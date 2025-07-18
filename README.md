@@ -5,7 +5,70 @@
 # Kite
 
 ![GitHub License](https://img.shields.io/github/license/tristan852/kite)
-![GitHub Release](https://img.shields.io/github/v/release/tristan852/kite)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/tristan852/kite)
 
-## 
+Kite is a Connect Four solver that can solve any Connect Four position on any hardware in a reasonable amount of time.
+This library may be used as part of a UI application or a Connect Four bot.
+
+## How to set up
+
+This library can easily be imported into any **Gradle** or **Maven** project using the Maven Central repository.
+
+### Gradle (Kotlin DSL)
+
+Add the following code snippet to your `build.gradle.kts` file:
+
+```kotlin filename="build.gradle.kts"
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("io.github.tristan852:kite:1.0.0")
+}
+```
+
+### Gradle (Groovy DSL)
+
+Add the following code snippet to your `build.gradle` file:
+
+```groovy filename="build.gradle"
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.github.tristan852:kite:1.0.0'
+}
+```
+
+### Maven
+
+Add the following code snippet to your `pom.xml` file:
+
+```xml filename="pom.xml"
+<repositories>
+    <repository>
+        <id>central</id>
+        <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>io.github.tristan852</groupId>
+        <artifactId>kite</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+</dependencies>
+```
+
+## How to use
+
+The Kite solver can be used by obtaining a reference to the singleton solver instance.
+Note that the solver cannot be used by multiple threads in parallel.
+The first time a reference to the Kite solver is obtained the solver is created and initialized first which may take a bit of time.
+
+```java
+CODE
+```
