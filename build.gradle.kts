@@ -1,6 +1,4 @@
 plugins {
-    id("java")
-    
     application
     signing
     
@@ -19,12 +17,26 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+}
+
+java {
+    withSourcesJar()
+    // withJavadocJar()
+}
+
 tasks.jar {
     manifest {
         attributes(
             "Main-Class" to application.mainClass.get()
         )
     }
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 publishing {
