@@ -9,10 +9,6 @@ plugins {
 group = "net.kite"
 version = "1.0.0"
 
-application {
-    mainClass.set("net.kite.Main")
-}
-
 repositories {
     mavenCentral()
 }
@@ -24,15 +20,11 @@ dependencies {
 
 java {
     withSourcesJar()
-    // withJavadocJar()
+    withJavadocJar()
 }
 
-tasks.jar {
-    manifest {
-        attributes(
-            "Main-Class" to application.mainClass.get()
-        )
-    }
+tasks.javadoc {
+    exclude("net/kite/board/**")
 }
 
 tasks.test {

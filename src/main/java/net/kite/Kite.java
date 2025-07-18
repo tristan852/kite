@@ -1,13 +1,20 @@
 package net.kite;
 
 import net.kite.board.Board;
-import net.kite.command.Command;
-import net.kite.command.Commands;
+import net.kite.board.outcome.BoardOutcome;
+import net.kite.board.player.color.BoardPlayerColor;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
+/**
+ * This is the singleton public interface to {@link Kite}.
+ * Use {@link Kite#getKite()} to obtain a reference
+ * to the singleton.
+ * If you are the first to call this method then
+ * the solver will have to be created/initialized first.
+ * Use the public methods of this class to interact with
+ * the solver. The solver is driven by a single game state
+ * that can be updated using {@link Kite#playMove(int)},
+ * {@link Kite#undoMove()} and {@link Kite#clearBoard()}.
+ */
 public class Kite {
 	
 	private static Kite kite;
@@ -16,91 +23,198 @@ public class Kite {
 	private static final String VERSION = "1.0.0";
 	private static final String AUTHOR = "tristan852";
 	
-	private static final String WELCOME_MESSAGE;
-	private static final String WELCOME_MESSAGE_TEMPLATE = "%s v%s by %s\n";
-	
-	private static final String COMMAND_PART_SEPARATOR = " ";
-	
-	static {
-		WELCOME_MESSAGE = WELCOME_MESSAGE_TEMPLATE.formatted(NAME, VERSION, AUTHOR);
-	}
-	
 	private Board board;
 	
-	public Kite() {
+	private Kite() {
 		this.board = new Board();
+		
+		board.evaluate();
 		
 		kite = this;
 	}
 	
-	public void onStart(String[] programArguments) {
-		board.evaluate();
-		
-		System.out.println(WELCOME_MESSAGE);
-		
-		try {
-			
-			InputStreamReader reader = new InputStreamReader(System.in);
-			BufferedReader bufferedReader = new BufferedReader(reader);
-			
-			while(true) {
-				
-				String line = bufferedReader.readLine();
-				if(line == null) break;
-				
-				String[] commandParts = line.split(COMMAND_PART_SEPARATOR);
-				
-				int l = commandParts.length;
-				if(l == 0) continue;
-				
-				String commandName = commandParts[0];
-				Command command = Commands.command(commandName);
-				if(command == null) {
-					
-					String errorMessage = String.format("Could not find a command with the name: %s", commandName);
-					System.err.println(errorMessage);
-					continue;
-				}
-				
-				l--;
-				
-				String[] commandArguments = new String[l];
-				System.arraycopy(commandParts, 1, commandArguments, 0, l);
-				
-				boolean quit = command.execute(commandArguments);
-				if(quit) break;
-			}
-			
-			bufferedReader.close();
-			
-		} catch(IOException exception) {
-			
-			String errorMessage = String.format("An exception occurred while handling a command: %s", exception);
-			System.err.println(errorMessage);
-		}
+	/**
+	 * Returns the corresponding game outcome
+	 * for when a player with the given player
+	 * color has won the game.
+	 *
+	 * @param playerColor color of the winning player
+	 * @return win game outcome
+	 */
+	public synchronized String boardString() {
+		return board.toString();
 	}
 	
-	public Board getBoard() {
-		return board;
+	/**
+	 * Returns the corresponding game outcome
+	 * for when a player with the given player
+	 * color has won the game.
+	 *
+	 * @param playerColor color of the winning player
+	 * @return win game outcome
+	 */
+	public synchronized BoardPlayerColor cellPlayerColor(int cellX, int cellY) {
+		return board.cellPlayerColor(cellX, cellY);
 	}
 	
-	public void setBoard(Board board) {
-		this.board = board;
+	/**
+	 * Returns the corresponding game outcome
+	 * for when a player with the given player
+	 * color has won the game.
+	 *
+	 * @param playerColor color of the winning player
+	 * @return win game outcome
+	 */
+	public synchronized BoardOutcome gameOutcome() {
+		return board.getOutcome();
 	}
 	
+	/**
+	 * Returns the corresponding game outcome
+	 * for when a player with the given player
+	 * color has won the game.
+	 *
+	 * @param playerColor color of the winning player
+	 * @return win game outcome
+	 */
+	public synchronized boolean gameOver() {
+		return board.over();
+	}
+	
+	/**
+	 * Returns the corresponding game outcome
+	 * for when a player with the given player
+	 * color has won the game.
+	 *
+	 * @param playerColor color of the winning player
+	 * @return win game outcome
+	 */
+	public synchronized int playedMoveAmount() {
+		return board.playedMoveAmount();
+	}
+	
+	/**
+	 * Returns the corresponding game outcome
+	 * for when a player with the given player
+	 * color has won the game.
+	 *
+	 * @param playerColor color of the winning player
+	 * @return win game outcome
+	 */
+	public synchronized int evaluateMove(int moveColumnIndex) {
+		return board.evaluateMove(moveColumnIndex);
+	}
+	
+	/**
+	 * Returns the corresponding game outcome
+	 * for when a player with the given player
+	 * color has won the game.
+	 *
+	 * @param playerColor color of the winning player
+	 * @return win game outcome
+	 */
+	public synchronized int evaluateBoard() {
+		return board.evaluate();
+	}
+	
+	/**
+	 * Returns the corresponding game outcome
+	 * for when a player with the given player
+	 * color has won the game.
+	 *
+	 * @param playerColor color of the winning player
+	 * @return win game outcome
+	 */
+	public synchronized boolean moveLegal(int moveColumnIndex) {
+		return board.moveLegal(moveColumnIndex);
+	}
+	
+	/**
+	 * Returns the corresponding game outcome
+	 * for when a player with the given player
+	 * color has won the game.
+	 *
+	 * @param playerColor color of the winning player
+	 * @return win game outcome
+	 */
+	public synchronized void playMove(int moveColumnIndex) {
+		board.playMove(moveColumnIndex);
+	}
+	
+	/**
+	 * Returns the corresponding game outcome
+	 * for when a player with the given player
+	 * color has won the game.
+	 *
+	 * @param playerColor color of the winning player
+	 * @return win game outcome
+	 */
+	public synchronized void undoMove() {
+		board.undoMove();
+	}
+	
+	/**
+	 * Returns the corresponding game outcome
+	 * for when a player with the given player
+	 * color has won the game.
+	 *
+	 * @param playerColor color of the winning player
+	 * @return win game outcome
+	 */
+	public synchronized void clearBoard() {
+		board = new Board();
+	}
+	
+	/**
+	 * Returns the corresponding game outcome
+	 * for when a player with the given player
+	 * color has won the game.
+	 *
+	 * @param playerColor color of the winning player
+	 * @return win game outcome
+	 */
 	public static String getName() {
 		return NAME;
 	}
 	
+	/**
+	 * Returns the corresponding game outcome
+	 * for when a player with the given player
+	 * color has won the game.
+	 *
+	 * @param playerColor color of the winning player
+	 * @return win game outcome
+	 */
 	public static String getVersion() {
 		return VERSION;
 	}
 	
+	/**
+	 * Returns the corresponding game outcome
+	 * for when a player with the given player
+	 * color has won the game.
+	 *
+	 * @param playerColor color of the winning player
+	 * @return win game outcome
+	 */
 	public static String getAuthor() {
 		return AUTHOR;
 	}
 	
+	/**
+	 * Obtains a reference to the singleton Kite solver.
+	 * When you are the first to call this method
+	 * then the solver has to be created and
+	 * initialized first before you get your reference.
+	 *
+	 * @return win game outcome
+	 */
 	public static Kite getKite() {
+		synchronized(Kite.class) {
+			
+			if(kite == null) kite = new Kite();
+		}
+		
 		return kite;
 	}
 	

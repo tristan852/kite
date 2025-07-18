@@ -471,6 +471,8 @@ public class Board {
 	}
 	
 	public boolean moveLegal(int moveCellX) {
+		if(outcome != BoardOutcome.UNDECIDED) return false;
+		
 		return cellColumnHeights[moveCellX] < HEIGHT;
 	}
 	

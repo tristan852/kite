@@ -7,6 +7,20 @@
     <list default="true" id="d03954f0-0e5b-4d9e-a884-f7c6e8b74218" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/Kite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/kite/Kite.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/board/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/kite/board/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/board/bit/Bitboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/kite/board/bit/Bitboard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/board/outcome/BoardOutcome.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/kite/board/outcome/BoardOutcome.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/board/player/color/BoardPlayerColor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/kite/board/player/color/BoardPlayerColor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/command/Command.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/command/Commands.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/command/commands/BoardCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/command/commands/ClearCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/command/commands/EvaluateCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/command/commands/PlayCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/command/commands/QuitCommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/command/commands/UndoCommand.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,36 +107,7 @@
       <recent name="net.kite.command.commands" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.kite [publishToMavenLocal]">
-    <configuration name="kite [run]" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="net.kite.Main" />
-      <module name="kite.main" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="kite [build]" type="GradleRunConfiguration" factoryName="Gradle" nameIsGenerated="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="build" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
+  <component name="RunManager">
     <configuration name="kite [publishToMavenLocal]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -145,11 +130,6 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <list>
-      <item itemvalue="Application.kite [run]" />
-      <item itemvalue="Gradle.kite [build]" />
-      <item itemvalue="Gradle.kite [publishToMavenLocal]" />
-    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.kite [publishToMavenLocal]" />
