@@ -18,7 +18,7 @@ This library can easily be imported into any **Gradle** or **Maven** project usi
 
 Add the following code snippet to your `build.gradle.kts` file:
 
-```kotlin filename="build.gradle.kts"
+```kotlin
 repositories {
     mavenCentral()
 }
@@ -32,7 +32,7 @@ dependencies {
 
 Add the following code snippet to your `build.gradle` file:
 
-```groovy filename="build.gradle"
+```groovy
 repositories {
     mavenCentral()
 }
@@ -46,7 +46,7 @@ dependencies {
 
 Add the following code snippet to your `pom.xml` file:
 
-```xml filename="pom.xml"
+```xml
 <repositories>
     <repository>
         <id>central</id>
