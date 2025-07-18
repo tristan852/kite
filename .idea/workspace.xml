@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d03954f0-0e5b-4d9e-a884-f7c6e8b74218" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/Kite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/kite/Kite.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,20 +71,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.kite [:net.kite.Main.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.kite [build].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.kite [publishToMavenLocal].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/Tristan (TUDO)/Documents/kite/src/main/java/net/kite/Main.java&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.import&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.kite [:net.kite.Main.main()].executor": "Run",
+    "Gradle.kite [build].executor": "Run",
+    "Gradle.kite [publishToMavenCentral].executor": "Run",
+    "Gradle.kite [publishToMavenLocal].executor": "Run",
+    "Gradle.kite [publish].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "onboarding.tips.debug.path": "C:/Users/Tristan (TUDO)/Documents/kite/src/main/java/net/kite/Main.java",
+    "settings.editor.selected.configurable": "editor.preferences.import"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Tristan (TUDO)\Documents\kite" />
@@ -93,8 +95,8 @@
       <recent name="net.kite.command.commands" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.kite [publish]">
-    <configuration name="kite [publishToMavenLocal]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+  <component name="RunManager">
+    <configuration name="kite [publishToMavenCentral]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -105,7 +107,7 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="publishToMavenLocal" />
+            <option value="publishToMavenCentral" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -116,36 +118,9 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="kite [publish]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="publish" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <list>
-      <item itemvalue="Gradle.kite [publish]" />
-      <item itemvalue="Gradle.kite [publishToMavenLocal]" />
-    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.kite [publish]" />
-        <item itemvalue="Gradle.kite [publishToMavenLocal]" />
+        <item itemvalue="Gradle.kite [publishToMavenCentral]" />
       </list>
     </recent_temporary>
   </component>
