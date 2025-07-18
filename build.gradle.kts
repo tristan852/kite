@@ -1,8 +1,10 @@
 plugins {
     id("java")
-    application
     
+    application
     signing
+    
+    `java-library`
     `maven-publish`
 }
 
