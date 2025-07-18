@@ -34,168 +34,189 @@ public class Kite {
 	}
 	
 	/**
-	 * Returns the corresponding game outcome
-	 * for when a player with the given player
-	 * color has won the game.
+	 * Returns a string representation of
+	 * the internal game state.
+	 * The string representation consists of
+	 * a list of played moves as well as a board
+	 * showing the stones of the players.
+	 * The stones of the player with color {@link BoardPlayerColor#RED}
+	 * are shown as 'X' whereas the stones of
+	 * the player with color {@link BoardPlayerColor#YELLOW}
+	 * are shown as 'O'.
 	 *
-	 * @param playerColor color of the winning player
-	 * @return win game outcome
+	 * @return game state string representation
 	 */
 	public synchronized String boardString() {
 		return board.toString();
 	}
 	
 	/**
-	 * Returns the corresponding game outcome
-	 * for when a player with the given player
-	 * color has won the game.
+	 * Returns the player color of the stone in a
+	 * given cell if the cell is not empty or
+	 * {@code null} if the cell is empty.
 	 *
-	 * @param playerColor color of the winning player
-	 * @return win game outcome
+	 * @param cellX x coordinate of the cell (zero indexed from right to left)
+	 * @param cellY y coordinate of the cell (zero indexed from bottom to top)
+	 * @return player color of the stone or {@code null} if no stone
 	 */
 	public synchronized BoardPlayerColor cellPlayerColor(int cellX, int cellY) {
 		return board.cellPlayerColor(cellX, cellY);
 	}
 	
 	/**
-	 * Returns the corresponding game outcome
-	 * for when a player with the given player
-	 * color has won the game.
+	 * Returns the outcome of the game.
+	 * If the game has not ended yet {@link BoardOutcome#UNDECIDED}
+	 * will be returned.
 	 *
-	 * @param playerColor color of the winning player
-	 * @return win game outcome
+	 * @return game outcome
 	 */
 	public synchronized BoardOutcome gameOutcome() {
 		return board.getOutcome();
 	}
 	
 	/**
-	 * Returns the corresponding game outcome
-	 * for when a player with the given player
-	 * color has won the game.
+	 * Returns whether the game has been
+	 * decided or not.
+	 * This method returns {@code true} if and only if the game
+	 * has ended in a draw or a win for either player.
 	 *
-	 * @param playerColor color of the winning player
-	 * @return win game outcome
+	 * @return whether the game has finished
 	 */
 	public synchronized boolean gameOver() {
 		return board.over();
 	}
 	
 	/**
-	 * Returns the corresponding game outcome
-	 * for when a player with the given player
-	 * color has won the game.
+	 * Returns the number of total moves that
+	 * have been played so far by both sides
+	 * combined.
 	 *
-	 * @param playerColor color of the winning player
-	 * @return win game outcome
+	 * @return number of moves played so far
 	 */
 	public synchronized int playedMoveAmount() {
 		return board.playedMoveAmount();
 	}
 	
 	/**
-	 * Returns the corresponding game outcome
-	 * for when a player with the given player
-	 * color has won the game.
+	 * Evaluates the game state that is
+	 * reached by playing the given move
+	 * from the perspective of the player
+	 * that is currently at turn.
+	 * For the game evaluation perfect play
+	 * will be assumed for both sides.
+	 * The move's score is either zero if
+	 * the game will end in a draw, positive
+	 * if the active player will win or negative
+	 * if the active player will lose.
+	 * A score of {@code n > 0} means the active
+	 * player will win with their {@code n}th to last stone.
+	 * A score of {@code n < 0} means the opponent
+	 * of the active player will win with their
+	 * {@code -n}th to last stone.
 	 *
-	 * @param playerColor color of the winning player
-	 * @return win game outcome
+	 * @param moveColumnIndex the one-indexed column number (from left to right)
+	 * @return move evaluation
 	 */
 	public synchronized int evaluateMove(int moveColumnIndex) {
+		moveColumnIndex--;
+		
 		return board.evaluateMove(moveColumnIndex);
 	}
 	
 	/**
-	 * Returns the corresponding game outcome
-	 * for when a player with the given player
-	 * color has won the game.
+	 * Evaluates the current game state
+	 * from the perspective of the player
+	 * that is currently at turn.
+	 * For the game evaluation perfect play
+	 * will be assumed for both sides.
+	 * The board's score is either zero if
+	 * the game will end in a draw, positive
+	 * if the active player will win or negative
+	 * if the active player will lose.
+	 * A score of {@code n > 0} means the active
+	 * player will win with their {@code n}th to last stone.
+	 * A score of {@code n < 0} means the opponent
+	 * of the active player will win with their
+	 * {@code -n}th to last stone.
 	 *
-	 * @param playerColor color of the winning player
-	 * @return win game outcome
+	 * @return board evaluation
 	 */
 	public synchronized int evaluateBoard() {
 		return board.evaluate();
 	}
 	
 	/**
-	 * Returns the corresponding game outcome
-	 * for when a player with the given player
-	 * color has won the game.
+	 * Tests whether a given move is legal.
+	 * A move is legal if the game has not ended yet
+	 * (implying the board is also not entirely full)
+	 * and when the column of the move is not full yet.
 	 *
-	 * @param playerColor color of the winning player
-	 * @return win game outcome
+	 * @param moveColumnIndex the one-indexed column number (from left to right)
+	 * @return whether the move is legal
 	 */
 	public synchronized boolean moveLegal(int moveColumnIndex) {
+		moveColumnIndex--;
+		
 		return board.moveLegal(moveColumnIndex);
 	}
 	
 	/**
-	 * Returns the corresponding game outcome
-	 * for when a player with the given player
-	 * color has won the game.
+	 * Plays a move on behalf of the player that is
+	 * currently at turn by inserting one of their stones
+	 * into the given column.
+	 * The internal game state will be updated.
 	 *
-	 * @param playerColor color of the winning player
-	 * @return win game outcome
+	 * @param moveColumnIndex the one-indexed column number (from left to right)
 	 */
 	public synchronized void playMove(int moveColumnIndex) {
+		moveColumnIndex--;
+		
 		board.playMove(moveColumnIndex);
 	}
 	
 	/**
-	 * Returns the corresponding game outcome
-	 * for when a player with the given player
-	 * color has won the game.
-	 *
-	 * @param playerColor color of the winning player
-	 * @return win game outcome
+	 * Updates the internal game state by undoing
+	 * the last move.
 	 */
 	public synchronized void undoMove() {
 		board.undoMove();
 	}
 	
 	/**
-	 * Returns the corresponding game outcome
-	 * for when a player with the given player
-	 * color has won the game.
-	 *
-	 * @param playerColor color of the winning player
-	 * @return win game outcome
+	 * Clears the internal game state.
+	 * After this method has been called the
+	 * game state will be a completely
+	 * empty board.
 	 */
 	public synchronized void clearBoard() {
 		board = new Board();
 	}
 	
 	/**
-	 * Returns the corresponding game outcome
-	 * for when a player with the given player
-	 * color has won the game.
+	 * Returns the name of
+	 * the Kite solver.
 	 *
-	 * @param playerColor color of the winning player
-	 * @return win game outcome
+	 * @return name
 	 */
 	public static String getName() {
 		return NAME;
 	}
 	
 	/**
-	 * Returns the corresponding game outcome
-	 * for when a player with the given player
-	 * color has won the game.
+	 * Returns the version of
+	 * the Kite solver.
 	 *
-	 * @param playerColor color of the winning player
-	 * @return win game outcome
+	 * @return version
 	 */
 	public static String getVersion() {
 		return VERSION;
 	}
 	
 	/**
-	 * Returns the corresponding game outcome
-	 * for when a player with the given player
-	 * color has won the game.
+	 * Returns the name of the author of
+	 * the Kite solver.
 	 *
-	 * @param playerColor color of the winning player
-	 * @return win game outcome
+	 * @return author name
 	 */
 	public static String getAuthor() {
 		return AUTHOR;
@@ -207,7 +228,7 @@ public class Kite {
 	 * then the solver has to be created and
 	 * initialized first before you get your reference.
 	 *
-	 * @return win game outcome
+	 * @return a reference to the Kite solver
 	 */
 	public static Kite getKite() {
 		synchronized(Kite.class) {
