@@ -575,6 +575,10 @@ public class Board {
 		}
 	}
 	
+	public int cellColumnHeight(int cellColumnIndex) {
+		return cellColumnHeights[cellColumnIndex];
+	}
+	
 	public int playedMove(int moveIndex) {
 		return playedMoves[moveIndex];
 	}
@@ -597,6 +601,10 @@ public class Board {
 	
 	public boolean over() {
 		return outcome != BoardOutcome.UNDECIDED;
+	}
+	
+	public BoardPlayerColor getActivePlayerColor() {
+		return activePlayerColor;
 	}
 	
 	public BoardOutcome getOutcome() {

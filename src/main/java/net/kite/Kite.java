@@ -64,16 +64,45 @@ public class Kite {
 	}
 	
 	/**
+	 * Returns the height of any given column.
+	 * This height of a column is equal to the
+	 * number of stones played into it.
+	 *
+	 * @param cellColumnIndex the index of the column (one indexed from left to right)
+	 * @return height of the column
+	 */
+	public synchronized int cellColumnHeight(int cellColumnIndex) {
+		cellColumnIndex--;
+		
+		return board.cellColumnHeight(cellColumnIndex);
+	}
+	
+	/**
 	 * Returns the player color of the stone in a
 	 * given cell if the cell is not empty or
 	 * {@code null} if the cell is empty.
 	 *
-	 * @param cellX x coordinate of the cell (zero indexed from right to left)
+	 * @param cellX x coordinate of the cell (zero indexed from left to right)
 	 * @param cellY y coordinate of the cell (zero indexed from bottom to top)
 	 * @return player color of the stone or {@code null} if no stone
 	 */
 	public synchronized BoardPlayerColor cellPlayerColor(int cellX, int cellY) {
 		return board.cellPlayerColor(cellX, cellY);
+	}
+	
+	/**
+	 * Returns the color of the currently active
+	 * player, i.e. the player that is allowed to
+	 * move next.
+	 * If the game has already ended this method
+	 * still returns the color of the player
+	 * that would be allowed to move next if the
+	 * game had not ended yet.
+	 *
+	 * @return player color of the currently active player
+	 */
+	public synchronized BoardPlayerColor activePlayerColor() {
+		return board.getActivePlayerColor();
 	}
 	
 	/**
@@ -92,6 +121,9 @@ public class Kite {
 	 * decided or not.
 	 * This method returns {@code true} if and only if the game
 	 * has ended in a draw or a win for either player.
+	 * Also note that this method only returns {@code true}
+	 * if and only if there is a legal move left to play
+	 * for the currently active player.
 	 *
 	 * @return whether the game has finished
 	 */
