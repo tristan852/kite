@@ -258,15 +258,16 @@ public class Board {
 		if(immediateThreats != Bitboards.EMPTY) {
 			
 			int p = Bitboard.firstCellPosition(immediateThreats);
-			int forcedX = p >>> LOGARITHMIC_BITBOARD_LENGTH;
-			int forcedY = p & BITBOARD_LENGTH_MASK;
-			long b = Bitboards.cellBitboard(forcedX, forcedY);
+			long b = Bitboards.cellBitboard(p);
 			
 			immediateThreats ^= b;
 			if(immediateThreats != Bitboards.EMPTY) {
 				
 				return minScore;
 			}
+			
+			int forcedX = p >>> LOGARITHMIC_BITBOARD_LENGTH;
+			int forcedY = p & BITBOARD_LENGTH_MASK;
 			
 			long upperCellBitboard = Bitboards.cellBitboard(forcedX, forcedY + 1);
 			if((upperCellBitboard & opponentWinBitboard) != 0) {

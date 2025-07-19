@@ -5,6 +5,8 @@ public class Bitboard {
 	private static final int WIDTH = 8;
 	private static final int HEIGHT = 8;
 	
+	private static final int SIZE = 64;
+	
 	private static final String TO_STRING_CELL_STRING = "O";
 	private static final String TO_STRING_MISSING_CELL_STRING = ".";
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
@@ -44,6 +46,10 @@ public class Bitboard {
 	
 	public static int getHeight() {
 		return HEIGHT;
+	}
+	
+	public static int getSize() {
+		return SIZE;
 	}
 	
 }
