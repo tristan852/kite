@@ -7,12 +7,27 @@
 ![GitHub License](https://img.shields.io/github/license/tristan852/kite)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/tristan852/kite)
 
-Kite is a Connect Four solver that can solve any Connect Four position on any hardware in a reasonable amount of time.
-This library may be used as part of a UI application or a Connect Four bot.
+Kite is a high-performance Connect Four solver capable of evaluating any valid board position within practical time bounds, even on modest hardware. It is suitable for building AI bots, integrating into GUI applications, or analyzing positions programmatically.
 
-## How to set up
+Internally, Kite leverages **bitboards**, **alpha-beta pruning**, **position hashing**, **symmetry reduction**, and **opening book lookups** to provide fast and accurate game tree evaluation.
 
-This library can easily be imported into any **Gradle** or **Maven** project using the Maven Central repository.
+---
+
+## 🚀 Features
+
+* **Bitboard Representation**: Game states use 64-bit integers for fast updates and operations.
+* **Symmetry Pruning**: Mirrored game states are considered equivalent and cached accordingly.
+* **Alpha-Beta Pruning**: Reduces search space by skipping suboptimal branches early.
+* **Move Ordering**: Uses heuristics that favor center columns and winning threats.
+* **Transposition Caching**: Hashes each position and stores scores in an efficient score cache.
+* **Opening Book**: Stores lots of precomputed scores for early-game positions.
+* *and much more...*
+
+---
+
+## 📦 Installation
+
+Kite is available via **Maven Central** and can be easily added to any **Gradle** or **Maven** project.
 
 ### Gradle (Kotlin DSL)
 
@@ -63,7 +78,9 @@ Add the following code snippet to your `pom.xml` file:
 </dependencies>
 ```
 
-## How to use
+---
+
+## 🚀 Getting Started
 
 The Kite solver can be used by obtaining a reference to the singleton solver instance.
 Note that the solver cannot be used by multiple threads in parallel.
@@ -113,3 +130,28 @@ System.out.println(kite.boardString());
 // the starting game state)
 kite.clearBoard();
 ```
+
+---
+
+## 🧠 Evaluation Scale
+
+Kite uses the following score metric to represent the value of a board or a move under perfect play:
+
+| Score   | Meaning                                             |
+|---------|-----------------------------------------------------|
+| `0`     | Draw                                                |
+| `n > 0` | We win by playing our `n`th to last stone           |
+| `n < 0` | Opponent wins by playing their `-n`th to last stone |
+
+For example a score of `1` represents that we are going to win but only with our very last stone.
+A score of `-2` means that our opponent will win with one stone to spare.
+
+---
+
+## 📄 License
+
+Kite is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html).
+
+You are free to use, modify, and distribute this software under the terms of the GPL-3.0. However, if you distribute a modified version or derivative work, it must also be licensed under the GPL-3.0 and include the source code.
+
+For full terms, see the [LICENSE](./LICENSE) file.
