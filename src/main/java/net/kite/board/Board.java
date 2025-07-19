@@ -177,6 +177,22 @@ public class Board {
 		int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
 		if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
 		
+		if(filledCellAmount > 0) {
+			
+			undoMove();
+			
+			int lastMove = playedMoves[filledCellAmount];
+			
+			openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
+			if(openingBoardScore != Integer.MIN_VALUE) {
+				
+				int s = -openingBoardScore;
+				if(minimalScore < s) minimalScore = s;
+			}
+			
+			playMove(lastMove);
+		}
+		
 		BoardScoreCacheEntry entry = BoardScoreCaches.DEFAULT.entry(hash, mixedHash);
 		if(entry != null) {
 			
