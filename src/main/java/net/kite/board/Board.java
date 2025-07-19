@@ -38,13 +38,12 @@ public class Board {
 	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 11;
 	
 	private static final int[][] MOVE_CELL_SCORES = new int[][] {
-			{  0,  1,  2,  2,  1,  0 },
-			{  1,  3,  5,  5,  3,  1 },
-			{  2,  5,  8,  8,  5,  2 },
-			{  4,  7, 10, 10,  7,  4 },
-			{  2,  5,  8,  8,  5,  2 },
-			{  1,  3,  5,  5,  3,  1 },
-			{  0,  1,  2,  2,  1,  0 }
+			{  0,  1,  2,  4,  2,  1,  0 },
+			{  1,  3,  5,  7,  5,  3,  1 },
+			{  2,  5,  8, 10,  8,  5,  2 },
+			{  2,  5,  8, 10,  8,  5,  2 },
+			{  1,  3,  5,  7,  5,  3,  1 },
+			{  0,  1,  2,  4,  2,  1,  0 }
 	};
 	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
@@ -430,7 +429,7 @@ public class Board {
 		result &= ~mask;
 		result &= Bitboards.FULL_BOARD;
 		
-		return Long.bitCount(result) * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT + MOVE_CELL_SCORES[moveCellX][moveCellY];
+		return Long.bitCount(result) * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT + MOVE_CELL_SCORES[moveCellY][moveCellX];
 	}
 	
 	private boolean activePlayerHasImmediateWin() {
