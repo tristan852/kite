@@ -73,6 +73,10 @@ The first time a reference to the Kite solver is obtained the solver is created 
 // obtain access to the Kite solver
 Kite kite = Kite.getKite();
 
+// if we haven't used the solver before
+// then the board is still empty and it
+// is red's turn
+
 // red plays in the 4th column
 // and yellow plays in the 6th column
 kite.playMoves(4, 6);
