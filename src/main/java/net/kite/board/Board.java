@@ -29,10 +29,10 @@ public class Board {
 	private static final String TO_STRING_MOVES_PREFIX_STRING = "moves: ";
 	
 	private static final int[] BITBOARD_CONNECTION_DIRECTIONS = new int[] {
-			1,
-			7,
 			8,
-			9
+			7,
+			9,
+			1
 	};
 	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
