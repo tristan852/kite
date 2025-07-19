@@ -285,7 +285,7 @@ public class Board {
 				
 				int nodes = nodesVisited[depth];
 				
-				saveToCache(s, maxScore, nodes);
+				BoardScoreCaches.DEFAULT.updateEntry(hash, mixedHash, s, maxScore, nodes);
 				return s;
 			}
 			
@@ -293,7 +293,7 @@ public class Board {
 			
 			int nodes = nodesVisited[depth];
 			
-			saveToCache(minScore, minimalScore, nodes);
+			BoardScoreCaches.DEFAULT.updateEntry(hash, mixedHash, minScore, minimalScore, nodes);
 			
 			return minimalScore;
 		}
@@ -355,7 +355,7 @@ public class Board {
 				
 				int nodes = nodesVisited[depth];
 				
-				saveToCache(s, maxScore, nodes);
+				BoardScoreCaches.DEFAULT.updateEntry(hash, mixedHash, s, maxScore, nodes);
 				return s;
 			}
 			
@@ -364,13 +364,9 @@ public class Board {
 		
 		int nodes = nodesVisited[depth];
 		
-		saveToCache(minScore, minimalScore, nodes);
+		BoardScoreCaches.DEFAULT.updateEntry(hash, mixedHash, minScore, minimalScore, nodes);
 		
 		return minimalScore;
-	}
-	
-	private void saveToCache(int minimalScore, int maximalScore, int nodesVisited) {
-		BoardScoreCaches.DEFAULT.updateEntry(hash, mixedHash, minimalScore, maximalScore, nodesVisited);
 	}
 	
 	private int moveScore(int moveCellX) {
