@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tristan852:kite:1.0.1")
+    implementation("io.github.tristan852:kite:1.0.2")
 }
 ```
 
@@ -38,7 +38,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.tristan852:kite:1.0.1'
+    implementation 'io.github.tristan852:kite:1.0.2'
 }
 ```
 
@@ -58,7 +58,7 @@ Add the following code snippet to your `pom.xml` file:
     <dependency>
         <groupId>io.github.tristan852</groupId>
         <artifactId>kite</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
     </dependency>
 </dependencies>
 ```
@@ -71,7 +71,7 @@ The first time a reference to the Kite solver is obtained the solver is created 
 
 ```java
 // obtain access to the Kite solver
-Kite kite = Kite.getKite();
+Kite kite = Kite.instance();
 
 // if we haven't used the solver before
 // then the board is still empty and it

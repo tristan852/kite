@@ -575,6 +575,10 @@ public class Board {
 		}
 	}
 	
+	public int playedMove(int moveIndex) {
+		return playedMoves[moveIndex];
+	}
+	
 	public boolean cellFilled(int cellX, int cellY) {
 		return cellPlayerColors[cellX][cellY] != null;
 	}

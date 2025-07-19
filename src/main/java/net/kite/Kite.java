@@ -4,9 +4,12 @@ import net.kite.board.Board;
 import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.player.color.BoardPlayerColor;
 
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * This is the singleton public interface to {@link Kite}.
- * Use {@link Kite#getKite()} to obtain a reference
+ * Use {@link Kite#instance()} to obtain a reference
  * to the singleton.
  * If you are the first to call this method then
  * the solver will have to be created/initialized first.
@@ -17,20 +20,30 @@ import net.kite.board.player.color.BoardPlayerColor;
  */
 public class Kite {
 	
-	private static Kite kite;
+	private static Kite instance;
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.0.1";
+	private static final String VERSION = "1.0.2";
 	private static final String AUTHOR = "tristan852";
 	
+	private static final int BOARD_WIDTH = 7;
+	
+	private static final int[] ORDERED_MOVE_COLUMN_INDICES = new int[] {
+			3, 2, 4, 1, 5, 0, 6
+	};
+	
+	private static final int INVALID_MOVE_COLUMN_INDEX = 0;
+	
 	private Board board;
+	
+	private final int[] moveScores = new int[BOARD_WIDTH];
 	
 	private Kite() {
 		this.board = new Board();
 		
 		board.evaluate();
 		
-		kite = this;
+		instance = this;
 	}
 	
 	/**
@@ -95,6 +108,60 @@ public class Kite {
 	 */
 	public synchronized int playedMoveAmount() {
 		return board.playedMoveAmount();
+	}
+	
+	/**
+	 * Evaluates the game state and returns
+	 * an optimal move. If the game state
+	 * only has one optimal move, the best
+	 * move is returned.
+	 * If the game state has multiple
+	 * optimal moves, an optimal move
+	 * is chosen uniformly at random and
+	 * will be returned.
+	 *
+	 * @return an optimal one-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
+	 */
+	public synchronized int optimalMove() {
+		int optimalMoveScore = Integer.MIN_VALUE;
+		int n = 0;
+		
+		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
+			
+			int moveScore = board.moveLegal(moveColumnIndex) ? board.evaluateMove(moveColumnIndex) : Integer.MIN_VALUE;
+			
+			moveScores[moveColumnIndex] = moveScore;
+			
+			if(moveScore > optimalMoveScore) {
+				
+				optimalMoveScore = moveScore;
+				n = 1;
+				
+			} else if(moveScore == optimalMoveScore && moveScore != Integer.MIN_VALUE) {
+				
+				n++;
+			}
+		}
+		
+		if(n == 0) {
+			
+			return INVALID_MOVE_COLUMN_INDEX;
+		}
+		
+		Random random = ThreadLocalRandom.current();
+		int index = random.nextInt(n);
+		
+		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
+			
+			int moveScore = moveScores[moveColumnIndex];
+			if(moveScore != optimalMoveScore) continue;
+			
+			if(index == 0) return moveColumnIndex + 1;
+			index--;
+		}
+		
+		// impossible to reach
+		return INVALID_MOVE_COLUMN_INDEX;
 	}
 	
 	/**
@@ -214,6 +281,54 @@ public class Kite {
 	}
 	
 	/**
+	 * Plays multiple moves on behalf of the player
+	 * that is allowed to move next by inserting one
+	 * of their stones into the given column.
+	 * The internal game state will be updated
+	 * unless no move is provided.
+	 *
+	 * @param moveColumnIndices the one-indexed move column numbers (columns indexed from left to right)
+	 */
+	public synchronized void setupBoard(int... moveColumnIndices) {
+		int n = board.playedMoveAmount();
+		int l = moveColumnIndices.length;
+		
+		for(int i = 0; i < l; i++) {
+			
+			int moveColumnIndex = moveColumnIndices[i] - 1;
+			
+			if(i == n) {
+				
+				board.playMove(moveColumnIndex);
+				n++;
+				
+				continue;
+			}
+			
+			int x = board.playedMove(i);
+			if(x == moveColumnIndex) {
+				
+				continue;
+			}
+			
+			while(n > i) {
+				
+				board.undoMove();
+				n--;
+			}
+			
+			board.playMove(moveColumnIndex);
+			n++;
+		}
+		
+		while(n > l) {
+			
+			board.undoMove();
+			n--;
+		}
+	}
+	
+	/**
 	 * Clears the internal game state.
 	 * After this method has been called the
 	 * game state will be a completely
@@ -261,13 +376,13 @@ public class Kite {
 	 *
 	 * @return a reference to the Kite solver
 	 */
-	public static Kite getKite() {
+	public static Kite instance() {
 		synchronized(Kite.class) {
 			
-			if(kite == null) kite = new Kite();
+			if(instance == null) instance = new Kite();
 		}
 		
-		return kite;
+		return instance;
 	}
 	
 }
