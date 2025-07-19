@@ -492,9 +492,8 @@ public class Board {
 		mirroredMaskBitboard ^= b2;
 		mirroredCeilingBitboard ^= b2;
 		
-		moveCellY++;
-		b1 = Bitboards.cellBitboard(moveCellX, moveCellY);
-		b2 = Bitboards.cellBitboard(mirroredMoveCellX, moveCellY);
+		b1 >>>= 1;
+		b2 >>>= 1;
 		
 		ceilingBitboard ^= b1;
 		activeBitboard = (~bitboard) & maskBitboard;
@@ -541,9 +540,8 @@ public class Board {
 		mirroredMaskBitboard ^= b2;
 		mirroredCeilingBitboard ^= b2;
 		
-		moveCellY++;
-		b1 = Bitboards.cellBitboard(moveCellX, moveCellY);
-		b2 = Bitboards.cellBitboard(mirroredMoveCellX, moveCellY);
+		b1 >>>= 1;
+		b2 >>>= 1;
 		
 		ceilingBitboard ^= b1;
 		activeBitboard = (~bitboard) & maskBitboard;
