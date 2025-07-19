@@ -38,7 +38,6 @@ public class Board {
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
 	
 	private static final int LOGARITHMIC_BITBOARD_LENGTH = 3;
-	private static final int BITBOARD_LENGTH_MASK = 7;
 	
 	private static final int LARGEST_MOVE_CELL_X = 6;
 	
@@ -267,9 +266,8 @@ public class Board {
 			}
 			
 			int forcedX = p >>> LOGARITHMIC_BITBOARD_LENGTH;
-			int forcedY = p & BITBOARD_LENGTH_MASK;
 			
-			long upperCellBitboard = Bitboards.cellBitboard(forcedX, forcedY + 1);
+			long upperCellBitboard = b >>> 1;
 			if((upperCellBitboard & opponentWinBitboard) != 0) {
 				
 				return minScore;
