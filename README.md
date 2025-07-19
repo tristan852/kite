@@ -69,6 +69,8 @@ The Kite solver can be used by obtaining a reference to the singleton solver ins
 Note that the solver cannot be used by multiple threads in parallel.
 The first time a reference to the Kite solver is obtained the solver is created and initialized first which may take a bit of time.
 
+The following code snippet demonstrates how the Kite solver should ideally be used:
+
 ```java
 // obtain access to the Kite solver
 Kite kite = Kite.instance();
