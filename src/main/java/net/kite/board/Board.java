@@ -267,7 +267,7 @@ public class Board {
 			
 			int forcedX = p >>> LOGARITHMIC_BITBOARD_LENGTH;
 			
-			long upperCellBitboard = b >>> 1;
+			long upperCellBitboard = b << 1;
 			if((upperCellBitboard & opponentWinBitboard) != 0) {
 				
 				return minScore;
@@ -492,8 +492,8 @@ public class Board {
 		mirroredMaskBitboard ^= b2;
 		mirroredCeilingBitboard ^= b2;
 		
-		b1 >>>= 1;
-		b2 >>>= 1;
+		b1 <<= 1;
+		b2 <<= 1;
 		
 		ceilingBitboard ^= b1;
 		activeBitboard = (~bitboard) & maskBitboard;
@@ -540,8 +540,8 @@ public class Board {
 		mirroredMaskBitboard ^= b2;
 		mirroredCeilingBitboard ^= b2;
 		
-		b1 >>>= 1;
-		b2 >>>= 1;
+		b1 <<= 1;
+		b2 <<= 1;
 		
 		ceilingBitboard ^= b1;
 		activeBitboard = (~bitboard) & maskBitboard;
