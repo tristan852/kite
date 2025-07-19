@@ -20,7 +20,7 @@ public class Kite {
 	private static Kite kite;
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.0.0";
+	private static final String VERSION = "1.0.1";
 	private static final String AUTHOR = "tristan852";
 	
 	private Board board;
