@@ -89,6 +89,7 @@ System.out.println(kite.evaluateBoard()); // = 2
 kite.playMove(5);
 
 // it is now yellow's turn
+
 // if yellow plays in the 6th column they
 // are going to win with their last stone
 System.out.println(kite.evaluateMove(6)); // = 1
