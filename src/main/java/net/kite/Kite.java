@@ -101,7 +101,7 @@ public class Kite {
 	 * Evaluates the game state that is
 	 * reached by playing the given move
 	 * from the perspective of the player
-	 * that is currently at turn.
+	 * that is currently taking their turn.
 	 * For the game evaluation perfect play
 	 * will be assumed for both sides.
 	 * The move's score is either zero if
@@ -126,7 +126,7 @@ public class Kite {
 	/**
 	 * Evaluates the current game state
 	 * from the perspective of the player
-	 * that is currently at turn.
+	 * that is currently taking their turn.
 	 * For the game evaluation perfect play
 	 * will be assumed for both sides.
 	 * The board's score is either zero if
@@ -161,9 +161,27 @@ public class Kite {
 	}
 	
 	/**
+	 * Plays multiple moves on behalf of the player
+	 * that is allowed to move next by inserting one
+	 * of their stones into the given column.
+	 * The internal game state will be updated
+	 * unless no move is provided.
+	 *
+	 * @param moveColumnIndices the one-indexed column numbers (columns indexed from left to right)
+	 */
+	public synchronized void playMoves(int... moveColumnIndices) {
+		for(int moveColumnIndex : moveColumnIndices) {
+			
+			moveColumnIndex--;
+			
+			board.playMove(moveColumnIndex);
+		}
+	}
+	
+	/**
 	 * Plays a move on behalf of the player that is
-	 * currently at turn by inserting one of their stones
-	 * into the given column.
+	 * currently taking their turn by inserting one
+	 * of their stones into the given column.
 	 * The internal game state will be updated.
 	 *
 	 * @param moveColumnIndex the one-indexed column number (from left to right)
@@ -172,6 +190,19 @@ public class Kite {
 		moveColumnIndex--;
 		
 		board.playMove(moveColumnIndex);
+	}
+	
+	/**
+	 * Updates the internal game state by undoing
+	 * the last {@code moveAmount} moves.
+	 *
+	 * @param moveAmount number of moves to undo
+	 */
+	public synchronized void undoMoves(int moveAmount) {
+		for(int i = 0; i < moveAmount; i++) {
+			
+			board.undoMove();
+		}
 	}
 	
 	/**

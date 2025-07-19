@@ -70,5 +70,39 @@ Note that the solver cannot be used by multiple threads in parallel.
 The first time a reference to the Kite solver is obtained the solver is created and initialized first which may take a bit of time.
 
 ```java
-CODE
+// obtain access to the Kite solver
+Kite kite = Kite.getKite();
+
+// red plays in the 4th column
+// and yellow plays in the 6th column
+kite.playMoves(4, 6);
+
+// it is now red's turn, and they are going
+// to win with their second to last stone
+System.out.println(kite.evaluateBoard()); // = 2
+
+// red plays in the 6th column
+kite.playMove(5);
+
+// it is now yellow's turn
+// if yellow plays in the 6th column they
+// are going to win with their last stone
+System.out.println(kite.evaluateMove(6)); // = 1
+
+// print a string representation
+// of the current game state
+
+// .......
+// .......
+// .......
+// .......
+// .......
+// ...XXO.
+// 
+// moves: 465
+System.out.println(kite.boardString());
+
+// clear the board (i.e. go back to
+// the starting game state)
+kite.clearBoard();
 ```
