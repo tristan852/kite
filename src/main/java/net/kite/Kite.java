@@ -3,6 +3,7 @@ package net.kite;
 import net.kite.board.Board;
 import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.player.color.BoardPlayerColor;
+import net.kite.skill.level.SkillLevel;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -154,6 +155,72 @@ public class Kite {
 	
 	/**
 	 * Evaluates the game state and returns
+	 * a legal move that is chosen according
+	 * to the provided {@code skillLevel}.
+	 * The skill based move is chosen at random
+	 * according to a probability distribution
+	 * that is more spread out for weaker
+	 * skill levels and more centered for
+	 * stronger skill levels.
+	 *
+	 * @param skillLevel the skill level that the move should be based on
+	 * @return a skill based one-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
+	 */
+	public synchronized int skilledMove(SkillLevel skillLevel) {
+		if(skillLevel == SkillLevel.PERFECT) return optimalMove();
+		if(skillLevel == SkillLevel.RANDOM) return randomMove();
+		
+		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
+		
+		int optimalMoveScore = Integer.MIN_VALUE;
+		
+		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
+			
+			int moveScore = board.moveLegal(moveColumnIndex) ? board.evaluateMove(moveColumnIndex) : Integer.MIN_VALUE;
+			
+			moveScores[moveColumnIndex] = moveScore;
+			
+			if(moveScore > optimalMoveScore) {
+				
+				optimalMoveScore = moveScore;
+			}
+		}
+		
+		int maximalScoreLose = skillLevel.getMaximalScoreLose();
+		int minimalScore = optimalMoveScore - maximalScoreLose;
+		
+		int totalWeight = 0;
+		
+		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
+			
+			int moveScore = moveScores[moveColumnIndex];
+			if(moveScore >= minimalScore) {
+				
+				int weight = moveScore - minimalScore + 1;
+				totalWeight += weight;
+			}
+		}
+		
+		Random random = ThreadLocalRandom.current();
+		int weightIndex = random.nextInt(totalWeight);
+		
+		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
+			
+			int moveScore = moveScores[moveColumnIndex];
+			if(moveScore < minimalScore) continue;
+			
+			int weight = moveScore - minimalScore + 1;
+			if(weightIndex < weight) return moveColumnIndex + 1;
+			
+			weightIndex -= weight;
+		}
+		
+		// impossible to reach
+		return INVALID_MOVE_COLUMN_INDEX;
+	}
+	
+	/**
+	 * Evaluates the game state and returns
 	 * an optimal move. If the game state
 	 * only has one optimal move, the best
 	 * move is returned.
@@ -165,6 +232,8 @@ public class Kite {
 	 * @return an optimal one-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
 	 */
 	public synchronized int optimalMove() {
+		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
+		
 		int optimalMoveScore = Integer.MIN_VALUE;
 		int n = 0;
 		
@@ -185,11 +254,6 @@ public class Kite {
 			}
 		}
 		
-		if(n == 0) {
-			
-			return INVALID_MOVE_COLUMN_INDEX;
-		}
-		
 		Random random = ThreadLocalRandom.current();
 		int index = random.nextInt(n);
 		
@@ -197,6 +261,37 @@ public class Kite {
 			
 			int moveScore = moveScores[moveColumnIndex];
 			if(moveScore != optimalMoveScore) continue;
+			
+			if(index == 0) return moveColumnIndex + 1;
+			index--;
+		}
+		
+		// impossible to reach
+		return INVALID_MOVE_COLUMN_INDEX;
+	}
+	
+	/**
+	 * Returns one of the available legal moves
+	 * chosen uniformly at random.
+	 *
+	 * @return a random one-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
+	 */
+	public synchronized int randomMove() {
+		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
+		
+		int n = 0;
+		
+		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
+			
+			if(board.moveLegal(moveColumnIndex)) n++;
+		}
+		
+		Random random = ThreadLocalRandom.current();
+		int index = random.nextInt(n);
+		
+		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
+			
+			if(!board.moveLegal(moveColumnIndex)) continue;
 			
 			if(index == 0) return moveColumnIndex + 1;
 			index--;
