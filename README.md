@@ -161,6 +161,62 @@ public class B {
 
 ---
 
+## 🕹️ Try It Out
+Want to quickly try out the Kite solver? Here's a simple demo class that pits you against the solver using a fixed skill level:
+
+```java
+import net.kite.board.outcome.BoardOutcome;
+import net.kite.skill.level.SkillLevel;
+
+import java.util.Random;
+import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
+
+public class Main {
+	
+	// 
+	private static final SkillLevel OPPONENT_SKILL_LEVEL = SkillLevel.SEVEN;
+	
+	public static void main(String[] programArguments) {
+		// initialize solver and scanner
+		Kite solver = Kite.instance();
+		Scanner scanner = new Scanner(System.in);
+		
+		// choose randomly who goes first
+		Random random = ThreadLocalRandom.current();
+		boolean humanTurn = random.nextBoolean();
+		
+		if(!humanTurn) solver.playMove(solver.skilledMove(OPPONENT_SKILL_LEVEL));
+		
+		System.out.println(solver.boardString());
+		
+		while(true) {
+			
+			solver.playMove(scanner.nextInt());
+			
+			if(solver.gameOver()) {
+				
+				System.out.println(solver.boardString());
+				System.out.println(solver.gameOutcome() == BoardOutcome.DRAW ? "You drew." : "You won!");
+				return;
+			}
+			
+			solver.playMove(solver.skilledMove(OPPONENT_SKILL_LEVEL));
+			System.out.println(solver.boardString());
+			
+			if(solver.gameOver()) {
+				
+				System.out.println(solver.gameOutcome() == BoardOutcome.DRAW ? "You drew." : "You lost!");
+				return;
+			}
+		}
+	}
+	
+}
+```
+
+---
+
 ## 🧠 Evaluation Scale
 
 Kite uses the following score metric to represent the value of a board or a move under perfect play:
