@@ -141,7 +141,7 @@ public class Board {
 	
 	private long partialPascalHash(long pascalHash, int x) {
 		int height = cellColumnHeights[x];
-		long board = Bitboards.cellBitboard(x, 0);
+		long board = Bitboards.bottomCellBitboard(x);
 		
 		for(int y = 0; y < height; y++) {
 			
