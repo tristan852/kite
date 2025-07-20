@@ -184,9 +184,7 @@ public class Main {
 		
 		// choose randomly who goes first
 		Random random = ThreadLocalRandom.current();
-		boolean humanTurn = random.nextBoolean();
-		
-		if(!humanTurn) solver.playMove(solver.skilledMove(OPPONENT_SKILL_LEVEL));
+		if(random.nextBoolean()) solver.playMove(solver.skilledMove(OPPONENT_SKILL_LEVEL));
 		
 		System.out.println(solver.boardString());
 		

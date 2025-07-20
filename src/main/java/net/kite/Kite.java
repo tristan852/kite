@@ -197,6 +197,8 @@ public class Kite {
 			if(moveScore >= minimalScore) {
 				
 				int weight = moveScore - minimalScore + 1;
+				weight *= weight;
+				
 				totalWeight += weight;
 			}
 		}
@@ -210,8 +212,9 @@ public class Kite {
 			if(moveScore < minimalScore) continue;
 			
 			int weight = moveScore - minimalScore + 1;
-			if(weightIndex < weight) return moveColumnIndex + 1;
+			weight *= weight;
 			
+			if(weightIndex < weight) return moveColumnIndex + 1;
 			weightIndex -= weight;
 		}
 		
