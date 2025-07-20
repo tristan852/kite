@@ -7,7 +7,7 @@
 ![GitHub License](https://img.shields.io/github/license/tristan852/kite)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/tristan852/kite)
 
-Kite is a high-performance Connect Four solver capable of evaluating any valid board position within practical time bounds, even on modest hardware. It is suitable for building AI bots, integrating into GUI applications, or analyzing positions programmatically.
+Kite is a high-performance Connect Four solver capable of solving any board position within practical time bounds, even on modest hardware. It can be used to power AI bots with adjustable playing strength — from deliberately weak to perfectly optimal, making only provably best moves. Kite is suitable for building AI opponents, integrating into GUI applications, or analyzing positions programmatically.
 
 Internally, Kite leverages **bitboards**, **alpha-beta pruning**, **position hashing**, **symmetry reduction**, and **opening book lookups** to provide fast and accurate game tree evaluation.
 
@@ -84,7 +84,7 @@ Add the following code snippet to your `pom.xml` file:
 
 The Kite solver can be used by obtaining a reference to the singleton solver instance.
 Note that the solver cannot be used by multiple threads in parallel.
-The first time a reference to the Kite solver is obtained the solver is created and initialized first which may take a bit of time.
+The first time a reference to the Kite solver is obtained, the solver is created and initialized first, which may take a bit of time.
 
 The following code snippet demonstrates how the Kite solver should ideally be used:
 
@@ -93,7 +93,7 @@ The following code snippet demonstrates how the Kite solver should ideally be us
 Kite solver = Kite.instance();
 
 // if we haven't used the solver before
-// then the board is still empty and it
+// then the board is still empty, and it
 // is red's turn
 
 // red plays in the 4th column
@@ -171,8 +171,8 @@ Kite uses the following score metric to represent the value of a board or a move
 | `n > 0` | We win by playing our `n`th to last stone           |
 | `n < 0` | Opponent wins by playing their `-n`th to last stone |
 
-For example a score of `1` represents that we are going to win but only with our very last stone.
-A score of `-2` means that our opponent will win with one stone to spare.
+For example, a score of `1` indicates that we are going to win, but only with our very last stone.
+A score of `-2` means that our opponent will win, with one stone to spare.
 
 ---
 
