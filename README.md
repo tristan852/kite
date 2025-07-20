@@ -135,19 +135,19 @@ Please keep in mind that Java classes are being loaded lazily.
 
 ```java
 // a class that is not used during program startup
-public class B {
+public class A {
 	
 	private static final Kite SOLVER = Kite.instance();
 	
 }
 ```
 
-In the above setup, if class `B` is not loaded at program startup, but rather at some later point, the solver creation and initialization will also not happen at startup, but rather when you first use class `B`, which might introduce an unwanted delay before your first use of the solver.
+In the above setup, if class `A` is not loaded at program startup, but rather at some later point, the solver creation and initialization will also not happen at startup, but rather when you first use class `A`, which might introduce an unwanted delay before your first use of the solver.
 
 In the following class, the method `onProgramStartup` is called when your program is booting up. The method obtains a reference to the solver, which ensures that the solver is already initialized after your program has started.
 
 ```java
-public class A {
+public class B {
 	
 	private static Kite solver;
 	
