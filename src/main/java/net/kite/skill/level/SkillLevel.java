@@ -20,47 +20,47 @@ public enum SkillLevel {
 	/**
 	 * Level one (the weakest level above random)
 	 */
-	ONE(15),
+	ONE(28),
 	
 	/**
 	 * Level two
 	 */
-	TWO(13),
+	TWO(25),
 	
 	/**
 	 * Level three
 	 */
-	THREE(12),
+	THREE(22),
 	
 	/**
 	 * Level four
 	 */
-	FOUR(10),
+	FOUR(19),
 	
 	/**
 	 * Level five
 	 */
-	FIVE(9),
+	FIVE(16),
 	
 	/**
 	 * Level six
 	 */
-	SIX(7),
+	SIX(13),
 	
 	/**
 	 * Level seven
 	 */
-	SEVEN(6),
+	SEVEN(10),
 	
 	/**
 	 * Level eight
 	 */
-	EIGHT(4),
+	EIGHT(7),
 	
 	/**
 	 * Level nine
 	 */
-	NINE(3),
+	NINE(4),
 	
 	/**
 	 * Level ten (the strongest level below perfect)
