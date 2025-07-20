@@ -384,7 +384,10 @@ public class Board {
 				return s;
 			}
 			
-			if(s > minimalScore) minimalScore = s;
+			if(s > minimalScore) {
+				
+				minimalScore = s;
+			}
 		}
 		
 		int nodes = nodesVisited[depth];
