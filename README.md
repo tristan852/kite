@@ -90,7 +90,7 @@ The following code snippet demonstrates how the Kite solver should ideally be us
 
 ```java
 // obtain access to the Kite solver
-Kite kite = Kite.instance();
+Kite solver = Kite.instance();
 
 // if we haven't used the solver before
 // then the board is still empty and it
@@ -98,20 +98,20 @@ Kite kite = Kite.instance();
 
 // red plays in the 4th column
 // and yellow plays in the 6th column
-kite.playMoves(4, 6);
+solver.playMoves(4, 6);
 
 // it is now red's turn, and they are going
 // to win with their second to last stone
-System.out.println(kite.evaluateBoard()); // = 2
+System.out.println(solver.evaluateBoard()); // = 2
 
 // red plays in the 5th column
-kite.playMove(5);
+solver.playMove(5);
 
 // it is now yellow's turn
 
 // if yellow plays in the 6th column they
 // are going to win with their last stone
-System.out.println(kite.evaluateMove(6)); // = 1
+System.out.println(solver.evaluateMove(6)); // = 1
 
 // print a string representation
 // of the current game state
@@ -124,11 +124,11 @@ System.out.println(kite.evaluateMove(6)); // = 1
 // ...XXO.
 // 
 // moves: 465
-System.out.println(kite.boardString());
+System.out.println(solver.boardString());
 
 // clear the board (i.e. go back to
 // the starting game state)
-kite.clearBoard();
+solver.clearBoard();
 ```
 
 ---
