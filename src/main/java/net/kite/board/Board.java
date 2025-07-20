@@ -63,8 +63,6 @@ public class Board {
 	
 	private static final int HASH_MIX_SHIFT_AMOUNT = 33;
 	
-	private final BoardPlayerColor[][] cellPlayerColors;
-	
 	private final int[] cellColumnHeights = new int[WIDTH];
 	private int filledCellAmount;
 	
@@ -78,7 +76,6 @@ public class Board {
 	private long mirroredMaskBitboard = Bitboards.EMPTY;
 	private long mirroredCeilingBitboard = Bitboards.EMPTY_CEILING;
 	
-	private BoardPlayerColor activePlayerColor = BoardPlayerColor.RED;
 	private BoardOutcome outcome = BoardOutcome.UNDECIDED;
 	
 	private final int[][] moves;
@@ -91,7 +88,6 @@ public class Board {
 	private long mixedHash = 0x2373BFB0BD385EEAL;
 	
 	public Board() {
-		this.cellPlayerColors = new BoardPlayerColor[WIDTH][HEIGHT];
 		this.moves = new int[FULL_CELL_AMOUNT][WIDTH];
 		this.moveScores = new int[FULL_CELL_AMOUNT][WIDTH];
 		this.playedMoves = new int[FULL_CELL_AMOUNT];
@@ -145,15 +141,18 @@ public class Board {
 	
 	private long partialPascalHash(long pascalHash, int x) {
 		int height = cellColumnHeights[x];
+		long board = Bitboards.cellBitboard(x, 0);
 		
 		for(int y = 0; y < height; y++) {
 			
 			pascalHash *= 3;
 			
-			boolean activeCell = cellPlayerColors[x][y] == activePlayerColor;
+			boolean activeCell = (activeBitboard & board) != 0;
 			
 			if(activeCell) pascalHash++;
 			else pascalHash += 2;
+			
+			board <<= 1;
 		}
 		
 		pascalHash *= 3;
@@ -502,9 +501,6 @@ public class Board {
 		int moveCellY = cellColumnHeights[moveCellX];
 		cellColumnHeights[moveCellX]++;
 		
-		cellPlayerColors[moveCellX][moveCellY] = activePlayerColor;
-		activePlayerColor = activePlayerColor.opposite();
-		
 		playedMoves[filledCellAmount] = moveCellX;
 		filledCellAmount++;
 		
@@ -533,7 +529,9 @@ public class Board {
 		long board = (~activeBitboard) & maskBitboard;
 		if(bitboardContainsConnection(board)) {
 			
-			BoardPlayerColor winnerPlayerColor = activePlayerColor.opposite();
+			boolean redAtTurn = (filledCellAmount & 1) == 0;
+			
+			BoardPlayerColor winnerPlayerColor = redAtTurn ? BoardPlayerColor.YELLOW : BoardPlayerColor.RED;
 			outcome = BoardOutcome.winOfPlayerColor(winnerPlayerColor);
 			
 			return;
@@ -552,9 +550,6 @@ public class Board {
 		
 		cellColumnHeights[moveCellX]--;
 		int moveCellY = cellColumnHeights[moveCellX];
-		
-		activePlayerColor = activePlayerColor.opposite();
-		cellPlayerColors[moveCellX][moveCellY] = null;
 		
 		int mirroredMoveCellX = LARGEST_MOVE_CELL_X - moveCellX;
 		
@@ -604,11 +599,26 @@ public class Board {
 	}
 	
 	public boolean cellFilled(int cellX, int cellY) {
-		return cellPlayerColors[cellX][cellY] != null;
+		int height = cellColumnHeights[cellX];
+		
+		return cellY < height;
 	}
 	
 	public BoardPlayerColor cellPlayerColor(int cellX, int cellY) {
-		return cellPlayerColors[cellX][cellY];
+		int height = cellColumnHeights[cellX];
+		
+		if(cellY >= height) return null;
+		
+		long board = Bitboards.cellBitboard(cellX, cellY);
+		BoardPlayerColor activePlayerColor = activePlayerColor();
+		
+		return (activeBitboard & board) == 0 ? activePlayerColor.opposite() : activePlayerColor;
+	}
+	
+	public BoardPlayerColor activePlayerColor() {
+		boolean redAtTurn = (filledCellAmount & 1) == 0;
+		
+		return redAtTurn ? BoardPlayerColor.RED : BoardPlayerColor.YELLOW;
 	}
 	
 	public int playedMoveAmount() {
@@ -621,10 +631,6 @@ public class Board {
 	
 	public boolean over() {
 		return outcome != BoardOutcome.UNDECIDED;
-	}
-	
-	public BoardPlayerColor getActivePlayerColor() {
-		return activePlayerColor;
 	}
 	
 	public BoardOutcome getOutcome() {
