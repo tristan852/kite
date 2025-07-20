@@ -20,6 +20,10 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class Kite {
 	
+	private static final int[] SECOND_WARM_UP_POSITION = new int[] {
+			0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2
+	};
+	
 	private static Kite instance;
 	
 	private static final String NAME = "Kite";
@@ -42,6 +46,12 @@ public class Kite {
 		this.board = new Board();
 		
 		board.evaluate();
+		
+		for(int move : SECOND_WARM_UP_POSITION) board.playMove(move);
+		
+		board.evaluate();
+		
+		while(board.playedMoveAmount() > 0) board.undoMove();
 		
 		instance = this;
 	}
@@ -102,7 +112,7 @@ public class Kite {
 	 * @return player color of the currently active player
 	 */
 	public synchronized BoardPlayerColor activePlayerColor() {
-		return board.getActivePlayerColor();
+		return board.activePlayerColor();
 	}
 	
 	/**
