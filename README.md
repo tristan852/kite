@@ -174,8 +174,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
 	
-	// 
-	private static final SkillLevel OPPONENT_SKILL_LEVEL = SkillLevel.SEVEN;
+	// opponent of skill level six
+	private static final SkillLevel OPPONENT_SKILL_LEVEL = SkillLevel.SIX;
 	
 	public static void main(String[] programArguments) {
 		// initialize solver and scanner
@@ -192,7 +192,16 @@ public class Main {
 		
 		while(true) {
 			
-			solver.playMove(scanner.nextInt());
+			System.out.println("Enter your move");
+			int x = scanner.nextInt();
+			
+			if(!solver.moveLegal(x)) {
+				
+				System.err.println("Illegal move!");
+				return;
+			}
+			
+			solver.playMove(x);
 			
 			if(solver.gameOver()) {
 				
