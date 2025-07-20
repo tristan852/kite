@@ -28,7 +28,7 @@ public class Kite {
 	private static Kite instance;
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.0.6";
+	private static final String VERSION = "1.0.7";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
