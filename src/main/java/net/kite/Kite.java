@@ -52,7 +52,7 @@ public class Kite {
 		
 		board.evaluate();
 		
-		while(board.playedMoveAmount() > 0) board.undoMove();
+		while(board.playedMoveAmount() != 0) board.undoMove();
 		
 		instance = this;
 	}
@@ -479,7 +479,7 @@ public class Kite {
 	public synchronized void clearBoard() {
 		int n = board.playedMoveAmount();
 		
-		while(n > 0) {
+		while(n != 0) {
 			
 			board.undoMove();
 			n--;
