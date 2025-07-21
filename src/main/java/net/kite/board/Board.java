@@ -2,6 +2,8 @@ package net.kite.board;
 
 import net.kite.board.bit.Bitboard;
 import net.kite.board.bit.Bitboards;
+import net.kite.board.history.BoardHistory;
+import net.kite.board.history.entry.BoardHistoryEntry;
 import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.player.color.BoardPlayerColor;
 import net.kite.board.score.BoardScore;
@@ -87,6 +89,8 @@ public class Board {
 	private long hash = Bitboards.EMPTY_CEILING;
 	private long mixedHash = 0x2373BFB0BD385EEAL;
 	
+	private final BoardHistory history;
+	
 	public Board() {
 		this.moves = new int[FULL_CELL_AMOUNT][WIDTH];
 		this.moveScores = new int[FULL_CELL_AMOUNT][WIDTH];
@@ -96,6 +100,8 @@ public class Board {
 		l++;
 		
 		this.nodesVisited = new int[l];
+		
+		this.history = new BoardHistory();
 	}
 	
 	@Override
@@ -501,6 +507,13 @@ public class Board {
 	}
 	
 	public void playMove(int moveCellX) {
+		BoardHistoryEntry entry = history.entry(filledCellAmount);
+		entry.fill(
+				bitboard, activeBitboard, maskBitboard, ceilingBitboard,
+				mirroredBitboard, mirroredActiveBitboard, mirroredMaskBitboard, mirroredCeilingBitboard,
+				hash, mixedHash
+		);
+		
 		int moveCellY = cellColumnHeights[moveCellX];
 		cellColumnHeights[moveCellX]++;
 		
@@ -551,32 +564,22 @@ public class Board {
 		filledCellAmount--;
 		int moveCellX = playedMoves[filledCellAmount];
 		
+		BoardHistoryEntry entry = history.entry(filledCellAmount);
+		
 		cellColumnHeights[moveCellX]--;
-		int moveCellY = cellColumnHeights[moveCellX];
 		
-		int mirroredMoveCellX = LARGEST_MOVE_CELL_X - moveCellX;
+		bitboard = entry.getBitboard();
+		activeBitboard = entry.getActiveBitboard();
+		maskBitboard = entry.getMaskBitboard();
+		ceilingBitboard = entry.getCeilingBitboard();
 		
-		long b1 = Bitboards.cellBitboard(moveCellX, moveCellY);
-		long b2 = Bitboards.cellBitboard(mirroredMoveCellX, moveCellY);
+		mirroredBitboard = entry.getMirroredBitboard();
+		mirroredActiveBitboard = entry.getMirroredActiveBitboard();
+		mirroredMaskBitboard = entry.getMirroredMaskBitboard();
+		mirroredCeilingBitboard = entry.getMirroredCeilingBitboard();
 		
-		maskBitboard ^= b1;
-		ceilingBitboard ^= b1;
-		
-		mirroredMaskBitboard ^= b2;
-		mirroredCeilingBitboard ^= b2;
-		
-		b1 <<= 1;
-		b2 <<= 1;
-		
-		ceilingBitboard ^= b1;
-		activeBitboard = (~bitboard) & maskBitboard;
-		bitboard = activeBitboard | ceilingBitboard;
-		
-		mirroredCeilingBitboard ^= b2;
-		mirroredActiveBitboard = (~mirroredBitboard) & mirroredMaskBitboard;
-		mirroredBitboard = mirroredActiveBitboard | mirroredCeilingBitboard;
-		
-		updateHash();
+		hash = entry.getHash();
+		mixedHash = entry.getMixedHash();
 	}
 	
 	private void updateHash() {
