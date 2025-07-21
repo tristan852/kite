@@ -18,7 +18,10 @@ public enum SkillLevel {
 	RANDOM(Integer.MAX_VALUE),
 	
 	/**
-	 * Level one (the weakest level above random)
+	 * Level one (the weakest level above random;
+	 * can play any legal move but compared to
+	 * {@link SkillLevel#RANDOM} the distribution is
+	 * not uniform)
 	 */
 	ONE(36),
 	
