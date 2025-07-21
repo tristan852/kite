@@ -182,7 +182,7 @@ public class Main {
 		Kite solver = Kite.instance();
 		Scanner scanner = new Scanner(System.in);
 		
-		// choose randomly who goes first
+		// randomly choose who goes first
 		Random random = ThreadLocalRandom.current();
 		if(random.nextBoolean()) solver.playMove(solver.skilledMove(OPPONENT_SKILL_LEVEL));
 		
