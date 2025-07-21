@@ -28,7 +28,7 @@ public class Kite {
 	private static Kite instance;
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.0.9";
+	private static final String VERSION = "1.0.10";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -39,7 +39,7 @@ public class Kite {
 	
 	private static final int INVALID_MOVE_COLUMN_INDEX = 0;
 	
-	private Board board;
+	private final Board board;
 	
 	private final int[] moveScores = new int[BOARD_WIDTH];
 	
@@ -477,7 +477,13 @@ public class Kite {
 	 * empty board.
 	 */
 	public synchronized void clearBoard() {
-		board = new Board();
+		int n = board.playedMoveAmount();
+		
+		while(n > 0) {
+			
+			board.undoMove();
+			n--;
+		}
 	}
 	
 	/**

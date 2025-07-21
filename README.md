@@ -39,7 +39,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tristan852:kite:1.0.9")
+    implementation("io.github.tristan852:kite:1.0.10")
 }
 ```
 
@@ -53,7 +53,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.tristan852:kite:1.0.9'
+    implementation 'io.github.tristan852:kite:1.0.10'
 }
 ```
 
@@ -73,7 +73,7 @@ Add the following code snippet to your `pom.xml` file:
     <dependency>
         <groupId>io.github.tristan852</groupId>
         <artifactId>kite</artifactId>
-        <version>1.0.9</version>
+        <version>1.0.10</version>
     </dependency>
 </dependencies>
 ```
