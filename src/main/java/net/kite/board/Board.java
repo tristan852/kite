@@ -173,7 +173,7 @@ public class Board {
 		if(outcome != BoardOutcome.UNDECIDED) {
 			
 			if(outcome == BoardOutcome.DRAW) return BoardScore.DRAW;
-			return BoardScore.lose(filledCellAmount);
+			return BoardScore.loss(filledCellAmount);
 		}
 		
 		if(activePlayerHasImmediateWin()) {
@@ -251,7 +251,7 @@ public class Board {
 		if(outcome != BoardOutcome.UNDECIDED) {
 			
 			if(outcome == BoardOutcome.DRAW) return BoardScore.DRAW;
-			return BoardScore.lose(filledCellAmount);
+			return BoardScore.loss(filledCellAmount);
 		}
 		
 		int minScore = BoardScore.minimal(filledCellAmount);

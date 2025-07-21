@@ -72,10 +72,10 @@ public enum SkillLevel {
 	 */
 	PERFECT(0);
 	
-	private final int maximalScoreLose;
+	private final int maximalScoreLoss;
 	
-	SkillLevel(int maximalScoreLose) {
-		this.maximalScoreLose = maximalScoreLose;
+	SkillLevel(int maximalScoreLoss) {
+		this.maximalScoreLoss = maximalScoreLoss;
 	}
 	
 	/**
@@ -83,8 +83,8 @@ public enum SkillLevel {
 	 * a player of this skill level is allowed
 	 * to lose for each move.
 	 */
-	public int getMaximalScoreLose() {
-		return maximalScoreLose;
+	public int getMaximalScoreLoss() {
+		return maximalScoreLoss;
 	}
 	
 }

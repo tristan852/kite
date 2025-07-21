@@ -37,7 +37,7 @@ public class BoardScore {
 		return ((MAXIMAL_WON_FILLED_CELL_AMOUNT - filledCellAmount) >> 1) + 1;
 	}
 	
-	public static int lose(int filledCellAmount) {
+	public static int loss(int filledCellAmount) {
 		return -((MAXIMAL_WON_FILLED_CELL_AMOUNT - filledCellAmount) >> 1) - 1;
 	}
 	
