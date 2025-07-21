@@ -20,42 +20,42 @@ public enum SkillLevel {
 	/**
 	 * Level one (the weakest level above random)
 	 */
-	ONE(28),
+	ONE(36),
 	
 	/**
 	 * Level two
 	 */
-	TWO(25),
+	TWO(32),
 	
 	/**
 	 * Level three
 	 */
-	THREE(22),
+	THREE(28),
 	
 	/**
 	 * Level four
 	 */
-	FOUR(19),
+	FOUR(24),
 	
 	/**
 	 * Level five
 	 */
-	FIVE(16),
+	FIVE(20),
 	
 	/**
 	 * Level six
 	 */
-	SIX(13),
+	SIX(16),
 	
 	/**
 	 * Level seven
 	 */
-	SEVEN(10),
+	SEVEN(12),
 	
 	/**
 	 * Level eight
 	 */
-	EIGHT(7),
+	EIGHT(8),
 	
 	/**
 	 * Level nine
@@ -63,9 +63,9 @@ public enum SkillLevel {
 	NINE(4),
 	
 	/**
-	 * Level ten (the strongest level below perfect)
+	 * Level ten (the strongest level; equivalent to perfect)
 	 */
-	TEN(1),
+	TEN(0),
 	
 	/**
 	 * The level of a perfect Connect Four player
