@@ -20,8 +20,9 @@ dependencies {
 
 tasks.javadoc {
     exclude("net/kite/board/Board.java")
-    exclude("net/kite/board/score/**")
     exclude("net/kite/board/bit/**")
+    exclude("net/kite/board/history/**")
+    exclude("net/kite/board/score/**")
 }
 
 tasks.test {

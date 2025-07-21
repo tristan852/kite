@@ -7,6 +7,9 @@ public class Bitboards {
 	
 	public static final long EMPTY_CEILING = 0x0001010101010101L;
 	
+	public static final long ODD_ROWS = 0x5555555555555555L;
+	public static final long EVEN_ROWS = 0xAAAAAAAAAAAAAAAAL;
+	
 	private static final long[][] cellBitboards;
 	private static final long[] cellPositionBitboards;
 	

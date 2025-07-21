@@ -437,7 +437,14 @@ public class Board {
 		result &= ~mask;
 		result &= Bitboards.FULL_BOARD;
 		
-		return Long.bitCount(result) * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT + MOVE_CELL_SCORES[moveCellY][moveCellX];
+		int openCount = Long.bitCount(result);
+		
+		b >>>= 1;
+		
+		boolean aboveOwn = (board & b) != 0;
+		if(aboveOwn) openCount++;
+		
+		return openCount * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT + MOVE_CELL_SCORES[moveCellY][moveCellX];
 	}
 	
 	private boolean activePlayerHasImmediateWin() {
