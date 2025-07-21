@@ -28,7 +28,7 @@ public class Kite {
 	private static Kite instance;
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.0.7";
+	private static final String VERSION = "1.0.8";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -167,7 +167,9 @@ public class Kite {
 	 * @return a skill based one-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
 	 */
 	public synchronized int skilledMove(SkillLevel skillLevel) {
-		if(skillLevel == SkillLevel.PERFECT) return optimalMove();
+		boolean perfect = skillLevel == SkillLevel.PERFECT || skillLevel == SkillLevel.TEN;
+		
+		if(perfect) return optimalMove();
 		if(skillLevel == SkillLevel.RANDOM) return randomMove();
 		
 		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
@@ -186,8 +188,8 @@ public class Kite {
 			}
 		}
 		
-		int maximalScoreLose = skillLevel.getMaximalScoreLose();
-		int minimalScore = optimalMoveScore - maximalScoreLose;
+		int maximalScoreLoss = skillLevel.getMaximalScoreLoss();
+		int minimalScore = optimalMoveScore - maximalScoreLoss;
 		
 		int totalWeight = 0;
 		
@@ -197,7 +199,7 @@ public class Kite {
 			if(moveScore >= minimalScore) {
 				
 				int weight = moveScore - minimalScore + 1;
-				weight *= weight;
+				weight *= weight * weight;
 				
 				totalWeight += weight;
 			}
@@ -212,7 +214,7 @@ public class Kite {
 			if(moveScore < minimalScore) continue;
 			
 			int weight = moveScore - minimalScore + 1;
-			weight *= weight;
+			weight *= weight * weight;
 			
 			if(weightIndex < weight) return moveColumnIndex + 1;
 			weightIndex -= weight;

@@ -63,7 +63,7 @@ public enum SkillLevel {
 	NINE(4),
 	
 	/**
-	 * Level ten (the strongest level; equivalent to perfect)
+	 * Level ten (the strongest level; equivalent to {@link SkillLevel#PERFECT})
 	 */
 	TEN(0),
 	
