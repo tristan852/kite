@@ -75,6 +75,10 @@ public enum SkillLevel {
 	 */
 	PERFECT(0);
 	
+	private static final SkillLevel[] ORDERED_LEVELS = new SkillLevel[] {
+			ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN
+	};
+	
 	private final int maximalScoreLoss;
 	
 	SkillLevel(int maximalScoreLoss) {
@@ -85,9 +89,28 @@ public enum SkillLevel {
 	 * Returns the maximum amount of score that
 	 * a player of this skill level is allowed
 	 * to lose for each move.
+	 *
+	 * @return maximal amount of score to lose
 	 */
 	public int getMaximalScoreLoss() {
 		return maximalScoreLoss;
+	}
+	
+	/**
+	 * Returns a skill level from {@link SkillLevel#ONE}
+	 * to {@link SkillLevel#TEN} given the requested
+	 * level.
+	 * {@code level(1)} returns {@link SkillLevel#ONE},
+	 * {@code level(2)} returns {@link SkillLevel#TWO}
+	 * and so on.
+	 *
+	 * @param level an integer from {@code 1} to {@code 10}
+	 * @return corresponding skill level
+	 */
+	public static SkillLevel level(int level) {
+		level--;
+		
+		return ORDERED_LEVELS[level];
 	}
 	
 }
