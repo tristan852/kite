@@ -13,7 +13,8 @@ public enum SkillLevel {
 	
 	/**
 	 * The level of a Connect Four player
-	 * that always plays random moves.
+	 * that always plays uniformly sampled
+	 * random moves.
 	 */
 	RANDOM(Integer.MAX_VALUE),
 	
