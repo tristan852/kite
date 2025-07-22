@@ -22,6 +22,7 @@ public class Bitboards {
 		
 		cellBitboards = new long[width][height];
 		cellPositionBitboards = new long[size];
+		
 		bottomCellBitboards = new long[width];
 		
 		long cellBitboard = 1;
@@ -33,6 +34,7 @@ public class Bitboards {
 			for(int y = 0; y < height; y++) {
 				
 				cellBitboards[x][y] = cellBitboard;
+				
 				cellBitboard <<= 1;
 			}
 		}

@@ -38,6 +38,7 @@ public class Board {
 	};
 	
 	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 12;
+	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 4;
 	
 	private static final int[][] RED_MOVE_CELL_SCORES = new int[][] {
 			{  3,  4,  5,  7,  5,  4,  3 },
@@ -463,6 +464,10 @@ public class Board {
 		result &= Bitboards.FULL_BOARD;
 		
 		int openCount = Long.bitCount(result);
+		
+		result &= result << 1;
+		
+		openCount += Long.bitCount(result) * MOVE_SCORE_COLUMN_FORK_WEIGHT;
 		
 		b >>>= 1;
 		
