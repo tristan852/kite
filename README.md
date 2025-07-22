@@ -86,6 +86,8 @@ Add the following code snippet to your `pom.xml` file:
 
 The Kite solver can be used by obtaining a newly created solver instance.
 Note that each solver instance cannot be used by multiple threads in parallel.
+If your project involves only a single game (even with multiple bots), a single solver instance is sufficient. However, if you're running multiple games in parallel, each game will need its own solver instance to avoid delays caused by mutual exclusion. In that case, the best approach is to recycle solver instances when possible and create new ones as needed.
+
 The first time a Kite solver instance is obtained, a warm-up and additional initialization is done, which may take a bit of time.
 
 The following code snippet demonstrates how the Kite solver should ideally be used:
