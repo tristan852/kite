@@ -7,7 +7,7 @@ import net.kite.board.history.entry.BoardHistoryEntry;
 import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.player.color.BoardPlayerColor;
 import net.kite.board.score.BoardScore;
-import net.kite.board.score.cache.BoardScoreCaches;
+import net.kite.board.score.cache.BoardScoreCache;
 import net.kite.board.score.cache.entry.BoardScoreCacheEntry;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 
@@ -94,8 +94,11 @@ public class Board {
 	private long mixedHash = 0x2373BFB0BD385EEAL;
 	
 	private final BoardHistory history;
+	private final BoardScoreCache scoreCache;
 	
-	public Board() {
+	public Board(BoardScoreCache scoreCache) {
+		this.scoreCache = scoreCache;
+		
 		this.moves = new int[FULL_CELL_AMOUNT][WIDTH];
 		this.moveScores = new int[FULL_CELL_AMOUNT][WIDTH];
 		this.playedMoves = new int[FULL_CELL_AMOUNT];
@@ -229,7 +232,7 @@ public class Board {
 			playMove(lastMove);
 		}
 		
-		BoardScoreCacheEntry entry = BoardScoreCaches.DEFAULT.entry(hash, mixedHash);
+		BoardScoreCacheEntry entry = scoreCache.entry(hash, mixedHash);
 		if(entry != null) {
 			
 			int entryMinScore = entry.getMinimalScore();
@@ -291,7 +294,7 @@ public class Board {
 		int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
 		if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
 		
-		BoardScoreCacheEntry entry = BoardScoreCaches.DEFAULT.entry(hash, mixedHash);
+		BoardScoreCacheEntry entry = scoreCache.entry(hash, mixedHash);
 		if(entry != null) {
 			
 			int entryMinScore = entry.getMinimalScore();
@@ -336,7 +339,7 @@ public class Board {
 				
 				int nodes = nodesVisited[depth];
 				
-				BoardScoreCaches.DEFAULT.updateEntry(hash, mixedHash, s, maxScore, nodes);
+				scoreCache.updateEntry(hash, mixedHash, s, maxScore, nodes);
 				return s;
 			}
 			
@@ -344,7 +347,7 @@ public class Board {
 			
 			int nodes = nodesVisited[depth];
 			
-			BoardScoreCaches.DEFAULT.updateEntry(hash, mixedHash, minScore, minimalScore, nodes);
+			scoreCache.updateEntry(hash, mixedHash, minScore, minimalScore, nodes);
 			
 			return minimalScore;
 		}
@@ -411,7 +414,7 @@ public class Board {
 				
 				int nodes = nodesVisited[depth];
 				
-				BoardScoreCaches.DEFAULT.updateEntry(hash, mixedHash, s, maxScore, nodes);
+				scoreCache.updateEntry(hash, mixedHash, s, maxScore, nodes);
 				return s;
 			}
 			
@@ -423,7 +426,7 @@ public class Board {
 		
 		int nodes = nodesVisited[depth];
 		
-		BoardScoreCaches.DEFAULT.updateEntry(hash, mixedHash, minScore, minimalScore, nodes);
+		scoreCache.updateEntry(hash, mixedHash, minScore, minimalScore, nodes);
 		
 		return minimalScore;
 	}
@@ -687,8 +690,8 @@ public class Board {
 		return false;
 	}
 	
-	public static Board boardWithMoves(String moves) {
-		Board board = new Board();
+	public static Board boardWithMoves(String moves, BoardScoreCache scoreCache) {
+		Board board = new Board(scoreCache);
 		
 		int l = moves.length();
 		for(int i = 0; i < l; i++) {

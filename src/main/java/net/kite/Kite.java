@@ -3,29 +3,22 @@ package net.kite;
 import net.kite.board.Board;
 import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.player.color.BoardPlayerColor;
+import net.kite.board.score.cache.BoardScoreCache;
 import net.kite.skill.level.SkillLevel;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * This is the singleton public interface to {@link Kite}.
- * Use {@link Kite#instance()} to obtain a reference
- * to the singleton.
- * If you are the first to call this method then
- * the solver will have to be created/initialized first.
+ * This is the public API to a {@link Kite} solver.
+ * Use {@link Kite#createInstance()} to obtain a reference
+ * to a newly created solver.
  * Use the public methods of this class to interact with
- * the solver. The solver is driven by a single game state
+ * the solver. Each solver is driven by a single game state
  * that can be updated using {@link Kite#playMove(int)},
  * {@link Kite#undoMove()} and {@link Kite#clearBoard()}.
  */
 public class Kite {
-	
-	private static final int[] SECOND_WARM_UP_POSITION = new int[] {
-			0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2
-	};
-	
-	private static Kite instance;
 	
 	private static final String NAME = "Kite";
 	private static final String VERSION = "1.0.12";
@@ -44,17 +37,11 @@ public class Kite {
 	private final int[] moveScores = new int[BOARD_WIDTH];
 	
 	private Kite() {
-		this.board = new Board();
+		BoardScoreCache boardScoreCache = new BoardScoreCache();
+		
+		this.board = new Board(boardScoreCache);
 		
 		board.evaluate();
-		
-		for(int move : SECOND_WARM_UP_POSITION) board.playMove(move);
-		
-		board.evaluate();
-		
-		while(board.playedMoveAmount() != 0) board.undoMove();
-		
-		instance = this;
 	}
 	
 	/**
@@ -253,7 +240,7 @@ public class Kite {
 				optimalMoveScore = moveScore;
 				n = 1;
 				
-			} else if(moveScore == optimalMoveScore && moveScore != Integer.MIN_VALUE) {
+			} else if(moveScore == optimalMoveScore) {
 				
 				n++;
 			}
@@ -517,20 +504,28 @@ public class Kite {
 	}
 	
 	/**
-	 * Obtains a reference to the singleton Kite solver.
-	 * When you are the first to call this method
-	 * then the solver has to be created and
-	 * initialized first before you get your reference.
+	 * Creates a new instance of the Kite solver.
+	 * Most of the solver's state is exclusive to one
+	 * instance and is not shared across instances.
+	 * This includes for example the game state and
+	 * the transposition table/score cache.
+	 * Some state, for example the opening book, only
+	 * exists once and <b>is</b> shared across solvers.
+	 * Solver instances are thread-safe by not allowing
+	 * multiple threads to use them in parallel.
+	 * If you create the first (or one of the first)
+	 * solver instances some additional time might be
+	 * spent on warming up the solver and initializing
+	 * solver-shared state, like the opening book.
 	 *
-	 * @return a reference to the Kite solver
+	 * @return a newly created Kite solver instance
 	 */
-	public static Kite instance() {
-		synchronized(Kite.class) {
-			
-			if(instance == null) instance = new Kite();
-		}
-		
-		return instance;
+	public static Kite createInstance() {
+		return new Kite();
+	}
+	
+	public static void main(String[] args) {
+		createInstance();
 	}
 	
 }
