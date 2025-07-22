@@ -29,9 +29,8 @@ public class Board {
 			1
 	};
 	
-	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 8; // TODO tune
-	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 32; // TODO tune
-	private static final int MOVE_SCORE_ABOVE_OWN_WEIGHT = 8; // TODO tune
+	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 12;
+	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 16;
 	
 	private static final int[] RED_MOVE_CELL_SCORES = new int[] {
 			 5,  1, 10,  3,  7,  0,  0,  0,
@@ -465,11 +464,6 @@ public class Board {
 		result &= result << 1;
 		
 		openScore += Long.bitCount(result) * MOVE_SCORE_COLUMN_FORK_WEIGHT;
-		
-		moveBitboard >>>= 1;
-		
-		boolean aboveOwn = (board & moveBitboard) != 0;
-		if(aboveOwn) openScore += MOVE_SCORE_ABOVE_OWN_WEIGHT;
 		
 		boolean redAtTurn = (filledCellAmount & 1) == 0;
 		int[] moveCellScores = redAtTurn ? RED_MOVE_CELL_SCORES : YELLOW_MOVE_CELL_SCORES;
