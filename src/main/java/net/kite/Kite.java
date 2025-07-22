@@ -239,12 +239,12 @@ public class Kite {
 	public synchronized int optimalMove() {
 		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
 		
-		int optimalMoveScore = Integer.MIN_VALUE;
+		int optimalMoveScore = Integer.MIN_VALUE + 2;
 		int n = 0;
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			int moveScore = board.moveLegal(moveColumnIndex) ? board.evaluateMove(moveColumnIndex) : Integer.MIN_VALUE;
+			int moveScore = board.moveLegal(moveColumnIndex) ? board.evaluateMove(moveColumnIndex, optimalMoveScore - 1) : Integer.MIN_VALUE;
 			
 			moveScores[moveColumnIndex] = moveScore;
 			

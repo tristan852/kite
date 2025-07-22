@@ -184,7 +184,21 @@ public class Board {
 		return score;
 	}
 	
+	public int evaluateMove(int moveCellX, int minScore) {
+		playMove(moveCellX);
+		
+		int score = -evaluate(-minScore);
+		
+		undoMove();
+		
+		return score;
+	}
+	
 	public int evaluate() {
+		return evaluate(Integer.MAX_VALUE);
+	}
+	
+	public int evaluate(int maxScore) {
 		if(outcome != BoardOutcome.UNDECIDED) {
 			
 			if(outcome == BoardOutcome.DRAW) return BoardScore.DRAW;
@@ -196,11 +210,13 @@ public class Board {
 			return BoardScore.win(filledCellAmount + 1);
 		}
 		
+		int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
+		if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
+		
 		int minimalScore = BoardScore.minimal(filledCellAmount);
 		int maximalScore = BoardScore.maximal(filledCellAmount);
 		
-		int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
-		if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
+		if(maximalScore > maxScore) maximalScore = maxScore;
 		
 		if(filledCellAmount > 0) {
 			
