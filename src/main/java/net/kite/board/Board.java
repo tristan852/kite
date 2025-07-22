@@ -1,6 +1,5 @@
 package net.kite.board;
 
-import net.kite.board.bit.Bitboard;
 import net.kite.board.bit.Bitboards;
 import net.kite.board.history.BoardHistory;
 import net.kite.board.history.entry.BoardHistoryEntry;
@@ -311,7 +310,7 @@ public class Board {
 		
 		if(immediateThreats != Bitboards.EMPTY) {
 			
-			int p = Bitboard.firstCellPosition(immediateThreats);
+			int p = Long.numberOfTrailingZeros(immediateThreats);
 			long b = Bitboards.cellBitboard(p);
 			
 			immediateThreats ^= b;
@@ -363,7 +362,7 @@ public class Board {
 		
 		while(movesBitboard != 0) {
 			
-			int movePosition = Bitboard.firstCellPosition(movesBitboard);
+			int movePosition = Long.numberOfTrailingZeros(movesBitboard);
 			int moveCellX = movePosition >>> LOGARITHMIC_BITBOARD_LENGTH;
 			
 			long moveBitboard = Bitboards.cellBitboard(movePosition);
