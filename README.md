@@ -244,6 +244,63 @@ A score of `-2` means that our opponent will win, with one stone to spare.
 
 ---
 
+## ⚔️ Skill levels
+
+The Kite solver is capable of not only playing perfectly but also generating moves at fixed skill levels.
+Its API supports twelve distinct skill levels, ranging from `SkillLevel.RANDOM` up to `SkillLevel.PERFECT`, including intermediate levels like `SkillLevel.ONE`, `SkillLevel.TWO`, ..., and `SkillLevel.TEN`.
+
+These skill levels are ordered by increasing playing strength, with each level designed to be stronger than the previous one.
+
+The matrix below illustrates how each skill level performs against the others.
+
+| **vs**.     | **Random**                            | **One**                               | **Two**                               | **Three**                             | **Four**                              | **Five**                              | **Six**                               | **Seven**                             | **Eight**                             | **Nine**                            | **Ten**                              | **Perfect**                          |
+|-------------|---------------------------------------|---------------------------------------|---------------------------------------|---------------------------------------|---------------------------------------|---------------------------------------|---------------------------------------|---------------------------------------|---------------------------------------|-------------------------------------|--------------------------------------|--------------------------------------|
+| **Random**  | <span style="opacity:0.5">-</span>    | 14%                                   | 9%                                    | 8%                                    | 8%                                    | 2%                                    | 1%                                    | 1%                                    | <span style="opacity:0.5">0%</span>   | <span style="opacity:0.5">0%</span> | <span style="opacity:0.5">0%</span>  | <span style="opacity:0.5">0%</span>  |
+| **One**     | 86%                                   | <span style="opacity:0.5">-</span>    | 46%                                   | 22%                                   | 18%                                   | 17%                                   | 6%                                    | 6%                                    | <span style="opacity:0.5">0%</span>   | <span style="opacity:0.5">0%</span> | <span style="opacity:0.5">0%</span>  | <span style="opacity:0.5">0%</span>  |
+| **Two**     | 91%                                   | 54%                                   | <span style="opacity:0.5">-</span>    | 36%                                   | 27%                                   | 21%                                   | 10%                                   | 6%                                    | <span style="opacity:0.5">0%</span>   | <span style="opacity:0.5">0%</span> | <span style="opacity:0.5">0%</span>  | <span style="opacity:0.5">0%</span>  |
+| **Three**   | 92%                                   | 78%                                   | 63%                                   | <span style="opacity:0.5">-</span>    | 45%                                   | 28%                                   | 20%                                   | 5%                                    | 1%                                    | <span style="opacity:0.5">0%</span> | <span style="opacity:0.5">0%</span>  | <span style="opacity:0.5">0%</span>  |
+| **Four**    | 92%                                   | 82%                                   | 73%                                   | 55%                                   | <span style="opacity:0.5">-</span>    | 40%                                   | 21%                                   | 13%                                   | 2%                                    | <span style="opacity:0.5">0%</span> | <span style="opacity:0.5">0%</span>  | <span style="opacity:0.5">0%</span>  |
+| **Five**    | 98%                                   | 83%                                   | 79%                                   | 72%                                   | 60%                                   | <span style="opacity:0.5">-</span>    | 36%                                   | 14%                                   | 2%                                    | <span style="opacity:0.5">0%</span> | <span style="opacity:0.5">0%</span>  | <span style="opacity:0.5">0%</span>  |
+| **Six**     | 99%                                   | 94%                                   | 89%                                   | 79%                                   | 79%                                   | 64%                                   | <span style="opacity:0.5">-</span>    | 25%                                   | 10%                                   | 1%                                  | <span style="opacity:0.5">0%</span>  | <span style="opacity:0.5">0%</span>  |
+| **Seven**   | 99%                                   | 94%                                   | 94%                                   | 93%                                   | 87%                                   | 86%                                   | 75%                                   | <span style="opacity:0.5">-</span>    | 19%                                   | 2%                                  | <span style="opacity:0.5">0%</span>  | <span style="opacity:0.5">0%</span>  |
+| **Eight**   | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | 98%                                   | 96%                                   | 96%                                   | 86%                                   | 77%                                   | <span style="opacity:0.5">-</span>    | 7%                                  | <span style="opacity:0.5">0%</span>  | <span style="opacity:0.5">0%</span>  |
+| **Nine**    | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | 99%                                   | 97%                                   | 86%                                   | <span style="opacity:0.5">-</span>  | 2%                                   | 2%                                   |
+| **Ten**     | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | 95%                                 | <span style="opacity:0.5">-</span>   | <span style="opacity:0.5">50%</span> |
+| **Perfect** | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | <span style="opacity:0.5">100%</span> | 95%                                 | <span style="opacity:0.5">50%</span> | <span style="opacity:0.5">-</span>   |
+
+For example, the table shows that `SkillLevel.TEN` wins *95%* of its matches against the `SkillLevel.NINE` bot, loses *2%*, and draws the remaining *3%*.
+Draws are generally rare between bots of different skill levels.
+
+Since `SkillLevel.TEN` always plays perfectly — and Connect Four is a first-player win under perfect play — matches between `SkillLevel.TEN` and `SkillLevel.PERFECT` are determined solely by who gets to move first, resulting in a *50/50* outcome.
+
+By using the win, loss, and draw probabilities for each pair of skill levels from the table above, we can estimate an [Elo rating](https://en.wikipedia.org/wiki/Elo_rating_system) for each level:
+
+| Skill level | ELO rating estimate |
+|-------------|---------------------|
+| Random      | 0                   |
+| One         | 296                 |
+| Two         | 358                 |
+| Three       | 468                 |
+| Four        | 522                 |
+| Five        | 601                 |
+| Six         | 728                 |
+| Seven       | 894                 |
+| Eight       | 1136                |
+| Nine        | 1532                |
+| Ten         | 2114                |
+| Perfect     | 2114                |
+
+An Elo rating difference of approximately *400* corresponds to a *91%* win rate for the higher-rated player.
+This aligns well with the empirical results from the first table when compared to the rating estimates in the second.
+
+For reference, the Elo ratings have been normalized so that the `SkillLevel.RANDOM` bot starts at *0*.
+Since `SkillLevel.TEN` and `SkillLevel.PERFECT` represent the same level of play, they share the same rating estimate.
+
+Notably, the Elo gaps between successive skill levels widen as we approach perfect play.
+This reflects the fact that at high levels, even a single small mistake can be decisive—making further improvements increasingly difficult and more impactful in terms of rating.
+
+---
+
 ## 📄 License
 
 Kite is licensed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html).
