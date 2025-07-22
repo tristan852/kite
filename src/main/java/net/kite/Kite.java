@@ -524,8 +524,4 @@ public class Kite {
 		return new Kite();
 	}
 	
-	public static void main(String[] args) {
-		createInstance();
-	}
-	
 }

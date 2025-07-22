@@ -84,19 +84,20 @@ Add the following code snippet to your `pom.xml` file:
 
 ## 🚀 Getting Started
 
-The Kite solver can be used by obtaining a reference to the singleton solver instance.
-Note that the solver cannot be used by multiple threads in parallel.
-The first time a reference to the Kite solver is obtained, the solver is created and initialized first, which may take a bit of time.
+The Kite solver can be used by obtaining a newly created solver instance.
+Note that each solver instance cannot be used by multiple threads in parallel.
+The first time a Kite solver instance is obtained, a warm-up and additional initialization is done, which may take a bit of time.
 
 The following code snippet demonstrates how the Kite solver should ideally be used:
 
 ```java
-// obtain access to the Kite solver
-Kite solver = Kite.instance();
+// obtain access to a new Kite solver instance
+Kite solver = Kite.createInstance();
 
-// if we haven't used the solver before
-// then the board is still empty, and it
-// is red's turn
+// Newly created solver instances will
+// have the empty board state set up.
+// Playing new moves will therefore add
+// them in sequence to the empty board.
 
 // red plays in the 4th column
 // and yellow plays in the 6th column
@@ -139,14 +140,14 @@ Please keep in mind that Java classes are being loaded lazily.
 // a class that is not used during program startup
 public class A {
 	
-	private static final Kite SOLVER = Kite.instance();
+	private static final Kite SOLVER = Kite.createInstance();
 	
 }
 ```
 
-In the above setup, if class `A` is not loaded at program startup, but rather at some later point, the solver creation and initialization will also not happen at startup, but rather when you first use class `A`, which might introduce an unwanted delay before your first use of the solver.
+In the above setup, if class `A` is not loaded at program startup, but rather at some later point, the solver instance creation and initialization will also not happen at startup, but rather when you first use class `A`, which might introduce an unwanted delay before your first use of the solver instance.
 
-In the following class, the method `onProgramStartup` is assumed to be called when your program is booting up. The method obtains a reference to the solver, which ensures that the solver is already initialized after your program has started.
+In the following class, the method `onProgramStartup` is assumed to be called when your program is booting up. The method obtains a reference to a new solver instance, which ensures that the solver is already initialized and ready to go after your program has started.
 
 ```java
 public class B {
@@ -155,7 +156,7 @@ public class B {
 	
 	// a method that is called during program startup
 	public void onProgramStartup() {
-		solver = Kite.instance();
+		solver = Kite.createInstance();
 	}
 	
 }
@@ -180,8 +181,8 @@ public class Main {
 	private static final SkillLevel OPPONENT_SKILL_LEVEL = SkillLevel.SIX;
 	
 	public static void main(String[] programArguments) {
-		// initialize solver and scanner
-		Kite solver = Kite.instance();
+		// initialize a new solver instance and a scanner
+		Kite solver = Kite.createInstance();
 		Scanner scanner = new Scanner(System.in);
 		
 		// randomly choose who goes first
