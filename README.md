@@ -9,6 +9,8 @@
 
 Kite is a high-performance Connect Four solver capable of solving any board position within practical time bounds, even on modest hardware. It can be used to power AI bots with adjustable playing strength — from deliberately weak to perfectly optimal, making only provably best moves. Kite is suitable for building AI opponents, integrating into GUI applications, or analyzing positions programmatically.
 
+Even **without** an opening book, this solver can solve the empty board — the most difficult game state in Connect Four, as it represents the root of the game tree — in about 15 minutes on a modern laptop (Intel i7-1165G7) and around 4 minutes on a modern desktop PC (Intel i9-11900KF).
+
 Internally, Kite leverages **bitboards**, **alpha-beta pruning**, **position hashing**, **symmetry reduction**, and **opening book lookups** to provide fast and accurate game tree evaluation.
 
 ---
