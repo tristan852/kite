@@ -9,18 +9,18 @@
 
 Kite is a high-performance Connect Four solver capable of solving any board position within practical time bounds, even on modest hardware. It can be used to power AI bots with adjustable playing strength — from deliberately weak to perfectly optimal, making only provably best moves. Kite is suitable for building AI opponents, integrating into GUI applications, or analyzing positions programmatically.
 
-Even **with the opening book disabled**, this solver can solve the empty board — the most difficult game state in Connect Four, as it represents the root of the game tree — in about 15 minutes on a modern laptop (using an *Intel i7-1165G7* processor) and around 4 minutes on a modern desktop PC (using an *Intel i9-11900KF* processor).
+Even **with the opening book disabled**, this solver can solve the empty board — the most difficult game state in Connect Four, as it represents the root of the game tree — in about 15 minutes on a modern laptop (using an *Intel i7-1165G7* processor) or in around 4 minutes on a modern desktop PC (using an *Intel i9-11900KF* processor).
 
-Internally, Kite leverages **bitboards**, **alpha-beta pruning**, **position hashing**, **symmetry reduction**, and **opening book lookups** to provide fast and accurate game tree evaluation.
+Internally, Kite leverages **alpha-beta pruning**, **symmetry reduction**, **bitboards**, **position hashing** and **opening book lookups** to provide fast and accurate game tree evaluation.
 
 ---
 
 ## 🚀 Features
 
-* **Bitboard Representation**: Game states use 64-bit integers for fast updates and operations.
-* **Symmetry Pruning**: Mirrored game states are considered equivalent and cached accordingly.
 * **Alpha-Beta Pruning**: Reduces search space by skipping suboptimal branches early.
+* **Symmetry Pruning**: Mirrored game states are considered equivalent and cached accordingly.
 * **Move Ordering**: Uses heuristics that favor center columns and winning threats.
+* **Bitboard Representation**: Game states use 64-bit integers for fast updates and operations.
 * **Transposition Caching**: Hashes each position and stores scores in an efficient score cache.
 * **Opening Book**: Stores lots of precomputed scores for early-game positions.
 * *and much more...*
