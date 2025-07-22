@@ -18,14 +18,6 @@ public class Board {
 	
 	private static final int FULL_CELL_AMOUNT = 42;
 	
-	private static final int[] ORDERED_MOVE_CELL_XS = new int[] {
-			3, 2, 4, 1, 5, 0, 6
-	};
-	
-	private static final int[] SYMMETRIC_ORDERED_MOVE_CELL_XS = new int[] {
-			3, 2, 1, 0
-	};
-	
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
 	private static final String TO_STRING_EMPTY_CELL_STRING = ".";
 	private static final String TO_STRING_MOVES_PREFIX_STRING = "moves: ";
@@ -37,25 +29,28 @@ public class Board {
 			1
 	};
 	
-	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 12;
-	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 4;
+	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 8; // TODO tune
+	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 32; // TODO tune
+	private static final int MOVE_SCORE_ABOVE_OWN_WEIGHT = 8; // TODO tune
 	
-	private static final int[][] RED_MOVE_CELL_SCORES = new int[][] {
-			{  3,  4,  5,  7,  5,  4,  3 },
-			{  1,  3,  5,  6,  5,  3,  1 },
-			{  5,  8, 10, 11, 10,  8,  5 },
-			{  2,  5,  7,  8,  7,  5,  2 },
-			{  4,  6,  8,  9,  8,  6,  4 },
-			{  0,  1,  2,  4,  2,  1,  0 }
+	private static final int[] RED_MOVE_CELL_SCORES = new int[] {
+			 5,  1, 10,  3,  7,  0,  0,  0,
+			 8,  6, 17, 11, 13,  2,  0,  0,
+			12, 12, 21, 15, 18,  4,  0,  0,
+			16, 14, 22, 19, 20,  9,  0,  0,
+			12, 12, 21, 15, 18,  4,  0,  0,
+			 8,  6, 17, 11, 13,  2,  0,  0,
+			 5,  1, 10,  3,  7,  0
 	};
 	
-	private static final int[][] YELLOW_MOVE_CELL_SCORES = new int[][] {
-			{  0,  1,  2,  4,  2,  1,  0 },
-			{  4,  6,  8,  9,  8,  6,  4 },
-			{  2,  5,  7,  8,  7,  5,  2 },
-			{  5,  8, 10, 11, 10,  8,  5 },
-			{  1,  3,  5,  6,  5,  3,  1 },
-			{  3,  4,  5,  7,  5,  4,  3 }
+	private static final int[] YELLOW_MOVE_CELL_SCORES = new int[] {
+			 0,  7,  3, 10,  1,  5,  0,  0,
+			 2, 13, 11, 17,  6,  8,  0,  0,
+			 4, 18, 15, 21, 12, 12,  0,  0,
+			 9, 20, 19, 22, 14, 16,  0,  0,
+			 4, 18, 15, 21, 12, 12,  0,  0,
+			 2, 13, 11, 17,  6,  8,  0,  0,
+			 0,  7,  3, 10,  1,  5
 	};
 	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
@@ -359,21 +354,26 @@ public class Board {
 		int[] moveScores = this.moveScores[filledCellAmount];
 		int moveAmount = 0;
 		
-		boolean symmetric = bitboard == mirroredBitboard;
-		int[] orderedMoves = symmetric ? SYMMETRIC_ORDERED_MOVE_CELL_XS : ORDERED_MOVE_CELL_XS;
+		long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
 		
-		for(int moveCellX : orderedMoves) {
+		boolean symmetric = bitboard == mirroredBitboard;
+		if(symmetric) movesBitboard &= Bitboards.SYMMETRY_PRUNE_BITBOARD;
+		
+		while(movesBitboard != 0) {
 			
-			int cellColumnHeight = cellColumnHeights[moveCellX];
-			if(cellColumnHeight == HEIGHT) continue;
+			int movePosition = Bitboard.firstCellPosition(movesBitboard);
+			int moveCellX = movePosition >>> LOGARITHMIC_BITBOARD_LENGTH;
 			
-			long upperCellBitboard = Bitboards.cellBitboard(moveCellX, cellColumnHeight + 1);
+			long moveBitboard = Bitboards.cellBitboard(movePosition);
+			movesBitboard ^= moveBitboard;
+			
+			long upperCellBitboard = moveBitboard << 1;
 			if((upperCellBitboard & opponentWinBitboard) != 0) {
 				
 				continue;
 			}
 			
-			int moveScore = moveScore(moveCellX);
+			int moveScore = moveScore(movePosition, moveBitboard);
 			int moveIndex = moveAmount;
 			
 			moves[moveIndex] = moveCellX;
@@ -429,15 +429,12 @@ public class Board {
 		return minimalScore;
 	}
 	
-	private int moveScore(int moveCellX) {
-		int moveCellY = cellColumnHeights[moveCellX];
-		
+	private int moveScore(int moveCellPosition, long moveBitboard) {
 		long board = activeBitboard;
 		long mask = maskBitboard;
-		long b = Bitboards.cellBitboard(moveCellX, moveCellY);
 		
-		board ^= b;
-		mask ^= b;
+		board ^= moveBitboard;
+		mask ^= moveBitboard;
 		
 		long result = 0;
 		
@@ -463,21 +460,21 @@ public class Board {
 		result &= ~mask;
 		result &= Bitboards.FULL_BOARD;
 		
-		int openCount = Long.bitCount(result);
+		int openScore = Long.bitCount(result) * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT;
 		
 		result &= result << 1;
 		
-		openCount += Long.bitCount(result) * MOVE_SCORE_COLUMN_FORK_WEIGHT;
+		openScore += Long.bitCount(result) * MOVE_SCORE_COLUMN_FORK_WEIGHT;
 		
-		b >>>= 1;
+		moveBitboard >>>= 1;
 		
-		boolean aboveOwn = (board & b) != 0;
-		if(aboveOwn) openCount++;
+		boolean aboveOwn = (board & moveBitboard) != 0;
+		if(aboveOwn) openScore += MOVE_SCORE_ABOVE_OWN_WEIGHT;
 		
 		boolean redAtTurn = (filledCellAmount & 1) == 0;
-		int[][] moveCellScores = redAtTurn ? RED_MOVE_CELL_SCORES : YELLOW_MOVE_CELL_SCORES;
+		int[] moveCellScores = redAtTurn ? RED_MOVE_CELL_SCORES : YELLOW_MOVE_CELL_SCORES;
 		
-		return openCount * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT + moveCellScores[moveCellY][moveCellX];
+		return openScore + moveCellScores[moveCellPosition];
 	}
 	
 	private boolean activePlayerHasImmediateWin() {
