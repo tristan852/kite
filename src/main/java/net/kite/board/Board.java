@@ -387,9 +387,9 @@ public class Board {
 		for(int i = 0; i < moveAmount; i++) {
 			
 			int bestMoveIndex = 0;
-			int bestMoveScore = MISSING_MOVE_SCORE;
+			int bestMoveScore = moveScores[0];
 			
-			for(int j = 0; j < moveAmount; j++) {
+			for(int j = 1; j < moveAmount; j++) {
 				
 				int s = moveScores[j];
 				if(s > bestMoveScore) {
