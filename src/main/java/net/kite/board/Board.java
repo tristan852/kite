@@ -558,9 +558,11 @@ public class Board {
 		long b1 = Bitboards.cellBitboard(moveCellX, moveCellY);
 		long b2 = Bitboards.cellBitboard(mirroredMoveCellX, moveCellY);
 		
+		activeBitboard = activeBitboard ^ maskBitboard;
 		maskBitboard ^= b1;
 		ceilingBitboard ^= b1;
 		
+		mirroredActiveBitboard = mirroredActiveBitboard ^ mirroredMaskBitboard;
 		mirroredMaskBitboard ^= b2;
 		mirroredCeilingBitboard ^= b2;
 		
@@ -568,20 +570,16 @@ public class Board {
 		b2 <<= 1;
 		
 		ceilingBitboard ^= b1;
-		activeBitboard = (~bitboard) & maskBitboard;
 		bitboard = activeBitboard | ceilingBitboard;
 		
 		mirroredCeilingBitboard ^= b2;
-		mirroredActiveBitboard = (~mirroredBitboard) & mirroredMaskBitboard;
 		mirroredBitboard = mirroredActiveBitboard | mirroredCeilingBitboard;
 		
-		long board = (~activeBitboard) & maskBitboard;
+		long board = activeBitboard ^ maskBitboard;
 		if(bitboardContainsConnection(board)) {
 			
 			boolean redAtTurn = (filledCellAmount & 1) == 0;
-			
-			BoardPlayerColor winnerPlayerColor = redAtTurn ? BoardPlayerColor.YELLOW : BoardPlayerColor.RED;
-			outcome = BoardOutcome.winOfPlayerColor(winnerPlayerColor);
+			outcome = redAtTurn ? BoardOutcome.YELLOW_WIN : BoardOutcome.RED_WIN;
 			
 			return;
 		}
