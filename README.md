@@ -249,12 +249,13 @@ Kite uses the following score metric to represent the value of a board or a move
 ## ⚔️ Skill levels
 
 The Kite solver is capable of not only playing perfectly but also generating moves at fixed skill levels.
-Its API supports twelve distinct skill levels, ranging from `SkillLevel.RANDOM` up to `SkillLevel.PERFECT`, including intermediate levels like `SkillLevel.ONE`, `SkillLevel.TWO`, ..., and `SkillLevel.TEN`.
+Its API supports thirteen distinct skill levels, ranging from `SkillLevel.RANDOM` up to `SkillLevel.PERFECT`, including intermediate levels like `SkillLevel.ONE`, `SkillLevel.TWO`, ..., and `SkillLevel.TEN`.
 
 These skill levels are ordered by increasing playing strength, with each level designed to be stronger than the previous one.
+A special skill level, `SkillLevel.ADAPTIVE`, adjusts move selection to match the opponent's playing strength.
 You can use all available skill levels or choose a subset that fits your project.
 
-The matrix below illustrates how each skill level performs against the others.
+The matrix below illustrates how each skill level (excluding `SkillLevel.ADAPTIVE`) performs against the others.
 
 | **vs**.     | **Random**                         | **One**                            | **Two**                            | **Three**                          | **Four**                           | **Five**                           | **Six**                            | **Seven**                          | **Eight**                          | **Nine**                           | **Ten**                                | **Perfect**                            |
 |-------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|----------------------------------------|----------------------------------------|
