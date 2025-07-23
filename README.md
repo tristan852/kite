@@ -280,23 +280,23 @@ By using the win, loss, and draw probabilities for each pair of skill levels fro
 
 | Skill level | ELO rating estimate |
 |-------------|---------------------|
-| Random      | 0                   |
-| One         | 296                 |
-| Two         | 358                 |
-| Three       | 468                 |
-| Four        | 522                 |
-| Five        | 601                 |
-| Six         | 728                 |
-| Seven       | 894                 |
-| Eight       | 1136                |
-| Nine        | 1532                |
-| Ten         | 2114                |
-| Perfect     | 2114                |
+| Random      | 1000                |
+| One         | 1296                |
+| Two         | 1358                |
+| Three       | 1468                |
+| Four        | 1522                |
+| Five        | 1601                |
+| Six         | 1728                |
+| Seven       | 1894                |
+| Eight       | 2136                |
+| Nine        | 2532                |
+| Ten         | 3114                |
+| Perfect     | 3114                |
 
 An Elo rating difference of approximately *400* corresponds to a *91%* win rate for the higher-rated player.
 This aligns well with the empirical results from the first table when compared to the rating estimates in the second.
 
-For reference, the Elo ratings have been normalized so that the `SkillLevel.RANDOM` bot starts at *0*.
+For reference, the Elo ratings have been normalized so that the `SkillLevel.RANDOM` bot has a rating of *1000*.
 Since `SkillLevel.TEN` and `SkillLevel.PERFECT` represent the same level of play, they share the same rating estimate.
 
 Notably, the Elo gaps between successive skill levels widen as we approach perfect play. This trend is also reflected in the first table, where matchups become increasingly one-sided.
