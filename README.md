@@ -304,6 +304,8 @@ Since `SkillLevel.TEN` and `SkillLevel.PERFECT` represent the same level of play
 Notably, the Elo gaps between successive skill levels widen as we approach perfect play. This trend is also reflected in the first table, where matchups become increasingly one-sided.
 This reflects the fact that at high levels, even a single small mistake can be decisive — making further improvements increasingly difficult and more impactful in terms of rating.
 
+If you want to translate these Elo ratings to your own scale — or vice versa — try to identify a reference point by comparing one of these skill levels to a skill level in your system with a known Elo rating.
+
 ---
 
 ## 📄 License
