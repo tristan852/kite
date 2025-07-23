@@ -14,8 +14,8 @@ public class OpeningBoardScoreCache {
 	
 	private static final long BOARD_PARTIAL_PASCAL_HASH_MASK = 0x00000000000000FFL;
 	
-	private final long[] boardPartialPascalHashes;
-	private final int[] boardScores;
+	private final byte[] boardPartialPascalHashes;
+	private final byte[] boardScores;
 	
 	private final int maximalDepth;
 	
@@ -24,8 +24,8 @@ public class OpeningBoardScoreCache {
 	}
 	
 	public OpeningBoardScoreCache(int capacity, int maximalDepth) {
-		this.boardPartialPascalHashes = new long[capacity];
-		this.boardScores = new int[capacity];
+		this.boardPartialPascalHashes = new byte[capacity];
+		this.boardScores = new byte[capacity];
 		
 		this.maximalDepth = maximalDepth;
 	}
@@ -41,21 +41,13 @@ public class OpeningBoardScoreCache {
 			try(inputStream) {
 				
 				int c = boardPartialPascalHashes.length;
-				int t = c << 1;
 				
-				byte[] bytes = inputStream.readNBytes(t);
-				int byteIndex = 0;
-				
-				for(int i = 0; i < c; i++) {
-					
-					boardPartialPascalHashes[i] = bytes[byteIndex];
-					byteIndex++;
-				}
+				inputStream.readNBytes(boardPartialPascalHashes, 0, c);
+				inputStream.readNBytes(boardScores, 0, c);
 				
 				for(int i = 0; i < c; i++) {
 					
-					boardScores[i] = bytes[byteIndex] + BoardScore.INVALID;
-					byteIndex++;
+					boardScores[i] += BoardScore.INVALID;
 				}
 				
 			} catch(IOException exception) {
@@ -75,12 +67,14 @@ public class OpeningBoardScoreCache {
 		long pascalHash = board.pascalHash();
 		int index = (int) Long.remainderUnsigned(pascalHash, capacity);
 		
-		int boardScore = boardScores[index];
+		byte boardScore = boardScores[index];
 		if(boardScore == BoardScore.INVALID) return Integer.MIN_VALUE;
 		
-		pascalHash &= BOARD_PARTIAL_PASCAL_HASH_MASK;
-		
 		long partialPascalHash = boardPartialPascalHashes[index];
+		
+		pascalHash &= BOARD_PARTIAL_PASCAL_HASH_MASK;
+		partialPascalHash &= BOARD_PARTIAL_PASCAL_HASH_MASK;
+		
 		if(pascalHash != partialPascalHash) return Integer.MIN_VALUE;
 		
 		return boardScore;
