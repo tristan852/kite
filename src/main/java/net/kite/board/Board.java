@@ -7,7 +7,6 @@ import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.player.color.BoardPlayerColor;
 import net.kite.board.score.BoardScore;
 import net.kite.board.score.cache.BoardScoreCache;
-import net.kite.board.score.cache.entry.BoardScoreCacheEntry;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 
 public class Board {
@@ -231,11 +230,11 @@ public class Board {
 			playMove(lastMove);
 		}
 		
-		BoardScoreCacheEntry entry = scoreCache.entry(hash, mixedHash);
-		if(entry != null) {
+		int entryKey = scoreCache.entryKey(hash, mixedHash);
+		if(entryKey >= 0) {
 			
-			int entryMinScore = entry.getMinimalScore();
-			int entryMaxScore = entry.getMaximalScore();
+			int entryMinScore = scoreCache.entryMinimalScore(entryKey);
+			int entryMaxScore = scoreCache.entryMaximalScore(entryKey);
 			
 			if(entryMinScore > minimalScore) minimalScore = entryMinScore;
 			if(entryMaxScore < maximalScore) maximalScore = entryMaxScore;
@@ -293,11 +292,11 @@ public class Board {
 		int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
 		if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
 		
-		BoardScoreCacheEntry entry = scoreCache.entry(hash, mixedHash);
-		if(entry != null) {
+		int entryKey = scoreCache.entryKey(hash, mixedHash);
+		if(entryKey >= 0) {
 			
-			int entryMinScore = entry.getMinimalScore();
-			int entryMaxScore = entry.getMaximalScore();
+			int entryMinScore = scoreCache.entryMinimalScore(entryKey);
+			int entryMaxScore = scoreCache.entryMaximalScore(entryKey);
 			
 			if(entryMinScore > minimalScore) minimalScore = entryMinScore;
 			if(entryMaxScore < maximalScore) maximalScore = entryMaxScore;
