@@ -233,11 +233,11 @@ public class Main {
 
 Kite uses the following score metric to represent the value of a board or a move under perfect play:
 
-| Score   | Interpretation                                                                                                                                                |
-|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `0`     | The position is a guaranteed draw if both players play perfectly.                                                                                             |
-| `n > 0` | The current player will win, assuming perfect play, by placing their `n`th-to-last stone — the fastest possible win against perfect defense in this position. |
-| `n < 0` | The opponent will win, assuming perfect play, by placing their `-n`th-to-last stone — the fastest possible win against perfect defense in this position.      |
+| Evaluation score | Interpretation                                                                                                                                                |
+|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `0`              | The position is a guaranteed draw if both players play perfectly.                                                                                             |
+| `n > 0`          | The current player will win, assuming perfect play, by placing their `n`th-to-last stone — the fastest possible win against perfect defense in this position. |
+| `n < 0`          | The opponent will win, assuming perfect play, by placing their `-n`th-to-last stone — the fastest possible win against perfect defense in this position.      |
 
 **Examples:**
 
