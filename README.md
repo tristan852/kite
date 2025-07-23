@@ -233,14 +233,16 @@ public class Main {
 
 Kite uses the following score metric to represent the value of a board or a move under perfect play:
 
-| Score   | Meaning                                             |
-|---------|-----------------------------------------------------|
-| `0`     | Draw                                                |
-| `n > 0` | We win by playing our `n`th to last stone           |
-| `n < 0` | Opponent wins by playing their `-n`th to last stone |
+| Score   | Interpretation                                                                                                                                                |
+|---------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `0`     | The position is a guaranteed draw if both players play perfectly.                                                                                             |
+| `n > 0` | The current player will win, assuming perfect play, by placing their `n`th-to-last stone — the fastest possible win against perfect defense in this position. |
+| `n < 0` | The opponent will win, assuming perfect play, by placing their `-n`th-to-last stone — the fastest possible win against perfect defense in this position.      |
 
-For example, a score of `1` indicates that we are going to win, but only with our very last stone.
-A score of `-2` means that our opponent will win, with one stone to spare.
+**Examples:**
+
+* A score of `1` means the player to move can win, but only with their final stone.
+* A score of `-2` means the opponent will win, and they will still have one stone remaining after the win.
 
 ---
 
