@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.1.2";
+	private static final String VERSION = "1.2.0";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -158,6 +158,7 @@ public class Kite {
 		
 		if(perfect) return optimalMove();
 		if(skillLevel == SkillLevel.RANDOM) return randomMove();
+		if(skillLevel == SkillLevel.ADAPTIVE) return adaptiveMove();
 		
 		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
 		
@@ -205,6 +206,50 @@ public class Kite {
 			
 			if(weightIndex < weight) return moveColumnIndex + 1;
 			weightIndex -= weight;
+		}
+		
+		// impossible to reach
+		return INVALID_MOVE_COLUMN_INDEX;
+	}
+	
+	private int adaptiveMove() {
+		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
+		
+		int bestAbsoluteMoveScore = Integer.MAX_VALUE;
+		int n = 0;
+		
+		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
+			
+			if(!board.moveLegal(moveColumnIndex)) continue;
+			
+			int moveScore = board.evaluateMove(moveColumnIndex);
+			if(moveScore < 0) moveScore = -moveScore;
+			
+			moveScores[moveColumnIndex] = moveScore;
+			
+			if(moveScore < bestAbsoluteMoveScore) {
+				
+				bestAbsoluteMoveScore = moveScore;
+				n = 1;
+				
+				continue;
+			}
+			
+			if(moveScore == bestAbsoluteMoveScore) n++;
+		}
+		
+		Random random = ThreadLocalRandom.current();
+		int index = random.nextInt(n);
+		
+		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
+			
+			if(!board.moveLegal(moveColumnIndex)) continue;
+			
+			int absoluteMoveScore = moveScores[moveColumnIndex];
+			if(absoluteMoveScore != bestAbsoluteMoveScore) continue;
+			
+			if(index == 0) return moveColumnIndex + 1;
+			index--;
 		}
 		
 		// impossible to reach

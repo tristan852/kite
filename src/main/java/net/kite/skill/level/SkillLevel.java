@@ -5,9 +5,16 @@ package net.kite.skill.level;
  * a Connect Four player.
  * Skill levels may range from level {@link SkillLevel#ONE}
  * (weakest) up to level {@link SkillLevel#TEN} (strongest).
- * Additionally, the special skill levels {@link SkillLevel#RANDOM}
- * and {@link SkillLevel#PERFECT} represent skill levels of players
- * that always play random or optimal moves respectively.
+ * <p>
+ * Additionally, there exists three special
+ * skill levels: {@link SkillLevel#RANDOM}, {@link SkillLevel#PERFECT}
+ * and {@link SkillLevel#ADAPTIVE}.
+ * {@link SkillLevel#RANDOM} and {@link SkillLevel#PERFECT} represent
+ * skill levels of players that always play
+ * random or optimal moves respectively.
+ * {@link SkillLevel#ADAPTIVE} on the other hand
+ * tries to match its own skill to that
+ * of its opponent.
  */
 public enum SkillLevel {
 	
@@ -74,7 +81,15 @@ public enum SkillLevel {
 	/**
 	 * The level of a perfect Connect Four player
 	 */
-	PERFECT(0);
+	PERFECT(0),
+	
+	/**
+	 * This skill level always tries to match
+	 * its own playing strength to that of its
+	 * opponent by attempting to equalize the
+	 * position.
+	 */
+	ADAPTIVE(Integer.MAX_VALUE);
 	
 	private static final SkillLevel[] ORDERED_LEVELS = new SkillLevel[] {
 			ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN
