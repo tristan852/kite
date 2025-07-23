@@ -271,7 +271,7 @@ The matrix below illustrates how each skill level performs against the others.
 | **Ten**     |                                    |                                    |                                    |                                    |                                    |                                    |                                    |                                    |                                    | 95.8%                              | <span style="opacity:0.5">-</span>     | <span style="opacity:0.5">50.0%</span> |
 | **Perfect** |                                    |                                    |                                    |                                    |                                    |                                    |                                    |                                    |                                    | 95.8%                              | <span style="opacity:0.5">50.0%</span> | <span style="opacity:0.5">-</span>     |
 
-For example, the table shows that `SkillLevel.TEN` wins *95%* of its matches against the `SkillLevel.NINE` bot, loses *2%*, and draws the remaining *3%*.
+For example, the table shows that `SkillLevel.TEN` wins *95.8%* of its matches against the `SkillLevel.NINE` bot, loses *1%*, and draws the remaining *3.2%*.
 Draws are generally rare between bots of different skill levels.
 
 For clarity, one-sided matchups — where the stronger level consistently wins 100% of the time — have been omitted from the table.
@@ -283,17 +283,17 @@ By using the win, loss, and draw probabilities for each pair of skill levels fro
 | Skill level | Elo rating estimate |
 |-------------|---------------------|
 | Random      | 1000                |
-| One         | 1296                |
-| Two         | 1358                |
-| Three       | 1468                |
-| Four        | 1522                |
-| Five        | 1601                |
-| Six         | 1728                |
-| Seven       | 1894                |
-| Eight       | 2136                |
-| Nine        | 2532                |
-| Ten         | 3114                |
-| Perfect     | 3114                |
+| One         | 1285                |
+| Two         | 1329                |
+| Three       | 1382                |
+| Four        | 1443                |
+| Five        | 1536                |
+| Six         | 1636                |
+| Seven       | 1789                |
+| Eight       | 2006                |
+| Nine        | 2380                |
+| Ten         | 3005                |
+| Perfect     | 3005                |
 
 An Elo rating difference of approximately *400* corresponds to a *91%* win rate for the higher-rated player.
 This aligns well with the empirical results from the first table when compared to the rating estimates in the second.
