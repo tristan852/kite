@@ -157,12 +157,13 @@ public class Board {
 		
 		for(int x = 0; x < WIDTH; x++) {
 			
+			if(x != 0) stringBuilder.append(TO_STRING_MOVE_SCORE_SEPARATOR_STRING);
+			
 			if(moveLegal(x)) {
 				
 				int score = moveScores[x];
 				String s = formatMoveScore(score);
 				
-				if(x != 0) stringBuilder.append(TO_STRING_MOVE_SCORE_SEPARATOR_STRING);
 				stringBuilder.append(s);
 				
 			} else stringBuilder.append(TO_STRING_ILLEGAL_MOVE_STRING);
