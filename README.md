@@ -299,7 +299,7 @@ This aligns well with the empirical results from the first table when compared t
 For reference, the Elo ratings have been normalized so that the `SkillLevel.RANDOM` bot starts at *0*.
 Since `SkillLevel.TEN` and `SkillLevel.PERFECT` represent the same level of play, they share the same rating estimate.
 
-Notably, the Elo gaps between successive skill levels widen as we approach perfect play. Notably, as we approach perfect play, the Elo gaps between skill levels become larger. This trend is also reflected in the first table, where matchups become increasingly one-sided.
+Notably, the Elo gaps between successive skill levels widen as we approach perfect play. This trend is also reflected in the first table, where matchups become increasingly one-sided.
 This reflects the fact that at high levels, even a single small mistake can be decisive — making further improvements increasingly difficult and more impactful in terms of rating.
 
 ---
