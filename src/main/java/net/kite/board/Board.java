@@ -16,15 +16,15 @@ public class Board {
 	
 	private static final int FULL_CELL_AMOUNT = 42;
 	
-	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
-	private static final String TO_STRING_EMPTY_CELL_STRING = ".";
-	private static final String TO_STRING_MOVES_PREFIX_STRING = "moves: ";
-	
 	private static final int[] BITBOARD_CONNECTION_DIRECTIONS = new int[] {
 			8,
 			7,
 			9,
 			1
+	};
+	
+	private static final int[] ORDERED_MOVE_COLUMN_INDICES = new int[] {
+			3, 2, 4, 1, 5, 0, 6
 	};
 	
 	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 12;
@@ -66,6 +66,16 @@ public class Board {
 	};
 	
 	private static final int HASH_MIX_SHIFT_AMOUNT = 33;
+	
+	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
+	private static final String TO_STRING_EMPTY_CELL_STRING = ".";
+	private static final String TO_STRING_MOVES_PREFIX_STRING = "moves: ";
+	private static final String TO_STRING_MOVE_SCORES_PREFIX_STRING = "\nmove scores: ";
+	private static final String TO_STRING_MOVE_SCORE_SEPARATOR_STRING = ", ";
+	private static final String TO_STRING_OUTCOME_PREFIX_STRING = "\noutcome: ";
+	private static final String TO_STRING_ILLEGAL_MOVE_STRING = "-";
+	
+	private static final String WINNING_MOVE_FORMAT_PREFIX = "+";
 	
 	private final int[] cellColumnHeights = new int[WIDTH];
 	private int filledCellAmount;
@@ -135,6 +145,31 @@ public class Board {
 			
 			stringBuilder.append(moveCharacter);
 		}
+		
+		stringBuilder.append(TO_STRING_MOVE_SCORES_PREFIX_STRING);
+		
+		int[] moveScores = this.moveScores[0];
+		
+		for(int x : ORDERED_MOVE_COLUMN_INDICES) {
+			
+			if(moveLegal(x)) moveScores[x] = evaluateMove(x);
+		}
+		
+		for(int x = 0; x < WIDTH; x++) {
+			
+			if(moveLegal(x)) {
+				
+				int score = moveScores[x];
+				String s = formatMoveScore(score);
+				
+				if(x != 0) stringBuilder.append(TO_STRING_MOVE_SCORE_SEPARATOR_STRING);
+				stringBuilder.append(s);
+				
+			} else stringBuilder.append(TO_STRING_ILLEGAL_MOVE_STRING);
+		}
+		
+		stringBuilder.append(TO_STRING_OUTCOME_PREFIX_STRING);
+		stringBuilder.append(outcome);
 		
 		return stringBuilder.toString();
 	}
@@ -707,6 +742,12 @@ public class Board {
 	
 	public static int getHeight() {
 		return HEIGHT;
+	}
+	
+	private static String formatMoveScore(int moveScore) {
+		if(moveScore > 0) return WINNING_MOVE_FORMAT_PREFIX + moveScore;
+		
+		return String.valueOf(moveScore);
 	}
 	
 }

@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.2.0";
+	private static final String VERSION = "1.2.1";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -42,6 +42,23 @@ public class Kite {
 		this.board = new Board(boardScoreCache);
 		
 		board.evaluate();
+	}
+	
+	/**
+	 * Returns a string representation of
+	 * the internal game state of this solver.
+	 * <p>
+	 * This method is equivalent to
+	 * {@link Kite#boardString}.
+	 *
+	 * @return game state string representation
+	 */
+	@Override
+	public String toString() {
+		synchronized(this) {
+			
+			return board.toString();
+		}
 	}
 	
 	/**
