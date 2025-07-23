@@ -129,6 +129,8 @@ System.out.println(solver.evaluateMove(6)); // = 1
 // ...XXO.
 // 
 // moves: 465
+// move scores: -3, 0, -2, +2, 0, +1, -2
+// outcome: UNDECIDED
 System.out.println(solver.boardString());
 
 // clear the board (i.e. go back to
