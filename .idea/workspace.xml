@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d03954f0-0e5b-4d9e-a884-f7c6e8b74218" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="d03954f0-0e5b-4d9e-a884-f7c6e8b74218" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -102,7 +100,7 @@
       <recent name="net.kite.command.commands" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.kite [build]">
+  <component name="RunManager" selected="Gradle.kite [publishToMavenCentral]">
     <configuration name="Kite" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="net.kite.Kite" />
       <module name="kite.main" />
