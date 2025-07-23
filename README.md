@@ -278,7 +278,7 @@ Since `SkillLevel.TEN` always plays perfectly — and Connect Four is a first-pl
 
 By using the win, loss, and draw probabilities for each pair of skill levels from the table above, we can estimate an [Elo rating](https://en.wikipedia.org/wiki/Elo_rating_system) for each level:
 
-| Skill level | ELO rating estimate |
+| Skill level | Elo rating estimate |
 |-------------|---------------------|
 | Random      | 1000                |
 | One         | 1296                |
