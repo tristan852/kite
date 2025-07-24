@@ -27,8 +27,10 @@ public class Board {
 			3, 2, 4, 1, 5, 0, 6
 	};
 	
-	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 12;
-	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 16;
+	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 16;
+	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 2;
+	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 23;
+	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 43;
 	
 	private static final int[] RED_MOVE_CELL_SCORES = new int[] {
 			 5,  1, 10,  3,  7,  0,  0,  0,
@@ -409,7 +411,8 @@ public class Board {
 				continue;
 			}
 			
-			int moveScore = moveScore(movePosition, moveBitboard);
+			long opponentOpenThreats = opponentWinBitboard & ~movesBitboard;
+			int moveScore = moveScore(movePosition, moveBitboard, opponentOpenThreats);
 			int moveIndex = moveAmount;
 			
 			moves[moveIndex] = moveCellX;
@@ -465,12 +468,21 @@ public class Board {
 		return minimalScore;
 	}
 	
-	private int moveScore(int moveCellPosition, long moveBitboard) {
+	private int moveScore(int moveCellPosition, long moveBitboard, long opponentOpenThreats) {
 		long board = activeBitboard;
 		long mask = maskBitboard;
+		long ceiling = ceilingBitboard;
 		
 		board |= moveBitboard;
 		mask |= moveBitboard;
+		
+		ceiling ^= moveBitboard;
+		
+		moveBitboard <<= 1;
+		
+		ceiling |= moveBitboard;
+		
+		long responseMoves = ceiling & Bitboards.FULL_BOARD;
 		
 		long result = 0;
 		
@@ -497,6 +509,11 @@ public class Board {
 		result &= Bitboards.FULL_BOARD;
 		
 		int openScore = Long.bitCount(result) * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT;
+		openScore += Long.bitCount(result & responseMoves) * MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT;
+		
+		responseMoves <<= 1;
+		
+		openScore += Long.bitCount(result & responseMoves) * MOVE_SCORE_SOON_THREAT_WEIGHT;
 		
 		result &= result << 1;
 		
