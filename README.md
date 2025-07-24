@@ -1,4 +1,4 @@
-<span style="width: 100%; text-align: center;">
+<span align="center">
     <br>
     <br>
 
