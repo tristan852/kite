@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.2.4";
+	private static final String VERSION = "1.3.0";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -354,6 +354,54 @@ public class Kite {
 		
 		// impossible to reach
 		return INVALID_MOVE_COLUMN_INDEX;
+	}
+	
+	/**
+	 * Evaluates each legal move in the same way
+	 * that ({@link Kite#evaluateMove(int moveColumnIndex)})
+	 * would do.
+	 * Illegal moves are given the evaluation score
+	 * {@link Integer#MIN_VALUE}.
+	 * The parameter {@code moveScores} is used as a
+	 * buffer to hold the move evaluations and
+	 * therefore needs to be of size {@code 7}.
+	 *
+	 * @param moveScores the buffer to write move evaluations into
+	 * @return move evaluations ({@link Integer#MIN_VALUE} for illegal moves)
+	 */
+	public synchronized int[] evaluateAllMoves(int[] moveScores) {
+		for(int x : ORDERED_MOVE_COLUMN_INDICES) {
+			
+			if(board.moveLegal(x)) moveScores[x] = evaluateMove(x);
+			else moveScores[x] = Integer.MIN_VALUE;
+		}
+		
+		return moveScores;
+	}
+	
+	/**
+	 * Evaluates each legal move in the same way
+	 * that ({@link Kite#evaluateMove(int moveColumnIndex)})
+	 * would do.
+	 * Illegal moves are given the evaluation score
+	 * {@link Integer#MIN_VALUE}.
+	 * <p>
+	 * Use {@link Kite#evaluateAllMoves(int[] moveScores)}
+	 * if you already have a buffer to write the move
+	 * evaluations into.
+	 *
+	 * @return move evaluations ({@link Integer#MIN_VALUE} for illegal moves)
+	 */
+	public synchronized int[] evaluateAllMoves() {
+		int[] moveScores = new int[BOARD_WIDTH];
+		
+		for(int x : ORDERED_MOVE_COLUMN_INDICES) {
+			
+			if(board.moveLegal(x)) moveScores[x] = evaluateMove(x);
+			else moveScores[x] = Integer.MIN_VALUE;
+		}
+		
+		return moveScores;
 	}
 	
 	/**
