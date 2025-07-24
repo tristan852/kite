@@ -1,13 +1,13 @@
 <span align="center">
     <br>
-
+    
 ![The Kite logo](assets/images/brand/small_logo.png)
-
+    
 # Kite
-
+    
 ![GitHub License](https://img.shields.io/github/license/tristan852/kite)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/tristan852/kite)
-
+    
 </span>
 
 Kite is a high-performance Connect Four solver capable of solving any board position within practical time bounds, even on modest hardware. It can be used to power AI bots with adjustable playing strength — from deliberately weak to perfectly optimal, making only provably best moves. Kite is suitable for building AI opponents, integrating into GUI applications, or analyzing positions programmatically.
