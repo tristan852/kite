@@ -372,7 +372,7 @@ public class Kite {
 	public synchronized int[] evaluateAllMoves(int[] moveScores) {
 		for(int x : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			if(board.moveLegal(x)) moveScores[x] = evaluateMove(x);
+			if(board.moveLegal(x)) moveScores[x] = board.evaluateMove(x);
 			else moveScores[x] = Integer.MIN_VALUE;
 		}
 		
@@ -397,7 +397,7 @@ public class Kite {
 		
 		for(int x : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			if(board.moveLegal(x)) moveScores[x] = evaluateMove(x);
+			if(board.moveLegal(x)) moveScores[x] = board.evaluateMove(x);
 			else moveScores[x] = Integer.MIN_VALUE;
 		}
 		
