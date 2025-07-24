@@ -27,10 +27,10 @@ public class Board {
 			3, 2, 4, 1, 5, 0, 6
 	};
 	
-	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 16;
-	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 2;
-	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 23;
-	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 43;
+	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 14;
+	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 15;
+	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 29;
+	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 37;
 	
 	private static final int[] RED_MOVE_CELL_SCORES = new int[] {
 			 5,  1, 10,  3,  7,  0,  0,  0,
@@ -507,6 +507,7 @@ public class Board {
 		
 		result &= ~mask;
 		result &= Bitboards.FULL_BOARD;
+		result &= ~(opponentOpenThreats << 1);
 		
 		int openScore = Long.bitCount(result) * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT;
 		openScore += Long.bitCount(result & responseMoves) * MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT;
