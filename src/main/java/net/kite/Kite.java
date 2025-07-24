@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.2.3";
+	private static final String VERSION = "1.2.4";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
