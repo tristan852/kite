@@ -181,20 +181,21 @@ public class Kite {
 		
 		int optimalMoveScore = Integer.MIN_VALUE;
 		
+		int maximalScoreLoss = skillLevel.getMaximalScoreLoss();
+		int minimalScore = Integer.MIN_VALUE + 2;
+		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			int moveScore = board.moveLegal(moveColumnIndex) ? board.evaluateMove(moveColumnIndex) : Integer.MIN_VALUE;
+			int moveScore = board.moveLegal(moveColumnIndex) ? board.evaluateMove(moveColumnIndex, minimalScore - 1) : Integer.MIN_VALUE;
 			
 			moveScores[moveColumnIndex] = moveScore;
 			
 			if(moveScore > optimalMoveScore) {
 				
 				optimalMoveScore = moveScore;
+				minimalScore = optimalMoveScore - maximalScoreLoss;
 			}
 		}
-		
-		int maximalScoreLoss = skillLevel.getMaximalScoreLoss();
-		int minimalScore = optimalMoveScore - maximalScoreLoss;
 		
 		int totalWeight = 0;
 		
@@ -232,14 +233,14 @@ public class Kite {
 	private int adaptiveMove() {
 		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
 		
-		int bestAbsoluteMoveScore = Integer.MAX_VALUE;
+		int bestAbsoluteMoveScore = Integer.MAX_VALUE - 1;
 		int n = 0;
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
 			if(!board.moveLegal(moveColumnIndex)) continue;
 			
-			int moveScore = board.evaluateMove(moveColumnIndex);
+			int moveScore = board.evaluateMove(moveColumnIndex, -bestAbsoluteMoveScore - 1);
 			if(moveScore < 0) moveScore = -moveScore;
 			
 			moveScores[moveColumnIndex] = moveScore;
