@@ -35,26 +35,25 @@ public class OpeningBoardScoreCache {
 		if(inputStream == null) {
 			
 			System.err.println("The opening score cache could not be found in resources!");
+			return;
+		}
+		
+		try(inputStream) {
 			
-		} else {
+			int c = boardPartialPascalHashes.length;
 			
-			try(inputStream) {
+			inputStream.readNBytes(boardPartialPascalHashes, 0, c);
+			inputStream.readNBytes(boardScores, 0, c);
+			
+			for(int i = 0; i < c; i++) {
 				
-				int c = boardPartialPascalHashes.length;
-				
-				inputStream.readNBytes(boardPartialPascalHashes, 0, c);
-				inputStream.readNBytes(boardScores, 0, c);
-				
-				for(int i = 0; i < c; i++) {
-					
-					boardScores[i] += BoardScore.INVALID;
-				}
-				
-			} catch(IOException exception) {
-				
-				String errorMessage = String.format("An exception occurred while loading opening score cache from resources: %s", exception);
-				System.err.println(errorMessage);
+				boardScores[i] += BoardScore.INVALID;
 			}
+			
+		} catch(IOException exception) {
+			
+			String errorMessage = String.format("An exception occurred while loading opening score cache from resources: %s", exception);
+			System.err.println(errorMessage);
 		}
 	}
 	
