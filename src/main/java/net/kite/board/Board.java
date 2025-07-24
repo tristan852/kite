@@ -469,8 +469,8 @@ public class Board {
 		long board = activeBitboard;
 		long mask = maskBitboard;
 		
-		board ^= moveBitboard;
-		mask ^= moveBitboard;
+		board |= moveBitboard;
+		mask |= moveBitboard;
 		
 		long result = 0;
 		
@@ -513,8 +513,7 @@ public class Board {
 		
 		for(int direction : BITBOARD_CONNECTION_DIRECTIONS) {
 			
-			long b1 = activeBitboard;
-			long b2 = b1;
+			long b2 = activeBitboard;
 			
 			b2 &= b2 >>> direction;
 			
@@ -524,8 +523,8 @@ public class Board {
 			result |= b3 >>> direction;
 			result |= b3 << (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
 			
-			long b4 = (b2 << (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH)) & b1;
-			long b5 = (b2 >>> (direction << 1)) & b1;
+			long b4 = (b2 << (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH)) & activeBitboard;
+			long b5 = (b2 >>> (direction << 1)) & activeBitboard;
 			
 			result |= b4 >>> direction;
 			result |= b5 << direction;
@@ -594,20 +593,20 @@ public class Board {
 		long b2 = Bitboards.cellBitboard(mirroredMoveCellX, moveCellY);
 		
 		activeBitboard = activeBitboard ^ maskBitboard;
-		maskBitboard ^= b1;
+		maskBitboard |= b1;
 		ceilingBitboard ^= b1;
 		
 		mirroredActiveBitboard = mirroredActiveBitboard ^ mirroredMaskBitboard;
-		mirroredMaskBitboard ^= b2;
+		mirroredMaskBitboard |= b2;
 		mirroredCeilingBitboard ^= b2;
 		
 		b1 <<= 1;
 		b2 <<= 1;
 		
-		ceilingBitboard ^= b1;
+		ceilingBitboard |= b1;
 		bitboard = activeBitboard | ceilingBitboard;
 		
-		mirroredCeilingBitboard ^= b2;
+		mirroredCeilingBitboard |= b2;
 		mirroredBitboard = mirroredActiveBitboard | mirroredCeilingBitboard;
 		
 		long board = activeBitboard ^ maskBitboard;

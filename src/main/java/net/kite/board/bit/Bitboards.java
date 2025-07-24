@@ -10,7 +10,7 @@ public class Bitboards {
 	public static final long ODD_ROWS = 0x5555555555555555L;
 	public static final long EVEN_ROWS = 0xAAAAAAAAAAAAAAAAL;
 	
-	public static final long SYMMETRY_PRUNE_BITBOARD = 0x00000000FFFFFFFFL;
+	public static final long SYMMETRY_PRUNE_BITBOARD = 0x000000003F3F3F3FL;
 	
 	private static final long[][] cellBitboards;
 	private static final long[] cellPositionBitboards;
