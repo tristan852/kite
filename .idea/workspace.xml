@@ -82,25 +82,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.kite [:net.kite.Kite.main()].executor": "Run",
-    "Gradle.kite [:net.kite.Main.main()].executor": "Run",
-    "Gradle.kite [build].executor": "Run",
-    "Gradle.kite [publishMavenPublicationToMavenLocal].executor": "Run",
-    "Gradle.kite [publishToMavenCentral].executor": "Run",
-    "Gradle.kite [publishToMavenLocal].executor": "Run",
-    "Gradle.kite [publish].executor": "Run",
-    "Gradle.kite [test].executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "onboarding.tips.debug.path": "C:/Users/Tristan (TUDO)/Documents/kite/src/main/java/net/kite/Main.java",
-    "settings.editor.selected.configurable": "editor.preferences.import"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.kite [:net.kite.Kite.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.kite [:net.kite.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.kite [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.kite [publishMavenPublicationToMavenLocal].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.kite [publishToMavenCentral].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.kite [publishToMavenLocal].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.kite [publish].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.kite [test].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/Tristan (TUDO)/Documents/kite/src/main/java/net/kite/Main.java&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.import&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Tristan (TUDO)\Documents\kite" />
