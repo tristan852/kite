@@ -16,11 +16,16 @@ public class Board {
 	
 	private static final int FULL_CELL_AMOUNT = 42;
 	
+	private static final int UP_BITBOARD_DIRECTION = 1;
+	private static final int RIGHT_BITBOARD_DIRECTION = 8;
+	private static final int UP_RIGHT_BITBOARD_DIRECTION = 9;
+	private static final int DOWN_RIGHT_BITBOARD_DIRECTION = 7;
+	
 	private static final int[] BITBOARD_CONNECTION_DIRECTIONS = new int[] {
-			8,
-			7,
-			9,
-			1
+			RIGHT_BITBOARD_DIRECTION,
+			DOWN_RIGHT_BITBOARD_DIRECTION,
+			UP_RIGHT_BITBOARD_DIRECTION,
+			UP_BITBOARD_DIRECTION
 	};
 	
 	private static final int[] ORDERED_MOVE_COLUMN_INDICES = new int[] {
@@ -70,6 +75,8 @@ public class Board {
 	private static final int HASH_MIX_SHIFT_AMOUNT = 33;
 	
 	private static final int COLUMN_HASH_BASE = 3;
+	
+	private static final int MINIMAL_CHILD_CACHE_LOOKUP_DEPTH = 10;
 	
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
 	private static final String TO_STRING_EMPTY_CELL_STRING = ".";
@@ -324,6 +331,12 @@ public class Board {
 		int minScore = BoardScore.minimal(filledCellAmount);
 		int maxScore = BoardScore.maximal(filledCellAmount);
 		
+		long emptyCells = ~maskBitboard;
+		emptyCells &= Bitboards.FULL_BOARD;
+		
+		boolean canStillWin = bitboardContainsConnection(activeBitboard | emptyCells);
+		if(!canStillWin) maxScore = 0; 
+		
 		if(minScore > minimalScore) minimalScore = minScore;
 		if(maxScore < maximalScore) maximalScore = maxScore;
 		
@@ -341,6 +354,48 @@ public class Board {
 			if(entryMinScore > minimalScore) minimalScore = entryMinScore;
 			if(entryMaxScore < maximalScore) maximalScore = entryMaxScore;
 			
+			if(minimalScore >= maximalScore) return minimalScore;
+		}
+		
+		if(filledCellAmount > MINIMAL_CHILD_CACHE_LOOKUP_DEPTH) {
+			
+			int max = Integer.MIN_VALUE;
+			
+			long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
+			while(movesBitboard != 0) {
+				
+				int movePosition = Long.numberOfTrailingZeros(movesBitboard);
+				int moveCellX = movePosition >>> LOGARITHMIC_BITBOARD_LENGTH;
+				int moveCellY = cellColumnHeights[moveCellX];
+				
+				long moveBitboard = Bitboards.cellBitboard(movePosition);
+				movesBitboard ^= moveBitboard;
+				
+				long mirroredMoveBitboard = Bitboards.cellBitboard(LARGEST_MOVE_CELL_X - moveCellX, moveCellY);
+				
+				long h1 = (bitboard ^ maskBitboard) + moveBitboard;
+				long h2 = (mirroredBitboard ^ mirroredMaskBitboard) + mirroredMoveBitboard;
+				
+				if(h2 < h1) h1 = h2;
+				
+				long mixedHash = mixedHash(h1);
+				
+				entryKey = scoreCache.entryKey(h1, mixedHash);
+				if(entryKey >= 0) {
+					
+					int entryMinScore = -scoreCache.entryMaximalScore(entryKey);
+					int entryMaxScore = -scoreCache.entryMinimalScore(entryKey);
+					
+					if(entryMinScore > minimalScore) minimalScore = entryMinScore;
+					if(entryMaxScore > max) max = entryMaxScore;
+					
+				} else {
+					
+					max = Integer.MAX_VALUE;
+				}
+			}
+			
+			if(max < maximalScore) maximalScore = max;
 			if(minimalScore >= maximalScore) return minimalScore;
 		}
 		
@@ -492,19 +547,19 @@ public class Board {
 			
 			long b2 = board;
 			
-			b2 &= b2 >>> direction;
+			b2 &= b2 << direction;
 			
 			long b3 = b2;
-			b3 &= b3 >>> direction;
+			b3 &= b3 << direction;
 			
-			result |= b3 >>> direction;
-			result |= b3 << (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
+			result |= b3 << direction;
+			result |= b3 >>> (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
 			
-			long b4 = (b2 << (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH)) & board;
-			long b5 = (b2 >>> (direction << 1)) & board;
+			long b4 = (b2 >>> (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH)) & board;
+			long b5 = (b2 << (direction << 1)) & board;
 			
-			result |= b4 >>> direction;
-			result |= b5 << direction;
+			result |= b4 << direction;
+			result |= b5 >>> direction;
 		}
 		
 		result &= ~mask;
@@ -535,19 +590,19 @@ public class Board {
 			
 			long b2 = activeBitboard;
 			
-			b2 &= b2 >>> direction;
+			b2 &= b2 << direction;
 			
 			long b3 = b2;
-			b3 &= b3 >>> direction;
+			b3 &= b3 << direction;
 			
-			result |= b3 >>> direction;
-			result |= b3 << (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
+			result |= b3 << direction;
+			result |= b3 >>> (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
 			
-			long b4 = (b2 << (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH)) & activeBitboard;
-			long b5 = (b2 >>> (direction << 1)) & activeBitboard;
+			long b4 = (b2 >>> (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH)) & activeBitboard;
+			long b5 = (b2 << (direction << 1)) & activeBitboard;
 			
-			result |= b4 >>> direction;
-			result |= b5 << direction;
+			result |= b4 << direction;
+			result |= b5 >>> direction;
 		}
 		
 		result &= Bitboards.FULL_BOARD;
@@ -568,19 +623,19 @@ public class Board {
 			
 			long b2 = board;
 			
-			b2 &= b2 >>> direction;
+			b2 &= b2 << direction;
 			
 			long b3 = b2;
-			b3 &= b3 >>> direction;
+			b3 &= b3 << direction;
 			
-			result |= b3 >>> direction;
-			result |= b3 << (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
+			result |= b3 << direction;
+			result |= b3 >>> (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
 			
-			long b4 = (b2 << (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH)) & board;
-			long b5 = (b2 >>> (direction << 1)) & board;
+			long b4 = (b2 >>> (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH)) & board;
+			long b5 = (b2 << (direction << 1)) & board;
 			
-			result |= b4 >>> direction;
-			result |= b5 << direction;
+			result |= b4 << direction;
+			result |= b5 >>> direction;
 		}
 		
 		result &= Bitboards.FULL_BOARD;
@@ -669,16 +724,9 @@ public class Board {
 	
 	private void updateHash() {
 		hash = bitboard;
-		if(hash < mirroredBitboard) hash = mirroredBitboard;
+		if(hash > mirroredBitboard) hash = mirroredBitboard;
 		
-		mixedHash = hash;
-		mixedHash ^= mixedHash >>> HASH_MIX_SHIFT_AMOUNT;
-		
-		for(long m : HASH_MIX_MAGICS) {
-			
-			mixedHash *= m;
-			mixedHash ^= mixedHash >>> HASH_MIX_SHIFT_AMOUNT;
-		}
+		mixedHash = mixedHash(hash);
 	}
 	
 	public int cellColumnHeight(int cellColumnIndex) {
@@ -728,12 +776,50 @@ public class Board {
 		return outcome;
 	}
 	
+	private static long mixedHash(long hash) {
+		hash ^= hash >>> HASH_MIX_SHIFT_AMOUNT;
+		
+		for(long m : HASH_MIX_MAGICS) {
+			
+			hash *= m;
+			hash ^= hash >>> HASH_MIX_SHIFT_AMOUNT;
+		}
+		
+		return hash;
+	}
+	
+	private static long winCellsBitboardOfDirection(long bitboard, int direction) {
+		int doubleDirection = direction << 1;
+		
+		bitboard &= bitboard >>> direction;
+		bitboard &= bitboard >>> doubleDirection;
+		
+		bitboard |= bitboard << direction;
+		bitboard |= bitboard << doubleDirection;
+		
+		return bitboard;
+	}
+	
+	private static long winBitboardOfDirection(long bitboard, int direction) {
+		bitboard &= bitboard << direction;
+		bitboard &= bitboard << (direction << 1);
+		
+		return bitboard;
+	}
+	
+	private static boolean bitboardContainsVerticalConnection(long bitboard) {
+		bitboard &= bitboard << 1;
+		bitboard &= bitboard << 2;
+		
+		return bitboard != 0;
+	}
+	
 	private static boolean bitboardContainsConnection(long bitboard) {
 		for(int direction : BITBOARD_CONNECTION_DIRECTIONS) {
 			
 			long board = bitboard;
-			board &= board >>> direction;
-			board &= board >>> (direction << 1);
+			board &= board << direction;
+			board &= board << (direction << 1);
 			
 			if(board != 0) return true;
 		}
