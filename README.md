@@ -1,7 +1,7 @@
 <span align="center">
     <br>
     
-![The Kite logo](assets/images/brand/small_logo.png)
+[![The Kite logo](assets/images/brand/small_logo.png)](assets/images/brand/large_logo.png)
     
 # Kite
 
