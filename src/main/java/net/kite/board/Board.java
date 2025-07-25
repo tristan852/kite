@@ -69,6 +69,8 @@ public class Board {
 	
 	private static final int HASH_MIX_SHIFT_AMOUNT = 33;
 	
+	private static final int COLUMN_HASH_BASE = 3;
+	
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
 	private static final String TO_STRING_EMPTY_CELL_STRING = ".";
 	private static final String TO_STRING_MOVES_PREFIX_STRING = "moves: ";
@@ -177,35 +179,35 @@ public class Board {
 		return stringBuilder.toString();
 	}
 	
-	public long pascalHash() {
+	public long columnHash() {
 		long h1 = 0;
 		long h2 = 0;
 		
-		for(int x = 0; x < WIDTH; x++) h1 = partialPascalHash(h1, x);
-		for(int x = LARGEST_MOVE_CELL_X; x >= 0; x--) h2 = partialPascalHash(h2, x);
+		for(int x = 0; x < WIDTH; x++) h1 = partialColumnHash(h1, x);
+		for(int x = LARGEST_MOVE_CELL_X; x >= 0; x--) h2 = partialColumnHash(h2, x);
 		
 		if(h2 < h1) h1 = h2;
 		return Long.divideUnsigned(h1, 3);
 	}
 	
-	private long partialPascalHash(long pascalHash, int x) {
+	private long partialColumnHash(long columnHash, int x) {
 		int height = cellColumnHeights[x];
 		long board = Bitboards.bottomCellBitboard(x);
 		
 		for(int y = 0; y < height; y++) {
 			
-			pascalHash *= 3;
+			columnHash *= COLUMN_HASH_BASE;
 			
 			boolean activeCell = (activeBitboard & board) != 0;
 			
-			if(activeCell) pascalHash++;
-			else pascalHash += 2;
+			if(activeCell) columnHash++;
+			else columnHash += 2;
 			
 			board <<= 1;
 		}
 		
-		pascalHash *= 3;
-		return pascalHash;
+		columnHash *= COLUMN_HASH_BASE;
+		return columnHash;
 	}
 	
 	public int evaluateMove(int moveCellX) {
