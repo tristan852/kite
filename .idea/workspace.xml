@@ -107,7 +107,7 @@
       <recent name="net.kite.command.commands" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.kite [test]">
+  <component name="RunManager" selected="Gradle.kite [build]">
     <configuration name="Kite" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="net.kite.Kite" />
       <module name="kite.main" />
@@ -187,33 +187,10 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="kite [test]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="test" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>false</RunAsTest>
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.kite [test]" />
-        <item itemvalue="Gradle.kite [publishToMavenCentral]" />
         <item itemvalue="Gradle.kite [build]" />
+        <item itemvalue="Gradle.kite [publishToMavenCentral]" />
         <item itemvalue="Gradle.kite [publishMavenPublicationToMavenLocal]" />
         <item itemvalue="Application.Kite" />
       </list>
