@@ -1,10 +1,11 @@
-<span align="center">
+<p align="center">
     <br>
-    
-[![The Kite logo](assets/images/brand/small_logo.png)](assets/images/brand/large_logo.png)
+    <img src="assets/images/brand/small_logo.png" alt="The Kite logo" align="center" />
+</p>
+<span align="center" >
     
 # Kite
-
+    
 ![Java version](https://img.shields.io/badge/Java-17+-blue?style=for-the-badge)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/tristan852/kite?style=for-the-badge)
 ![GitHub License](https://img.shields.io/github/license/tristan852/kite?style=for-the-badge)
