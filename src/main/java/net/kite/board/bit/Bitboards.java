@@ -10,7 +10,7 @@ public class Bitboards {
 	public static final long ODD_BOARD_ROWS = 0x0015151515151515L;
 	public static final long EVEN_BOARD_ROWS = 0x002A2A2A2A2A2A2AL;
 	
-	public static final long[] ORDERED_EVEN_BOARD_ROWS = new long[] {
+	public static final long[] DESCENDINGLY_ORDERED_EVEN_BOARD_ROWS = new long[] {
 			0x0020202020202020L,
 			0x0008080808080808L,
 			0x0002020202020202L
@@ -20,7 +20,6 @@ public class Bitboards {
 	
 	private static final long[][] cellBitboards;
 	private static final long[] cellPositionBitboards;
-	private static final long[] cellsBelowCellPositionBitboards;
 	
 	private static final long[] bottomCellBitboards;
 	
@@ -31,7 +30,6 @@ public class Bitboards {
 		
 		cellBitboards = new long[width][height];
 		cellPositionBitboards = new long[size];
-		cellsBelowCellPositionBitboards = new long[size];
 		
 		bottomCellBitboards = new long[width];
 		
@@ -41,16 +39,11 @@ public class Bitboards {
 		for(int x = 0; x < width; x++) {
 			
 			bottomCellBitboards[x] = cellBitboard;
-			long column = 0;
 			
 			for(int y = 0; y < height; y++) {
 				
 				cellBitboards[x][y] = cellBitboard;
-				
 				cellPositionBitboards[p] = cellBitboard;
-				cellsBelowCellPositionBitboards[p] = column;
-				
-				column |= cellBitboard;
 				
 				cellBitboard <<= 1;
 				p++;
@@ -60,10 +53,6 @@ public class Bitboards {
 	
 	public static long bottomCellBitboard(int cellX) {
 		return bottomCellBitboards[cellX];
-	}
-	
-	public static long cellsBelowCellBitboard(int cellPosition) {
-		return cellsBelowCellPositionBitboards[cellPosition];
 	}
 	
 	public static long cellBitboard(int cellPosition) {
