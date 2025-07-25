@@ -21,6 +21,12 @@ public class Board {
 	private static final int UP_RIGHT_BITBOARD_DIRECTION = 9;
 	private static final int DOWN_RIGHT_BITBOARD_DIRECTION = 7;
 	
+	private static final int[] NON_VERTICAL_BITBOARD_CONNECTION_DIRECTIONS = new int[] {
+			RIGHT_BITBOARD_DIRECTION,
+			DOWN_RIGHT_BITBOARD_DIRECTION,
+			UP_RIGHT_BITBOARD_DIRECTION
+	};
+	
 	private static final int[] BITBOARD_CONNECTION_DIRECTIONS = new int[] {
 			RIGHT_BITBOARD_DIRECTION,
 			DOWN_RIGHT_BITBOARD_DIRECTION,
@@ -539,34 +545,15 @@ public class Board {
 		
 		ceiling |= moveBitboard;
 		
-		long responseMoves = ceiling & Bitboards.FULL_BOARD;
-		
-		long result = 0;
-		
-		for(int direction : BITBOARD_CONNECTION_DIRECTIONS) {
-			
-			long b2 = board;
-			
-			b2 &= b2 << direction;
-			
-			long b3 = b2;
-			b3 &= b3 << direction;
-			
-			result |= b3 << direction;
-			result |= b3 >>> (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
-			
-			long b4 = (b2 >>> (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH)) & board;
-			long b5 = (b2 << (direction << 1)) & board;
-			
-			result |= b4 << direction;
-			result |= b5 >>> direction;
-		}
+		long result = bitboardConnectionOpportunities(board);
 		
 		result &= ~mask;
-		result &= Bitboards.FULL_BOARD;
 		result &= ~(opponentOpenThreats << 1);
 		
 		int openScore = Long.bitCount(result) * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT;
+		
+		long responseMoves = ceiling & Bitboards.FULL_BOARD;
+		
 		openScore += Long.bitCount(result & responseMoves) * MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT;
 		
 		responseMoves <<= 1;
@@ -584,28 +571,7 @@ public class Board {
 	}
 	
 	private boolean activePlayerHasImmediateWin() {
-		long result = 0;
-		
-		for(int direction : BITBOARD_CONNECTION_DIRECTIONS) {
-			
-			long b2 = activeBitboard;
-			
-			b2 &= b2 << direction;
-			
-			long b3 = b2;
-			b3 &= b3 << direction;
-			
-			result |= b3 << direction;
-			result |= b3 >>> (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
-			
-			long b4 = (b2 >>> (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH)) & activeBitboard;
-			long b5 = (b2 << (direction << 1)) & activeBitboard;
-			
-			result |= b4 << direction;
-			result |= b5 >>> direction;
-		}
-		
-		result &= Bitboards.FULL_BOARD;
+		long result = bitboardConnectionOpportunities(activeBitboard);
 		result &= ceilingBitboard;
 		
 		return result != 0;
@@ -617,28 +583,7 @@ public class Board {
 		
 		board ^= mask;
 		
-		long result = 0;
-		
-		for(int direction : BITBOARD_CONNECTION_DIRECTIONS) {
-			
-			long b2 = board;
-			
-			b2 &= b2 << direction;
-			
-			long b3 = b2;
-			b3 &= b3 << direction;
-			
-			result |= b3 << direction;
-			result |= b3 >>> (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
-			
-			long b4 = (b2 >>> (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH)) & board;
-			long b5 = (b2 << (direction << 1)) & board;
-			
-			result |= b4 << direction;
-			result |= b5 >>> direction;
-		}
-		
-		result &= Bitboards.FULL_BOARD;
+		long result = bitboardConnectionOpportunities(board);
 		return result & ~mask;
 	}
 	
@@ -812,6 +757,36 @@ public class Board {
 		bitboard &= bitboard << 2;
 		
 		return bitboard != 0;
+	}
+	
+	private static long bitboardConnectionOpportunities(long bitboard) {
+		long result = 0;
+		
+		long verticalDoubles = bitboard;
+		verticalDoubles &= verticalDoubles << UP_BITBOARD_DIRECTION;
+		
+		long verticalTriples = verticalDoubles;
+		verticalTriples &= verticalTriples << UP_BITBOARD_DIRECTION;
+		
+		result |= verticalTriples << UP_BITBOARD_DIRECTION;
+		
+		for(int direction : NON_VERTICAL_BITBOARD_CONNECTION_DIRECTIONS) {
+			
+			long doubles = bitboard;
+			doubles &= doubles << direction;
+			
+			long triples = doubles;
+			triples &= triples << direction;
+			
+			result |= triples << direction;
+			result |= triples >>> (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
+			
+			result |= (doubles >>> (direction << 1)) & (bitboard << direction);
+			result |= (doubles << direction) & (bitboard >>> direction);
+		}
+		
+		result &= Bitboards.FULL_BOARD;
+		return result;
 	}
 	
 	private static boolean bitboardContainsConnection(long bitboard) {
