@@ -4,9 +4,10 @@
 ![The Kite logo](assets/images/brand/small_logo.png)
     
 # Kite
-    
-![GitHub License](https://img.shields.io/github/license/tristan852/kite)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/tristan852/kite)
+
+![Java version](https://img.shields.io/badge/Java-17+-blue?style=for-the-badge)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/tristan852/kite?style=for-the-badge)
+![GitHub License](https://img.shields.io/github/license/tristan852/kite?style=for-the-badge)
     
 </span>
 
