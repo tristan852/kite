@@ -1,8 +1,7 @@
-<p align="center">
+<span align="center">
     <br>
-    <img src="assets/images/brand/small_logo.png" alt="The Kite logo" align="center" />
-</p>
-<span align="center" >
+    
+[![The Kite logo](assets/images/brand/small_logo.png)](assets/images/brand/large_logo.png)
     
 # Kite
     
