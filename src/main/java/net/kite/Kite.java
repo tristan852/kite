@@ -62,6 +62,20 @@ public class Kite {
 	}
 	
 	/**
+	 * Returns the sequence of move that
+	 * were currently played onto the
+	 * game state.
+	 * A move is represented by its
+	 * 1-indexed column number (from left
+	 * to right).
+	 *
+	 * @return played moves string representation
+	 */
+	public synchronized String boardMovesString() {
+		return board.movesString();
+	}
+	
+	/**
 	 * Returns a string representation of
 	 * the internal game state.
 	 * The string representation consists of

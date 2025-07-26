@@ -192,6 +192,20 @@ public class Board {
 		return stringBuilder.toString();
 	}
 	
+	public String movesString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		for(int i = 0; i < filledCellAmount; i++) {
+			
+			int move = playedMoves[i];
+			char moveCharacter = (char) (SMALLEST_MOVE_CHARACTER + move);
+			
+			stringBuilder.append(moveCharacter);
+		}
+		
+		return stringBuilder.toString();
+	}
+	
 	public long columnHash() {
 		long h1 = 0;
 		long h2 = 0;
