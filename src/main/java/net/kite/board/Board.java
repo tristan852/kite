@@ -68,6 +68,7 @@ public class Board {
 	private static final int LOGARITHMIC_BITBOARD_LENGTH = 3;
 	
 	private static final int LARGEST_MOVE_CELL_X = 6;
+	private static final int LARGEST_MOVE_CELL_Y = 5;
 	
 	private static final int MISSING_MOVE_SCORE = Integer.MIN_VALUE;
 	
@@ -95,7 +96,9 @@ public class Board {
 	private static final String WINNING_MOVE_FORMAT_PREFIX = "+";
 	
 	private final int[] cellColumnHeights = new int[WIDTH];
+	
 	private int filledCellAmount;
+	private int evenParityCellColumnAmount = WIDTH;
 	
 	private long bitboard = Bitboards.EMPTY_CEILING;
 	private long activeBitboard = Bitboards.EMPTY;
@@ -355,7 +358,42 @@ public class Board {
 		emptyCells &= Bitboards.FULL_BOARD;
 		
 		boolean canStillWin = bitboardContainsConnection(activeBitboard | emptyCells);
-		if(!canStillWin) maxScore = 0; 
+		if(!canStillWin) maxScore = 0;
+		
+		if(evenParityCellColumnAmount == WIDTH) {
+			
+			long redCells = activeBitboard | (Bitboards.ODD_BOARD_ROWS & ~maskBitboard);
+			long yellowCells = Bitboards.FULL_BOARD ^ redCells;
+			
+			long currentYellowCells = activeBitboard ^ maskBitboard;
+			
+			if(!canRedWinInClaimEven(redCells, yellowCells, currentYellowCells, maskBitboard)) {
+				
+				if(maxScore > BoardScore.DRAW) maxScore = BoardScore.DRAW;
+				
+				boolean yellowWon = bitboardContainsConnection(yellowCells);
+				
+				if(yellowWon) {
+					
+					long yellowWinningStones = winCellsBitboard(yellowCells);
+					
+					int y = LARGEST_MOVE_CELL_Y;
+					for(long row : Bitboards.DESCENDINGLY_ORDERED_EVEN_BOARD_ROWS) {
+						
+						if((row & yellowWinningStones) != 0) {
+							
+							int n = FULL_CELL_AMOUNT - LARGEST_MOVE_CELL_Y + y;
+							int score = BoardScore.loss(n);
+							if(maxScore > score) maxScore = score;
+							
+							break;
+						}
+						
+						y -= 2;
+					}
+				}
+			}
+		}
 		
 		if(minScore > minimalScore) minimalScore = minScore;
 		if(maxScore < maximalScore) maximalScore = maxScore;
@@ -616,7 +654,12 @@ public class Board {
 		);
 		
 		int moveCellY = cellColumnHeights[moveCellX];
+		
 		cellColumnHeights[moveCellX]++;
+		
+		boolean wasEven = (moveCellY & 1) == 0;
+		if(wasEven) evenParityCellColumnAmount--;
+		else evenParityCellColumnAmount++;
 		
 		playedMoves[filledCellAmount] = moveCellX;
 		filledCellAmount++;
@@ -666,6 +709,12 @@ public class Board {
 		BoardHistoryEntry entry = history.entry(filledCellAmount);
 		
 		cellColumnHeights[moveCellX]--;
+		
+		int moveCellY = cellColumnHeights[moveCellX];
+		
+		boolean isEven = (moveCellY & 1) == 0;
+		if(isEven) evenParityCellColumnAmount++;
+		else evenParityCellColumnAmount--;
 		
 		bitboard = entry.getBitboard();
 		activeBitboard = entry.getActiveBitboard();
@@ -747,16 +796,52 @@ public class Board {
 		return hash;
 	}
 	
-	private static long winCellsBitboardOfDirection(long bitboard, int direction) {
-		int doubleDirection = direction << 1;
+	private static boolean canRedWinInClaimEven(long redCells, long yellowCells, long currentYellowCells, long currentMask) {
+		for(int direction : BITBOARD_CONNECTION_DIRECTIONS) {
+			
+			long wins = redCells;
+			
+			wins &= wins << direction;
+			wins &= wins << (direction << 1);
+			
+			while(wins != 0) {
+				
+				int winPosition = Long.numberOfTrailingZeros(wins);
+				long winBitboard = Bitboards.cellBitboard(winPosition);
+				
+				wins ^= winBitboard;
+				
+				long winCells = winBitboardOfDirection(winBitboard, direction);
+				long redBuilds = cellsBelowBitboard(winCells);
+				
+				long cells = currentYellowCells | (~currentMask & yellowCells & redBuilds);
+				if(bitboardContainsConnection(cells)) continue;
+				
+				return true;
+			}
+		}
 		
-		bitboard &= bitboard >>> direction;
-		bitboard &= bitboard >>> doubleDirection;
+		return false;
+	}
+	
+	private static long winCellsBitboard(long bitboard) {
+		long result = 0;
 		
-		bitboard |= bitboard << direction;
-		bitboard |= bitboard << doubleDirection;
+		for(int direction : BITBOARD_CONNECTION_DIRECTIONS) {
+			
+			int doubleDirection = direction << 1;
+			long b = bitboard;
+			
+			b &= b >>> direction;
+			b &= b >>> doubleDirection;
+			
+			b |= b << direction;
+			b |= b << doubleDirection;
+			
+			result |= b;
+		}
 		
-		return bitboard;
+		return result;
 	}
 	
 	private static long winBitboardOfDirection(long bitboard, int direction) {
@@ -814,6 +899,20 @@ public class Board {
 		}
 		
 		return false;
+	}
+	
+	private static long cellsBelowBitboard(long bitboard) {
+		long result = 0;
+		
+		while(bitboard != 0) {
+			
+			int p = Long.numberOfTrailingZeros(bitboard);
+			bitboard ^= Bitboards.cellBitboard(p);
+			
+			result |= Bitboards.cellsBelowCellBitboard(p);
+		}
+		
+		return result;
 	}
 	
 	public static Board boardWithMoves(String moves, BoardScoreCache scoreCache) {

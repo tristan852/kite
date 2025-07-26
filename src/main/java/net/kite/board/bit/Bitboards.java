@@ -20,6 +20,7 @@ public class Bitboards {
 	
 	private static final long[][] cellBitboards;
 	private static final long[] cellPositionBitboards;
+	private static final long[] cellsBelowPositionBitboards;
 	
 	private static final long[] bottomCellBitboards;
 	
@@ -30,6 +31,7 @@ public class Bitboards {
 		
 		cellBitboards = new long[width][height];
 		cellPositionBitboards = new long[size];
+		cellsBelowPositionBitboards = new long[size];
 		
 		bottomCellBitboards = new long[width];
 		
@@ -40,15 +42,23 @@ public class Bitboards {
 			
 			bottomCellBitboards[x] = cellBitboard;
 			
+			long column = 0;
+			
 			for(int y = 0; y < height; y++) {
 				
 				cellBitboards[x][y] = cellBitboard;
 				cellPositionBitboards[p] = cellBitboard;
+				cellsBelowPositionBitboards[p] = column;
 				
+				column |= cellBitboard;
 				cellBitboard <<= 1;
 				p++;
 			}
 		}
+	}
+	
+	public static long cellsBelowCellBitboard(int cellPosition) {
+		return cellsBelowPositionBitboards[cellPosition];
 	}
 	
 	public static long bottomCellBitboard(int cellX) {
