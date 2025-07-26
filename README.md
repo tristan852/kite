@@ -27,6 +27,7 @@ Internally, Kite leverages **alpha-beta pruning**, **symmetry reduction**, **bit
 * **Bitboard Representation**: Game states use 64-bit integers for fast updates and operations.
 * **Transposition Caching**: Hashes each position and stores scores in an efficient score cache.
 * **Opening Book**: Stores lots of precomputed scores for early-game positions.
+* **Claim-even**: Applies the claim-even strategy to solve certain special positions in *O(1)* time.
 * *and much more...*
 
 ---
@@ -45,7 +46,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tristan852:kite:1.3.4")
+    implementation("io.github.tristan852:kite:1.4.0")
 }
 ```
 
@@ -59,7 +60,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.tristan852:kite:1.3.4'
+    implementation 'io.github.tristan852:kite:1.4.0'
 }
 ```
 
@@ -79,7 +80,7 @@ Add the following code snippet to your `pom.xml` file:
     <dependency>
         <groupId>io.github.tristan852</groupId>
         <artifactId>kite</artifactId>
-        <version>1.3.4</version>
+        <version>1.4.0</version>
     </dependency>
 </dependencies>
 ```
