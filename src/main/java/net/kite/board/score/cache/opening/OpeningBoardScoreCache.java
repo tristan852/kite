@@ -47,8 +47,11 @@ public class OpeningBoardScoreCache {
 			
 			int c = boardPartialColumnHashes.length;
 			
+			System.out.println("here1");
 			inputStream.readNBytes(boardPartialColumnHashes, 0, c);
+			System.out.println("here2");
 			inputStream.readNBytes(boardScores, 0, c);
+			System.out.println("here3");
 			
 			for(int i = 0; i < c; i++) {
 				
