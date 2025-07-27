@@ -19,7 +19,7 @@ public class Bitboard {
 				
 				int p = HEIGHT * x + y;
 				
-				long board = Bitboards.CELL_BITBOARDS[p];
+				long board = 1L << p;
 				boolean contained = (bitboard & board) != 0;
 				
 				String s = contained ? TO_STRING_CELL_STRING : TO_STRING_MISSING_CELL_STRING;
@@ -37,7 +37,7 @@ public class Bitboard {
 	}
 	
 	public static long toggleCell(long bitboard, int cellPosition) {
-		long board = Bitboards.CELL_BITBOARDS[cellPosition];
+		long board = 1L << cellPosition;
 		
 		return bitboard ^ board;
 	}

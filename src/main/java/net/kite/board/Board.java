@@ -426,7 +426,7 @@ public class Board {
 				
 				int movePosition = Long.numberOfTrailingZeros(movesBitboard);
 				
-				long moveBitboard = Bitboards.CELL_BITBOARDS[movePosition];
+				long moveBitboard = 1L << movePosition;
 				movesBitboard ^= moveBitboard;
 				
 				long mirroredMoveBitboard = Bitboards.MIRRORED_BOARD_CELL_BITBOARDS[movePosition];
@@ -463,7 +463,7 @@ public class Board {
 		if(immediateThreats != Bitboards.EMPTY) {
 			
 			int p = Long.numberOfTrailingZeros(immediateThreats);
-			long b = Bitboards.CELL_BITBOARDS[p];
+			long b = 1L << p;
 			
 			immediateThreats ^= b;
 			if(immediateThreats != Bitboards.EMPTY) {
@@ -517,7 +517,7 @@ public class Board {
 			int movePosition = Long.numberOfTrailingZeros(movesBitboard);
 			int moveCellX = movePosition >>> LOGARITHMIC_BITBOARD_LENGTH;
 			
-			long moveBitboard = Bitboards.CELL_BITBOARDS[movePosition];
+			long moveBitboard = 1L << movePosition;
 			movesBitboard ^= moveBitboard;
 			
 			long upperCellBitboard = moveBitboard << 1;
@@ -666,7 +666,7 @@ public class Board {
 		
 		int p = BITBOARD_HEIGHT * moveCellX + moveCellY;
 		
-		long b1 = Bitboards.CELL_BITBOARDS[p];
+		long b1 = 1L << p;
 		long b2 = Bitboards.MIRRORED_BOARD_CELL_BITBOARDS[p];
 		
 		activeBitboard = activeBitboard ^ maskBitboard;
@@ -758,7 +758,7 @@ public class Board {
 		
 		int cellPosition = BITBOARD_HEIGHT * cellX + cellY;
 		
-		long board = Bitboards.CELL_BITBOARDS[cellPosition];
+		long board = 1L << cellPosition;
 		BoardPlayerColor activePlayerColor = activePlayerColor();
 		
 		return (activeBitboard & board) == 0 ? activePlayerColor.opposite() : activePlayerColor;
@@ -809,7 +809,7 @@ public class Board {
 			while(wins != 0) {
 				
 				int winPosition = Long.numberOfTrailingZeros(wins);
-				long winBitboard = Bitboards.CELL_BITBOARDS[winPosition];
+				long winBitboard = 1L << winPosition;
 				
 				wins ^= winBitboard;
 				
@@ -910,7 +910,7 @@ public class Board {
 			
 			int p = Long.numberOfTrailingZeros(bitboard);
 			
-			bitboard ^= Bitboards.CELL_BITBOARDS[p];
+			bitboard ^= 1L << p;
 			result |= Bitboards.CELLS_BELOW_CELL_BITBOARDS[p];
 		}
 		
