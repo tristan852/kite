@@ -808,9 +808,7 @@ public class Board {
 			
 			while(wins != 0) {
 				
-				int winPosition = Long.numberOfTrailingZeros(wins);
-				long winBitboard = 1L << winPosition;
-				
+				long winBitboard = wins & -wins;
 				wins ^= winBitboard;
 				
 				long winCells = winBitboardOfDirection(winBitboard, direction);
