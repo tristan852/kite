@@ -54,7 +54,7 @@ public class KiteDemo {
 				body.removeChild(node);
 			}
 			
-			HTMLElement container = createFlexBox("column");
+			HTMLElement container = createFlexBox("column", 60);
 			
 			HTMLImageElement imageElement = (HTMLImageElement) DOCUMENT.createElement("img");
 			
@@ -64,6 +64,11 @@ public class KiteDemo {
 			
 			container.appendChild(createBoard());
 			
+			imageElement = (HTMLImageElement) DOCUMENT.createElement("img");
+			
+			imageElement.setSrc("https://github.com/tristan852/kite/blob/main/assets/images/socials/github.png?raw=true");
+			container.appendChild(imageElement);
+			
 			body.appendChild(container);
 		});
 		
@@ -71,7 +76,7 @@ public class KiteDemo {
 	}
 	
 	private HTMLElement createBoard() {
-		HTMLElement cellBoard = createFlexBox("row");
+		HTMLElement cellBoard = createFlexBox("row", 10);
 		
 		for(int x = 0; x < 7; x++) {
 			
@@ -84,15 +89,15 @@ public class KiteDemo {
 	}
 	
 	private HTMLElement createBoardColumn() {
-		HTMLElement cellColumn = createFlexBox("column");
+		HTMLElement cellColumn = createFlexBox("column", 10);
 		
 		for(int y = 0; y < 6; y++) {
 			
 			HTMLElement cell = DOCUMENT.createElement("div");
 			
-			cell.getStyle().setProperty("width", "50px");
-			cell.getStyle().setProperty("height", "50px");
-			cell.getStyle().setProperty("height", "50px");
+			cell.getStyle().setProperty("width", "80px");
+			cell.getStyle().setProperty("height", "80px");
+			cell.getStyle().setProperty("borderRadius", "50%");
 			cell.getStyle().setProperty("borderRadius", "50%");
 			
 			cellColumn.appendChild(cell);
@@ -101,12 +106,12 @@ public class KiteDemo {
 		return cellColumn;
 	}
 	
-	private HTMLElement createFlexBox(String direction) {
+	private HTMLElement createFlexBox(String direction, int gap) {
 		HTMLElement flexBox = DOCUMENT.createElement("div");
 		
 		flexBox.getStyle().setProperty("display", "flex");
 		flexBox.getStyle().setProperty("flexDirection", direction);
-		flexBox.getStyle().setProperty("gap", "10px"); // Optional: spacing between items
+		flexBox.getStyle().setProperty("gap", gap + "px"); // Optional: spacing between items
 		
 		return flexBox;
 	}
