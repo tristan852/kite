@@ -359,8 +359,11 @@ public class Board {
 		long emptyCells = ~maskBitboard;
 		emptyCells &= Bitboards.FULL_BOARD;
 		
-		boolean canStillWin = bitboardContainsConnection(activeBitboard | emptyCells);
-		if(!canStillWin) maxScore = 0;
+		if(maximalScore > 0) {
+			
+			boolean canStillWin = bitboardContainsConnection(activeBitboard | emptyCells);
+			if(!canStillWin) maxScore = 0;
+		}
 		
 		if(evenParityCellColumnAmount == WIDTH) {
 			
