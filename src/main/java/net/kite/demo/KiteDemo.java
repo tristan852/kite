@@ -9,7 +9,7 @@ public class KiteDemo {
 		HTMLDocument doc = HTMLDocument.current();
 		
 		var div = doc.createElement("div");
-		div.appendChild(doc.createTextNode("TeaVM generated element2; solver move: " + Kite.createInstance().optimalMove()));
+		div.appendChild(doc.createTextNode("TeaVM generated element2; solver move: " + Kite.getName()));
 		doc.getBody().appendChild(div);
 	}
 	

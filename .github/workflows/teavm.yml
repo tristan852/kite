@@ -48,13 +48,20 @@ jobs:
 
       - name: Build with Gradle Wrapper
         run: ./gradlew build
-  
+
+      - name: Find and unzip WAR file
+        run: |
+          mkdir war-unpacked
+          WAR_FILE=$(find build/libs -name "*.war" | head -n 1)
+          echo "Unzipping $WAR_FILE"
+          unzip "$WAR_FILE" -d war-unpacked
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'build/generated/teavm'
+          path: 'war-unpacked'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
