@@ -9,7 +9,7 @@ public class KiteDemo {
 		HTMLDocument doc = HTMLDocument.current();
 		
 		XMLHttpRequest xhr = new XMLHttpRequest();
-		xhr.open("GET", "/WEB-INF/classes/score_caches/opening.cfc");
+		xhr.open("GET", "/WEB-INF/classes/board_score_caches/opening.cfc");
 		xhr.setResponseType("arraybuffer");
 		xhr.onLoad((x) -> {
 			if (xhr.getStatus() == 200) {
