@@ -2,6 +2,9 @@ plugins {
     id("java")
     id("com.vanniktech.maven.publish") version "0.34.0"
     
+    id("war")
+    id("org.teavm") version "0.12.3"
+    
     signing
     `maven-publish`
 }
@@ -29,6 +32,25 @@ tasks.test {
     useJUnitPlatform()
 }
 
+tasks.named("build") {
+    finalizedBy("copyDemoIndexFile")
+}
+
+tasks.register<Copy>("copyDemoIndexFile") {
+    from("demo/index.html")
+    into("build/generated/teavm")
+}
+
 signing {
     useGpgCmd()
+}
+
+teavm {
+    all {
+        mainClass = "net.kite.Main"
+    }
+    
+    wasmGC {
+        addedToWebApp = true
+    }
 }
