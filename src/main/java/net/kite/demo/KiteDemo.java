@@ -4,6 +4,8 @@ import net.kite.Kite;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 import org.teavm.jso.ajax.XMLHttpRequest;
 import org.teavm.jso.dom.html.HTMLDocument;
+import org.teavm.jso.dom.html.HTMLElement;
+import org.teavm.jso.dom.xml.Document;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Int8Array;
 
@@ -37,8 +39,8 @@ public class KiteDemo {
 			System.out.println("db2");
 			
 			Kite kite = Kite.createInstance();
-			kite.playMoves(1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2);
-			System.out.println(kite.optimalMove());
+			kite.playMoves(2,6,6,5,4,4,4,3,2,2,1,2);
+			System.out.println(kite.evaluateBoard());
 			
 			var div = doc.createElement("div");
 			div.appendChild(doc.createTextNode("Hello world!"));
@@ -51,5 +53,19 @@ public class KiteDemo {
 		
 		xhr.send();
 	}
+	
+	private void createBoard(Document document) {
+		
+	}
+	
+	private void createBoardColumn(Document document) {
+		for(int y = 0; y < 6; y++) {
+			
+			HTMLElement container = (HTMLElement) document.createElement("div");
+			// container.getStyle().setP
+		}
+	}
+	
+	// private static HTMLDo
 	
 }
