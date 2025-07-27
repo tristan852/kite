@@ -36,8 +36,9 @@ public class KiteDemo {
 			
 			System.out.println("db2");
 			
-			System.out.println(Kite.createInstance().optimalMove());
-			System.out.println(bytes.length);
+			Kite kite = Kite.createInstance();
+			kite.playMoves(1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2);
+			System.out.println(kite.optimalMove());
 			
 			var div = doc.createElement("div");
 			div.appendChild(doc.createTextNode("Hello world!"));
