@@ -64,7 +64,7 @@ public class KiteDemo {
 			
 			container.appendChild(createBoard());
 			
-			DOCUMENT.appendChild(container);
+			body.appendChild(container);
 		});
 		
 		xhr.send();
