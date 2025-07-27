@@ -11,7 +11,7 @@ public class KiteDemo {
 		Kite solver = Kite.createInstance();
 		
 		var div = doc.createElement("div");
-		div.appendChild(doc.createTextNode("TeaVM generated element" + solver.toString()));
+		div.appendChild(doc.createTextNode("TeaVM generated element; solver: " + solver.toString()));
 		doc.getBody().appendChild(div);
 	}
 	
