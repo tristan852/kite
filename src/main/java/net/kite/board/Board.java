@@ -149,9 +149,9 @@ public class Board {
 			for(int x = 0; x < WIDTH; x++) {
 				
 				BoardPlayerColor cellPlayerColor = cellPlayerColor(x, y);
-				char cellString = cellPlayerColor == null ? TO_STRING_EMPTY_CELL_CHARACTER : cellPlayerColor.getCharacter();
+				char cellCharacter = cellPlayerColor == null ? TO_STRING_EMPTY_CELL_CHARACTER : cellPlayerColor.getCharacter();
 				
-				stringBuilder.append(cellString);
+				stringBuilder.append(cellCharacter);
 			}
 			
 			stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
