@@ -7,7 +7,6 @@ import org.teavm.jso.dom.html.HTMLBodyElement;
 import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
 import org.teavm.jso.dom.html.HTMLImageElement;
-import org.teavm.jso.dom.xml.Document;
 import org.teavm.jso.dom.xml.Node;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Int8Array;
@@ -59,7 +58,7 @@ public class KiteDemo {
 			
 			HTMLImageElement imageElement = (HTMLImageElement) DOCUMENT.createElement("img");
 			
-			imageElement.setSrc("https://github.com/tristan852/kite/blob/main/assets/images/brand/small_logo.png");
+			imageElement.setSrc("https://github.com/tristan852/kite/blob/main/assets/images/brand/small_logo.png?raw=true");
 			
 			container.appendChild(imageElement);
 			
@@ -97,7 +96,7 @@ public class KiteDemo {
 			cellColumn.appendChild(cell);
 		}
 		
-		return ;
+		return cellColumn;
 	}
 	
 	private HTMLElement createFlexBox(String direction) {
