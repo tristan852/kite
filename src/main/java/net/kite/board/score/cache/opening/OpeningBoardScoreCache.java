@@ -32,9 +32,14 @@ public class OpeningBoardScoreCache {
 	
 	public void loadFromResources(String resourcePath) {
 		InputStream inputStream = BoardScoreCache.class.getResourceAsStream(resourcePath);
+		
+		loadFromInputStream(inputStream);
+	}
+	
+	public void loadFromInputStream(InputStream inputStream) {
 		if(inputStream == null) {
 			
-			System.err.println("The opening score cache could not be found in resources!");
+			System.err.println("The opening score cache could not be found in (web-) resources!");
 			return;
 		}
 		

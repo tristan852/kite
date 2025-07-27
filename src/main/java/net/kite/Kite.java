@@ -4,6 +4,7 @@ import net.kite.board.Board;
 import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.player.color.BoardPlayerColor;
 import net.kite.board.score.cache.BoardScoreCache;
+import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.skill.level.SkillLevel;
 
 import java.util.Random;
@@ -40,6 +41,8 @@ public class Kite {
 		BoardScoreCache boardScoreCache = new BoardScoreCache();
 		
 		this.board = new Board(boardScoreCache);
+		
+		OpeningBoardScoreCaches.ensureDefaultIsLoaded(null);
 		
 		board.evaluate();
 	}
