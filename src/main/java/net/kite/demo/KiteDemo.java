@@ -7,8 +7,6 @@ import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Int8Array;
 
-import java.io.ByteArrayInputStream;
-
 public class KiteDemo {
 	
 	public void onStart() {
@@ -31,12 +29,10 @@ public class KiteDemo {
 			
 			System.out.println("its bytes now");
 			
-			ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-			
 			System.out.println("db1");
 			System.out.println(bytes.length);
 			
-			OpeningBoardScoreCaches.ensureDefaultIsLoaded(inputStream);
+			OpeningBoardScoreCaches.ensureDefaultIsLoaded(bytes);
 			
 			System.out.println("db2");
 			

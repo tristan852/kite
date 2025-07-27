@@ -1,7 +1,5 @@
 package net.kite.board.score.cache.opening;
 
-import java.io.InputStream;
-
 public class OpeningBoardScoreCaches {
 	
 	public static final OpeningBoardScoreCache DEFAULT = new OpeningBoardScoreCache();
@@ -10,7 +8,7 @@ public class OpeningBoardScoreCaches {
 	
 	private static boolean defaultLoaded;
 	
-	public static void ensureDefaultIsLoaded(InputStream inputStream) {
+	public static void ensureDefaultIsLoaded(byte[] prefetchedCacheBytes) {
 		if(defaultLoaded) return;
 		
 		synchronized(OpeningBoardScoreCaches.class) {
@@ -18,8 +16,8 @@ public class OpeningBoardScoreCaches {
 			if(defaultLoaded) return;
 			defaultLoaded = true;
 			
-			if(inputStream == null) DEFAULT.loadFromResources(DEFAULT_RESOURCE_PATH);
-			else DEFAULT.loadFromInputStream(inputStream);
+			if(prefetchedCacheBytes == null) DEFAULT.loadFromResources(DEFAULT_RESOURCE_PATH);
+			else DEFAULT.loadFromBytes(prefetchedCacheBytes);
 		}
 	}
 	

@@ -33,13 +33,9 @@ public class OpeningBoardScoreCache {
 	public void loadFromResources(String resourcePath) {
 		InputStream inputStream = BoardScoreCache.class.getResourceAsStream(resourcePath);
 		
-		loadFromInputStream(inputStream);
-	}
-	
-	public void loadFromInputStream(InputStream inputStream) {
 		if(inputStream == null) {
 			
-			System.err.println("The opening score cache could not be found in (web-) resources!");
+			System.err.println("The opening score cache could not be found in resources!");
 			return;
 		}
 		
@@ -47,12 +43,8 @@ public class OpeningBoardScoreCache {
 			
 			int c = boardPartialColumnHashes.length;
 			
-			System.out.println("here1");
-			System.out.println("reading: " + c);
 			inputStream.readNBytes(boardPartialColumnHashes, 0, c);
-			System.out.println("here2");
 			inputStream.readNBytes(boardScores, 0, c);
-			System.out.println("here3");
 			
 			for(int i = 0; i < c; i++) {
 				
@@ -62,6 +54,32 @@ public class OpeningBoardScoreCache {
 		} catch(IOException exception) {
 			
 			String errorMessage = String.format("An exception occurred while loading opening score cache from resources: %s", exception);
+			System.err.println(errorMessage);
+		}
+	}
+	
+	public void loadFromBytes(byte[] bytes) {
+		if(bytes == null) {
+			
+			System.err.println("The opening score cache could not be found in web resources!");
+			return;
+		}
+		
+		try {
+			
+			int c = boardPartialColumnHashes.length;
+			
+			System.arraycopy(bytes, 0, boardPartialColumnHashes, 0, c);
+			System.arraycopy(bytes, c, boardScores, 0, c);
+			
+			for(int i = 0; i < c; i++) {
+				
+				boardScores[i] += BoardScore.INVALID;
+			}
+			
+		} catch(Exception exception) {
+			
+			String errorMessage = String.format("An exception occurred while loading opening score cache from bytes: %s", exception);
 			System.err.println(errorMessage);
 		}
 	}
