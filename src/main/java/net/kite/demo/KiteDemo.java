@@ -3,17 +3,20 @@ package net.kite.demo;
 import net.kite.Kite;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 import org.teavm.jso.ajax.XMLHttpRequest;
+import org.teavm.jso.dom.html.HTMLBodyElement;
 import org.teavm.jso.dom.html.HTMLDocument;
 import org.teavm.jso.dom.html.HTMLElement;
+import org.teavm.jso.dom.html.HTMLImageElement;
 import org.teavm.jso.dom.xml.Document;
+import org.teavm.jso.dom.xml.Node;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Int8Array;
 
 public class KiteDemo {
 	
+	private static final HTMLDocument DOCUMENT = HTMLDocument.current();
+	
 	public void onStart() {
-		HTMLDocument doc = HTMLDocument.current();
-		
 		XMLHttpRequest xhr = new XMLHttpRequest();
 		xhr.open("GET", "WEB-INF/classes/board_score_caches/opening.cfc");
 		xhr.setResponseType("arraybuffer");
@@ -42,30 +45,69 @@ public class KiteDemo {
 			kite.playMoves(2,6,6,5,4,4,4,3,2,2,1,2);
 			System.out.println(kite.evaluateBoard());
 			
-			var div = doc.createElement("div");
-			div.appendChild(doc.createTextNode("Hello world!"));
-			doc.getBody().appendChild(div);
+			HTMLBodyElement body = DOCUMENT.getBody();
 			
-			var div2 = doc.createElement("div");
-			div2.appendChild(doc.createTextNode("TeaVM generated element3; solver move: "));
-			doc.getBody().appendChild(div2);
+			while(true) {
+				
+				Node node = body.getFirstChild();
+				if(node == null) break;
+				
+				body.removeChild(node);
+			}
+			
+			HTMLElement container = createFlexBox("column");
+			
+			HTMLImageElement imageElement = (HTMLImageElement) DOCUMENT.createElement("img");
+			
+			imageElement.setSrc("https://github.com/tristan852/kite/blob/main/assets/images/brand/small_logo.png");
+			
+			container.appendChild(imageElement);
+			
+			container.appendChild(createBoard());
 		});
 		
 		xhr.send();
 	}
 	
-	private void createBoard(Document document) {
+	private HTMLElement createBoard() {
+		HTMLElement cellBoard = createFlexBox("row");
 		
+		for(int x = 0; x < 7; x++) {
+			
+			HTMLElement column = createBoardColumn();
+			
+			cellBoard.appendChild(column);
+		}
+		
+		return cellBoard;
 	}
 	
-	private void createBoardColumn(Document document) {
+	private HTMLElement createBoardColumn() {
+		HTMLElement cellColumn = createFlexBox("column");
+		
 		for(int y = 0; y < 6; y++) {
 			
-			HTMLElement container = (HTMLElement) document.createElement("div");
-			// container.getStyle().setP
+			HTMLElement cell = DOCUMENT.createElement("div");
+			
+			cell.getStyle().setProperty("width", "50px");
+			cell.getStyle().setProperty("height", "50px");
+			cell.getStyle().setProperty("height", "50px");
+			cell.getStyle().setProperty("borderRadius", "50%");
+			
+			cellColumn.appendChild(cell);
 		}
+		
+		return ;
 	}
 	
-	// private static HTMLDo
+	private HTMLElement createFlexBox(String direction) {
+		HTMLElement flexBox = DOCUMENT.createElement("div");
+		
+		flexBox.getStyle().setProperty("display", "flex");
+		flexBox.getStyle().setProperty("flexDirection", direction);
+		flexBox.getStyle().setProperty("gap", "10px"); // Optional: spacing between items
+		
+		return flexBox;
+	}
 	
 }
