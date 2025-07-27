@@ -51,17 +51,17 @@ jobs:
 
       - name: Find and unzip WAR file
         run: |
-          mkdir war-unpacked
+          mkdir build/war-unpacked
           WAR_FILE=$(find build/libs -name "*.war" | head -n 1)
           echo "Unzipping $WAR_FILE"
-          unzip "$WAR_FILE" -d war-unpacked
+          unzip "$WAR_FILE" -d build/war-unpacked
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'war-unpacked'
+          path: 'build/war-unpacked'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

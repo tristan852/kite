@@ -38,7 +38,7 @@ tasks.named("build") {
 
 tasks.register<Copy>("copyDemoAssetFiles") {
     from("assets/demo/")
-    into("build/generated/teavm")
+    into("build/war-unpacked")
 }
 
 signing {
