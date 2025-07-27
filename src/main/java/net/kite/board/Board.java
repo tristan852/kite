@@ -85,6 +85,8 @@ public class Board {
 	
 	private static final int MINIMAL_CHILD_CACHE_LOOKUP_DEPTH = 10;
 	
+	private static final int BITBOARD_HEIGHT = 8;
+	
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
 	private static final String TO_STRING_EMPTY_CELL_STRING = ".";
 	private static final String TO_STRING_MOVES_PREFIX_STRING = "moves: ";
@@ -222,7 +224,7 @@ public class Board {
 	
 	private long partialColumnHash(long columnHash, int x) {
 		int height = cellColumnHeights[x];
-		long board = Bitboards.bottomCellBitboard(x);
+		long board = Bitboards.BOTTOM_CELL_BITBOARDS[x];
 		
 		for(int y = 0; y < height; y++) {
 			
@@ -423,13 +425,11 @@ public class Board {
 			while(movesBitboard != 0) {
 				
 				int movePosition = Long.numberOfTrailingZeros(movesBitboard);
-				int moveCellX = movePosition >>> LOGARITHMIC_BITBOARD_LENGTH;
-				int moveCellY = cellColumnHeights[moveCellX];
 				
-				long moveBitboard = Bitboards.cellBitboard(movePosition);
+				long moveBitboard = Bitboards.CELL_BITBOARDS[movePosition];
 				movesBitboard ^= moveBitboard;
 				
-				long mirroredMoveBitboard = Bitboards.cellBitboard(LARGEST_MOVE_CELL_X - moveCellX, moveCellY);
+				long mirroredMoveBitboard = Bitboards.MIRRORED_BOARD_CELL_BITBOARDS[movePosition];
 				
 				long h1 = (bitboard ^ maskBitboard) + moveBitboard;
 				long h2 = (mirroredBitboard ^ mirroredMaskBitboard) + mirroredMoveBitboard;
@@ -463,7 +463,7 @@ public class Board {
 		if(immediateThreats != Bitboards.EMPTY) {
 			
 			int p = Long.numberOfTrailingZeros(immediateThreats);
-			long b = Bitboards.cellBitboard(p);
+			long b = Bitboards.CELL_BITBOARDS[p];
 			
 			immediateThreats ^= b;
 			if(immediateThreats != Bitboards.EMPTY) {
@@ -517,7 +517,7 @@ public class Board {
 			int movePosition = Long.numberOfTrailingZeros(movesBitboard);
 			int moveCellX = movePosition >>> LOGARITHMIC_BITBOARD_LENGTH;
 			
-			long moveBitboard = Bitboards.cellBitboard(movePosition);
+			long moveBitboard = Bitboards.CELL_BITBOARDS[movePosition];
 			movesBitboard ^= moveBitboard;
 			
 			long upperCellBitboard = moveBitboard << 1;
@@ -664,10 +664,10 @@ public class Board {
 		playedMoves[filledCellAmount] = moveCellX;
 		filledCellAmount++;
 		
-		int mirroredMoveCellX = LARGEST_MOVE_CELL_X - moveCellX;
+		int p = BITBOARD_HEIGHT * moveCellX + moveCellY;
 		
-		long b1 = Bitboards.cellBitboard(moveCellX, moveCellY);
-		long b2 = Bitboards.cellBitboard(mirroredMoveCellX, moveCellY);
+		long b1 = Bitboards.CELL_BITBOARDS[p];
+		long b2 = Bitboards.MIRRORED_BOARD_CELL_BITBOARDS[p];
 		
 		activeBitboard = activeBitboard ^ maskBitboard;
 		maskBitboard |= b1;
@@ -756,7 +756,9 @@ public class Board {
 		
 		if(cellY >= height) return null;
 		
-		long board = Bitboards.cellBitboard(cellX, cellY);
+		int cellPosition = BITBOARD_HEIGHT * cellX + cellY;
+		
+		long board = Bitboards.CELL_BITBOARDS[cellPosition];
 		BoardPlayerColor activePlayerColor = activePlayerColor();
 		
 		return (activeBitboard & board) == 0 ? activePlayerColor.opposite() : activePlayerColor;
@@ -807,7 +809,7 @@ public class Board {
 			while(wins != 0) {
 				
 				int winPosition = Long.numberOfTrailingZeros(wins);
-				long winBitboard = Bitboards.cellBitboard(winPosition);
+				long winBitboard = Bitboards.CELL_BITBOARDS[winPosition];
 				
 				wins ^= winBitboard;
 				
@@ -907,9 +909,9 @@ public class Board {
 		while(bitboard != 0) {
 			
 			int p = Long.numberOfTrailingZeros(bitboard);
-			bitboard ^= Bitboards.cellBitboard(p);
 			
-			result |= Bitboards.cellsBelowCellBitboard(p);
+			bitboard ^= Bitboards.CELL_BITBOARDS[p];
+			result |= Bitboards.CELLS_BELOW_CELL_BITBOARDS[p];
 		}
 		
 		return result;

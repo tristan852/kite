@@ -17,7 +17,9 @@ public class Bitboard {
 		for(int y = HEIGHT - 1; y >= 0; y--) {
 			for(int x = 0; x < WIDTH; x++) {
 				
-				long board = Bitboards.cellBitboard(x, y);
+				int p = HEIGHT * x + y;
+				
+				long board = Bitboards.CELL_BITBOARDS[p];
 				boolean contained = (bitboard & board) != 0;
 				
 				String s = contained ? TO_STRING_CELL_STRING : TO_STRING_MISSING_CELL_STRING;
@@ -34,8 +36,8 @@ public class Bitboard {
 		return Long.numberOfTrailingZeros(bitboard);
 	}
 	
-	public static long toggleCell(long bitboard, int cellX, int cellY) {
-		long board = Bitboards.cellBitboard(cellX, cellY);
+	public static long toggleCell(long bitboard, int cellPosition) {
+		long board = Bitboards.CELL_BITBOARDS[cellPosition];
 		
 		return bitboard ^ board;
 	}

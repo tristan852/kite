@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.4.1";
+	private static final String VERSION = "1.4.2";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -138,6 +138,10 @@ public class Kite {
 	 * Returns the outcome of the game.
 	 * If the game has not ended yet {@link BoardOutcome#UNDECIDED}
 	 * will be returned.
+	 * <p>
+	 * Note that this is not a prediction of
+	 * who is going to win (use {@link Kite#evaluateBoard()}
+	 * for that).
 	 *
 	 * @return game outcome
 	 */
@@ -638,7 +642,7 @@ public class Kite {
 	 * exists once and <b>is</b> shared across solvers.
 	 * Solver instances are thread-safe by not allowing
 	 * multiple threads to use them in parallel.
-	 * If you create the first (or one of the first)
+	 * If you are creating the first (or one of the first)
 	 * solver instances some additional time might be
 	 * spent on warming up the solver and initializing
 	 * solver-shared state, like the opening book.
