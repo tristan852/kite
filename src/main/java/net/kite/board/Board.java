@@ -354,7 +354,7 @@ public class Board {
 		}
 		
 		int minScore = BoardScore.minimal(filledCellAmount);
-		int maxScore = BoardScore.maximal(filledCellAmount);
+		int maxScore = BoardScore.maximalWithNoImmediateWin(filledCellAmount);
 		
 		long emptyCells = ~maskBitboard;
 		emptyCells &= Bitboards.FULL_BOARD;
