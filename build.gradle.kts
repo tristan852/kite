@@ -37,7 +37,7 @@ tasks.named("build") {
 }
 
 tasks.register<Copy>("copyDemoAssetFiles") {
-    from("demo/")
+    from("assets/demo/")
     into("build/generated/teavm")
 }
 
