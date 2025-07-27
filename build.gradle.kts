@@ -33,11 +33,11 @@ tasks.test {
 }
 
 tasks.named("build") {
-    finalizedBy("copyDemoIndexFile")
+    finalizedBy("copyDemoAssetFiles")
 }
 
-tasks.register<Copy>("copyDemoIndexFile") {
-    from("demo/index.html")
+tasks.register<Copy>("copyDemoAssetFiles") {
+    from("demo/")
     into("build/generated/teavm")
 }
 
