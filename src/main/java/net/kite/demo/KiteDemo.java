@@ -17,6 +17,8 @@ public class KiteDemo {
 			} else {
 				System.out.println("DID NOT GET IT");
 			}
+			
+			System.out.println(xhr.getResponse());
 		});
 		xhr.send();
 		
