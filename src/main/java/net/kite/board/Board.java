@@ -88,7 +88,7 @@ public class Board {
 	private static final int BITBOARD_HEIGHT = 8;
 	
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
-	private static final String TO_STRING_EMPTY_CELL_STRING = ".";
+	private static final char TO_STRING_EMPTY_CELL_CHARACTER = '.';
 	private static final String TO_STRING_MOVES_PREFIX_STRING = "moves: ";
 	private static final String TO_STRING_MOVE_SCORES_PREFIX_STRING = "\nmove scores: ";
 	private static final String TO_STRING_MOVE_SCORE_SEPARATOR_STRING = ", ";
@@ -149,7 +149,7 @@ public class Board {
 			for(int x = 0; x < WIDTH; x++) {
 				
 				BoardPlayerColor cellPlayerColor = cellPlayerColor(x, y);
-				String cellString = cellPlayerColor == null ? TO_STRING_EMPTY_CELL_STRING : cellPlayerColor.getString();
+				char cellString = cellPlayerColor == null ? TO_STRING_EMPTY_CELL_CHARACTER : cellPlayerColor.getCharacter();
 				
 				stringBuilder.append(cellString);
 			}

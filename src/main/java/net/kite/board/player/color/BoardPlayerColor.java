@@ -12,18 +12,18 @@ public enum BoardPlayerColor {
 	 * The player color of the red player.
 	 * This player goes first.
 	 */
-	RED("X"),
+	RED('X'),
 	
 	/**
 	 * The player color of the yellow player.
 	 * This player goes second.
 	 */
-	YELLOW("O");
+	YELLOW('O');
 	
-	private final String string;
+	private final char character;
 	
-	BoardPlayerColor(String string) {
-		this.string = string;
+	BoardPlayerColor(char character) {
+		this.character = character;
 	}
 	
 	/**
@@ -40,15 +40,15 @@ public enum BoardPlayerColor {
 	}
 	
 	/**
-	 * Returns a {@link String} with one single
-	 * character corresponding to the character that
-	 * is being used for this player color inside
-	 * board strings.
+	 * Returns a {@code char} corresponding
+	 * to the character that is being used
+	 * for this player color inside of
+	 * board string representations.
 	 *
-	 * @return player character string
+	 * @return player character
 	 */
-	public String getString() {
-		return string;
+	public char getCharacter() {
+		return character;
 	}
 	
 }
