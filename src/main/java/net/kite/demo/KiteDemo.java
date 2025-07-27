@@ -63,6 +63,8 @@ public class KiteDemo {
 			container.appendChild(imageElement);
 			
 			container.appendChild(createBoard());
+			
+			DOCUMENT.appendChild(container);
 		});
 		
 		xhr.send();
