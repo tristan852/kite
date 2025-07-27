@@ -27,17 +27,17 @@ public class KiteDemo {
 			ArrayBuffer arrayBuffer = (ArrayBuffer) xhr.getResponse();
 			Int8Array array = new Int8Array(arrayBuffer);
 			
-			int n = array.getLength();
-			byte[] bytes = new byte[n];
+			byte[] bytes = array.copyToJavaArray();
 			
-			for(int i = 0; i < n; i++) {
-				
-				bytes[i] = array.get(i);
-			}
+			System.out.println("its bytes now");
 			
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
 			
+			System.out.println("db1");
+			
 			OpeningBoardScoreCaches.ensureDefaultIsLoaded(inputStream);
+			
+			System.out.println("db2");
 			
 			System.out.println(Kite.createInstance().optimalMove());
 			System.out.println(bytes.length);
