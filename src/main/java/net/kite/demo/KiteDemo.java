@@ -34,6 +34,7 @@ public class KiteDemo {
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
 			
 			System.out.println("db1");
+			System.out.println(bytes.length);
 			
 			OpeningBoardScoreCaches.ensureDefaultIsLoaded(inputStream);
 			

@@ -13,14 +13,11 @@ public class OpeningBoardScoreCaches {
 	public static void ensureDefaultIsLoaded(InputStream inputStream) {
 		if(defaultLoaded) return;
 		
-		System.out.println("db3");
 		synchronized(OpeningBoardScoreCaches.class) {
 			
 			if(defaultLoaded) return;
 			defaultLoaded = true;
 			
-			System.out.println("db4");
-			System.out.println("is: " + inputStream);
 			if(inputStream == null) DEFAULT.loadFromResources(DEFAULT_RESOURCE_PATH);
 			else DEFAULT.loadFromInputStream(inputStream);
 		}
