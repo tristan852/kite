@@ -167,6 +167,10 @@ public class KiteDemo {
 		
 	}
 	
+	private void clearBoard() {
+		while(playedMoveAmount > 0) undoMove();
+	}
+	
 	private void playHumanMove(int moveX) {
 		if(solver.gameOver()) return;
 		
@@ -272,6 +276,7 @@ public class KiteDemo {
 			HTMLElement label = DOCUMENT.createElement("span");
 			
 			label.getStyle().setProperty("width", "56px");
+			label.getStyle().setProperty("height", "20px");
 			label.getStyle().setProperty("text-align", "center");
 			label.getStyle().setProperty("font-weight", "bold");
 			
