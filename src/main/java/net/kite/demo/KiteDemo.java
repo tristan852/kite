@@ -80,6 +80,7 @@ public class KiteDemo {
 		HTMLElement version = DOCUMENT.createElement("span");
 		
 		version.setTextContent("v" + Kite.getVersion());
+		version.getStyle().setProperty("font-style", "italic");
 		
 		sidebarContainer.appendChild(version);
 		
@@ -208,12 +209,14 @@ public class KiteDemo {
 			HTMLElement label = DOCUMENT.createElement("span");
 			
 			label.getStyle().setProperty("width", "56px");
+			label.getStyle().setProperty("text-align", "center");
+			label.getStyle().setProperty("font-style", "bold");
 			label.setTextContent("T");
 			
 			labels.appendChild(label);
 		}
 		
-		HTMLElement container = createFlexBox("column", 0);
+		HTMLElement container = createFlexBox("column", 30);
 		
 		container.appendChild(cellBoard);
 		container.appendChild(labels);
