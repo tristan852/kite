@@ -59,6 +59,12 @@ public class KiteDemo {
 			
 			container.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png", "", 120));
 			
+			HTMLElement version = DOCUMENT.createElement("span");
+			
+			version.setTextContent("v" + Kite.getVersion());
+			
+			container.appendChild(version);
+			
 			HTMLButtonElement button = (HTMLButtonElement) DOCUMENT.createElement("button");
 			
 			button.setTextContent("Analyze / Play vs AI");
