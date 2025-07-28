@@ -83,14 +83,20 @@ public class KiteDemo {
 		
 		HTMLButtonElement button = (HTMLButtonElement) DOCUMENT.createElement("button");
 		
-		button.setTextContent("Analyze / Play vs AI");
+		button.setTextContent("Mode: Analyze / Play vs AI");
 		button.onClick((mouseEvent) -> toggleMode());
+		
+		HTMLButtonElement button2 = (HTMLButtonElement) DOCUMENT.createElement("button");
+		
+		button2.setTextContent("New game");
+		button2.onClick((mouseEvent) -> toggleMode());
 		
 		HTMLSelectElement select = (HTMLSelectElement) DOCUMENT.createElement("select");
 		
 		select.getOptions().add((HTMLOptionElement) DOCUMENT.createElement("option"));
 		
 		controlsContainer.appendChild(button);
+		controlsContainer.appendChild(button2);
 		controlsContainer.appendChild(select);
 		
 		container.appendChild(controlsContainer);
