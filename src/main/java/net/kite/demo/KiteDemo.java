@@ -71,18 +71,17 @@ public class KiteDemo {
 		}
 		
 		System.out.println("db3");
-		HTMLElement container = createFlexBox("column", 60);
+		HTMLElement container = createFlexBox("row", 60);
+		HTMLElement sidebarContainer = createFlexBox("column", 60);
+		HTMLElement controlsContainer = createFlexBox("row", 60);
 		
-		container.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png", "", 120));
+		sidebarContainer.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png", "", 120));
 		
 		HTMLElement version = DOCUMENT.createElement("span");
 		
 		version.setTextContent("v" + Kite.getVersion());
 		
-		container.appendChild(version);
-		
-		System.out.println("db2");
-		HTMLElement controlsContainer = createFlexBox("row", 60);
+		sidebarContainer.appendChild(version);
 		
 		HTMLButtonElement button = (HTMLButtonElement) DOCUMENT.createElement("button");
 		
@@ -108,13 +107,15 @@ public class KiteDemo {
 		controlsContainer.appendChild(button3);
 		controlsContainer.appendChild(select);
 		
-		container.appendChild(controlsContainer);
+		sidebarContainer.appendChild(controlsContainer);
 		
-		container.appendChild(createBoard());
-		
-		container.appendChild(wrapWithLink(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.png", "", 60), "https://github.com/tristan852/kite"));
+		sidebarContainer.appendChild(wrapWithLink(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.png", "", 60), "https://github.com/tristan852/kite"));
 		
 		System.out.println("db1");
+		
+		container.appendChild(sidebarContainer);
+		container.appendChild(createBoard());
+		
 		body.appendChild(container);
 		
 		playAIMove();
@@ -206,7 +207,7 @@ public class KiteDemo {
 			
 			HTMLElement label = DOCUMENT.createElement("span");
 			
-			label.getStyle().setProperty("width", "50px");
+			label.getStyle().setProperty("width", "56px");
 			label.setTextContent("T");
 			
 			labels.appendChild(label);
