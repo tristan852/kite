@@ -37,6 +37,9 @@ public class KiteDemo {
 	private final HTMLElement[][] cells = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
 	private final HTMLElement[] cellLabels = new HTMLElement[BOARD_WIDTH];
 	
+	private HTMLElement modeButton;
+	private HTMLSelectElement levelSelect;
+	
 	public void onStart() {
 		XMLHttpRequest xhr = new XMLHttpRequest();
 		xhr.open("GET", "WEB-INF/classes/board_score_caches/opening.cfc");
@@ -92,12 +95,12 @@ public class KiteDemo {
 		brandContainer.appendChild(version);
 		sidebarContainer.appendChild(brandContainer);
 		
-		HTMLElement button = createControl("button", (mouseEvent) -> {
+		modeButton = createControl("button", (mouseEvent) -> {
 			
 			toggleMode();
 		});
 		
-		button.setTextContent("Mode: Analyze / Play vs AI");
+		modeButton.setTextContent("Mode: Analyze / Play vs AI");
 		
 		HTMLElement button2 = createControl("button", (mouseEvent) -> {
 			
@@ -113,15 +116,15 @@ public class KiteDemo {
 		
 		button3.setTextContent("Undo Move");
 		
-		HTMLSelectElement select = (HTMLSelectElement) createControl("select", (mouseEvent) -> {
+		levelSelect = (HTMLSelectElement) createControl("select", (mouseEvent) -> {
 			
 			toggleMode();
 		});
 		
-		select.getOptions().add((HTMLOptionElement) DOCUMENT.createElement("option"));
+		levelSelect.getOptions().add((HTMLOptionElement) DOCUMENT.createElement("option"));
 		
-		controlsContainer.appendChild(button);
-		controlsContainer.appendChild(select);
+		controlsContainer.appendChild(modeButton);
+		controlsContainer.appendChild(levelSelect);
 		controlsContainer.appendChild(button2);
 		controlsContainer.appendChild(button3);
 		

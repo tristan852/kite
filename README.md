@@ -32,6 +32,18 @@ Internally, Kite leverages **alpha-beta pruning**, **symmetry reduction**, **bit
 
 ---
 
+## 🕹️ Online Demo
+
+Try the solver directly in your browser:
+
+👉 **[Launch the Demo](https://tristan852.github.io/kite)**
+
+You can set up and analyze positions, or play against AI opponents of varying strength — no installation required.
+
+The demo runs natively in WebAssembly and is generally slower than the Java library, though still fast enough for typical use.
+
+---
+
 ## 📦 Installation
 
 Kite is available via **Maven Central** and can be easily added to any **Gradle** or **Maven** project.
@@ -170,18 +182,6 @@ public class B {
 	
 }
 ```
-
----
-
-## 🕹️ Online Demo
-
-Try the solver directly in your browser:
-
-👉 **[Launch the Demo](https://tristan852.github.io/kite)**
-
-You can set up and analyze positions, or play against AI opponents of varying strength — no installation required.
-
-The demo runs natively in WebAssembly and is generally slower than the Java library, though still fast enough for typical use.
 
 ---
 
