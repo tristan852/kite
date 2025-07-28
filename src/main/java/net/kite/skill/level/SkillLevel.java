@@ -23,7 +23,7 @@ public enum SkillLevel {
 	 * that always plays uniformly sampled
 	 * random moves.
 	 */
-	RANDOM(Integer.MAX_VALUE),
+	RANDOM(Integer.MAX_VALUE, 1000),
 	
 	/**
 	 * Level one (the weakest level above random;
@@ -31,57 +31,57 @@ public enum SkillLevel {
 	 * {@link SkillLevel#RANDOM} the distribution is
 	 * not uniform)
 	 */
-	ONE(36),
+	ONE(36, 1285),
 	
 	/**
 	 * Level two
 	 */
-	TWO(32),
+	TWO(32, 1329),
 	
 	/**
 	 * Level three
 	 */
-	THREE(28),
+	THREE(28, 1382),
 	
 	/**
 	 * Level four
 	 */
-	FOUR(24),
+	FOUR(24, 1443),
 	
 	/**
 	 * Level five
 	 */
-	FIVE(20),
+	FIVE(20, 1536),
 	
 	/**
 	 * Level six
 	 */
-	SIX(16),
+	SIX(16, 1636),
 	
 	/**
 	 * Level seven
 	 */
-	SEVEN(12),
+	SEVEN(12, 1789),
 	
 	/**
 	 * Level eight
 	 */
-	EIGHT(8),
+	EIGHT(8, 2006),
 	
 	/**
 	 * Level nine
 	 */
-	NINE(4),
+	NINE(4, 2380),
 	
 	/**
 	 * Level ten (the strongest level; equivalent to {@link SkillLevel#PERFECT})
 	 */
-	TEN(0),
+	TEN(0, 3005),
 	
 	/**
 	 * The level of a perfect Connect Four player
 	 */
-	PERFECT(0),
+	PERFECT(0, 3005),
 	
 	/**
 	 * This skill level always tries to match
@@ -89,7 +89,7 @@ public enum SkillLevel {
 	 * opponent by attempting to equalize the
 	 * position.
 	 */
-	ADAPTIVE(Integer.MAX_VALUE);
+	ADAPTIVE(Integer.MAX_VALUE, -1);
 	
 	private static final SkillLevel[] ORDERED_LEVELS = new SkillLevel[] {
 			ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN
@@ -97,8 +97,11 @@ public enum SkillLevel {
 	
 	private final int maximalScoreLoss;
 	
-	SkillLevel(int maximalScoreLoss) {
+	private final int approximateEloRating;
+	
+	SkillLevel(int maximalScoreLoss, int approximateEloRating) {
 		this.maximalScoreLoss = maximalScoreLoss;
+		this.approximateEloRating = approximateEloRating;
 	}
 	
 	/**
@@ -110,6 +113,18 @@ public enum SkillLevel {
 	 */
 	public int getMaximalScoreLoss() {
 		return maximalScoreLoss;
+	}
+	
+	/**
+	 * Returns the approximate ELO rating
+	 * of players of this skill level.
+	 * For the adaptive skill level
+	 * {@code -1} is returned instead.
+	 *
+	 * @return approximate ELO rating
+	 */
+	public int getApproximateEloRating() {
+		return approximateEloRating;
 	}
 	
 	/**

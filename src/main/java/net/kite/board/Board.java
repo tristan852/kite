@@ -8,6 +8,7 @@ import net.kite.board.player.color.BoardPlayerColor;
 import net.kite.board.score.BoardScore;
 import net.kite.board.score.cache.BoardScoreCache;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
+import net.kite.skill.level.SkillLevel;
 
 public class Board {
 	
@@ -86,6 +87,12 @@ public class Board {
 	private static final int MINIMAL_CHILD_CACHE_LOOKUP_DEPTH = 10;
 	
 	private static final int BITBOARD_HEIGHT = 8;
+	
+	private static final float ELO_APPROXIMATION_FIRST_COEFFICIENT = 2707.77f;
+	private static final float ELO_APPROXIMATION_SECOND_COEFFICIENT = -0.295056f;
+	
+	private static final int ELO_APPROXIMATION_RED_MIN_MOVE_AMOUNT = 1;
+	private static final int ELO_APPROXIMATION_YELLOW_MIN_MOVE_AMOUNT = 2;
 	
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
 	private static final char TO_STRING_EMPTY_CELL_CHARACTER = '.';
@@ -195,6 +202,48 @@ public class Board {
 		stringBuilder.append(outcome);
 		
 		return stringBuilder.toString();
+	}
+	
+	public float approximateEloRatingOfPlayer(BoardPlayerColor playerColor) {
+		int n = filledCellAmount;
+		int minMoveAmount = playerColor == BoardPlayerColor.RED ? ELO_APPROXIMATION_RED_MIN_MOVE_AMOUNT : ELO_APPROXIMATION_YELLOW_MIN_MOVE_AMOUNT;
+		
+		if(n < minMoveAmount) {
+			
+			return SkillLevel.TEN.getApproximateEloRating();
+		}
+		
+		while(filledCellAmount != 0) {
+			
+			undoMove();
+		}
+		
+		int totalScoreLoss = 0;
+		int m = 0;
+		
+		int previousBoardScore = evaluate();
+		
+		boolean playerAtTurn = playerColor == BoardPlayerColor.RED;
+		
+		for(int i = 0; i < n; i++) {
+			
+			int move = playedMoves[i];
+			
+			playMove(move);
+			
+			int boardScore = evaluate();
+			if(playerAtTurn) {
+				
+				totalScoreLoss += previousBoardScore + boardScore;
+				m++;
+			}
+			
+			playerAtTurn = !playerAtTurn;
+			previousBoardScore = boardScore;
+		}
+		
+		float averageScoreLoss = (float) totalScoreLoss / m;
+		return approximateElo(averageScoreLoss);
 	}
 	
 	public String movesString() {
@@ -939,6 +988,14 @@ public class Board {
 	
 	public static int getHeight() {
 		return HEIGHT;
+	}
+	
+	private static float approximateElo(float averageScoreLoss) {
+		averageScoreLoss *= ELO_APPROXIMATION_SECOND_COEFFICIENT;
+		averageScoreLoss = (float) Math.exp(averageScoreLoss);
+		averageScoreLoss *= ELO_APPROXIMATION_FIRST_COEFFICIENT;
+		
+		return averageScoreLoss;
 	}
 	
 	private static String formatMoveScore(int moveScore) {

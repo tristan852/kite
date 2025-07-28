@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.4.5";
+	private static final String VERSION = "1.5.0";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -53,6 +53,10 @@ public class Kite {
 	 * <p>
 	 * This method is equivalent to
 	 * {@link Kite#boardString}.
+	 * <p>
+	 * Note that this method also blocks
+	 * any concurrent access from other
+	 * threads to this solver instance.
 	 *
 	 * @return game state string representation
 	 */
@@ -423,6 +427,30 @@ public class Kite {
 		}
 		
 		return moveScores;
+	}
+	
+	/**
+	 * Uses all the moves played so far onto
+	 * this solver instance to evaluate the
+	 * performance of a given player.
+	 * If the game that is currently
+	 * loaded is already over (see {@link Kite#gameOver()})
+	 * then the entire match will be used
+	 * to give an Elo approximation.
+	 * <p>
+	 * Note that Elo rating approximation based
+	 * on a few moves are even an entire game
+	 * can still be inaccurate.
+	 * The returned Elo rating approximation
+	 * is based upon the approximate Elo
+	 * ratings of the different {@link SkillLevel}s
+	 * (see also {@link SkillLevel#getApproximateEloRating()}).
+	 *
+	 * @param playerColor the color of the player whose performance is to be evaluated
+	 * @return Elo rating approximation
+	 */
+	public synchronized float evaluatePlayerPerformance(BoardPlayerColor playerColor) {
+		return board.approximateEloRatingOfPlayer(playerColor);
 	}
 	
 	/**
