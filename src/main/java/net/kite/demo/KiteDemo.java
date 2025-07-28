@@ -237,7 +237,7 @@ public class KiteDemo {
 		
 		levelSelect.setSelectedIndex(level);
 		
-		clearBoard();
+		if(aiPlay) clearBoard();
 	}
 	
 	private void setWindowSearch() {
@@ -276,6 +276,7 @@ public class KiteDemo {
 		playMove(moveX);
 		movesToRedoAmount = 0;
 		
+		if(solver.gameOver()) return;
 		System.out.println(aiPlay + ", " + aiPlaysRed + ", " + redAtTurn);
 		if(aiPlay && aiPlaysRed == redAtTurn) playAIMove();
 	}
