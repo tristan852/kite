@@ -77,10 +77,11 @@ public class KiteDemo {
 		}
 		
 		HTMLElement container = createFlexBox("row", 80);
-		HTMLElement sidebarContainer = createFlexBox("column", 60);
+		HTMLElement sidebarContainer = createFlexBox("column", 54);
 		HTMLElement controlsContainer = createFlexBox("column", 10);
 		HTMLElement brandContainer = createFlexBox("column", 40);
 		
+		brandContainer.getStyle().setProperty("margin", "6px");
 		brandContainer.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png", "", 120));
 		
 		HTMLElement version = DOCUMENT.createElement("span");
