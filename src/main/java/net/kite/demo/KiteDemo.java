@@ -138,7 +138,7 @@ public class KiteDemo {
 		
 		sidebarContainer.appendChild(controlsContainer);
 		
-		HTMLElement githubLink = createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.png", "", 60);
+		HTMLElement githubLink = createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.png", "", 50);
 		
 		githubLink.getStyle().setProperty("padding", "6px");
 		
