@@ -212,6 +212,7 @@ public class KiteDemo {
 		
 		cell.getStyle().setProperty("background-color", redAtTurn ? "#FB2C36" : "#F0B100");
 		
+		System.out.println("here: " + moveX);
 		solver.playMove(moveX);
 		redAtTurn = !redAtTurn;
 		
