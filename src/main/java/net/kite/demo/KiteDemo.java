@@ -165,6 +165,7 @@ public class KiteDemo {
 		if(!search.isBlank()) {
 			
 			String[] items = search.split("&");
+			System.out.println(Arrays.toString(items));
 			for(String item : items) {
 				
 				String key = item.split("=")[0];
