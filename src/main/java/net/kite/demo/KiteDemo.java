@@ -105,8 +105,6 @@ public class KiteDemo {
 	
 	// TODO synchronize (keyword) these
 	
-	private void 
-	
 	private void playHumanMove(int moveX) {
 		int height = columnHeights[moveX];
 		if(height == BOARD_HEIGHT) return;
