@@ -121,7 +121,7 @@ public class KiteDemo {
 		
 		HTMLElement button3 = createControl("button", (mouseEvent) -> {
 			
-			undoMove();
+			if(!aiPlay) undoMove();
 		});
 		
 		button3.setTextContent("Undo Move");
