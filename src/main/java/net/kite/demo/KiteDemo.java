@@ -15,6 +15,7 @@ public class KiteDemo {
 	
 	private static final int BOARD_WIDTH = 7;
 	private static final int BOARD_HEIGHT = 6;
+	private static final int BOARD_SIZE = 42;
 	
 	// TODO keep solver in sync after each play/undo
 	
@@ -29,6 +30,9 @@ public class KiteDemo {
 	
 	private final int[] columnHeights = new int[BOARD_WIDTH];
 	private boolean redAtTurn = true;
+	
+	private final int[] playedMoves = new int[BOARD_SIZE];
+	private int playedMoveAmount;
 	
 	private final HTMLElement[][] cells = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
 	private final HTMLElement[] cellLabels = new HTMLElement[BOARD_WIDTH];
@@ -103,7 +107,7 @@ public class KiteDemo {
 		
 		HTMLElement button3 = createControl("button", (mouseEvent) -> {
 			
-			toggleMode();
+			undoMove();
 		});
 		
 		button3.setTextContent("Undo Move");
@@ -193,11 +197,23 @@ public class KiteDemo {
 		solver.playMove(moveX);
 		redAtTurn = !redAtTurn;
 		
+		playedMoves[playedMoveAmount] = moveX;
+		playedMoveAmount++;
+		
 		updateLabels();
 	}
 	
-	private void undoMove(int moveX, int moveY) {
-		HTMLElement cell = cells[moveX - 1][moveY];
+	private void undoMove() {
+		playedMoveAmount--;
+		
+		int moveX = playedMoves[playedMoveAmount];
+		int columnIndex = moveX - 1;
+		
+		columnHeights[columnIndex]--;
+		
+		int moveY = columnHeights[columnIndex];
+		
+		HTMLElement cell = cells[columnIndex][moveY];
 		
 		cell.getStyle().setProperty("background-color", "#09090B");
 		
