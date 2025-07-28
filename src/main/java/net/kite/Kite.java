@@ -26,6 +26,7 @@ public class Kite {
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
+	private static final int GAME_PLAYER_AMOUNT = 2;
 	
 	private static final int[] ORDERED_MOVE_COLUMN_INDICES = new int[] {
 			3, 2, 4, 1, 5, 0, 6
@@ -382,6 +383,94 @@ public class Kite {
 	}
 	
 	/**
+	 * Uses all the moves played so far onto
+	 * this solver instance to evaluate the
+	 * performance of both players.
+	 * If the game that is currently
+	 * loaded is already over (see {@link Kite#gameOver()})
+	 * then the entire match will be used
+	 * to give an Elo approximation.
+	 * <p>
+	 * Note that Elo rating approximation based
+	 * on a few moves are even an entire game
+	 * can still be inaccurate.
+	 * The returned Elo rating approximation
+	 * is based upon the approximate Elo
+	 * ratings of the different {@link SkillLevel}s
+	 * (see also {@link SkillLevel#getApproximateEloRating()}).
+	 * <p>
+	 * The Elo rating approximation of the first player will
+	 * be the first element of the returned array and the
+	 * rating approximation of the second player will be
+	 * the second element.
+	 *
+	 * @param playerRatingApproximations the buffer of length {@code 2} to write Elo rankings to
+	 * @return Elo rating approximation of both players
+	 */
+	public synchronized float[] evaluatePlayerPerformances(float[] playerRatingApproximations) {
+		board.approximateEloRatingOfBothPlayer(playerRatingApproximations);
+		
+		return playerRatingApproximations;
+	}
+	
+	/**
+	 * Uses all the moves played so far onto
+	 * this solver instance to evaluate the
+	 * performance of both players.
+	 * If the game that is currently
+	 * loaded is already over (see {@link Kite#gameOver()})
+	 * then the entire match will be used
+	 * to give an Elo approximation.
+	 * <p>
+	 * Note that Elo rating approximation based
+	 * on a few moves are even an entire game
+	 * can still be inaccurate.
+	 * The returned Elo rating approximation
+	 * is based upon the approximate Elo
+	 * ratings of the different {@link SkillLevel}s
+	 * (see also {@link SkillLevel#getApproximateEloRating()}).
+	 * <p>
+	 * The Elo rating approximation of the first player will
+	 * be the first element of the returned array and the
+	 * rating approximation of the second player will be
+	 * the second element.
+	 * Use {@link Kite#evaluatePlayerPerformances(float[] playerRatingApproximations)}
+	 * if you already have a buffer to write the player
+	 * evaluations into.
+	 *
+	 * @return Elo rating approximation of both players
+	 */
+	public synchronized float[] evaluatePlayerPerformances() {
+		float[] eloBuffer = new float[GAME_PLAYER_AMOUNT];
+		
+		return board.approximateEloRatingOfBothPlayer(eloBuffer);
+	}
+	
+	/**
+	 * Uses all the moves played so far onto
+	 * this solver instance to evaluate the
+	 * performance of a given player.
+	 * If the game that is currently
+	 * loaded is already over (see {@link Kite#gameOver()})
+	 * then the entire match will be used
+	 * to give an Elo approximation.
+	 * <p>
+	 * Note that Elo rating approximation based
+	 * on a few moves are even an entire game
+	 * can still be inaccurate.
+	 * The returned Elo rating approximation
+	 * is based upon the approximate Elo
+	 * ratings of the different {@link SkillLevel}s
+	 * (see also {@link SkillLevel#getApproximateEloRating()}).
+	 *
+	 * @param playerColor the color of the player whose performance is to be evaluated
+	 * @return Elo rating approximation
+	 */
+	public synchronized float evaluatePlayerPerformance(BoardPlayerColor playerColor) {
+		return board.approximateEloRatingOfPlayer(playerColor);
+	}
+	
+	/**
 	 * Evaluates each legal move in the same way
 	 * that ({@link Kite#evaluateMove(int moveColumnIndex)})
 	 * would do.
@@ -427,30 +516,6 @@ public class Kite {
 		}
 		
 		return moveScores;
-	}
-	
-	/**
-	 * Uses all the moves played so far onto
-	 * this solver instance to evaluate the
-	 * performance of a given player.
-	 * If the game that is currently
-	 * loaded is already over (see {@link Kite#gameOver()})
-	 * then the entire match will be used
-	 * to give an Elo approximation.
-	 * <p>
-	 * Note that Elo rating approximation based
-	 * on a few moves are even an entire game
-	 * can still be inaccurate.
-	 * The returned Elo rating approximation
-	 * is based upon the approximate Elo
-	 * ratings of the different {@link SkillLevel}s
-	 * (see also {@link SkillLevel#getApproximateEloRating()}).
-	 *
-	 * @param playerColor the color of the player whose performance is to be evaluated
-	 * @return Elo rating approximation
-	 */
-	public synchronized float evaluatePlayerPerformance(BoardPlayerColor playerColor) {
-		return board.approximateEloRatingOfPlayer(playerColor);
 	}
 	
 	/**

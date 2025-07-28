@@ -204,6 +204,66 @@ public class Board {
 		return stringBuilder.toString();
 	}
 	
+	public void approximateEloRatingOfBothPlayer(float[] eloBuffer) {
+		int n = filledCellAmount;
+		while(filledCellAmount != 0) {
+			
+			undoMove();
+		}
+		
+		int redTotalScoreLoss = 0;
+		int yellowTotalScoreLoss = 0;
+		
+		int m1 = 0;
+		int m2 = 0;
+		
+		int previousBoardScore = evaluate();
+		
+		boolean redAtTurn = true;
+		
+		for(int i = 0; i < n; i++) {
+			
+			int move = playedMoves[i];
+			
+			playMove(move);
+			
+			int boardScore = evaluate();
+			if(redAtTurn) {
+				
+				redTotalScoreLoss += previousBoardScore + boardScore;
+				m1++;
+				
+			} else {
+				
+				yellowTotalScoreLoss += previousBoardScore + boardScore;
+				m2++;
+			}
+			
+			redAtTurn = !redAtTurn;
+			previousBoardScore = boardScore;
+		}
+		
+		float f1;
+		float f2;
+		
+		if(m1 == 0) f1 = SkillLevel.TEN.getApproximateEloRating();
+		else {
+			
+			float averageScoreLoss = (float) redTotalScoreLoss / m1;
+			f1 = approximateElo(averageScoreLoss);
+		}
+		
+		if(m2 == 0) f2 = SkillLevel.TEN.getApproximateEloRating();
+		else {
+			
+			float averageScoreLoss = (float) yellowTotalScoreLoss / m2;
+			f2 = approximateElo(averageScoreLoss);
+		}
+		
+		eloBuffer[0] = f1;
+		eloBuffer[1] = f2;
+	}
+	
 	public float approximateEloRatingOfPlayer(BoardPlayerColor playerColor) {
 		int n = filledCellAmount;
 		int minMoveAmount = playerColor == BoardPlayerColor.RED ? ELO_APPROXIMATION_RED_MIN_MOVE_AMOUNT : ELO_APPROXIMATION_YELLOW_MIN_MOVE_AMOUNT;
