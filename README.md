@@ -186,7 +186,7 @@ The demo runs natively in WebAssembly and offers performance similar to the Java
 ---
 
 ## 🧪 Try It Out
-Want to quickly try out the Kite solver? Here's a simple demo class that pits you against the solver using a fixed skill level:
+Want to quickly try out and experiment with the Kite solver? Here's a simple demo class that pits you against the solver using a fixed skill level:
 
 ```java
 import net.kite.board.outcome.BoardOutcome;

@@ -73,10 +73,7 @@ public class KiteDemo {
 			HTMLButtonElement button = (HTMLButtonElement) DOCUMENT.createElement("button");
 			
 			button.setTextContent("Analyze / Play vs AI");
-			button.onClick((mouseEvent) -> {
-				
-				
-			});
+			button.onClick((mouseEvent) -> toggleMode());
 			
 			HTMLSelectElement select = (HTMLSelectElement) DOCUMENT.createElement("select");
 			
@@ -104,6 +101,14 @@ public class KiteDemo {
 	}
 	
 	// TODO synchronize (keyword) these
+	
+	private void toggleMode() {
+		
+	}
+	
+	private void setAILevel(int level) {
+		
+	}
 	
 	private void playHumanMove(int moveX) {
 		int height = columnHeights[moveX];
