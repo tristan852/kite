@@ -81,7 +81,7 @@ public class KiteDemo {
 		
 		for(int x = 0; x < 7; x++) {
 			
-			HTMLElement column = createBoardColumn();
+			HTMLElement column = createBoardColumn(x);
 			
 			cellBoard.appendChild(column);
 		}
@@ -89,23 +89,35 @@ public class KiteDemo {
 		return cellBoard;
 	}
 	
-	private HTMLElement createBoardColumn() {
+	private HTMLElement createBoardColumn(int x) {
 		HTMLElement cellColumn = createFlexBox("column", 10);
 		
 		for(int y = 0; y < 6; y++) {
 			
 			HTMLElement cell = DOCUMENT.createElement("div");
 			
-			cell.getStyle().setProperty("width", "60px");
-			cell.getStyle().setProperty("height", "60px");
+			cell.getStyle().setProperty("width", "50px");
+			cell.getStyle().setProperty("height", "50px");
 			cell.getStyle().setProperty("border-radius", "50%");
 			cell.getStyle().setProperty("background-color", "red");
 			
 			cellColumn.appendChild(cell);
 		}
 		
+		cellColumn.onClick(mouseEvent -> {
+			
+			System.out.println("clicked: " + x);
+		});
+		
 		return cellColumn;
 	}
+	
+	/**
+	 * <href="https://tristan852.github.io/kite/"></>
+	 * @param direction
+	 * @param gap
+	 * @return
+	 */
 	
 	private HTMLElement createFlexBox(String direction, int gap) {
 		HTMLElement flexBox = DOCUMENT.createElement("div");
