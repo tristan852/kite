@@ -86,6 +86,8 @@ public class KiteDemo {
 			cellBoard.appendChild(column);
 		}
 		
+		cellBoard.getStyle().setProperty("background-color", "#18181B");
+		
 		return cellBoard;
 	}
 	
@@ -99,7 +101,7 @@ public class KiteDemo {
 			cell.getStyle().setProperty("width", "50px");
 			cell.getStyle().setProperty("height", "50px");
 			cell.getStyle().setProperty("border-radius", "50%");
-			cell.getStyle().setProperty("background-color", "red");
+			cell.getStyle().setProperty("background-color", "#09090B");
 			
 			cellColumn.appendChild(cell);
 		}
