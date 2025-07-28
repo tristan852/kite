@@ -99,6 +99,7 @@ public class KiteDemo {
 			cell.getStyle().setProperty("height", "80px");
 			cell.getStyle().setProperty("borderRadius", "50%");
 			cell.getStyle().setProperty("borderRadius", "50%");
+			cell.getStyle().setProperty("background-color", "red");
 			
 			cellColumn.appendChild(cell);
 		}
@@ -110,7 +111,7 @@ public class KiteDemo {
 		HTMLElement flexBox = DOCUMENT.createElement("div");
 		
 		flexBox.getStyle().setProperty("display", "flex");
-		flexBox.getStyle().setProperty("flexDirection", direction);
+		flexBox.getStyle().setProperty("flex-direction", direction);
 		flexBox.getStyle().setProperty("gap", gap + "px"); // Optional: spacing between items
 		
 		return flexBox;
