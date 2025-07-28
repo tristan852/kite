@@ -201,7 +201,12 @@ public class KiteDemo {
 		
 		modeButton.setTextContent(aiPlay ? "Mode: Play vs. AI" : "Mode: Analyze");
 		
-		if(aiPlay) clearBoard();
+		if(aiPlay) {
+			
+			clearBoard();
+			movesToRedoAmount = 0;
+		}
+		
 		updateLabels();
 	}
 	
