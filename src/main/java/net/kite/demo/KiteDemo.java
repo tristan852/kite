@@ -241,6 +241,7 @@ public class KiteDemo {
 		playMove(moveX);
 		movesToRedoAmount = 0;
 		
+		System.out.println(aiPlay + ", " + aiPlaysRed + ", " + redAtTurn);
 		if(aiPlay && aiPlaysRed == redAtTurn) playAIMove();
 	}
 	
