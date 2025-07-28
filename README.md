@@ -181,7 +181,7 @@ Try the solver directly in your browser:
 
 You can set up and analyze positions, or play against AI opponents of varying strength — no installation required.
 
-The demo runs natively in WebAssembly and offers performance similar to the Java library, though it may be slightly slower in some cases.
+The demo runs natively in WebAssembly and is generally slower than the Java library, though still fast enough for typical use.
 
 ---
 
