@@ -357,6 +357,7 @@ public class KiteDemo {
 		
 		HTMLElement container = createFlexBox("column", 30);
 		
+		container.appendChild(winnerLabel);
 		container.appendChild(cellBoard);
 		container.appendChild(labels);
 		
