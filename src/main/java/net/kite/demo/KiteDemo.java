@@ -22,8 +22,6 @@ public class KiteDemo {
 	private static final int BOARD_HEIGHT = 6;
 	private static final int BOARD_SIZE = 42;
 	
-	// TODO keep solver in sync after each play/undo
-	
 	private static final Window WINDOW = Window.current();
 	private static final HTMLDocument DOCUMENT = HTMLDocument.current();
 	
@@ -138,7 +136,14 @@ public class KiteDemo {
 			toggleMode();
 		});
 		
-		levelSelect.getOptions().add((HTMLOptionElement) DOCUMENT.createElement("option"));
+		for(SkillLevel level : SkillLevel.values()) {
+			
+			HTMLOptionElement optionElement = (HTMLOptionElement) DOCUMENT.createElement("option");
+			
+			optionElement.setLabel(level.name());
+			
+			levelSelect.getOptions().add(optionElement);
+		}
 		
 		controlsContainer.appendChild(modeButton);
 		controlsContainer.appendChild(levelSelect);
@@ -175,7 +180,14 @@ public class KiteDemo {
 				
 				if(key.equals("moves")) {
 					
-					for(char c : value.toCharArray()) playMove(c - '0');
+					for(char c : value.toCharArray()) {
+						
+						// check column height and if game is over (afterwards)
+						
+						playMove(c - '0');
+						
+						
+					}
 					
 				} else if(key.equals("ai-level")) {
 					
@@ -209,14 +221,17 @@ public class KiteDemo {
 	}
 	
 	private void setAILevel(int level) {
+		aiLevel = SkillLevel.values()[level]; // TODO array as constant -> orderred ai levels
 		
+		levelSelect.setSelectedIndex(level);
 		
-		// update select element
-		// maybe clear board
+		clearBoard();
 	}
 	
 	private void setWindowSearch() {
 		String s = "";
+		
+		// in order: moves, ai-level, ai-color (last ones only if in AI mode)
 		
 		Window.current().getHistory().pushState(null, "", "?foo=bar");
 	}
