@@ -70,10 +70,9 @@ public class KiteDemo {
 			body.removeChild(node);
 		}
 		
-		System.out.println("db3");
 		HTMLElement container = createFlexBox("row", 60);
 		HTMLElement sidebarContainer = createFlexBox("column", 60);
-		HTMLElement controlsContainer = createFlexBox("column", 60);
+		HTMLElement controlsContainer = createFlexBox("column", 10);
 		
 		sidebarContainer.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png", "", 120));
 		
