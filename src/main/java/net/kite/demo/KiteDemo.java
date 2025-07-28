@@ -54,32 +54,43 @@ public class KiteDemo {
 	
 	private HTMLSelectElement levelSelect;
 	
+	// ---
+	
+	private static final String REQUEST_METHOD = "GET";
+	private static final String REQUEST_RESPONSE_TYPE = "arraybuffer";
+	private static final String REQUEST_URL = "WEB-INF/classes/board_score_caches/opening.cfc";
+	
+	private static final int SUCCESSFUL_REQUEST_STATUS = 200;
+	
 	public void onStart() {
-		XMLHttpRequest xhr = new XMLHttpRequest();
-		xhr.open("GET", "WEB-INF/classes/board_score_caches/opening.cfc");
-		xhr.setResponseType("arraybuffer");
-		xhr.onLoad((x) -> {
+		XMLHttpRequest request = new XMLHttpRequest();
+		
+		request.open(REQUEST_METHOD, REQUEST_URL);
+		request.setResponseType(REQUEST_RESPONSE_TYPE);
+		
+		request.onLoad((progressEvent) -> {
 			
-			if(xhr.getStatus() == 200) {
+			int requestStatus = request.getStatus();
+			if(requestStatus == SUCCESSFUL_REQUEST_STATUS) {
 				
-				ArrayBuffer arrayBuffer = (ArrayBuffer) xhr.getResponse();
+				ArrayBuffer arrayBuffer = (ArrayBuffer) request.getResponse();
 				Int8Array array = new Int8Array(arrayBuffer);
 				
 				byte[] bytes = array.copyToJavaArray();
+				OpeningBoardScoreCaches.ensureDefaultIsLoaded(bytes);
 				
-				buildApp(bytes);
+				buildApp();
 				
 			} else {
 				
-				System.err.println("error message");
+				System.err.println("An error occurred while loading the opening score cache!");
 			}
 		});
 		
-		xhr.send();
+		request.send();
 	}
 	
-	private void buildApp(byte[] bytes) {
-		OpeningBoardScoreCaches.ensureDefaultIsLoaded(bytes);
+	private void buildApp() {
 		
 		solver = Kite.createInstance();
 		
@@ -165,8 +176,6 @@ public class KiteDemo {
 		controlsContainer.appendChild(undoButton);
 		controlsContainer.appendChild(redoButton);
 		
-		disableButton(redoButton);
-		
 		sidebarContainer.appendChild(controlsContainer);
 		
 		HTMLElement githubLink = createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.png", "", 50);
@@ -231,7 +240,18 @@ public class KiteDemo {
 		
 		modeButton.setTextContent(aiPlay ? "Mode: Play vs. AI" : "Mode: Analyze");
 		
-		if(aiPlay) clearBoard();
+		if(aiPlay) {
+			
+			clearBoard();
+			
+			disableButton(undoButton);
+			disableButton(redoButton);
+			
+		} else {
+			
+			enableButton(undoButton);
+			enableButton(redoButton);
+		}
 		
 		updateLabels();
 	}
@@ -538,5 +558,7 @@ public class KiteDemo {
 		
 		return String.valueOf(score);
 	}
+	
+	// ---
 	
 }
