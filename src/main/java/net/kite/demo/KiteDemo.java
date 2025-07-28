@@ -322,8 +322,6 @@ public class KiteDemo {
 			
 			winnerLabel.setTextContent("");
 		}
-		
-		aiPlaysRed = ThreadLocalRandom.current().nextBoolean();
 	}
 	
 	private void updateLabels() {
