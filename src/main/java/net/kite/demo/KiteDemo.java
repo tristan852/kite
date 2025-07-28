@@ -242,9 +242,8 @@ public class KiteDemo {
 		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
-			System.out.println("label: " + movesScores[x]);
-			
-			cellLabels[x].setTextContent(movesScores[x] + "");
+			String s = movesScores[x] == Integer.MIN_VALUE ? "" : movesScores[x] + "";
+			cellLabels[x].setTextContent(s);
 		}
 	}
 	
