@@ -23,6 +23,8 @@ public class KiteDemo {
 	
 	private Kite solver;
 	
+	private final int[] movesScores = new int[BOARD_WIDTH];
+	
 	private final int[] columnHeights = new int[BOARD_WIDTH];
 	private boolean redAtTurn = true;
 	
@@ -166,6 +168,22 @@ public class KiteDemo {
 		
 		solver.undoMove();
 		redAtTurn = !redAtTurn;
+	}
+	
+	private void showLabels() {
+		solver.evaluateAllMoves(movesScores);
+		
+		for(int x = 0; x < BOARD_WIDTH; x++) {
+			
+			cellLabels[x].setTextContent(movesScores[x] + "");
+		}
+	}
+	
+	private void hideLabels() {
+		for(int x = 0; x < BOARD_WIDTH; x++) {
+			
+			cellLabels[x].setTextContent("");
+		}
 	}
 	
 	private HTMLElement createBoard() {
