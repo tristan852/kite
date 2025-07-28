@@ -33,71 +33,80 @@ public class KiteDemo {
 		xhr.open("GET", "WEB-INF/classes/board_score_caches/opening.cfc");
 		xhr.setResponseType("arraybuffer");
 		xhr.onLoad((x) -> {
-			if (xhr.getStatus() == 200) {
-				System.out.println("GOT IT");
+			
+			if(xhr.getStatus() == 200) {
+				
+				ArrayBuffer arrayBuffer = (ArrayBuffer) xhr.getResponse();
+				Int8Array array = new Int8Array(arrayBuffer);
+				
+				byte[] bytes = array.copyToJavaArray();
+				
+				buildApp(bytes);
+				
 			} else {
-				System.out.println("DID NOT GET IT");
-			}
-			
-			ArrayBuffer arrayBuffer = (ArrayBuffer) xhr.getResponse();
-			Int8Array array = new Int8Array(arrayBuffer);
-			
-			byte[] bytes = array.copyToJavaArray();
-			
-			OpeningBoardScoreCaches.ensureDefaultIsLoaded(bytes);
-			
-			solver = Kite.createInstance();
-			
-			HTMLBodyElement body = DOCUMENT.getBody();
-			
-			while(true) {
 				
-				Node node = body.getFirstChild();
-				if(node == null) break;
-				
-				body.removeChild(node);
+				System.err.println("error message");
 			}
-			
-			HTMLElement container = createFlexBox("column", 60);
-			
-			container.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png", "", 120));
-			
-			HTMLElement version = DOCUMENT.createElement("span");
-			
-			version.setTextContent("v" + Kite.getVersion());
-			
-			container.appendChild(version);
-			
-			HTMLElement controlsContainer = createFlexBox("row", 60);
-			
-			HTMLButtonElement button = (HTMLButtonElement) DOCUMENT.createElement("button");
-			
-			button.setTextContent("Analyze / Play vs AI");
-			button.onClick((mouseEvent) -> toggleMode());
-			
-			HTMLSelectElement select = (HTMLSelectElement) DOCUMENT.createElement("select");
-			
-			select.getOptions().add((HTMLOptionElement) DOCUMENT.createElement("option"));
-			
-			controlsContainer.appendChild(button);
-			controlsContainer.appendChild(select);
-			
-			container.appendChild(controlsContainer);
-			
-			container.appendChild(createBoard());
-			
-			container.appendChild(wrapWithLink(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.png", "", 60), "https://github.com/tristan852/kite"));
-			
-			body.appendChild(container);
-			
-			playAIMove();
-			playAIMove();
-			playAIMove();
-			
-			// TODO parse url params
 		});
 		
 		xhr.send();
+	}
+	
+	private void buildApp(byte[] bytes) {
+		OpeningBoardScoreCaches.ensureDefaultIsLoaded(bytes);
+		
+		solver = Kite.createInstance();
+		
+		HTMLBodyElement body = DOCUMENT.getBody();
+		
+		while(true) {
+			
+			Node node = body.getFirstChild();
+			if(node == null) break;
+			
+			body.removeChild(node);
+		}
+		
+		System.out.println("db3");
+		HTMLElement container = createFlexBox("column", 60);
+		
+		container.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png", "", 120));
+		
+		HTMLElement version = DOCUMENT.createElement("span");
+		
+		version.setTextContent("v" + Kite.getVersion());
+		
+		container.appendChild(version);
+		
+		System.out.println("db2");
+		HTMLElement controlsContainer = createFlexBox("row", 60);
+		
+		HTMLButtonElement button = (HTMLButtonElement) DOCUMENT.createElement("button");
+		
+		button.setTextContent("Analyze / Play vs AI");
+		button.onClick((mouseEvent) -> toggleMode());
+		
+		HTMLSelectElement select = (HTMLSelectElement) DOCUMENT.createElement("select");
+		
+		select.getOptions().add((HTMLOptionElement) DOCUMENT.createElement("option"));
+		
+		controlsContainer.appendChild(button);
+		controlsContainer.appendChild(select);
+		
+		container.appendChild(controlsContainer);
+		
+		container.appendChild(createBoard());
+		
+		container.appendChild(wrapWithLink(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.png", "", 60), "https://github.com/tristan852/kite"));
+		
+		System.out.println("db1");
+		body.appendChild(container);
+		
+		playAIMove();
+		playAIMove();
+		playAIMove();
+		
+		// TODO parse url params
 	}
 	
 	// TODO synchronize (keyword) these
