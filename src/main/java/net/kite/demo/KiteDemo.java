@@ -70,7 +70,7 @@ public class KiteDemo {
 			body.removeChild(node);
 		}
 		
-		HTMLElement container = createFlexBox("row", 60);
+		HTMLElement container = createFlexBox("row", 80);
 		HTMLElement sidebarContainer = createFlexBox("column", 60);
 		HTMLElement controlsContainer = createFlexBox("column", 10);
 		
@@ -86,26 +86,30 @@ public class KiteDemo {
 		HTMLButtonElement button = (HTMLButtonElement) DOCUMENT.createElement("button");
 		
 		button.setTextContent("Mode: Analyze / Play vs AI");
+		button.getStyle().setProperty("width", "100px");
 		button.onClick((mouseEvent) -> toggleMode());
 		
 		HTMLButtonElement button2 = (HTMLButtonElement) DOCUMENT.createElement("button");
 		
 		button2.setTextContent("New game");
+		button2.getStyle().setProperty("width", "100px");
 		button2.onClick((mouseEvent) -> toggleMode());
 		
 		HTMLButtonElement button3 = (HTMLButtonElement) DOCUMENT.createElement("button");
 		
 		button3.setTextContent("Undo move");
+		button3.getStyle().setProperty("width", "100px");
 		button3.onClick((mouseEvent) -> toggleMode());
 		
 		HTMLSelectElement select = (HTMLSelectElement) DOCUMENT.createElement("select");
 		
 		select.getOptions().add((HTMLOptionElement) DOCUMENT.createElement("option"));
+		select.getStyle().setProperty("width", "100px");
 		
 		controlsContainer.appendChild(button);
+		controlsContainer.appendChild(select);
 		controlsContainer.appendChild(button2);
 		controlsContainer.appendChild(button3);
-		controlsContainer.appendChild(select);
 		
 		sidebarContainer.appendChild(controlsContainer);
 		
@@ -136,7 +140,9 @@ public class KiteDemo {
 	}
 	
 	private void playHumanMove(int moveX) {
-		int height = columnHeights[moveX];
+		int columnIndex = moveX - 1;
+		
+		int height = columnHeights[columnIndex];
 		if(height == BOARD_HEIGHT) return;
 		
 		playMove(moveX);
@@ -151,10 +157,12 @@ public class KiteDemo {
 	}
 	
 	private void playMove(int moveX) {
-		int moveY = columnHeights[moveX];
-		columnHeights[moveX]++;
+		int columnIndex = moveX - 1;
 		
-		HTMLElement cell = cells[moveX - 1][moveY];
+		int moveY = columnHeights[columnIndex];
+		columnHeights[columnIndex]++;
+		
+		HTMLElement cell = cells[columnIndex][moveY];
 		
 		cell.getStyle().setProperty("background-color", redAtTurn ? "#FB2C36" : "#F0B100");
 		
