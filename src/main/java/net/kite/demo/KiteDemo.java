@@ -161,6 +161,7 @@ public class KiteDemo {
 		
 		// update button
 		
+		if(aiPlay) clearBoard();
 		updateLabels();
 	}
 	
