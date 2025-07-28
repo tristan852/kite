@@ -359,6 +359,7 @@ public class KiteDemo {
 		cellBoard.getStyle().setProperty("border-radius", "25px");
 		
 		HTMLElement labels = createFlexBox("row", 0);
+		labels.getStyle().setProperty("margin-bottom", "8px");
 		
 		for(int x = 0; x < 7; x++) {
 			
