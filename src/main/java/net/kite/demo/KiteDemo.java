@@ -114,7 +114,7 @@ public class KiteDemo {
 	}
 	
 	private HTMLElement createBoard() {
-		HTMLElement cellBoard = createFlexBox("row", 8);
+		HTMLElement cellBoard = createFlexBox("row", 6);
 		
 		for(int x = 0; x < 7; x++) {
 			
@@ -124,12 +124,13 @@ public class KiteDemo {
 		}
 		
 		cellBoard.getStyle().setProperty("background-color", "#18181B");
+		cellBoard.getStyle().setProperty("padding", "25px");
 		
 		return cellBoard;
 	}
 	
 	private HTMLElement createBoardColumn(int x) {
-		HTMLElement cellColumn = createFlexBox("column", 8);
+		HTMLElement cellColumn = createFlexBox("column", 6);
 		
 		for(int y = 0; y < 6; y++) {
 			
