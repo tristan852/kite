@@ -2,11 +2,9 @@ package net.kite.demo;
 
 import net.kite.Kite;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
+import net.kite.skill.level.SkillLevel;
 import org.teavm.jso.ajax.XMLHttpRequest;
-import org.teavm.jso.dom.html.HTMLBodyElement;
-import org.teavm.jso.dom.html.HTMLDocument;
-import org.teavm.jso.dom.html.HTMLElement;
-import org.teavm.jso.dom.html.HTMLImageElement;
+import org.teavm.jso.dom.html.*;
 import org.teavm.jso.dom.xml.Node;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Int8Array;
@@ -43,14 +41,7 @@ public class KiteDemo {
 			
 			byte[] bytes = array.copyToJavaArray();
 			
-			System.out.println("its bytes now");
-			
-			System.out.println("db1");
-			System.out.println(bytes.length);
-			
 			OpeningBoardScoreCaches.ensureDefaultIsLoaded(bytes);
-			
-			System.out.println("db2");
 			
 			solver = Kite.createInstance();
 			
@@ -68,21 +59,45 @@ public class KiteDemo {
 			
 			container.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png", "", 120));
 			
+			HTMLButtonElement button = (HTMLButtonElement) DOCUMENT.createElement("button");
+			
+			button.setTextContent("Analyze / Play vs AI");
+			
+			HTMLSelectElement select = (HTMLSelectElement) DOCUMENT.createElement("select");
+			
+			select.getOptions().add((HTMLOptionElement) DOCUMENT.createElement("option"));
+			
+			container.appendChild(button);
+			container.appendChild(select);
+			
 			container.appendChild(createBoard());
 			
 			container.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.png", "", 60));
 			
 			body.appendChild(container);
 			
-			playMove(3);
-			playMove(3);
-			playMove(3);
+			playAIMove();
+			playAIMove();
+			playAIMove();
 		});
 		
 		xhr.send();
 	}
 	
 	// TODO synchronize these
+	
+	private void playHumanMove(int moveX) {
+		int height = columnHeights[moveX];
+		if(height == BOARD_HEIGHT) return;
+		
+		playMove(moveX);
+	}
+	
+	private void playAIMove() {
+		int moveX = solver.skilledMove(SkillLevel.PERFECT);
+		
+		playMove(moveX);
+	}
 	
 	private void playMove(int moveX) {
 		int moveY = columnHeights[moveX];
@@ -106,7 +121,7 @@ public class KiteDemo {
 	}
 	
 	private HTMLElement createBoard() {
-		HTMLElement cellBoard = createFlexBox("row", 6);
+		HTMLElement cellBoard = createFlexBox("row", 0);
 		
 		for(int x = 0; x < 7; x++) {
 			
@@ -141,18 +156,13 @@ public class KiteDemo {
 		
 		cellColumn.onClick(mouseEvent -> {
 			
-			System.out.println("clicked: " + x);
+			playHumanMove(x);
 		});
+		
+		cellColumn.getStyle().setProperty("cursor", "pointer");
 		
 		return cellColumn;
 	}
-	
-	/**
-	 * <href="https://tristan852.github.io/kite/"></>
-	 * @param direction
-	 * @param gap
-	 * @return
-	 */
 	
 	private HTMLElement createImage(String source, String altText, int size) {
 		HTMLImageElement image = (HTMLImageElement) DOCUMENT.createElement("img");
