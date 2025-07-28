@@ -118,7 +118,9 @@ public class KiteDemo {
 	}
 	
 	private void playAIMove() {
+		System.out.println("here");
 		int moveX = solver.skilledMove(SkillLevel.PERFECT);
+		System.out.println(moveX);
 		
 		playMove(moveX);
 	}
