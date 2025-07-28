@@ -40,7 +40,9 @@ public class KiteDemo {
 	private boolean redAtTurn = true;
 	
 	private final int[] playedMoves = new int[BOARD_SIZE];
+	
 	private int playedMoveAmount;
+	private int movesToRedoAmount;
 	
 	private final HTMLElement[][] cells = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
 	private final HTMLElement[] cellLabels = new HTMLElement[BOARD_WIDTH];
@@ -124,6 +126,13 @@ public class KiteDemo {
 		
 		button3.setTextContent("Undo Move");
 		
+		HTMLElement button4 = createControl("button", (mouseEvent) -> {
+			
+			redoMove();
+		});
+		
+		button4.setTextContent("Redo Move");
+		
 		levelSelect = (HTMLSelectElement) createControl("select", (mouseEvent) -> {
 			
 			toggleMode();
@@ -135,6 +144,7 @@ public class KiteDemo {
 		controlsContainer.appendChild(levelSelect);
 		controlsContainer.appendChild(button2);
 		controlsContainer.appendChild(button3);
+		controlsContainer.appendChild(button4);
 		
 		sidebarContainer.appendChild(controlsContainer);
 		
@@ -223,6 +233,7 @@ public class KiteDemo {
 		if(height == BOARD_HEIGHT) return;
 		
 		playMove(moveX);
+		movesToRedoAmount = 0;
 		
 		if(aiPlay && aiPlaysRed == redAtTurn) playAIMove();
 	}
@@ -233,6 +244,7 @@ public class KiteDemo {
 		System.out.println(moveX);
 		
 		playMove(moveX);
+		movesToRedoAmount = 0;
 	}
 	
 	private void playMove(int moveX) {
@@ -255,9 +267,20 @@ public class KiteDemo {
 		updateWinnerLabel();
 	}
 	
+	private void redoMove() {
+		if(movesToRedoAmount == 0) return;
+		
+		int moveX = playedMoves[playedMoveAmount];
+		
+		playMove(moveX);
+		movesToRedoAmount--;
+	}
+	
 	private void undoMove() {
 		if(playedMoveAmount == 0) return;
+		
 		playedMoveAmount--;
+		movesToRedoAmount++;
 		
 		int moveX = playedMoves[playedMoveAmount];
 		int columnIndex = moveX - 1;
