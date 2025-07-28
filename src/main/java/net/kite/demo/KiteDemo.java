@@ -164,6 +164,8 @@ public class KiteDemo {
 		String search = WINDOW.getLocation().getSearch();
 		if(!search.isBlank()) {
 			
+			search = search.substring(1);
+			
 			String[] items = search.split("&");
 			System.out.println(Arrays.toString(items));
 			for(String item : items) {
