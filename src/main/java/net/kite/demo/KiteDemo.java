@@ -75,7 +75,7 @@ public class KiteDemo {
 		HTMLElement container = createFlexBox("row", 80);
 		HTMLElement sidebarContainer = createFlexBox("column", 60);
 		HTMLElement controlsContainer = createFlexBox("column", 10);
-		HTMLElement brandContainer = createFlexBox("column", 30);
+		HTMLElement brandContainer = createFlexBox("column", 40);
 		
 		brandContainer.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png", "", 120));
 		
@@ -132,6 +132,7 @@ public class KiteDemo {
 		playAIMove();
 		playAIMove();
 		playAIMove();
+		showLabels();
 		
 		// TODO parse url params
 		
@@ -141,7 +142,16 @@ public class KiteDemo {
 	// TODO synchronize (keyword) these
 	
 	private void toggleMode() {
+		setMode(!aiPlay);
+	}
+	
+	private void setMode(boolean aiPlay) {
+		this.aiPlay = aiPlay;
 		
+		// update button
+		
+		if(aiPlay) hideLabels();
+		else showLabels();
 	}
 	
 	private void setAILevel(int level) {
@@ -282,10 +292,10 @@ public class KiteDemo {
 	private HTMLElement createControl(String type, EventListener<MouseEvent> clickListener) {
 		HTMLElement element = DOCUMENT.createElement(type);
 		
-		element.getStyle().setProperty("width", "100px");
-		element.getStyle().setProperty("height", "20px");
-		element.getStyle().setProperty("color", "red");
-		element.getStyle().setProperty("background-color", "white");
+		element.getStyle().setProperty("width", "150px");
+		element.getStyle().setProperty("height", "30px");
+		element.getStyle().setProperty("color", "#F4F4F5");
+		element.getStyle().setProperty("background-color", "#27272A");
 		element.getStyle().setProperty("cursor", "pointer");
 		element.getStyle().setProperty("border", "none");
 		element.getStyle().setProperty("border-radius", "6px");
