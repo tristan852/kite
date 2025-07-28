@@ -120,6 +120,9 @@ public enum SkillLevel {
 	 * of players of this skill level.
 	 * For the adaptive skill level
 	 * {@code -1} is returned instead.
+	 * <p>
+	 * Visit <a href="https://github.com/tristan852/kite?tab=readme-ov-file#%EF%B8%8F-skill-levels">the README file</a>
+	 * for further details.
 	 *
 	 * @return approximate ELO rating
 	 */
