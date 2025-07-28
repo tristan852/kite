@@ -130,7 +130,7 @@ public class KiteDemo {
 			cellBoard.appendChild(column);
 		}
 		
-		cellBoard.getStyle().setProperty("background-color", "#18181B");
+		cellBoard.getStyle().setProperty("background-color", "#27272A");
 		cellBoard.getStyle().setProperty("padding", "25px");
 		cellBoard.getStyle().setProperty("border-radius", "25px");
 		
@@ -180,6 +180,8 @@ public class KiteDemo {
 		
 		flexBox.getStyle().setProperty("display", "flex");
 		flexBox.getStyle().setProperty("flex-direction", direction);
+		flexBox.getStyle().setProperty("justify-content", "center");
+		flexBox.getStyle().setProperty("align-items", "center");
 		flexBox.getStyle().setProperty("gap", gap + "px"); // Optional: spacing between items
 		
 		return flexBox;
