@@ -198,9 +198,26 @@ public class KiteDemo {
 		
 		cellBoard.getStyle().setProperty("background-color", "#27272A");
 		cellBoard.getStyle().setProperty("padding", "25px 19px");
-		cellBoard.getStyle().setProperty("padding", "25px");
+		cellBoard.getStyle().setProperty("border-radius", "25px");
 		
-		return cellBoard;
+		HTMLElement labels = createFlexBox("row", 0);
+		
+		for(int x = 0; x < 7; x++) {
+			
+			HTMLElement label = DOCUMENT.createElement("span");
+			
+			label.getStyle().setProperty("width", "50px");
+			label.setTextContent("T");
+			
+			labels.appendChild(label);
+		}
+		
+		HTMLElement container = createFlexBox("column", 0);
+		
+		container.appendChild(cellBoard);
+		container.appendChild(labels);
+		
+		return container;
 	}
 	
 	private HTMLElement createBoardColumn(int x) {
@@ -230,16 +247,7 @@ public class KiteDemo {
 		cellColumn.getStyle().setProperty("padding-left", "3px");
 		cellColumn.getStyle().setProperty("padding-right", "3px");
 		
-		HTMLElement label = DOCUMENT.createElement("span");
-		
-		label.setTextContent("T");
-		
-		HTMLElement container = createFlexBox("column", 60);
-		
-		container.appendChild(cellColumn);
-		container.appendChild(label);
-		
-		return container;
+		return cellColumn;
 	}
 	
 	private HTMLElement wrapWithLink(HTMLElement element, String target) {
