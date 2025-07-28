@@ -325,6 +325,7 @@ public class KiteDemo {
 		
 		winnerLabel.getStyle().setProperty("height", "20px");
 		winnerLabel.getStyle().setProperty("text-align", "center");
+		winnerLabel.getStyle().setProperty("font-style", "italic");
 		winnerLabel.getStyle().setProperty("font-weight", "bold");
 		
 		HTMLElement container = createFlexBox("column", 30);
