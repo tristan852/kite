@@ -123,6 +123,7 @@ public class KiteDemo {
 		
 		undoButton = (HTMLButtonElement) createControl("button", (mouseEvent) -> {
 			
+			// no longer needed
 			if(!aiPlay) undoMove();
 		});
 		
@@ -164,7 +165,7 @@ public class KiteDemo {
 		controlsContainer.appendChild(undoButton);
 		controlsContainer.appendChild(redoButton);
 		
-		redoButton.setDisabled(true);
+		disableButton(redoButton);
 		
 		sidebarContainer.appendChild(controlsContainer);
 		
@@ -473,6 +474,22 @@ public class KiteDemo {
 		link.appendChild(element);
 		
 		return link;
+	}
+	
+	// TODO wrapper for set style(String... key value pairs)
+	
+	private void enableButton(HTMLButtonElement buttonElement) {
+		buttonElement.getStyle().setProperty("color", "#F4F4F5");
+		buttonElement.getStyle().setProperty("background-color", "#27272A");
+		
+		buttonElement.setDisabled(false);
+	}
+	
+	private void disableButton(HTMLButtonElement buttonElement) {
+		buttonElement.getStyle().setProperty("color", "#9F9FA9");
+		buttonElement.getStyle().setProperty("background-color", "#18181B");
+		
+		buttonElement.setDisabled(true);
 	}
 	
 	private HTMLElement createControl(String type, EventListener<MouseEvent> clickListener) {
