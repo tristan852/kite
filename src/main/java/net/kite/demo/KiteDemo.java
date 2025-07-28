@@ -104,7 +104,7 @@ public class KiteDemo {
 		
 		HTMLElement button2 = createControl("button", (mouseEvent) -> {
 			
-			toggleMode();
+			clearBoard();
 		});
 		
 		button2.setTextContent("New Game");
