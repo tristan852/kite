@@ -77,7 +77,7 @@ public class KiteDemo {
 	}
 	
 	private HTMLElement createBoard() {
-		HTMLElement cellBoard = createFlexBox("row", 10);
+		HTMLElement cellBoard = createFlexBox("row", 8);
 		
 		for(int x = 0; x < 7; x++) {
 			
@@ -90,7 +90,7 @@ public class KiteDemo {
 	}
 	
 	private HTMLElement createBoardColumn(int x) {
-		HTMLElement cellColumn = createFlexBox("column", 10);
+		HTMLElement cellColumn = createFlexBox("column", 8);
 		
 		for(int y = 0; y < 6; y++) {
 			
