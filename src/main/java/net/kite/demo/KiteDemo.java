@@ -58,6 +58,7 @@ public class KiteDemo {
 			
 			HTMLImageElement imageElement = (HTMLImageElement) DOCUMENT.createElement("img");
 			
+			// use raw.github instead
 			imageElement.setSrc("https://github.com/tristan852/kite/blob/main/assets/images/brand/small_logo.png?raw=true");
 			
 			container.appendChild(imageElement);
@@ -95,10 +96,9 @@ public class KiteDemo {
 			
 			HTMLElement cell = DOCUMENT.createElement("div");
 			
-			cell.getStyle().setProperty("width", "80px");
-			cell.getStyle().setProperty("height", "80px");
-			cell.getStyle().setProperty("borderRadius", "50%");
-			cell.getStyle().setProperty("borderRadius", "50%");
+			cell.getStyle().setProperty("width", "60px");
+			cell.getStyle().setProperty("height", "60px");
+			cell.getStyle().setProperty("border-radius", "50%");
 			cell.getStyle().setProperty("background-color", "red");
 			
 			cellColumn.appendChild(cell);
