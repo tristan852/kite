@@ -12,6 +12,7 @@ import org.teavm.jso.dom.xml.Node;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Int8Array;
 
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class KiteDemo {
@@ -275,6 +276,7 @@ public class KiteDemo {
 	
 	private void showLabels() {
 		solver.evaluateAllMoves(movesScores);
+		System.out.println(Arrays.toString(movesScores));
 		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
