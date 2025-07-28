@@ -4,6 +4,8 @@ import net.kite.Kite;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.skill.level.SkillLevel;
 import org.teavm.jso.ajax.XMLHttpRequest;
+import org.teavm.jso.dom.events.EventListener;
+import org.teavm.jso.dom.events.MouseEvent;
 import org.teavm.jso.dom.html.*;
 import org.teavm.jso.dom.xml.Node;
 import org.teavm.jso.typedarrays.ArrayBuffer;
@@ -83,28 +85,33 @@ public class KiteDemo {
 		
 		sidebarContainer.appendChild(version);
 		
-		HTMLButtonElement button = (HTMLButtonElement) DOCUMENT.createElement("button");
+		HTMLElement button = createControl("button", (mouseEvent) -> {
+			
+			toggleMode();
+		});
 		
 		button.setTextContent("Mode: Analyze / Play vs AI");
-		button.getStyle().setProperty("width", "100px");
-		button.onClick((mouseEvent) -> toggleMode());
 		
-		HTMLButtonElement button2 = (HTMLButtonElement) DOCUMENT.createElement("button");
+		HTMLElement button2 = createControl("button", (mouseEvent) -> {
+			
+			toggleMode();
+		});
 		
-		button2.setTextContent("New game");
-		button2.getStyle().setProperty("width", "100px");
-		button2.onClick((mouseEvent) -> toggleMode());
+		button2.setTextContent("New Game");
 		
-		HTMLButtonElement button3 = (HTMLButtonElement) DOCUMENT.createElement("button");
+		HTMLElement button3 = createControl("button", (mouseEvent) -> {
+			
+			toggleMode();
+		});
 		
-		button3.setTextContent("Undo move");
-		button3.getStyle().setProperty("width", "100px");
-		button3.onClick((mouseEvent) -> toggleMode());
+		button3.setTextContent("Undo Move");
 		
-		HTMLSelectElement select = (HTMLSelectElement) DOCUMENT.createElement("select");
+		HTMLSelectElement select = (HTMLSelectElement) createControl("select", (mouseEvent) -> {
+			
+			toggleMode();
+		});
 		
 		select.getOptions().add((HTMLOptionElement) DOCUMENT.createElement("option"));
-		select.getStyle().setProperty("width", "100px");
 		
 		controlsContainer.appendChild(button);
 		controlsContainer.appendChild(select);
@@ -268,6 +275,22 @@ public class KiteDemo {
 		link.appendChild(element);
 		
 		return link;
+	}
+	
+	private HTMLElement createControl(String type, EventListener<MouseEvent> clickListener) {
+		HTMLElement element = DOCUMENT.createElement(type);
+		
+		element.getStyle().setProperty("width", "100px");
+		element.getStyle().setProperty("height", "20px");
+		element.getStyle().setProperty("color", "red");
+		element.getStyle().setProperty("background-color", "white");
+		element.getStyle().setProperty("cursor", "pointer");
+		element.getStyle().setProperty("border", "none");
+		element.getStyle().setProperty("border-radius", "6px");
+		
+		element.onClick(clickListener);
+		
+		return element;
 	}
 	
 	private HTMLElement createImage(String source, String altText, int size) {
