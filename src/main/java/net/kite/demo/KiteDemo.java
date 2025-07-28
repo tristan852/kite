@@ -5,6 +5,7 @@ import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.skill.level.SkillLevel;
 import org.teavm.jso.ajax.XMLHttpRequest;
+import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.events.EventListener;
 import org.teavm.jso.dom.events.MouseEvent;
 import org.teavm.jso.dom.html.*;
@@ -23,6 +24,7 @@ public class KiteDemo {
 	
 	// TODO keep solver in sync after each play/undo
 	
+	private static final Window WINDOW = Window.current();
 	private static final HTMLDocument DOCUMENT = HTMLDocument.current();
 	
 	private boolean aiPlay;
@@ -108,8 +110,6 @@ public class KiteDemo {
 			toggleMode();
 		});
 		
-		modeButton.setTextContent("Mode: Analyze / Play vs AI");
-		
 		HTMLElement button2 = createControl("button", (mouseEvent) -> {
 			
 			clearBoard();
@@ -151,7 +151,7 @@ public class KiteDemo {
 		container.appendChild(sidebarContainer);
 		container.appendChild(createBoard());
 		
-		// TODO parse url params
+		System.out.println(WINDOW.getLocation().getSearch());
 		
 		body.appendChild(container);
 	}
@@ -165,7 +165,7 @@ public class KiteDemo {
 	private void setMode(boolean aiPlay) {
 		this.aiPlay = aiPlay;
 		
-		// update button
+		modeButton.setTextContent(aiPlay ? "Mode: Play vs. AI" : "Mode: Analyze");
 		
 		if(aiPlay) clearBoard();
 		updateLabels();
