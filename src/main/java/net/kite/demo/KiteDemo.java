@@ -75,15 +75,17 @@ public class KiteDemo {
 		HTMLElement container = createFlexBox("row", 80);
 		HTMLElement sidebarContainer = createFlexBox("column", 60);
 		HTMLElement controlsContainer = createFlexBox("column", 10);
+		HTMLElement brandContainer = createFlexBox("column", 30);
 		
-		sidebarContainer.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png", "", 120));
+		brandContainer.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png", "", 120));
 		
 		HTMLElement version = DOCUMENT.createElement("span");
 		
 		version.setTextContent("v" + Kite.getVersion());
 		version.getStyle().setProperty("font-style", "italic");
 		
-		sidebarContainer.appendChild(version);
+		brandContainer.appendChild(version);
+		sidebarContainer.appendChild(brandContainer);
 		
 		HTMLElement button = createControl("button", (mouseEvent) -> {
 			
@@ -127,13 +129,13 @@ public class KiteDemo {
 		container.appendChild(sidebarContainer);
 		container.appendChild(createBoard());
 		
-		body.appendChild(container);
-		
 		playAIMove();
 		playAIMove();
 		playAIMove();
 		
 		// TODO parse url params
+		
+		body.appendChild(container);
 	}
 	
 	// TODO synchronize (keyword) these
