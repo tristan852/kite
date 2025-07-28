@@ -26,6 +26,7 @@ tasks.javadoc {
     exclude("net/kite/board/bit/**")
     exclude("net/kite/board/history/**")
     exclude("net/kite/board/score/**")
+    exclude("net/kite/demo/**")
 }
 
 tasks.test {

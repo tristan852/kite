@@ -18,6 +18,9 @@ public class KiteDemo {
 	
 	private static final HTMLDocument DOCUMENT = HTMLDocument.current();
 	
+	private boolean aiPlay;
+	private SkillLevel aiLevel;
+	
 	private Kite solver;
 	
 	private final int[] columnHeights = new int[BOARD_WIDTH];
@@ -65,16 +68,24 @@ public class KiteDemo {
 			
 			container.appendChild(version);
 			
+			HTMLElement controlsContainer = createFlexBox("row", 60);
+			
 			HTMLButtonElement button = (HTMLButtonElement) DOCUMENT.createElement("button");
 			
 			button.setTextContent("Analyze / Play vs AI");
+			button.onClick((mouseEvent) -> {
+				
+				
+			});
 			
 			HTMLSelectElement select = (HTMLSelectElement) DOCUMENT.createElement("select");
 			
 			select.getOptions().add((HTMLOptionElement) DOCUMENT.createElement("option"));
 			
-			container.appendChild(button);
-			container.appendChild(select);
+			controlsContainer.appendChild(button);
+			controlsContainer.appendChild(select);
+			
+			container.appendChild(controlsContainer);
 			
 			container.appendChild(createBoard());
 			
@@ -85,12 +96,16 @@ public class KiteDemo {
 			playAIMove();
 			playAIMove();
 			playAIMove();
+			
+			// TODO parse url params
 		});
 		
 		xhr.send();
 	}
 	
-	// TODO synchronize these
+	// TODO synchronize (keyword) these
+	
+	private void 
 	
 	private void playHumanMove(int moveX) {
 		int height = columnHeights[moveX];
