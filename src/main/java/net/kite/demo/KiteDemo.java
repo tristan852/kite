@@ -27,6 +27,7 @@ public class KiteDemo {
 	private boolean redAtTurn = true;
 	
 	private final HTMLElement[][] cells = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
+	private final HTMLElement[] cellLabels = new HTMLElement[BOARD_WIDTH];
 	
 	public void onStart() {
 		XMLHttpRequest xhr = new XMLHttpRequest();
@@ -91,12 +92,18 @@ public class KiteDemo {
 		button2.setTextContent("New game");
 		button2.onClick((mouseEvent) -> toggleMode());
 		
+		HTMLButtonElement button3 = (HTMLButtonElement) DOCUMENT.createElement("button");
+		
+		button3.setTextContent("Undo move");
+		button3.onClick((mouseEvent) -> toggleMode());
+		
 		HTMLSelectElement select = (HTMLSelectElement) DOCUMENT.createElement("select");
 		
 		select.getOptions().add((HTMLOptionElement) DOCUMENT.createElement("option"));
 		
 		controlsContainer.appendChild(button);
 		controlsContainer.appendChild(button2);
+		controlsContainer.appendChild(button3);
 		controlsContainer.appendChild(select);
 		
 		container.appendChild(controlsContainer);
@@ -205,7 +212,16 @@ public class KiteDemo {
 		cellColumn.getStyle().setProperty("padding-left", "3px");
 		cellColumn.getStyle().setProperty("padding-right", "3px");
 		
-		return cellColumn;
+		HTMLElement label = DOCUMENT.createElement("span");
+		
+		label.setTextContent("T");
+		
+		HTMLElement container = createFlexBox("column", 60);
+		
+		container.appendChild(cellColumn);
+		container.appendChild(label);
+		
+		return container;
 	}
 	
 	private HTMLElement wrapWithLink(HTMLElement element, String target) {
