@@ -209,7 +209,7 @@ public class KiteDemo {
 	}
 	
 	private HTMLElement wrapWithLink(HTMLElement element, String target) {
-		HTMLLinkElement link = (HTMLLinkElement) DOCUMENT.createElement("a");
+		HTMLAnchorElement link = (HTMLAnchorElement) DOCUMENT.createElement("a");
 		
 		link.setHref(target);
 		link.appendChild(element);
