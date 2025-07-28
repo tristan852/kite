@@ -213,6 +213,8 @@ public class KiteDemo {
 		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
+			System.out.println("label: " + movesScores[x]);
+			
 			cellLabels[x].setTextContent(movesScores[x] + "");
 		}
 	}
