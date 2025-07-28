@@ -204,6 +204,7 @@ public class KiteDemo {
 	}
 	
 	private void undoMove() {
+		if(playedMoveAmount == 0) return;
 		playedMoveAmount--;
 		
 		int moveX = playedMoves[playedMoveAmount];
