@@ -481,6 +481,7 @@ public class KiteDemo {
 	private void enableButton(HTMLButtonElement buttonElement) {
 		buttonElement.getStyle().setProperty("color", "#F4F4F5");
 		buttonElement.getStyle().setProperty("background-color", "#27272A");
+		buttonElement.getStyle().setProperty("cursor", "pointer");
 		
 		buttonElement.setDisabled(false);
 	}
@@ -488,6 +489,7 @@ public class KiteDemo {
 	private void disableButton(HTMLButtonElement buttonElement) {
 		buttonElement.getStyle().setProperty("color", "#9F9FA9");
 		buttonElement.getStyle().setProperty("background-color", "#18181B");
+		buttonElement.getStyle().setProperty("cursor", "default");
 		
 		buttonElement.setDisabled(true);
 	}
