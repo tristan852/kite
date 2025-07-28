@@ -122,7 +122,13 @@ public class KiteDemo {
 		
 		sidebarContainer.appendChild(controlsContainer);
 		
-		sidebarContainer.appendChild(wrapWithLink(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.png", "", 60), "https://github.com/tristan852/kite"));
+		HTMLElement githubLink = createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.png", "", 60);
+		
+		githubLink.getStyle().setProperty("padding", "6px");
+		
+		githubLink = wrapWithLink(githubLink, "https://github.com/tristan852/kite");
+		
+		sidebarContainer.appendChild(githubLink);
 		
 		System.out.println("db1");
 		
