@@ -211,6 +211,7 @@ public class KiteDemo {
 		while(playedMoveAmount > 0) undoMove();
 		
 		aiPlaysRed = ThreadLocalRandom.current().nextBoolean();
+		if(aiPlaysRed && aiPlay) playAIMove();
 	}
 	
 	private void playHumanMove(int moveX) {
@@ -222,6 +223,8 @@ public class KiteDemo {
 		if(height == BOARD_HEIGHT) return;
 		
 		playMove(moveX);
+		
+		if(aiPlay && aiPlaysRed == redAtTurn) playAIMove();
 	}
 	
 	private void playAIMove() {
