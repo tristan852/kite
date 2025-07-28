@@ -217,7 +217,7 @@ public class KiteDemo {
 			
 			label.getStyle().setProperty("width", "56px");
 			label.getStyle().setProperty("text-align", "center");
-			label.getStyle().setProperty("font-style", "bold");
+			label.getStyle().setProperty("font-weight", "bold");
 			label.setTextContent("T");
 			
 			labels.appendChild(label);
