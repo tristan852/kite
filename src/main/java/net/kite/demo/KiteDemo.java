@@ -147,6 +147,8 @@ public class KiteDemo {
 			// optionElement.setDefaultSelected();
 		}
 		
+		levelSelect.getStyle().setProperty("text-align", "center");
+		
 		controlsContainer.appendChild(modeButton);
 		controlsContainer.appendChild(levelSelect);
 		controlsContainer.appendChild(button2);
@@ -191,14 +193,14 @@ public class KiteDemo {
 						
 					}
 					
-				} else if(key.equals("ai-level")) {
+				} else if(key.equals("ai-color")) {
 					
-					setAILevel(Integer.parseInt(value));
+					aiPlaysRed = value.equals("red");
 					setMode(true);
 					
 				} else {
 					
-					aiPlaysRed = value.equals("red");
+					setAILevel(Integer.parseInt(value));
 				}
 			}
 		}
@@ -231,11 +233,19 @@ public class KiteDemo {
 	}
 	
 	private void setWindowSearch() {
-		String s = "";
+		String s = "moves=" + solver.boardMovesString();
 		
-		// in order: moves, ai-level, ai-color (last ones only if in AI mode)
+		if(aiPlay) {
+			
+			if(!s.isBlank()) s += "&";
+			
+			s += "ai-color=" + (aiPlaysRed ? "red" : "yellow");
+			s += "&ai-level=" + aiLevel.ordinal();
+		}
 		
-		Window.current().getHistory().pushState(null, "", "?foo=bar");
+		if(!s.isBlank()) s = "?" + s;
+		
+		Window.current().getHistory().pushState(null, "", s);
 	}
 	
 	private void clearBoard() {
