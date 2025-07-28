@@ -399,9 +399,9 @@ public class Kite {
 	 * ratings of the different {@link SkillLevel}s
 	 * (see also {@link SkillLevel#getApproximateEloRating()}).
 	 * <p>
-	 * The Elo rating approximation of the first player will
+	 * The Elo rating approximation of the red player will
 	 * be the first element of the returned array and the
-	 * rating approximation of the second player will be
+	 * rating approximation of the yellow player will be
 	 * the second element.
 	 *
 	 * @param playerRatingApproximations the buffer of length {@code 2} to write Elo rankings to
@@ -430,9 +430,9 @@ public class Kite {
 	 * ratings of the different {@link SkillLevel}s
 	 * (see also {@link SkillLevel#getApproximateEloRating()}).
 	 * <p>
-	 * The Elo rating approximation of the first player will
+	 * The Elo rating approximation of the red player will
 	 * be the first element of the returned array and the
-	 * rating approximation of the second player will be
+	 * rating approximation of the yellow player will be
 	 * the second element.
 	 * Use {@link Kite#evaluatePlayerPerformances(float[] playerRatingApproximations)}
 	 * if you already have a buffer to write the player
