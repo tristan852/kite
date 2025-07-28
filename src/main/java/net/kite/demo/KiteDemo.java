@@ -168,6 +168,8 @@ public class KiteDemo {
 	}
 	
 	private void playHumanMove(int moveX) {
+		if(solver.gameOver()) return;
+		
 		int columnIndex = moveX - 1;
 		
 		int height = columnHeights[columnIndex];
@@ -272,9 +274,10 @@ public class KiteDemo {
 			label.getStyle().setProperty("width", "56px");
 			label.getStyle().setProperty("text-align", "center");
 			label.getStyle().setProperty("font-weight", "bold");
-			label.setTextContent("T");
 			
 			labels.appendChild(label);
+			
+			cellLabels[x] = label;
 		}
 		
 		HTMLElement container = createFlexBox("column", 30);
