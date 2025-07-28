@@ -221,6 +221,7 @@ public class KiteDemo {
 		playedMoveAmount++;
 		
 		updateLabels();
+		updateWinnerLabel();
 	}
 	
 	private void undoMove() {
@@ -242,6 +243,7 @@ public class KiteDemo {
 		redAtTurn = !redAtTurn;
 		
 		updateLabels();
+		updateWinnerLabel();
 	}
 	
 	private void updateWinnerLabel() {
@@ -251,6 +253,9 @@ public class KiteDemo {
 			
 			String text = outcome == BoardOutcome.DRAW ? "Draw!" : outcome == BoardOutcome.RED_WIN ? "Red wins!" : "Yellow wins!";
 			String textColor = outcome == BoardOutcome.DRAW ? "#71717B" : outcome == BoardOutcome.RED_WIN ? "#FB2C36" : "#F0B100";
+			
+			winnerLabel.setTextContent(text);
+			winnerLabel.getStyle().setProperty("color", textColor);
 			
 		} else {
 			
