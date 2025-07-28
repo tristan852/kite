@@ -134,7 +134,12 @@ public class KiteDemo {
 		
 		levelSelect = (HTMLSelectElement) createControl("select", (mouseEvent) -> {
 			
-			toggleMode();
+			// toggleMode();
+		});
+		
+		levelSelect.addEventListener("change", (event) -> {
+			
+			setAILevel(levelSelect.getSelectedIndex());
 		});
 		
 		for(SkillLevel level : SkillLevel.values()) {
@@ -227,6 +232,8 @@ public class KiteDemo {
 	
 	private void setAILevel(int level) {
 		aiLevel = SkillLevel.values()[level]; // TODO array as constant -> orderred ai levels
+		
+		System.out.println(aiLevel);
 		
 		levelSelect.setSelectedIndex(level);
 		
