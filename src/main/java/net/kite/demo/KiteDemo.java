@@ -26,7 +26,7 @@ public class KiteDemo {
 	private static final HTMLDocument DOCUMENT = HTMLDocument.current();
 	
 	private boolean aiPlay;
-	private SkillLevel aiLevel;
+	private SkillLevel aiLevel = SkillLevel.PERFECT;
 	
 	private boolean aiPlaysRed;
 	
@@ -143,6 +143,8 @@ public class KiteDemo {
 			optionElement.setLabel(level.name());
 			
 			levelSelect.getOptions().add(optionElement);
+			
+			// optionElement.setDefaultSelected();
 		}
 		
 		controlsContainer.appendChild(modeButton);
@@ -261,7 +263,7 @@ public class KiteDemo {
 	}
 	
 	private void playAIMove() {
-		int moveX = solver.skilledMove(SkillLevel.PERFECT);
+		int moveX = solver.skilledMove(aiLevel);
 		
 		playMove(moveX);
 		movesToRedoAmount = 0;
