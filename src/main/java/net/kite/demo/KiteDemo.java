@@ -16,6 +16,7 @@ import org.teavm.jso.typedarrays.Int8Array;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
+// TODO optimize (especially the use of the solver; clean up)
 public class KiteDemo {
 	
 	private static final int BOARD_WIDTH = 7;
@@ -362,7 +363,7 @@ public class KiteDemo {
 		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
-			String s = movesScores[x] == Integer.MIN_VALUE ? "" : movesScores[x] + "";
+			String s = movesScores[x] == Integer.MIN_VALUE ? "" : formatScore(movesScores[x]);
 			cellLabels[x].setTextContent(s);
 		}
 	}
@@ -498,6 +499,12 @@ public class KiteDemo {
 		flexBox.getStyle().setProperty("gap", gap + "px"); // Optional: spacing between items
 		
 		return flexBox;
+	}
+	
+	private static String formatScore(int score) {
+		if(score > 0) return "+" + score;
+		
+		return String.valueOf(score);
 	}
 	
 }
