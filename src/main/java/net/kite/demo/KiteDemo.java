@@ -150,8 +150,7 @@ public class KiteDemo {
 		
 		// update button
 		
-		if(aiPlay) hideLabels();
-		else showLabels();
+		updateLabels();
 	}
 	
 	private void setAILevel(int level) {
@@ -187,6 +186,8 @@ public class KiteDemo {
 		
 		solver.playMove(moveX);
 		redAtTurn = !redAtTurn;
+		
+		updateLabels();
 	}
 	
 	private void undoMove(int moveX, int moveY) {
@@ -196,6 +197,15 @@ public class KiteDemo {
 		
 		solver.undoMove();
 		redAtTurn = !redAtTurn;
+		
+		updateLabels();
+	}
+	
+	private void updateLabels() {
+		boolean gameOver = solver.gameOver();
+		
+		if(aiPlay || gameOver) hideLabels();
+		else showLabels();
 	}
 	
 	private void showLabels() {
