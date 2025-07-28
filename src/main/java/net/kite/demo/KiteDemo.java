@@ -151,7 +151,30 @@ public class KiteDemo {
 		container.appendChild(sidebarContainer);
 		container.appendChild(createBoard());
 		
-		System.out.println(WINDOW.getLocation().getSearch());
+		String search = WINDOW.getLocation().getSearch();
+		if(!search.isBlank()) {
+			
+			String[] items = search.split("&");
+			for(String item : items) {
+				
+				String key = item.split("=")[0];
+				String value = item.split("=")[1];
+				
+				if(key.equals("moves")) {
+					
+					for(char c : value.toCharArray()) playMove(c - '0');
+					
+				} else if(key.equals("ai-level")) {
+					
+					setAILevel(Integer.parseInt(value));
+					setMode(true);
+					
+				} else {
+					
+					aiPlaysRed = value.equals("red");
+				}
+			}
+		}
 		
 		body.appendChild(container);
 	}
@@ -176,6 +199,12 @@ public class KiteDemo {
 		
 		// update select element
 		// maybe clear board
+	}
+	
+	private void setWindowSearch() {
+		String s = "";
+		
+		Window.current().getHistory().pushState(null, "", "?foo=bar");
 	}
 	
 	private void clearBoard() {
