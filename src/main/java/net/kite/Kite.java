@@ -443,7 +443,9 @@ public class Kite {
 	public synchronized float[] evaluatePlayerPerformances() {
 		float[] eloBuffer = new float[GAME_PLAYER_AMOUNT];
 		
-		return board.approximateEloRatingOfBothPlayer(eloBuffer);
+		board.approximateEloRatingOfBothPlayer(eloBuffer);
+		
+		return eloBuffer;
 	}
 	
 	/**
