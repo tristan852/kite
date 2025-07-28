@@ -66,19 +66,11 @@ public class KiteDemo {
 			
 			HTMLElement container = createFlexBox("column", 60);
 			
-			HTMLImageElement imageElement = (HTMLImageElement) DOCUMENT.createElement("img");
-			
-			// use raw.github instead
-			imageElement.setSrc("https://github.com/tristan852/kite/blob/main/assets/images/brand/small_logo.png?raw=true");
-			
-			container.appendChild(imageElement);
+			container.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png", "", 120));
 			
 			container.appendChild(createBoard());
 			
-			imageElement = (HTMLImageElement) DOCUMENT.createElement("img");
-			
-			imageElement.setSrc("https://github.com/tristan852/kite/blob/main/assets/images/socials/github.png?raw=true");
-			container.appendChild(imageElement);
+			container.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.png", "", 60));
 			
 			body.appendChild(container);
 			
@@ -125,6 +117,7 @@ public class KiteDemo {
 		
 		cellBoard.getStyle().setProperty("background-color", "#18181B");
 		cellBoard.getStyle().setProperty("padding", "25px");
+		cellBoard.getStyle().setProperty("border-radius", "25px");
 		
 		return cellBoard;
 	}
@@ -132,7 +125,7 @@ public class KiteDemo {
 	private HTMLElement createBoardColumn(int x) {
 		HTMLElement cellColumn = createFlexBox("column", 6);
 		
-		for(int y = 0; y < 6; y++) {
+		for(int y = BOARD_HEIGHT - 1; y >= 0; y--) {
 			
 			HTMLElement cell = DOCUMENT.createElement("div");
 			
@@ -160,6 +153,17 @@ public class KiteDemo {
 	 * @param gap
 	 * @return
 	 */
+	
+	private HTMLElement createImage(String source, String altText, int size) {
+		HTMLImageElement image = (HTMLImageElement) DOCUMENT.createElement("img");
+		
+		image.setSrc(source);
+		image.setAlt(altText);
+		image.setWidth(size);
+		image.setHeight(size);
+		
+		return image;
+	}
 	
 	private HTMLElement createFlexBox(String direction, int gap) {
 		HTMLElement flexBox = DOCUMENT.createElement("div");
