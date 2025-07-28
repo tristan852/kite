@@ -13,7 +13,19 @@ import org.teavm.jso.typedarrays.Int8Array;
 
 public class KiteDemo {
 	
+	private static final int BOARD_WIDTH = 7;
+	private static final int BOARD_HEIGHT = 6;
+	
+	// TODO keep solver in sync after each play/undo
+	
 	private static final HTMLDocument DOCUMENT = HTMLDocument.current();
+	
+	private Kite solver;
+	
+	private final int[] columnHeights = new int[BOARD_WIDTH];
+	private boolean redAtTurn = true;
+	
+	private final HTMLElement[][] cells = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
 	
 	public void onStart() {
 		XMLHttpRequest xhr = new XMLHttpRequest();
@@ -40,9 +52,7 @@ public class KiteDemo {
 			
 			System.out.println("db2");
 			
-			Kite kite = Kite.createInstance();
-			kite.playMoves(2,6,6,5,4,4,4,3,2,2,1,2);
-			System.out.println(kite.evaluateBoard());
+			solver = Kite.createInstance();
 			
 			HTMLBodyElement body = DOCUMENT.getBody();
 			
@@ -71,9 +81,36 @@ public class KiteDemo {
 			container.appendChild(imageElement);
 			
 			body.appendChild(container);
+			
+			playMove(3);
+			playMove(3);
+			playMove(3);
 		});
 		
 		xhr.send();
+	}
+	
+	// TODO synchronize these
+	
+	private void playMove(int moveX) {
+		int moveY = columnHeights[moveX];
+		columnHeights[moveX]++;
+		
+		HTMLElement cell = cells[moveX][moveY];
+		
+		cell.getStyle().setProperty("background-color", redAtTurn ? "#FB2C36" : "#F0B100");
+		
+		solver.playMove(moveX);
+		redAtTurn = !redAtTurn;
+	}
+	
+	private void undoMove(int moveX, int moveY) {
+		HTMLElement cell = cells[moveX][moveY];
+		
+		cell.getStyle().setProperty("background-color", "#09090B");
+		
+		solver.undoMove();
+		redAtTurn = !redAtTurn;
 	}
 	
 	private HTMLElement createBoard() {
@@ -104,6 +141,8 @@ public class KiteDemo {
 			cell.getStyle().setProperty("background-color", "#09090B");
 			
 			cellColumn.appendChild(cell);
+			
+			cells[x][y] = cell;
 		}
 		
 		cellColumn.onClick(mouseEvent -> {
