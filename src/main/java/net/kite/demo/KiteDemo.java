@@ -48,7 +48,10 @@ public class KiteDemo {
 	
 	private HTMLElement winnerLabel;
 	
-	private HTMLElement modeButton;
+	private HTMLButtonElement modeButton;
+	private HTMLButtonElement undoButton;
+	private HTMLButtonElement redoButton;
+	
 	private HTMLSelectElement levelSelect;
 	
 	public void onStart() {
@@ -106,7 +109,7 @@ public class KiteDemo {
 		brandContainer.appendChild(version);
 		sidebarContainer.appendChild(brandContainer);
 		
-		modeButton = createControl("button", (mouseEvent) -> {
+		modeButton = (HTMLButtonElement) createControl("button", (mouseEvent) -> {
 			
 			toggleMode();
 		});
@@ -118,19 +121,19 @@ public class KiteDemo {
 		
 		button2.setTextContent("New Game");
 		
-		HTMLElement button3 = createControl("button", (mouseEvent) -> {
+		undoButton = (HTMLButtonElement) createControl("button", (mouseEvent) -> {
 			
 			if(!aiPlay) undoMove();
 		});
 		
-		button3.setTextContent("Undo Move");
+		undoButton.setTextContent("Undo Move");
 		
-		HTMLElement button4 = createControl("button", (mouseEvent) -> {
+		redoButton = (HTMLButtonElement) createControl("button", (mouseEvent) -> {
 			
 			redoMove();
 		});
 		
-		button4.setTextContent("Redo Move");
+		redoButton.setTextContent("Redo Move");
 		
 		levelSelect = (HTMLSelectElement) createControl("select", (mouseEvent) -> {
 			
@@ -158,8 +161,10 @@ public class KiteDemo {
 		controlsContainer.appendChild(modeButton);
 		controlsContainer.appendChild(levelSelect);
 		controlsContainer.appendChild(button2);
-		controlsContainer.appendChild(button3);
-		controlsContainer.appendChild(button4);
+		controlsContainer.appendChild(undoButton);
+		controlsContainer.appendChild(redoButton);
+		
+		redoButton.setDisabled(true);
 		
 		sidebarContainer.appendChild(controlsContainer);
 		
@@ -192,17 +197,14 @@ public class KiteDemo {
 					
 					for(char c : value.toCharArray()) {
 						
-						// check column height and if game is over (afterwards)
-						
 						playMove(c - '0');
-						
-						
 					}
 					
 				} else if(key.equals("ai-color")) {
 					
 					aiPlaysRed = value.equals("red");
 					setMode(true);
+					// bug: this clears the loaded moves
 					
 				} else {
 					
@@ -212,6 +214,9 @@ public class KiteDemo {
 		}
 		
 		body.appendChild(container);
+		
+		if(solver.gameOver()) return;
+		if(aiPlay && aiPlaysRed == redAtTurn) playAIMove();
 	}
 	
 	// TODO synchronize (keyword) these
