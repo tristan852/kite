@@ -78,7 +78,7 @@ public class KiteDemo {
 			
 			container.appendChild(createBoard());
 			
-			container.appendChild(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.png", "", 60));
+			container.appendChild(wrapWithLink(createImage("https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.png", "", 60), "https://github.com/tristan852/kite"));
 			
 			body.appendChild(container);
 			
@@ -171,6 +171,15 @@ public class KiteDemo {
 		cellColumn.getStyle().setProperty("padding-right", "3px");
 		
 		return cellColumn;
+	}
+	
+	private HTMLElement wrapWithLink(HTMLElement element, String target) {
+		HTMLLinkElement link = (HTMLLinkElement) DOCUMENT.createElement("a");
+		
+		link.setHref(target);
+		link.appendChild(element);
+		
+		return link;
 	}
 	
 	private HTMLElement createImage(String source, String altText, int size) {
