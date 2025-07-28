@@ -109,7 +109,7 @@ public class KiteDemo {
 		int moveY = columnHeights[moveX];
 		columnHeights[moveX]++;
 		
-		HTMLElement cell = cells[moveX][moveY];
+		HTMLElement cell = cells[moveX - 1][moveY];
 		
 		cell.getStyle().setProperty("background-color", redAtTurn ? "#FB2C36" : "#F0B100");
 		
@@ -118,7 +118,7 @@ public class KiteDemo {
 	}
 	
 	private void undoMove(int moveX, int moveY) {
-		HTMLElement cell = cells[moveX][moveY];
+		HTMLElement cell = cells[moveX - 1][moveY];
 		
 		cell.getStyle().setProperty("background-color", "#09090B");
 		
@@ -137,8 +137,8 @@ public class KiteDemo {
 		}
 		
 		cellBoard.getStyle().setProperty("background-color", "#27272A");
+		cellBoard.getStyle().setProperty("padding", "25px 19px");
 		cellBoard.getStyle().setProperty("padding", "25px");
-		cellBoard.getStyle().setProperty("border-radius", "25px");
 		
 		return cellBoard;
 	}
@@ -162,10 +162,13 @@ public class KiteDemo {
 		
 		cellColumn.onClick(mouseEvent -> {
 			
-			playHumanMove(x);
+			int moveX = x + 1;
+			playHumanMove(moveX);
 		});
 		
 		cellColumn.getStyle().setProperty("cursor", "pointer");
+		cellColumn.getStyle().setProperty("padding-left", "3px");
+		cellColumn.getStyle().setProperty("padding-right", "3px");
 		
 		return cellColumn;
 	}
