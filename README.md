@@ -173,7 +173,19 @@ public class B {
 
 ---
 
-## 🕹️ Try It Out
+## 🕹️ Online Demo
+
+Try the solver directly in your browser:
+
+👉 **[Launch the Demo](https://tristan852.github.io/kite)**
+
+You can set up and analyze positions, or play against AI opponents of varying strength — no installation required.
+
+The demo runs natively in WebAssembly and offers performance similar to the Java library, though it may be slightly slower in some cases.
+
+---
+
+## 🧪 Try It Out
 Want to quickly try out the Kite solver? Here's a simple demo class that pits you against the solver using a fixed skill level:
 
 ```java
