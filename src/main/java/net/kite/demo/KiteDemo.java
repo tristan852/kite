@@ -150,11 +150,6 @@ public class KiteDemo {
 		container.appendChild(sidebarContainer);
 		container.appendChild(createBoard());
 		
-		playAIMove();
-		playAIMove();
-		playAIMove();
-		showLabels();
-		
 		// TODO parse url params
 		
 		body.appendChild(container);
@@ -177,6 +172,9 @@ public class KiteDemo {
 	
 	private void setAILevel(int level) {
 		
+		
+		// update select element
+		// maybe clear board
 	}
 	
 	private void clearBoard() {
