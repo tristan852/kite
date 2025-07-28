@@ -1,6 +1,7 @@
 package net.kite.demo;
 
 import net.kite.Kite;
+import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.skill.level.SkillLevel;
 import org.teavm.jso.ajax.XMLHttpRequest;
@@ -10,6 +11,8 @@ import org.teavm.jso.dom.html.*;
 import org.teavm.jso.dom.xml.Node;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Int8Array;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class KiteDemo {
 	
@@ -24,6 +27,8 @@ public class KiteDemo {
 	private boolean aiPlay;
 	private SkillLevel aiLevel;
 	
+	private boolean aiPlaysRed;
+	
 	private Kite solver;
 	
 	private final int[] movesScores = new int[BOARD_WIDTH];
@@ -36,6 +41,8 @@ public class KiteDemo {
 	
 	private final HTMLElement[][] cells = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
 	private final HTMLElement[] cellLabels = new HTMLElement[BOARD_WIDTH];
+	
+	private HTMLElement winnerLabel;
 	
 	private HTMLElement modeButton;
 	private HTMLSelectElement levelSelect;
@@ -174,6 +181,8 @@ public class KiteDemo {
 	
 	private void clearBoard() {
 		while(playedMoveAmount > 0) undoMove();
+		
+		aiPlaysRed = ThreadLocalRandom.current().nextBoolean();
 	}
 	
 	private void playHumanMove(int moveX) {
@@ -235,6 +244,24 @@ public class KiteDemo {
 		updateLabels();
 	}
 	
+	private void updateWinnerLabel() {
+		if(solver.gameOver()) {
+			
+			BoardOutcome outcome = solver.gameOutcome();
+			
+			String text = outcome == BoardOutcome.DRAW ? "Draw!" : outcome == BoardOutcome.RED_WIN ? "Red wins!" : "Yellow wins!";
+			String textColor = outcome == BoardOutcome.DRAW ? "#71717B" : outcome == BoardOutcome.RED_WIN ? "#FB2C36" : "#F0B100";
+			
+		} else {
+			
+			winnerLabel.setTextContent("");
+		}
+		
+		while(playedMoveAmount > 0) undoMove();
+		
+		aiPlaysRed = ThreadLocalRandom.current().nextBoolean();
+	}
+	
 	private void updateLabels() {
 		boolean gameOver = solver.gameOver();
 		
@@ -288,6 +315,12 @@ public class KiteDemo {
 			
 			cellLabels[x] = label;
 		}
+		
+		winnerLabel = DOCUMENT.createElement("span");
+		
+		winnerLabel.getStyle().setProperty("height", "20px");
+		winnerLabel.getStyle().setProperty("text-align", "center");
+		winnerLabel.getStyle().setProperty("font-weight", "bold");
 		
 		HTMLElement container = createFlexBox("column", 30);
 		
