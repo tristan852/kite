@@ -349,6 +349,14 @@ public class KiteDemo {
 			
 			int moveX = x;
 			
+			cellColumnElement.onClick((mouseEvent) -> {
+				
+				synchronized(WINDOW) {
+					
+					// playMove(moveX, false);
+				}
+			});
+			
 			setElementStyles(cellColumnElement, CELL_COLUMN_ELEMENT_STYLES);
 			
 			boardElement.appendChild(cellColumnElement);
