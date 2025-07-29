@@ -397,7 +397,7 @@ public class KiteDemo {
 			
 			cellColumnElement.onClick((mouseEvent) -> {
 				
-				playMove(moveX, false);
+				playMove(moveX, false, false);
 			});
 			
 			setElementStyles(cellColumnElement, CELL_COLUMN_ELEMENT_STYLES);
@@ -467,7 +467,7 @@ public class KiteDemo {
 						for(int i = 0; i < l; i++) {
 							
 							int moveX = itemValue.charAt(i) - SMALLEST_LOCATION_SEARCH_MOVE;
-							playMove(moveX, false);
+							playMove(moveX, false, true);
 						}
 					}
 					case LOCATION_SEARCH_AI_COLOR_KEY -> {
@@ -618,17 +618,17 @@ public class KiteDemo {
 		if(undoneMoveAmount == 0) return;
 		
 		int moveX = playedMoves[playedMoveAmount];
-		playMove(moveX, true);
+		playMove(moveX, true, false);
 	}
 	
 	private void playAIMove() {
 		int moveX = solver.skilledMove(aiSkillLevel);
 		moveX--;
 		
-		playMove(moveX, false);
+		playMove(moveX, false, false);
 	}
 	
-	private void playMove(int moveX, boolean redo) {
+	private void playMove(int moveX, boolean redo, boolean initial) {
 		if(solver.gameOver()) return;
 		
 		int moveY = columnPlayedMoveAmounts[moveX];
@@ -663,7 +663,7 @@ public class KiteDemo {
 		}
 		
 		updateWinnerLabelElement();
-		updateLocationSearch();
+		if(!initial) updateLocationSearch();
 	}
 	
 	private void setCellElementBackgroundColor(int cellElementX, int cellElementY, int cellElementBackgroundColorIndex) {
