@@ -1,6 +1,7 @@
 package net.kite.demo;
 
 import net.kite.Kite;
+import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.skill.level.SkillLevel;
 import org.teavm.jso.ajax.XMLHttpRequest;
@@ -168,6 +169,15 @@ public class KiteDemo {
 	private static final String REDO_BUTTON_ELEMENT_TEXT = "Redo Move";
 	
 	private static final int WINNER_LABEL_ELEMENT_HEIGHT = 28;
+	
+	private static final String RED_WINNER_LABEL_ELEMENT_TEXT = "Red wins!";
+	private static final String YELLOW_WINNER_LABEL_ELEMENT_TEXT = "Yellow wins!";
+	private static final String DRAW_WINNER_LABEL_ELEMENT_TEXT = "Draw!";
+	private static final String EMPTY_WINNER_LABEL_ELEMENT_TEXT = "";
+	
+	private static final String RED_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR = "#FB2C36";
+	private static final String YELLOW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR = "#F0B100";
+	private static final String DRAW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR = "#71717B";
 	
 	private static final String[] CELL_ELEMENT_BACKGROUND_COLORS = new String[] {
 			"#FB2C36",
@@ -644,6 +654,31 @@ public class KiteDemo {
 			
 			HTMLElement cellLabelElement = cellLabelElements[x];
 			cellLabelElement.setTextContent(moveScoreString);
+		}
+	}
+	
+	private void updateWinnerLabelElement() {
+		BoardOutcome gameOutcome = solver.gameOutcome();
+		switch(gameOutcome) {
+			case UNDECIDED -> {
+				
+				winnerLabelElement.setTextContent(EMPTY_WINNER_LABEL_ELEMENT_TEXT);
+			}
+			case RED_WIN -> {
+				
+				winnerLabelElement.setTextContent(RED_WINNER_LABEL_ELEMENT_TEXT);
+				setElementStyles(winnerLabelElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, RED_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
+			}
+			case YELLOW_WIN -> {
+				
+				winnerLabelElement.setTextContent(YELLOW_WINNER_LABEL_ELEMENT_TEXT);
+				setElementStyles(winnerLabelElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, YELLOW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
+			}
+			case DRAW -> {
+				
+				winnerLabelElement.setTextContent(DRAW_WINNER_LABEL_ELEMENT_TEXT);
+				setElementStyles(winnerLabelElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, DRAW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
+			}
 		}
 	}
 	
