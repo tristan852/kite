@@ -48,10 +48,6 @@ tasks.register<Copy>("copyDemoAssetFiles") {
     into("build/war-unpacked")
 }
 
-afterEvaluate {
-    tasks.findByName("generateMetadataFileForMavenPublication")?.dependsOn("plainJavadocJar")
-}
-
 signing {
     useGpgCmd()
 }
