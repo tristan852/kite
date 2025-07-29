@@ -261,8 +261,6 @@ public class KiteDemo {
 		request.send();
 	}
 	
-	// ---
-	
 	private void buildApp() {
 		solver = Kite.createInstance();
 		
@@ -502,9 +500,6 @@ public class KiteDemo {
 		
 		bodyElement.appendChild(appElement);
 	}
-	
-	// TODO are imports clean?
-	// TODO check before every do method if value is not already set
 	
 	private void changeAISkillLevel(int aiSkillLevelIndex) {
 		int i = aiSkillLevelSelectElement.getSelectedIndex();
