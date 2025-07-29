@@ -1,11 +1,9 @@
 package net.kite.demo;
 
 import net.kite.Kite;
-import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.skill.level.SkillLevel;
 import org.teavm.jso.ajax.XMLHttpRequest;
-import org.teavm.jso.browser.History;
 import org.teavm.jso.browser.Location;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.css.CSSStyleDeclaration;
@@ -13,8 +11,6 @@ import org.teavm.jso.dom.html.*;
 import org.teavm.jso.dom.xml.Node;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Int8Array;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 public class KiteDemo {
 	
@@ -312,7 +308,7 @@ public class KiteDemo {
 			
 			synchronized(WINDOW) {
 				
-				changeMode();
+				// changeMode();
 			}
 		});
 		
@@ -320,7 +316,7 @@ public class KiteDemo {
 			
 			synchronized(WINDOW) {
 				
-				setupNewGame();
+				// setupNewGame();
 			}
 		});
 		
@@ -328,7 +324,7 @@ public class KiteDemo {
 			
 			synchronized(WINDOW) {
 				
-				undoMove();
+				// undoMove();
 			}
 		});
 		
@@ -336,14 +332,14 @@ public class KiteDemo {
 			
 			synchronized(WINDOW) {
 				
-				redoMove();
+				// redoMove();
 			}
 		});
 		
 		aiSkillLevelSelectElement.addEventListener(ELEMENT_CHANGE_EVENT_TYPE, (event) -> {
 			
 			int i = aiSkillLevelSelectElement.getSelectedIndex();
-			changeAISkillLevel(i);
+			// changeAISkillLevel(i);
 		});
 		
 		for(SkillLevel skillLevel : ORDERED_AI_SKILL_LEVELS) {
@@ -395,7 +391,7 @@ public class KiteDemo {
 				
 				synchronized(WINDOW) {
 					
-					playMove(moveX, false);
+					// playMove(moveX, false);
 				}
 			});
 			
@@ -466,7 +462,7 @@ public class KiteDemo {
 						for(int i = 0; i < l; i++) {
 							
 							int moveX = itemValue.charAt(i) - SMALLEST_LOCATION_SEARCH_MOVE;
-							playMove(moveX, false);
+							// playMove(moveX, false);
 						}
 					}
 					case LOCATION_SEARCH_AI_COLOR_KEY -> {
@@ -485,7 +481,6 @@ public class KiteDemo {
 						int i = Integer.parseInt(itemValue);
 						
 						aiSkillLevel = ORDERED_AI_SKILL_LEVELS[i];
-						
 						aiSkillLevelSelectElement.setSelectedIndex(i);
 					}
 				}
@@ -495,252 +490,252 @@ public class KiteDemo {
 		if(aiModeSelected && aiPlaysRed == redAtTurn) {
 			
 			boolean gameNotOver = !solver.gameOver();
-			if(gameNotOver) playAIMove();
+			// if(gameNotOver) playAIMove();
 		}
 		
 		bodyElement.appendChild(appElement);
 	}
 	
-	private void changeAISkillLevel(int aiSkillLevelIndex) {
-		int i = aiSkillLevelSelectElement.getSelectedIndex();
-		if(i == aiSkillLevelIndex) return;
-		
-		aiSkillLevel = ORDERED_AI_SKILL_LEVELS[aiSkillLevelIndex];
-		
-		updateLocationSearch();
-		setupNewGame();
-	}
-	
-	private void changeMode() {
-		aiModeSelected = !aiModeSelected;
-		if(aiModeSelected) {
-			
-			modeButtonElement.setTextContent(SECOND_MODE_BUTTON_ELEMENT_TEXT);
-			
-			disableControlElement(undoButtonElement);
-			disableControlElement(redoButtonElement);
-			
-			setupNewGame();
-			
-		} else {
-			
-			modeButtonElement.setTextContent(FIRST_MODE_BUTTON_ELEMENT_TEXT);
-			
-			enableControlElement(undoButtonElement);
-			enableControlElement(redoButtonElement);
-		}
-		
-		updateCellLabelElements();
-		updateLocationSearch();
-	}
-	
-	private void setupNewGame() {
-		if(playedMoveAmount != 0) {
-			
-			solver.clearBoard();
-			
-			for(int i = playedMoveAmount - 1; i >= 0; i--) {
-				
-				int moveX = playedMoves[i];
-				
-				columnPlayedMoveAmounts[moveX]--;
-				
-				int moveY = columnPlayedMoveAmounts[moveX];
-				
-				setCellElementBackgroundColor(moveX, moveY, EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX);
-			}
-			
-			playedMoveAmount = 0;
-			undoneMoveAmount = 0;
-			
-			updateWinnerLabelElement();
-			updateLocationSearch();
-		}
-		
-		if(aiModeSelected) {
-			
-			ThreadLocalRandom random = ThreadLocalRandom.current();
-			
-			aiPlaysRed = random.nextBoolean();
-			if(aiPlaysRed) playAIMove();
-			else updateLocationSearch();
-		}
-	}
-	
-	private void undoMove() {
-		if(playedMoveAmount == 0) return;
-		
-		playedMoveAmount--;
-		undoneMoveAmount++;
-		
-		redAtTurn = !redAtTurn;
-		
-		int moveX = playedMoves[playedMoveAmount];
-		
-		columnPlayedMoveAmounts[moveX]--;
-		
-		int moveY = columnPlayedMoveAmounts[moveX];
-		
-		solver.undoMove();
-		setCellElementBackgroundColor(moveX, moveY, EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX);
-		
-		if(!aiModeSelected) updateCellLabelElements();
-		updateWinnerLabelElement();
-		updateLocationSearch();
-	}
-	
-	private void redoMove() {
-		if(undoneMoveAmount == 0) return;
-		
-		int moveX = playedMoves[playedMoveAmount];
-		playMove(moveX, true);
-	}
-	
-	private void playAIMove() {
-		int moveX = solver.skilledMove(aiSkillLevel);
-		moveX--;
-		
-		playMove(moveX, false);
-	}
-	
-	private void playMove(int moveX, boolean redo) {
-		if(solver.gameOver()) return;
-		
-		int moveY = columnPlayedMoveAmounts[moveX];
-		if(moveY == BOARD_HEIGHT) return;
-		
-		int i = redAtTurn ? RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
-		
-		playedMoves[playedMoveAmount] = moveX;
-		playedMoveAmount++;
-		
-		redAtTurn = !redAtTurn;
-		
-		if(redo) undoneMoveAmount--;
-		else undoneMoveAmount = 0;
-		
-		columnPlayedMoveAmounts[moveX]++;
-		
-		solver.playMove(moveX + 1);
-		setCellElementBackgroundColor(moveX, moveY, i);
-		
-		if(!aiModeSelected) updateCellLabelElements();
-		updateWinnerLabelElement();
-		updateLocationSearch();
-	}
-	
-	private void setCellElementBackgroundColor(int cellElementX, int cellElementY, int cellElementBackgroundColorIndex) {
-		String s = CELL_ELEMENT_BACKGROUND_COLORS[cellElementBackgroundColorIndex];
-		
-		HTMLElement cellElement = cellElements[cellElementX][cellElementY];
-		setElementStyles(cellElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, s);
-	}
-	
-	private void updateCellLabelElements() {
-		if(aiModeSelected) {
-			
-			for(int x = 0; x < BOARD_WIDTH; x++) {
-				
-				HTMLElement cellLabelElement = cellLabelElements[x];
-				cellLabelElement.setTextContent(EMPTY_CELL_LABEL_ELEMENT_TEXT);
-			}
-			
-			return;
-		}
-		
-		solver.evaluateAllMoves(movesScores);
-		
-		for(int x = 0; x < BOARD_WIDTH; x++) {
-			
-			int moveScore = movesScores[x];
-			String moveScoreString = formatMoveScore(moveScore);
-			
-			HTMLElement cellLabelElement = cellLabelElements[x];
-			cellLabelElement.setTextContent(moveScoreString);
-		}
-	}
-	
-	private void updateWinnerLabelElement() {
-		BoardOutcome gameOutcome = solver.gameOutcome();
-		switch(gameOutcome) {
-			case UNDECIDED -> {
-				
-				winnerLabelElement.setTextContent(EMPTY_WINNER_LABEL_ELEMENT_TEXT);
-			}
-			case RED_WIN -> {
-				
-				winnerLabelElement.setTextContent(RED_WINNER_LABEL_ELEMENT_TEXT);
-				setElementStyles(winnerLabelElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, RED_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
-			}
-			case YELLOW_WIN -> {
-				
-				winnerLabelElement.setTextContent(YELLOW_WINNER_LABEL_ELEMENT_TEXT);
-				setElementStyles(winnerLabelElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, YELLOW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
-			}
-			case DRAW -> {
-				
-				winnerLabelElement.setTextContent(DRAW_WINNER_LABEL_ELEMENT_TEXT);
-				setElementStyles(winnerLabelElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, DRAW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
-			}
-		}
-	}
-	
-	private void updateLocationSearch() {
-		Location location = WINDOW.getLocation();
-		String locationPath = location.getPathName();
-		
-		boolean movesWerePlayed = playedMoveAmount != 0;
-		boolean searchNotEmpty = movesWerePlayed || aiModeSelected;
-		if(searchNotEmpty) {
-			
-			StringBuilder stringBuilder = new StringBuilder(locationPath);
-			stringBuilder.append(LOCATION_SEARCH_PREFIX);
-			
-			boolean b = false;
-			
-			if(movesWerePlayed) {
-				
-				b = true;
-				
-				stringBuilder.append(LOCATION_SEARCH_MOVES_KEY);
-				stringBuilder.append(LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR);
-				
-				for(int i = 0; i < playedMoveAmount; i++) {
-					
-					char c = (char) (SMALLEST_LOCATION_SEARCH_MOVE + playedMoves[i]);
-					stringBuilder.append(c);
-				}
-			}
-			
-			if(aiModeSelected) {
-				
-				if(b) stringBuilder.append(LOCATION_SEARCH_ITEM_SEPARATOR);
-				b = true;
-				
-				String s = aiPlaysRed ? RED_LOCATION_SEARCH_AI_COLOR : YELLOW_LOCATION_SEARCH_AI_COLOR;
-				
-				stringBuilder.append(LOCATION_SEARCH_AI_COLOR_KEY);
-				stringBuilder.append(LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR);
-				stringBuilder.append(s);
-			}
-			
-			if(aiSkillLevel != SkillLevel.PERFECT) {
-				
-				if(b) stringBuilder.append(LOCATION_SEARCH_ITEM_SEPARATOR);
-				
-				int index = aiSkillLevelSelectElement.getSelectedIndex();
-				
-				stringBuilder.append(LOCATION_SEARCH_AI_LEVEL_KEY);
-				stringBuilder.append(LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR);
-				stringBuilder.append(index);
-			}
-			
-			locationPath = stringBuilder.toString();
-		}
-		
-		History history = WINDOW.getHistory();
-		history.replaceState(null, APP_TITLE, locationPath);
-	}
+//	private void changeAISkillLevel(int aiSkillLevelIndex) {
+//		int i = aiSkillLevelSelectElement.getSelectedIndex();
+//		if(i == aiSkillLevelIndex) return;
+//		
+//		aiSkillLevel = ORDERED_AI_SKILL_LEVELS[aiSkillLevelIndex];
+//		
+//		updateLocationSearch();
+//		setupNewGame();
+//	}
+//	
+//	private void changeMode() {
+//		aiModeSelected = !aiModeSelected;
+//		if(aiModeSelected) {
+//			
+//			modeButtonElement.setTextContent(SECOND_MODE_BUTTON_ELEMENT_TEXT);
+//			
+//			disableControlElement(undoButtonElement);
+//			disableControlElement(redoButtonElement);
+//			
+//			setupNewGame();
+//			
+//		} else {
+//			
+//			modeButtonElement.setTextContent(FIRST_MODE_BUTTON_ELEMENT_TEXT);
+//			
+//			enableControlElement(undoButtonElement);
+//			enableControlElement(redoButtonElement);
+//		}
+//		
+//		updateCellLabelElements();
+//		updateLocationSearch();
+//	}
+//	
+//	private void setupNewGame() {
+//		if(playedMoveAmount != 0) {
+//			
+//			solver.clearBoard();
+//			
+//			for(int i = playedMoveAmount - 1; i >= 0; i--) {
+//				
+//				int moveX = playedMoves[i];
+//				
+//				columnPlayedMoveAmounts[moveX]--;
+//				
+//				int moveY = columnPlayedMoveAmounts[moveX];
+//				
+//				setCellElementBackgroundColor(moveX, moveY, EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX);
+//			}
+//			
+//			playedMoveAmount = 0;
+//			undoneMoveAmount = 0;
+//			
+//			updateWinnerLabelElement();
+//			updateLocationSearch();
+//		}
+//		
+//		if(aiModeSelected) {
+//			
+//			ThreadLocalRandom random = ThreadLocalRandom.current();
+//			
+//			aiPlaysRed = random.nextBoolean();
+//			if(aiPlaysRed) playAIMove();
+//			else updateLocationSearch();
+//		}
+//	}
+//	
+//	private void undoMove() {
+//		if(playedMoveAmount == 0) return;
+//		
+//		playedMoveAmount--;
+//		undoneMoveAmount++;
+//		
+//		redAtTurn = !redAtTurn;
+//		
+//		int moveX = playedMoves[playedMoveAmount];
+//		
+//		columnPlayedMoveAmounts[moveX]--;
+//		
+//		int moveY = columnPlayedMoveAmounts[moveX];
+//		
+//		solver.undoMove();
+//		setCellElementBackgroundColor(moveX, moveY, EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX);
+//		
+//		if(!aiModeSelected) updateCellLabelElements();
+//		updateWinnerLabelElement();
+//		updateLocationSearch();
+//	}
+//	
+//	private void redoMove() {
+//		if(undoneMoveAmount == 0) return;
+//		
+//		int moveX = playedMoves[playedMoveAmount];
+//		playMove(moveX, true);
+//	}
+//	
+//	private void playAIMove() {
+//		int moveX = solver.skilledMove(aiSkillLevel);
+//		moveX--;
+//		
+//		playMove(moveX, false);
+//	}
+//	
+//	private void playMove(int moveX, boolean redo) {
+//		if(solver.gameOver()) return;
+//		
+//		int moveY = columnPlayedMoveAmounts[moveX];
+//		if(moveY == BOARD_HEIGHT) return;
+//		
+//		int i = redAtTurn ? RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
+//		
+//		playedMoves[playedMoveAmount] = moveX;
+//		playedMoveAmount++;
+//		
+//		redAtTurn = !redAtTurn;
+//		
+//		if(redo) undoneMoveAmount--;
+//		else undoneMoveAmount = 0;
+//		
+//		columnPlayedMoveAmounts[moveX]++;
+//		
+//		solver.playMove(moveX + 1);
+//		setCellElementBackgroundColor(moveX, moveY, i);
+//		
+//		if(!aiModeSelected) updateCellLabelElements();
+//		updateWinnerLabelElement();
+//		updateLocationSearch();
+//	}
+//	
+//	private void setCellElementBackgroundColor(int cellElementX, int cellElementY, int cellElementBackgroundColorIndex) {
+//		String s = CELL_ELEMENT_BACKGROUND_COLORS[cellElementBackgroundColorIndex];
+//		
+//		HTMLElement cellElement = cellElements[cellElementX][cellElementY];
+//		setElementStyles(cellElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, s);
+//	}
+//	
+//	private void updateCellLabelElements() {
+//		if(aiModeSelected) {
+//			
+//			for(int x = 0; x < BOARD_WIDTH; x++) {
+//				
+//				HTMLElement cellLabelElement = cellLabelElements[x];
+//				cellLabelElement.setTextContent(EMPTY_CELL_LABEL_ELEMENT_TEXT);
+//			}
+//			
+//			return;
+//		}
+//		
+//		solver.evaluateAllMoves(movesScores);
+//		
+//		for(int x = 0; x < BOARD_WIDTH; x++) {
+//			
+//			int moveScore = movesScores[x];
+//			String moveScoreString = formatMoveScore(moveScore);
+//			
+//			HTMLElement cellLabelElement = cellLabelElements[x];
+//			cellLabelElement.setTextContent(moveScoreString);
+//		}
+//	}
+//	
+//	private void updateWinnerLabelElement() {
+//		BoardOutcome gameOutcome = solver.gameOutcome();
+//		switch(gameOutcome) {
+//			case UNDECIDED -> {
+//				
+//				winnerLabelElement.setTextContent(EMPTY_WINNER_LABEL_ELEMENT_TEXT);
+//			}
+//			case RED_WIN -> {
+//				
+//				winnerLabelElement.setTextContent(RED_WINNER_LABEL_ELEMENT_TEXT);
+//				setElementStyles(winnerLabelElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, RED_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
+//			}
+//			case YELLOW_WIN -> {
+//				
+//				winnerLabelElement.setTextContent(YELLOW_WINNER_LABEL_ELEMENT_TEXT);
+//				setElementStyles(winnerLabelElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, YELLOW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
+//			}
+//			case DRAW -> {
+//				
+//				winnerLabelElement.setTextContent(DRAW_WINNER_LABEL_ELEMENT_TEXT);
+//				setElementStyles(winnerLabelElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, DRAW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
+//			}
+//		}
+//	}
+//	
+//	private void updateLocationSearch() {
+//		Location location = WINDOW.getLocation();
+//		String locationPath = location.getPathName();
+//		
+//		boolean movesWerePlayed = playedMoveAmount != 0;
+//		boolean searchNotEmpty = movesWerePlayed || aiModeSelected;
+//		if(searchNotEmpty) {
+//			
+//			StringBuilder stringBuilder = new StringBuilder(locationPath);
+//			stringBuilder.append(LOCATION_SEARCH_PREFIX);
+//			
+//			boolean b = false;
+//			
+//			if(movesWerePlayed) {
+//				
+//				b = true;
+//				
+//				stringBuilder.append(LOCATION_SEARCH_MOVES_KEY);
+//				stringBuilder.append(LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR);
+//				
+//				for(int i = 0; i < playedMoveAmount; i++) {
+//					
+//					char c = (char) (SMALLEST_LOCATION_SEARCH_MOVE + playedMoves[i]);
+//					stringBuilder.append(c);
+//				}
+//			}
+//			
+//			if(aiModeSelected) {
+//				
+//				if(b) stringBuilder.append(LOCATION_SEARCH_ITEM_SEPARATOR);
+//				b = true;
+//				
+//				String s = aiPlaysRed ? RED_LOCATION_SEARCH_AI_COLOR : YELLOW_LOCATION_SEARCH_AI_COLOR;
+//				
+//				stringBuilder.append(LOCATION_SEARCH_AI_COLOR_KEY);
+//				stringBuilder.append(LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR);
+//				stringBuilder.append(s);
+//			}
+//			
+//			if(aiSkillLevel != SkillLevel.PERFECT) {
+//				
+//				if(b) stringBuilder.append(LOCATION_SEARCH_ITEM_SEPARATOR);
+//				
+//				int index = aiSkillLevelSelectElement.getSelectedIndex();
+//				
+//				stringBuilder.append(LOCATION_SEARCH_AI_LEVEL_KEY);
+//				stringBuilder.append(LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR);
+//				stringBuilder.append(index);
+//			}
+//			
+//			locationPath = stringBuilder.toString();
+//		}
+//		
+//		History history = WINDOW.getHistory();
+//		history.replaceState(null, APP_TITLE, locationPath);
+//	}
 	
 	private static void enableControlElement(HTMLButtonElement controlElement) {
 		controlElement.setDisabled(false);
