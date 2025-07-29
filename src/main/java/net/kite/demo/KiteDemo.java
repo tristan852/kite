@@ -512,6 +512,7 @@ public class KiteDemo {
 		
 		aiSkillLevel = ORDERED_AI_SKILL_LEVELS[aiSkillLevelIndex];
 		
+		updateLocationSearch();
 		setupNewGame();
 	}
 	
@@ -535,6 +536,7 @@ public class KiteDemo {
 		}
 		
 		updateCellLabelElements();
+		updateLocationSearch();
 	}
 	
 	private void setupNewGame() {
@@ -555,6 +557,9 @@ public class KiteDemo {
 			
 			playedMoveAmount = 0;
 			undoneMoveAmount = 0;
+			
+			updateWinnerLabelElement();
+			updateLocationSearch();
 		}
 		
 		if(aiModeSelected) {
@@ -563,6 +568,7 @@ public class KiteDemo {
 			
 			aiPlaysRed = random.nextBoolean();
 			if(aiPlaysRed) playAIMove();
+			else updateLocationSearch();
 		}
 	}
 	
@@ -584,6 +590,8 @@ public class KiteDemo {
 		setCellElementBackgroundColor(moveX, moveY, EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX);
 		
 		if(!aiModeSelected) updateCellLabelElements();
+		updateWinnerLabelElement();
+		updateLocationSearch();
 	}
 	
 	private void redoMove() {
@@ -622,9 +630,9 @@ public class KiteDemo {
 		setCellElementBackgroundColor(moveX, moveY, i);
 		
 		if(!aiModeSelected) updateCellLabelElements();
+		updateWinnerLabelElement();
+		updateLocationSearch();
 	}
-	
-	// TODO only call these two when needs to be changed
 	
 	private void setCellElementBackgroundColor(int cellElementX, int cellElementY, int cellElementBackgroundColorIndex) {
 		String s = CELL_ELEMENT_BACKGROUND_COLORS[cellElementBackgroundColorIndex];
