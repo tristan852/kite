@@ -460,8 +460,8 @@ public class KiteDemo {
 						
 						modeButtonElement.setTextContent(SECOND_MODE_BUTTON_ELEMENT_TEXT);
 						
-						disableControlElement(undoButtonElement);
-						disableControlElement(redoButtonElement);
+						disableButtonElement(undoButtonElement);
+						disableButtonElement(redoButtonElement);
 						
 						aiPlaysRed = itemValue.equals(RED_LOCATION_SEARCH_AI_COLOR);
 					}
@@ -484,9 +484,14 @@ public class KiteDemo {
 				if(gameNotOver) playAIMove();
 			}
 			
-		} else if(playedMoveAmount == 0) {
+		} else {
 			
-			updateCellLabelElements();
+			disableSelectElement(aiSkillLevelSelectElement);
+			
+			if(playedMoveAmount == 0) {
+				
+				updateCellLabelElements();
+			}
 		}
 		
 		bodyElement.appendChild(appElement);
@@ -508,8 +513,9 @@ public class KiteDemo {
 			
 			modeButtonElement.setTextContent(SECOND_MODE_BUTTON_ELEMENT_TEXT);
 			
-			disableControlElement(undoButtonElement);
-			disableControlElement(redoButtonElement);
+			disableButtonElement(undoButtonElement);
+			disableButtonElement(redoButtonElement);
+			enableSelectElement(aiSkillLevelSelectElement);
 			
 			setupNewGame();
 			
@@ -517,8 +523,9 @@ public class KiteDemo {
 			
 			modeButtonElement.setTextContent(FIRST_MODE_BUTTON_ELEMENT_TEXT);
 			
-			enableControlElement(undoButtonElement);
-			enableControlElement(redoButtonElement);
+			enableButtonElement(undoButtonElement);
+			enableButtonElement(redoButtonElement);
+			disableSelectElement(aiSkillLevelSelectElement);
 		}
 		
 		updateCellLabelElements();
@@ -735,16 +742,28 @@ public class KiteDemo {
 		history.replaceState(null, APP_TITLE, locationPath);
 	}
 	
-	private static void enableControlElement(HTMLButtonElement controlElement) {
-		controlElement.setDisabled(false);
+	private static void enableButtonElement(HTMLButtonElement buttonElement) {
+		buttonElement.setDisabled(false);
 		
-		setElementStyles(controlElement, ENABLED_CONTROL_ELEMENT_STYLES);
+		setElementStyles(buttonElement, ENABLED_CONTROL_ELEMENT_STYLES);
 	}
 	
-	private static void disableControlElement(HTMLButtonElement controlElement) {
-		controlElement.setDisabled(true);
+	private static void enableSelectElement(HTMLSelectElement selectElement) {
+		selectElement.setDisabled(false);
 		
-		setElementStyles(controlElement, DISABLED_CONTROL_ELEMENT_STYLES);
+		setElementStyles(selectElement, ENABLED_CONTROL_ELEMENT_STYLES);
+	}
+	
+	private static void disableButtonElement(HTMLButtonElement buttonElement) {
+		buttonElement.setDisabled(true);
+		
+		setElementStyles(buttonElement, DISABLED_CONTROL_ELEMENT_STYLES);
+	}
+	
+	private static void disableSelectElement(HTMLSelectElement selectElement) {
+		selectElement.setDisabled(true);
+		
+		setElementStyles(selectElement, DISABLED_CONTROL_ELEMENT_STYLES);
 	}
 	
 	private static HTMLOptionElement createOptionElement(String optionLabel) {
