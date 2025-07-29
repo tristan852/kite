@@ -562,6 +562,7 @@ public class KiteDemo {
 			
 			redAtTurn = true;
 			
+			if(!aiModeSelected) updateCellLabelElements();
 			updateWinnerLabelElement();
 			updateLocationSearch();
 		}
