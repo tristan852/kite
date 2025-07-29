@@ -275,7 +275,6 @@ public class KiteDemo {
 			onLoadError();
 		});
 		
-		System.out.println("sending request...");
 		request.send();
 	}
 	
