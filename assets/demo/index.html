@@ -21,7 +21,7 @@
     <meta name="twitter:description" content="A Connect Four solver" />
     <meta name="twitter:image" content="https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/banner.png" />
     
-    <script type="text/javascript" charset="utf-8" src="wasm-gc/kite.wasm-runtime.js"></script>
+    <script src="wasm-gc/kite.wasm-runtime.js" type="text/javascript" charset="utf-8"></script>
     <script>
         async function main() {
             let teavm = await TeaVM.wasmGC.load("wasm-gc/kite.wasm");
