@@ -264,7 +264,6 @@ public class KiteDemo {
 			System.err.println("An error occurred while loading the opening score cache!");
 		});
 		
-		
 		request.onTimeout((progressEvent) -> {
 			
 			System.err.println("An error occurred while loading the opening score cache!");
