@@ -304,6 +304,12 @@ public class KiteDemo {
 		
 		newGameButtonElement.setTextContent(NEW_GAME_BUTTON_ELEMENT_TEXT);
 		
+		aiSkillLevelSelectElement.addEventListener(ELEMENT_CHANGE_EVENT_TYPE, (event) -> {
+			
+			int i = aiSkillLevelSelectElement.getSelectedIndex();
+			// changeAISkillLevel(i);
+		});
+		
 		for(SkillLevel skillLevel : ORDERED_AI_SKILL_LEVELS) {
 			
 			String skillLevelName = skillLevel.name();
