@@ -476,10 +476,17 @@ public class KiteDemo {
 			}
 		}
 		
-		if(aiModeSelected && aiPlaysRed == redAtTurn) {
+		if(aiModeSelected) {
 			
-			boolean gameNotOver = !solver.gameOver();
-			if(gameNotOver) playAIMove();
+			if(aiPlaysRed == redAtTurn) {
+				
+				boolean gameNotOver = !solver.gameOver();
+				if(gameNotOver) playAIMove();
+			}
+			
+		} else if(playedMoveAmount == 0) {
+			
+			updateCellLabelElements();
 		}
 		
 		bodyElement.appendChild(appElement);
