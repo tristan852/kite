@@ -53,6 +53,7 @@ public class KiteDemo {
 	private static final String ELEMENT_WIDTH_STYLE_VALUE_FORMAT = "%spx";
 	private static final String ELEMENT_HEIGHT_STYLE_KEY = "height";
 	private static final String ELEMENT_HEIGHT_STYLE_VALUE_FORMAT = "%spx";
+	private static final String ELEMENT_COLOR_STYLE_KEY = "color";
 	private static final String ELEMENT_BACKGROUND_COLOR_STYLE_KEY = "background-color";
 	
 	private static final String[] FLEXBOX_ELEMENT_STYLES = new String[] {
@@ -684,17 +685,17 @@ public class KiteDemo {
 			case RED_WIN -> {
 				
 				winnerLabelElement.setTextContent(RED_WINNER_LABEL_ELEMENT_TEXT);
-				setElementStyles(winnerLabelElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, RED_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
+				setElementStyles(winnerLabelElement, ELEMENT_COLOR_STYLE_KEY, RED_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
 			}
 			case YELLOW_WIN -> {
 				
 				winnerLabelElement.setTextContent(YELLOW_WINNER_LABEL_ELEMENT_TEXT);
-				setElementStyles(winnerLabelElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, YELLOW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
+				setElementStyles(winnerLabelElement, ELEMENT_COLOR_STYLE_KEY, YELLOW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
 			}
 			case DRAW -> {
 				
 				winnerLabelElement.setTextContent(DRAW_WINNER_LABEL_ELEMENT_TEXT);
-				setElementStyles(winnerLabelElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, DRAW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
+				setElementStyles(winnerLabelElement, ELEMENT_COLOR_STYLE_KEY, DRAW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR);
 			}
 		}
 	}
@@ -821,7 +822,7 @@ public class KiteDemo {
 		
 		if(spanHeight != 0) {
 			
-			String s = ELEMENT_HEIGHT_STYLE_VALUE_FORMAT.formatted(spanWidth);
+			String s = ELEMENT_HEIGHT_STYLE_VALUE_FORMAT.formatted(spanHeight);
 			setElementStyles(spanElement, ELEMENT_HEIGHT_STYLE_KEY, s);
 		}
 		
