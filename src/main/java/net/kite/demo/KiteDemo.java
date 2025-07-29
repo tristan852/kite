@@ -499,12 +499,18 @@ public class KiteDemo {
 	}
 	
 	private void changeAISkillLevel(int aiSkillLevelIndex) {
-		System.out.println(aiSkillLevelIndex);
-		int i = aiSkillLevelSelectElement.getSelectedIndex();
-		if(i == aiSkillLevelIndex) return;
+		int index = 0;
+		while(index < ORDERED_AI_SKILL_LEVELS.length) {
+			
+			SkillLevel level = ORDERED_AI_SKILL_LEVELS[index];
+			if(level == aiSkillLevel) break;
+			
+			index++;
+		}
+		
+		if(index == aiSkillLevelIndex) return;
 		
 		aiSkillLevel = ORDERED_AI_SKILL_LEVELS[aiSkillLevelIndex];
-		System.out.println(aiSkillLevel);
 		
 		updateLocationSearch();
 		setupNewGame();
