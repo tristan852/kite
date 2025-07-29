@@ -498,10 +498,12 @@ public class KiteDemo {
 	}
 	
 	private void changeAISkillLevel(int aiSkillLevelIndex) {
+		System.out.println(aiSkillLevelIndex);
 		int i = aiSkillLevelSelectElement.getSelectedIndex();
 		if(i == aiSkillLevelIndex) return;
 		
 		aiSkillLevel = ORDERED_AI_SKILL_LEVELS[aiSkillLevelIndex];
+		System.out.println(aiSkillLevel);
 		
 		updateLocationSearch();
 		setupNewGame();
@@ -624,7 +626,19 @@ public class KiteDemo {
 		solver.playMove(moveX + 1);
 		setCellElementBackgroundColor(moveX, moveY, i);
 		
-		if(!aiModeSelected) updateCellLabelElements();
+		if(aiModeSelected) {
+			
+			if(!solver.gameOver() && aiPlaysRed == redAtTurn) {
+				
+				playAIMove();
+				return;
+			}
+			
+		} else {
+			
+			updateCellLabelElements();
+		}
+		
 		updateWinnerLabelElement();
 		updateLocationSearch();
 	}
