@@ -713,7 +713,8 @@ public class KiteDemo {
 		String locationPath = location.getPathName();
 		
 		boolean movesWerePlayed = playedMoveAmount != 0;
-		boolean searchNotEmpty = movesWerePlayed || aiModeSelected;
+		boolean aiLevelNotPerfect = aiSkillLevel != SkillLevel.PERFECT;
+		boolean searchNotEmpty = movesWerePlayed || aiModeSelected || aiLevelNotPerfect;
 		if(searchNotEmpty) {
 			
 			StringBuilder stringBuilder = new StringBuilder(locationPath);
@@ -747,7 +748,7 @@ public class KiteDemo {
 				stringBuilder.append(s);
 			}
 			
-			if(aiSkillLevel != SkillLevel.PERFECT) {
+			if(aiLevelNotPerfect) {
 				
 				if(b) stringBuilder.append(LOCATION_SEARCH_ITEM_SEPARATOR);
 				
