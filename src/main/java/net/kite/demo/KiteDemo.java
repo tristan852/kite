@@ -259,6 +259,22 @@ public class KiteDemo {
 			}
 		});
 		
+		request.onError((progressEvent) -> {
+			
+			System.err.println("An error occurred while loading the opening score cache!");
+		});
+		
+		
+		request.onTimeout((progressEvent) -> {
+			
+			System.err.println("An error occurred while loading the opening score cache!");
+		});
+		
+		request.onAbort((progressEvent) -> {
+			
+			System.err.println("An error occurred while loading the opening score cache!");
+		});
+		
 		request.send();
 	}
 	
@@ -607,7 +623,6 @@ public class KiteDemo {
 	}
 	
 	private void playAIMove() {
-		System.out.println(aiSkillLevel);
 		int moveX = solver.skilledMove(aiSkillLevel);
 		moveX--;
 		
