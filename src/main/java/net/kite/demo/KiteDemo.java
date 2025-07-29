@@ -197,6 +197,7 @@ public class KiteDemo {
 	private static final String REQUEST_METHOD = "GET";
 	private static final String REQUEST_RESPONSE_TYPE = "arraybuffer";
 	private static final String REQUEST_URL = "WEB-INF/classes/board_score_caches/opening.cfc";
+	private static final int REQUEST_RETRY_TIME_DELAY = 10000;
 	
 	private static final int SUCCESSFUL_REQUEST_STATUS = 200;
 	
@@ -255,26 +256,32 @@ public class KiteDemo {
 				
 			} else {
 				
-				System.err.println("An error occurred while loading the opening score cache!");
+				onLoadError();
 			}
 		});
 		
 		request.onError((progressEvent) -> {
 			
-			System.err.println("An error occurred while loading the opening score cache!");
+			onLoadError();
 		});
 		
 		request.onTimeout((progressEvent) -> {
 			
-			System.err.println("An error occurred while loading the opening score cache!");
+			onLoadError();
 		});
 		
 		request.onAbort((progressEvent) -> {
 			
-			System.err.println("An error occurred while loading the opening score cache!");
+			onLoadError();
 		});
 		
 		request.send();
+	}
+	
+	private void onLoadError() {
+		System.err.println("An error occurred while loading the opening score cache!");
+		
+		Window.setTimeout(this::onStart, REQUEST_RETRY_TIME_DELAY);
 	}
 	
 	private void buildApp() {
