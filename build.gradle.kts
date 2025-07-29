@@ -23,11 +23,6 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
-
 tasks.javadoc {
     exclude("net/kite/board/Board.java")
     exclude("net/kite/board/bit/**")
@@ -51,6 +46,10 @@ tasks.named("build") {
 tasks.register<Copy>("copyDemoAssetFiles") {
     from("assets/demo/")
     into("build/war-unpacked")
+}
+
+afterEvaluate {
+    tasks.findByName("generateMetadataFileForMavenPublication")?.dependsOn("plainJavadocJar")
 }
 
 signing {
