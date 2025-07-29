@@ -537,6 +537,8 @@ public class KiteDemo {
 			playedMoveAmount = 0;
 			undoneMoveAmount = 0;
 			
+			redAtTurn = true;
+			
 			updateWinnerLabelElement();
 			updateLocationSearch();
 		}
