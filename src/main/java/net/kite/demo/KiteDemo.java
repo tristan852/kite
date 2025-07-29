@@ -304,6 +304,22 @@ public class KiteDemo {
 		
 		newGameButtonElement.setTextContent(NEW_GAME_BUTTON_ELEMENT_TEXT);
 		
+		modeButtonElement.onClick((mouseEvent) -> {
+			
+		});
+		
+		newGameButtonElement.onClick((mouseEvent) -> {
+			
+		});
+		
+		undoButtonElement.onClick((mouseEvent) -> {
+			
+		});
+		
+		redoButtonElement.onClick((mouseEvent) -> {
+			
+		});
+		
 		aiSkillLevelSelectElement.addEventListener(ELEMENT_CHANGE_EVENT_TYPE, (event) -> {
 			
 			int i = aiSkillLevelSelectElement.getSelectedIndex();
@@ -354,6 +370,10 @@ public class KiteDemo {
 			}
 			
 			int moveX = x;
+			
+			cellColumnElement.onClick((mouseEvent) -> {
+				
+			});
 			
 			setElementStyles(cellColumnElement, CELL_COLUMN_ELEMENT_STYLES);
 			
