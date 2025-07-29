@@ -485,11 +485,10 @@ public class Board {
 				
 				if(maxScore > BoardScore.DRAW) maxScore = BoardScore.DRAW;
 				
-				boolean yellowWon = bitboardContainsConnection(yellowCells);
-				
+				boolean yellowWon = bitboardContainsNonVerticalConnection(yellowCells);
 				if(yellowWon) {
 					
-					long yellowWinningStones = winCellsBitboard(yellowCells);
+					long yellowWinningStones = nonVerticalWinCellsBitboard(yellowCells);
 					
 					int y = LARGEST_MOVE_CELL_Y;
 					for(long row : Bitboards.DESCENDINGLY_ORDERED_EVEN_BOARD_ROWS) {
@@ -911,7 +910,7 @@ public class Board {
 	}
 	
 	private static boolean canRedWinInClaimEven(long redCells, long yellowCells, long currentYellowCells, long currentMask) {
-		for(int direction : BITBOARD_CONNECTION_DIRECTIONS) {
+		for(int direction : NON_VERTICAL_BITBOARD_CONNECTION_DIRECTIONS) {
 			
 			long wins = redCells;
 			
@@ -934,6 +933,26 @@ public class Board {
 		}
 		
 		return false;
+	}
+	
+	private static long nonVerticalWinCellsBitboard(long bitboard) {
+		long result = 0;
+		
+		for(int direction : NON_VERTICAL_BITBOARD_CONNECTION_DIRECTIONS) {
+			
+			int doubleDirection = direction << 1;
+			long b = bitboard;
+			
+			b &= b >>> direction;
+			b &= b >>> doubleDirection;
+			
+			b |= b << direction;
+			b |= b << doubleDirection;
+			
+			result |= b;
+		}
+		
+		return result;
 	}
 	
 	private static long winCellsBitboard(long bitboard) {
@@ -961,13 +980,6 @@ public class Board {
 		bitboard &= bitboard << (direction << 1);
 		
 		return bitboard;
-	}
-	
-	private static boolean bitboardContainsVerticalConnection(long bitboard) {
-		bitboard &= bitboard << 1;
-		bitboard &= bitboard << 2;
-		
-		return bitboard != 0;
 	}
 	
 	private static long bitboardConnectionOpportunities(long bitboard) {
@@ -998,6 +1010,26 @@ public class Board {
 		
 		result &= Bitboards.FULL_BOARD;
 		return result;
+	}
+	
+	private static boolean bitboardContainsVerticalConnection(long bitboard) {
+		bitboard &= bitboard << 1;
+		bitboard &= bitboard << 2;
+		
+		return bitboard != 0;
+	}
+	
+	private static boolean bitboardContainsNonVerticalConnection(long bitboard) {
+		for(int direction : NON_VERTICAL_BITBOARD_CONNECTION_DIRECTIONS) {
+			
+			long board = bitboard;
+			board &= board << direction;
+			board &= board << (direction << 1);
+			
+			if(board != 0) return true;
+		}
+		
+		return false;
 	}
 	
 	private static boolean bitboardContainsConnection(long bitboard) {
