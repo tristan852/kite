@@ -229,7 +229,7 @@ public class KiteDemo {
 	
 	private Kite solver;
 	
-	public KiteDemo2() {
+	public KiteDemo() {
 		this.redAtTurn = true;
 	}
 	
