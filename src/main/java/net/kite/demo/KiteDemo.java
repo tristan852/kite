@@ -663,14 +663,14 @@ public class KiteDemo {
 				playAIMove();
 				return;
 			}
-			
-		} else {
-			
-			updateCellLabelElements();
 		}
 		
 		updateWinnerLabelElement();
-		if(!initial) updateLocationSearch();
+		if(!initial) {
+			
+			updateLocationSearch();
+			if(!aiModeSelected) updateCellLabelElements();
+		}
 	}
 	
 	private void setCellElementBackgroundColor(int cellElementX, int cellElementY, int cellElementBackgroundColorIndex) {

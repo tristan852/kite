@@ -88,8 +88,9 @@ public class Board {
 	
 	private static final int BITBOARD_HEIGHT = 8;
 	
-	private static final float ELO_APPROXIMATION_FIRST_COEFFICIENT = 2715.74f;
-	private static final float ELO_APPROXIMATION_SECOND_COEFFICIENT = -0.427048f;
+	private static final float ELO_APPROXIMATION_FIRST_COEFFICIENT = 20.734f;
+	private static final float ELO_APPROXIMATION_SECOND_COEFFICIENT = 0.00547f;
+	private static final float ELO_APPROXIMATION_THIRD_COEFFICIENT = -571.136f;
 	
 	private static final int ELO_APPROXIMATION_RED_MIN_MOVE_AMOUNT = 1;
 	private static final int ELO_APPROXIMATION_YELLOW_MIN_MOVE_AMOUNT = 2;
@@ -1083,9 +1084,12 @@ public class Board {
 	}
 	
 	private static float approximateElo(float averageScoreLoss) {
-		averageScoreLoss *= ELO_APPROXIMATION_SECOND_COEFFICIENT;
-		averageScoreLoss = (float) Math.exp(averageScoreLoss);
-		averageScoreLoss *= ELO_APPROXIMATION_FIRST_COEFFICIENT;
+		averageScoreLoss /= ELO_APPROXIMATION_FIRST_COEFFICIENT;
+		averageScoreLoss += ELO_APPROXIMATION_SECOND_COEFFICIENT;
+		
+		averageScoreLoss = (float) Math.log(averageScoreLoss);
+		
+		averageScoreLoss *= ELO_APPROXIMATION_THIRD_COEFFICIENT;
 		
 		return averageScoreLoss;
 	}
