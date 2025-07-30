@@ -13,6 +13,8 @@ public class BoardScore {
 	private static final int[] MAXIMUMS;
 	private static final int[] MAXIMUMS_WITH_NO_IMMEDIATE_WIN;
 	
+	private static final int[] MAXIMAL_SCORE_LOSSES;
+	
 	private static final int MAXIMAL_WON_FILLED_CELL_AMOUNT = 42;
 	
 	private static final int RED_SMALLEST_WON_FILLED_CELL_AMOUNT = 7;
@@ -27,6 +29,7 @@ public class BoardScore {
 		MINIMUMS = new int[MAXIMAL_WON_FILLED_CELL_AMOUNT];
 		MAXIMUMS = new int[MAXIMAL_WON_FILLED_CELL_AMOUNT];
 		MAXIMUMS_WITH_NO_IMMEDIATE_WIN = new int[MAXIMAL_WON_FILLED_CELL_AMOUNT];
+		MAXIMAL_SCORE_LOSSES = new int[MAXIMAL_WON_FILLED_CELL_AMOUNT];
 		
 		for(int i = 0; i < l; i++) {
 			
@@ -49,11 +52,20 @@ public class BoardScore {
 			if(n2 < m2) n2 = m2;
 			if(n3 < m2) n3 = m2;
 			
-			MINIMUMS[i] = -((MAXIMAL_WON_FILLED_CELL_AMOUNT - n) >> 1) - 1;
-			MAXIMUMS[i] = ((MAXIMAL_WON_FILLED_CELL_AMOUNT - n2) >> 1) + 1;
+			int s1 = -((MAXIMAL_WON_FILLED_CELL_AMOUNT - n) >> 1) - 1;
+			int s2 = ((MAXIMAL_WON_FILLED_CELL_AMOUNT - n2) >> 1) + 1;
+			
+			MINIMUMS[i] = s1;
+			MAXIMUMS[i] = s2;
 			
 			MAXIMUMS_WITH_NO_IMMEDIATE_WIN[i] = ((MAXIMAL_WON_FILLED_CELL_AMOUNT - n3) >> 1) + 1;
+			
+			MAXIMAL_SCORE_LOSSES[i] = s2 - s1;
 		}
+	}
+	
+	public static int maximalScoreLoss(int filledCellAmount) {
+		return MAXIMAL_SCORE_LOSSES[filledCellAmount];
 	}
 	
 	public static int maximalWithNoImmediateWin(int filledCellAmount) {

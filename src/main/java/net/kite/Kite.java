@@ -3,6 +3,7 @@ package net.kite;
 import net.kite.board.Board;
 import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.player.color.BoardPlayerColor;
+import net.kite.board.score.BoardScore;
 import net.kite.board.score.cache.BoardScoreCache;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.skill.level.SkillLevel;
@@ -22,7 +23,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.5.0";
+	private static final String VERSION = "1.5.1";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -33,6 +34,8 @@ public class Kite {
 	};
 	
 	private static final int INVALID_MOVE_COLUMN_INDEX = 0;
+	
+	private static final int MAXIMAL_MOVE_SCORE_LOSS = 36;
 	
 	private final Board board;
 	
@@ -204,10 +207,14 @@ public class Kite {
 		if(skillLevel == SkillLevel.ADAPTIVE) return adaptiveMove();
 		
 		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
+		int n = board.playedMoveAmount();
 		
 		int optimalMoveScore = Integer.MIN_VALUE;
+		int theoreticallyWorstScoreLoss = BoardScore.maximalScoreLoss(n);
 		
 		int maximalScoreLoss = skillLevel.getMaximalScoreLoss();
+		maximalScoreLoss = maximalScoreLoss * theoreticallyWorstScoreLoss / MAXIMAL_MOVE_SCORE_LOSS;
+		
 		int minimalScore = Integer.MIN_VALUE + 2;
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {

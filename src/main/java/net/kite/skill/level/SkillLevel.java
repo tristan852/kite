@@ -23,7 +23,7 @@ public enum SkillLevel {
 	 * that always plays uniformly sampled
 	 * random moves.
 	 */
-	RANDOM(Integer.MAX_VALUE, 1000),
+	RANDOM(Integer.MAX_VALUE, 960),
 	
 	/**
 	 * Level one (the weakest level above random;
@@ -31,57 +31,57 @@ public enum SkillLevel {
 	 * {@link SkillLevel#RANDOM} the distribution is
 	 * not uniform)
 	 */
-	ONE(36, 1285),
+	ONE(191, 1200),
 	
 	/**
 	 * Level two
 	 */
-	TWO(32, 1329),
+	TWO(56, 1400),
 	
 	/**
 	 * Level three
 	 */
-	THREE(28, 1382),
+	THREE(38, 1600),
 	
 	/**
 	 * Level four
 	 */
-	FOUR(24, 1443),
+	FOUR(24, 1800),
 	
 	/**
 	 * Level five
 	 */
-	FIVE(20, 1536),
+	FIVE(16, 2000),
 	
 	/**
 	 * Level six
 	 */
-	SIX(16, 1636),
+	SIX(11, 2200),
 	
 	/**
 	 * Level seven
 	 */
-	SEVEN(12, 1789),
+	SEVEN(7, 2400),
 	
 	/**
 	 * Level eight
 	 */
-	EIGHT(8, 2006),
+	EIGHT(4, 2600),
 	
 	/**
 	 * Level nine
 	 */
-	NINE(4, 2380),
+	NINE(2, 2800),
 	
 	/**
 	 * Level ten (the strongest level; equivalent to {@link SkillLevel#PERFECT})
 	 */
-	TEN(0, 3005),
+	TEN(0, 3000),
 	
 	/**
 	 * The level of a perfect Connect Four player
 	 */
-	PERFECT(0, 3005),
+	PERFECT(0, 3000),
 	
 	/**
 	 * This skill level always tries to match
@@ -95,13 +95,17 @@ public enum SkillLevel {
 			ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN
 	};
 	
-	private final int maximalScoreLoss;
+	private int maximalScoreLoss; // TODO still rename to skill weight
 	
 	private final int approximateEloRating;
 	
 	SkillLevel(int maximalScoreLoss, int approximateEloRating) {
 		this.maximalScoreLoss = maximalScoreLoss;
 		this.approximateEloRating = approximateEloRating;
+	}
+	
+	public void set(int i) {
+		maximalScoreLoss = i;
 	}
 	
 	/**

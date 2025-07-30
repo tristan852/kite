@@ -58,7 +58,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tristan852:kite:1.5.0")
+    implementation("io.github.tristan852:kite:1.5.1")
 }
 ```
 
@@ -72,7 +72,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.tristan852:kite:1.5.0'
+    implementation 'io.github.tristan852:kite:1.5.1'
 }
 ```
 
@@ -92,7 +92,7 @@ Add the following code snippet to your `pom.xml` file:
     <dependency>
         <groupId>io.github.tristan852</groupId>
         <artifactId>kite</artifactId>
-        <version>1.5.0</version>
+        <version>1.5.1</version>
     </dependency>
 </dependencies>
 ```
@@ -274,55 +274,29 @@ These skill levels are ordered by increasing playing strength, with each level d
 A special skill level, `SkillLevel.ADAPTIVE`, adjusts move selection to match the opponent's playing strength.
 You can use all available skill levels or choose a subset that fits your project.
 
-The matrix below illustrates how each skill level (excluding `SkillLevel.ADAPTIVE`) performs against the others.
-
-| **vs**.     | **Random**                         | **One**                            | **Two**                            | **Three**                          | **Four**                           | **Five**                           | **Six**                            | **Seven**                          | **Eight**                          | **Nine**                           | **Ten**                                | **Perfect**                            |
-|-------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|----------------------------------------|----------------------------------------|
-| **Random**  | <span style="opacity:0.5">-</span> | 16.8%                              | 13.1%                              | 9.4%                               | 8.1%                               | 4.0%                               | 2.3%                               | 0.5%                               |                                    |                                    |                                        |                                        |
-| **One**     | 83.2%                              | <span style="opacity:0.5">-</span> | 42.6%                              | 36.2%                              | 29.8%                              | 19.0%                              | 12.0%                              | 5.3%                               | 1.4%                               |                                    |                                        |                                        |
-| **Two**     | 86.6%                              | 57.1%                              | <span style="opacity:0.5">-</span> | 40.9%                              | 36.4%                              | 23.9%                              | 13.0%                              | 6.1%                               | 0.9%                               |                                    |                                        |                                        |
-| **Three**   | 90.5%                              | 63.6%                              | 58.8%                              | <span style="opacity:0.5">-</span> | 40.0%                              | 28.8%                              | 18.1%                              | 8.3%                               | 2.4%                               |                                    |                                        |                                        |
-| **Four**    | 91.7%                              | 69.9%                              | 63.3%                              | 59.6%                              | <span style="opacity:0.5">-</span> | 37.8%                              | 24.9%                              | 14.0%                              | 3.6%                               |                                    |                                        |                                        |
-| **Five**    | 95.7%                              | 80.8%                              | 75.6%                              | 70.4%                              | 61.7%                              | <span style="opacity:0.5">-</span> | 38.9%                              | 17.2%                              | 5.7%                               | 0.5%                               |                                        |                                        |
-| **Six**     | 97.6%                              | 87.9%                              | 86.7%                              | 81.8%                              | 74.6%                              | 60.4%                              | <span style="opacity:0.5">-</span> | 30.7%                              | 8.6%                               | 0.7%                               |                                        |                                        |
-| **Seven**   | 99.3%                              | 94.5%                              | 93.3%                              | 91.5%                              | 85.7%                              | 82.0%                              | 67.9%                              | <span style="opacity:0.5">-</span> | 22.5%                              | 2.5%                               |                                        |                                        |
-| **Eight**   |                                    | 98.6%                              | 98.4%                              | 97.3%                              | 95.9%                              | 92.7%                              | 88.9%                              | 73.9%                              | <span style="opacity:0.5">-</span> | 8.2%                               |                                        |                                        |
-| **Nine**    |                                    |                                    |                                    |                                    |                                    | 99.2%                              | 98.2%                              | 95.2%                              | 86.3%                              | <span style="opacity:0.5">-</span> | 1.0%                                   | 1.0%                                   |
-| **Ten**     |                                    |                                    |                                    |                                    |                                    |                                    |                                    |                                    |                                    | 95.8%                              | <span style="opacity:0.5">-</span>     | <span style="opacity:0.5">50.0%</span> |
-| **Perfect** |                                    |                                    |                                    |                                    |                                    |                                    |                                    |                                    |                                    | 95.8%                              | <span style="opacity:0.5">50.0%</span> | <span style="opacity:0.5">-</span>     |
-
-For example, the table shows that `SkillLevel.TEN` wins *95.8%* of its matches against the `SkillLevel.NINE` bot, loses *1%*, and draws the remaining *3.2%*.
-Draws are generally rare between bots of different skill levels.
-
-For clarity, one-sided matchups — where the stronger level consistently wins 100% of the time — have been omitted from the table.
-
-Since `SkillLevel.TEN` always plays perfectly — and Connect Four is a first-player win under perfect play — matches between `SkillLevel.TEN` and `SkillLevel.PERFECT` are determined solely by who gets to move first, resulting in a *50/50* outcome.
-
-By using the win, loss, and draw probabilities for each pair of skill levels from the table above, we can estimate an [Elo rating](https://en.wikipedia.org/wiki/Elo_rating_system) for each level:
+The skill level `SkillLevel.TEN` always plays perfectly and is therefore equivalent to `SkillLevel.PERFECT`.
+`SkillLevel.ONE` plays slightly better than the random bot.
+The Elo ratings of all the different skill levels are given in the table below:
 
 | Skill level | Elo rating estimate |
 |-------------|---------------------|
-| Random      | 1000                |
-| One         | 1285                |
-| Two         | 1329                |
-| Three       | 1382                |
-| Four        | 1443                |
-| Five        | 1536                |
-| Six         | 1636                |
-| Seven       | 1789                |
-| Eight       | 2006                |
-| Nine        | 2380                |
-| Ten         | 3005                |
-| Perfect     | 3005                |
+| Random      | 960                 |
+| One         | 1200                |
+| Two         | 1400                |
+| Three       | 1600                |
+| Four        | 1800                |
+| Five        | 2000                |
+| Six         | 2200                |
+| Seven       | 2400                |
+| Eight       | 2600                |
+| Nine        | 2800                |
+| Ten         | 3000                |
+| Perfect     | 3000                |
 
-An Elo rating difference of approximately *400* corresponds to a *91%* win rate for the higher-rated player.
-This aligns well with the empirical results from the first table when compared to the rating estimates in the second.
+An Elo rating difference of approximately *400* corresponds to a *91%* win rate for the higher-rated player. A difference in Elo of *200* corresponds to a *76%* win probability.
 
-For reference, the Elo ratings have been normalized so that the `SkillLevel.RANDOM` bot has a rating of *1000*.
+For reference, the Elo ratings have been normalized so that the `SkillLevel.PERFECT` bot has a rating of *3000*.
 Since `SkillLevel.TEN` and `SkillLevel.PERFECT` represent the same level of play, they share the same rating estimate.
-
-Notably, the Elo gaps between successive skill levels widen as we approach perfect play. This trend is also reflected in the first table, where matchups become increasingly one-sided.
-This reflects the fact that at high levels, even a single small mistake can be decisive — making further improvements increasingly difficult and more impactful in terms of rating.
 
 If you want to translate these Elo ratings to your own scale — or vice versa — try to identify a reference point by comparing one of these skill levels to a skill level in your system with a known Elo rating.
 

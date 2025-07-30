@@ -88,8 +88,8 @@ public class Board {
 	
 	private static final int BITBOARD_HEIGHT = 8;
 	
-	private static final float ELO_APPROXIMATION_FIRST_COEFFICIENT = 2707.77f;
-	private static final float ELO_APPROXIMATION_SECOND_COEFFICIENT = -0.295056f;
+	private static final float ELO_APPROXIMATION_FIRST_COEFFICIENT = 2715.74f;
+	private static final float ELO_APPROXIMATION_SECOND_COEFFICIENT = -0.427048f;
 	
 	private static final int ELO_APPROXIMATION_RED_MIN_MOVE_AMOUNT = 1;
 	private static final int ELO_APPROXIMATION_YELLOW_MIN_MOVE_AMOUNT = 2;
