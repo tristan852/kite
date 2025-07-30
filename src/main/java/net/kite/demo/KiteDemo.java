@@ -440,14 +440,7 @@ public class KiteDemo {
 		appElement.appendChild(sidebarElement);
 		appElement.appendChild(boardAndLabelsElement);
 		
-		int perfectIndex = 0;
-		while(perfectIndex < ORDERED_AI_SKILL_LEVELS.length) {
-			
-			SkillLevel level = ORDERED_AI_SKILL_LEVELS[perfectIndex];
-			if(level == SkillLevel.PERFECT) break;
-			
-			perfectIndex++;
-		}
+		int perfectIndex = SkillLevel.PERFECT.ordinal();
 		
 		aiSkillLevel = SkillLevel.PERFECT;
 		aiSkillLevelSelectElement.setSelectedIndex(perfectIndex);
@@ -521,15 +514,7 @@ public class KiteDemo {
 	}
 	
 	private void changeAISkillLevel(int aiSkillLevelIndex) {
-		int index = 0;
-		while(index < ORDERED_AI_SKILL_LEVELS.length) {
-			
-			SkillLevel level = ORDERED_AI_SKILL_LEVELS[index];
-			if(level == aiSkillLevel) break;
-			
-			index++;
-		}
-		
+		int index = aiSkillLevel.ordinal();
 		if(index == aiSkillLevelIndex) return;
 		
 		aiSkillLevel = ORDERED_AI_SKILL_LEVELS[aiSkillLevelIndex];

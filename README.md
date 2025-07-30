@@ -58,7 +58,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tristan852:kite:1.5.2")
+    implementation("io.github.tristan852:kite:1.5.3")
 }
 ```
 
@@ -72,7 +72,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.tristan852:kite:1.5.2'
+    implementation 'io.github.tristan852:kite:1.5.3'
 }
 ```
 
@@ -92,7 +92,7 @@ Add the following code snippet to your `pom.xml` file:
     <dependency>
         <groupId>io.github.tristan852</groupId>
         <artifactId>kite</artifactId>
-        <version>1.5.2</version>
+        <version>1.5.3</version>
     </dependency>
 </dependencies>
 ```
@@ -280,7 +280,7 @@ The Elo ratings of all the different skill levels are given in the table below:
 
 | Skill level | Elo rating estimate |
 |-------------|---------------------|
-| Random      | 960                 |
+| Random      | 1120                |
 | One         | 1200                |
 | Two         | 1400                |
 | Three       | 1600                |

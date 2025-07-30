@@ -8,7 +8,6 @@ import net.kite.board.player.color.BoardPlayerColor;
 import net.kite.board.score.BoardScore;
 import net.kite.board.score.cache.BoardScoreCache;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
-import net.kite.skill.level.SkillLevel;
 
 public class Board {
 	
@@ -88,9 +87,10 @@ public class Board {
 	
 	private static final int BITBOARD_HEIGHT = 8;
 	
-	private static final float ELO_APPROXIMATION_FIRST_COEFFICIENT = 20.734f;
-	private static final float ELO_APPROXIMATION_SECOND_COEFFICIENT = 0.00547f;
-	private static final float ELO_APPROXIMATION_THIRD_COEFFICIENT = -571.136f;
+	private static final float ELO_APPROXIMATION_FIRST_COEFFICIENT = 53.167f;
+	private static final float ELO_APPROXIMATION_SECOND_COEFFICIENT = 0.000661f;
+	private static final float ELO_APPROXIMATION_THIRD_COEFFICIENT = -414.261f;
+	private static final float PERFECT_ELO_APPROXIMATION = 3000.0f;
 	
 	private static final int ELO_APPROXIMATION_RED_MIN_MOVE_AMOUNT = 1;
 	private static final int ELO_APPROXIMATION_YELLOW_MIN_MOVE_AMOUNT = 2;
@@ -247,14 +247,14 @@ public class Board {
 		float f1;
 		float f2;
 		
-		if(m1 == 0) f1 = SkillLevel.TEN.getApproximateEloRating();
+		if(m1 == 0) f1 = PERFECT_ELO_APPROXIMATION;
 		else {
 			
 			float averageScoreLoss = (float) redTotalScoreLoss / m1;
 			f1 = approximateElo(averageScoreLoss);
 		}
 		
-		if(m2 == 0) f2 = SkillLevel.TEN.getApproximateEloRating();
+		if(m2 == 0) f2 = PERFECT_ELO_APPROXIMATION;
 		else {
 			
 			float averageScoreLoss = (float) yellowTotalScoreLoss / m2;
@@ -271,7 +271,7 @@ public class Board {
 		
 		if(n < minMoveAmount) {
 			
-			return SkillLevel.TEN.getApproximateEloRating();
+			return PERFECT_ELO_APPROXIMATION;
 		}
 		
 		while(filledCellAmount != 0) {
@@ -1091,6 +1091,7 @@ public class Board {
 		
 		averageScoreLoss *= ELO_APPROXIMATION_THIRD_COEFFICIENT;
 		
+		if(averageScoreLoss > PERFECT_ELO_APPROXIMATION) return PERFECT_ELO_APPROXIMATION;
 		return averageScoreLoss;
 	}
 	
