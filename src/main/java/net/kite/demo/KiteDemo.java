@@ -93,7 +93,7 @@ public class KiteDemo {
 			"cursor", "pointer"
 	};
 	
-	private static final String[] BRAND_ELEMENT_STYLES = new String[] {
+	private static final String[] LOGO_AND_VERSION_ELEMENT_STYLES = new String[] {
 			"margin", "6px"
 	};
 	
@@ -158,7 +158,7 @@ public class KiteDemo {
 	private static final String TOP_GITHUB_LOGO_ELEMENT_CLASS_NAME = "top-github-logo";
 	private static final String BOTTOM_GITHUB_LOGO_ELEMENT_CLASS_NAME = "bottom-github-logo";
 	
-	private static final int BRAND_ELEMENT_GAP = 24;
+	private static final int BRAND_ELEMENT_GAP = 18;
 	private static final int BOARD_AND_LABELS_ELEMENT_GAP = 30;
 	
 	private static final String LOGO_ELEMENT_SOURCE_PATH = "https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png";
@@ -310,7 +310,7 @@ public class KiteDemo {
 		HTMLElement brandElement = createFlexboxElement(FLEXBOX_ELEMENT_ROW_DIRECTION, BRAND_ELEMENT_GAP);
 		HTMLElement logoAndVersionElement = createFlexboxElementWithClass(LOGO_AND_VERSION_ELEMENT_CLASS_NAME);
 		
-		setElementStyles(logoAndVersionElement, BRAND_ELEMENT_STYLES);
+		setElementStyles(logoAndVersionElement, LOGO_AND_VERSION_ELEMENT_STYLES);
 		
 		HTMLElement logoImageElement = createImageElement(LOGO_ELEMENT_SOURCE_PATH, LOGO_ELEMENT_ALTERNATIVE_TEXT, LOGO_ELEMENT_SIZE);
 		HTMLElement versionElement = createSpanElement(0);
@@ -409,7 +409,7 @@ public class KiteDemo {
 		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
-			HTMLElement cellColumnElement = createFlexboxElement();
+			HTMLElement cellColumnElement = createColumnFlexboxElement();
 			
 			int maxY = BOARD_HEIGHT - 1;
 			for(int y = maxY; y >= 0; y--) {
@@ -879,6 +879,15 @@ public class KiteDemo {
 		return flexboxElement;
 	}
 	
+	private static HTMLElement createColumnFlexboxElement() {
+		HTMLElement flexboxElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
+		
+		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_STYLES);
+		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_DIRECTION_STYLE_KEY, FLEXBOX_ELEMENT_COLUMN_DIRECTION);
+		
+		return flexboxElement;
+	}
+	
 	private static HTMLElement createFlexboxElement(String flexboxDirection, int flexboxGap) {
 		HTMLElement flexboxElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
 		
@@ -886,15 +895,6 @@ public class KiteDemo {
 		
 		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_STYLES);
 		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_DIRECTION_STYLE_KEY, flexboxDirection, FLEXBOX_ELEMENT_GAP_STYLE_KEY, s);
-		
-		return flexboxElement;
-	}
-	
-	private static HTMLElement createFlexboxElement() {
-		HTMLElement flexboxElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
-		
-		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_STYLES);
-		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_DIRECTION_STYLE_KEY, FLEXBOX_ELEMENT_COLUMN_DIRECTION);
 		
 		return flexboxElement;
 	}
