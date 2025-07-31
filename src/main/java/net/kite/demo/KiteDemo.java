@@ -157,7 +157,8 @@ public class KiteDemo {
 	private static final String TOP_GITHUB_LOGO_ELEMENT_CLASS_NAME = "top-github-logo";
 	private static final String BOTTOM_GITHUB_LOGO_ELEMENT_CLASS_NAME = "bottom-github-logo";
 	
-	private static final int BRAND_ELEMENT_GAP = 40;
+	private static final int BRAND_ELEMENT_GAP = 24;
+	private static final int LOGO_AND_VERSION_ELEMENT_GAP = 40;
 	private static final int BOARD_AND_LABELS_ELEMENT_GAP = 30;
 	
 	private static final String LOGO_ELEMENT_SOURCE_PATH = "https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png";
@@ -307,7 +308,7 @@ public class KiteDemo {
 		HTMLElement sidebarElement = createFlexboxElementWithClass(SIDEBAR_ELEMENT_CLASS_NAME);
 		HTMLElement controlsElement = createFlexboxElementWithClass(CONTROLS_ELEMENT_CLASS_NAME);
 		HTMLElement brandElement = createFlexboxElement(FLEXBOX_ELEMENT_ROW_DIRECTION, BRAND_ELEMENT_GAP);
-		HTMLElement logoAndVersionElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, BRAND_ELEMENT_GAP);
+		HTMLElement logoAndVersionElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, LOGO_AND_VERSION_ELEMENT_GAP);
 		
 		setElementStyles(logoAndVersionElement, BRAND_ELEMENT_STYLES);
 		
