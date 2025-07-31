@@ -153,6 +153,7 @@ public class KiteDemo {
 	private static final String APP_ELEMENT_CLASS_NAME = "app";
 	private static final String SIDEBAR_ELEMENT_CLASS_NAME = "sidebar";
 	private static final String CONTROLS_ELEMENT_CLASS_NAME = "controls";
+	private static final String LOGO_IMAGE_ELEMENT_CLASS_NAME = "logo-image";
 	private static final String TOP_GITHUB_LOGO_ELEMENT_CLASS_NAME = "top-github-logo";
 	private static final String BOTTOM_GITHUB_LOGO_ELEMENT_CLASS_NAME = "bottom-github-logo";
 	
@@ -312,6 +313,8 @@ public class KiteDemo {
 		
 		HTMLElement logoImageElement = createImageElement(LOGO_ELEMENT_SOURCE_PATH, LOGO_ELEMENT_ALTERNATIVE_TEXT, LOGO_ELEMENT_SIZE);
 		HTMLElement versionElement = createSpanElement(0);
+		
+		logoImageElement.setClassName(LOGO_IMAGE_ELEMENT_CLASS_NAME);
 		
 		String version = Kite.getVersion();
 		String versionElementText = VERSION_ELEMENT_TEXT_FORMAT.formatted(version);
