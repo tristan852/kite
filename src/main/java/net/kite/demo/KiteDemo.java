@@ -393,7 +393,7 @@ public class KiteDemo {
 		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
-			HTMLElement cellColumnElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION);
+			HTMLElement cellColumnElement = createFlexboxElement();
 			
 			int maxY = BOARD_HEIGHT - 1;
 			for(int y = maxY; y >= 0; y--) {
@@ -874,11 +874,11 @@ public class KiteDemo {
 		return flexboxElement;
 	}
 	
-	private static HTMLElement createFlexboxElement(String flexboxDirection) {
+	private static HTMLElement createFlexboxElement() {
 		HTMLElement flexboxElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
 		
 		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_STYLES);
-		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_DIRECTION_STYLE_KEY, flexboxDirection);
+		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_DIRECTION_STYLE_KEY, FLEXBOX_ELEMENT_COLUMN_DIRECTION);
 		
 		return flexboxElement;
 	}
