@@ -49,8 +49,6 @@ public class KiteDemo {
 	
 	private static final String ELEMENT_CHANGE_EVENT_TYPE = "change";
 	
-	private static final String ELEMENT_WIDTH_STYLE_KEY = "width";
-	private static final String ELEMENT_WIDTH_STYLE_VALUE_FORMAT = "%spx";
 	private static final String ELEMENT_HEIGHT_STYLE_KEY = "height";
 	private static final String ELEMENT_HEIGHT_STYLE_VALUE_FORMAT = "%spx";
 	private static final String ELEMENT_COLOR_STYLE_KEY = "color";
@@ -311,7 +309,7 @@ public class KiteDemo {
 		setElementStyles(logoAndVersionElement, BRAND_ELEMENT_STYLES);
 		
 		HTMLElement logoImageElement = createImageElement(LOGO_ELEMENT_SOURCE_PATH, LOGO_ELEMENT_ALTERNATIVE_TEXT, LOGO_ELEMENT_SIZE);
-		HTMLElement versionElement = createSpanElement(0, 0);
+		HTMLElement versionElement = createSpanElement(0);
 		
 		String version = Kite.getVersion();
 		String versionElementText = VERSION_ELEMENT_TEXT_FORMAT.formatted(version);
@@ -426,7 +424,7 @@ public class KiteDemo {
 		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
-			HTMLElement cellLabelElement = createSpanElement(0, CELL_LABEL_ELEMENT_HEIGHT);
+			HTMLElement cellLabelElement = createSpanElement(CELL_LABEL_ELEMENT_HEIGHT);
 			setElementStyles(cellLabelElement, CELL_LABEL_ELEMENT_STYLES);
 			
 			cellLabelElements[x] = cellLabelElement;
@@ -436,7 +434,7 @@ public class KiteDemo {
 		
 		setElementStyles(cellLabelsElement, CELL_LABELS_ELEMENT_STYLES);
 		
-		winnerLabelElement = createSpanElement(0, WINNER_LABEL_ELEMENT_HEIGHT);
+		winnerLabelElement = createSpanElement(WINNER_LABEL_ELEMENT_HEIGHT);
 		setElementStyles(winnerLabelElement, WINNER_LABEL_ELEMENT_STYLES);
 		
 		HTMLElement boardAndLabelsElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, BOARD_AND_LABELS_ELEMENT_GAP);
@@ -834,14 +832,8 @@ public class KiteDemo {
 		return imageElement;
 	}
 	
-	private static HTMLElement createSpanElement(int spanWidth, int spanHeight) {
+	private static HTMLElement createSpanElement(int spanHeight) {
 		HTMLElement spanElement = DOCUMENT.createElement(SPAN_ELEMENT_TYPE);
-		
-		if(spanWidth != 0) {
-			
-			String s = ELEMENT_WIDTH_STYLE_VALUE_FORMAT.formatted(spanWidth);
-			setElementStyles(spanElement, ELEMENT_WIDTH_STYLE_KEY, s);
-		}
 		
 		if(spanHeight != 0) {
 			
