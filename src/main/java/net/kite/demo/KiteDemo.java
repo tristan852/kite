@@ -142,11 +142,10 @@ public class KiteDemo {
 			"margin-bottom", "8px"
 	};
 	
-	// 430 x 380
 	private static final String[] BOARD_ELEMENT_STYLES = new String[] {
 			"aspect-ratio", "43 / 38",
 			"background-color", "#27272A",
-			"border-radius", "25px"
+			"border-radius", "calc(100% / 430 * 25) / calc(100% / 380 * 25)"
 	};
 	
 	private static final int APP_ELEMENT_GAP = 80;
