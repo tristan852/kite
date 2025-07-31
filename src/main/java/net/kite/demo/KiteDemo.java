@@ -120,13 +120,14 @@ public class KiteDemo {
 	};
 	
 	private static final String[] CELL_ELEMENT_STYLES = new String[] {
-			"width", "50px",
-			"height", "50px",
+			"width", "100%",
+			"aspect-ratio", "1",
 			"border-radius", "50%",
 			"background-color", "#09090B"
 	};
 	
 	private static final String[] CELL_COLUMN_ELEMENT_STYLES = new String[] {
+			"width", "calc(100% / 430 * 50)",
 			"padding-left", "calc(100% / 430 * 3)",
 			"padding-right", "calc(100% / 430 * 3)",
 			"cursor", "pointer"
