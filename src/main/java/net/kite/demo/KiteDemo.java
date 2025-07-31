@@ -135,6 +135,7 @@ public class KiteDemo {
 	};
 	
 	private static final String[] CELL_LABEL_ELEMENT_STYLES = new String[] {
+			"width", "calc(min(80dvw / 430 * 56, 56px))",
 			"text-align", "center",
 			"font-weight", "bold"
 	};
@@ -195,7 +196,6 @@ public class KiteDemo {
 	private static final int YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX = 1;
 	private static final int EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX = 2;
 	
-	private static final int CELL_LABEL_ELEMENT_WIDTH = 56;
 	private static final int CELL_LABEL_ELEMENT_HEIGHT = 20;
 	private static final String EMPTY_CELL_LABEL_ELEMENT_TEXT = "";
 	
@@ -426,7 +426,7 @@ public class KiteDemo {
 		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
-			HTMLElement cellLabelElement = createSpanElement(CELL_LABEL_ELEMENT_WIDTH, CELL_LABEL_ELEMENT_HEIGHT);
+			HTMLElement cellLabelElement = createSpanElement(0, CELL_LABEL_ELEMENT_HEIGHT);
 			setElementStyles(cellLabelElement, CELL_LABEL_ELEMENT_STYLES);
 			
 			cellLabelElements[x] = cellLabelElement;
