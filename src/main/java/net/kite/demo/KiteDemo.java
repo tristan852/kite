@@ -321,7 +321,7 @@ public class KiteDemo {
 		logoAndVersionElement.appendChild(logoImageElement);
 		logoAndVersionElement.appendChild(versionElement);
 		
-		s
+		
 		
 		modeButtonElement = (HTMLButtonElement) createControlElement(BUTTON_ELEMENT_TYPE);
 		undoButtonElement = (HTMLButtonElement) createControlElement(BUTTON_ELEMENT_TYPE);
