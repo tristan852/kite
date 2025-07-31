@@ -127,8 +127,8 @@ public class KiteDemo {
 	};
 	
 	private static final String[] CELL_COLUMN_ELEMENT_STYLES = new String[] {
-			"padding-left", "3px",
-			"padding-right", "3px",
+			"padding-left", "calc(100% / 430 * 3)",
+			"padding-right", "calc(100% / 430 * 3)",
 			"cursor", "pointer"
 	};
 	
@@ -141,8 +141,9 @@ public class KiteDemo {
 			"margin-bottom", "8px"
 	};
 	
+	// 430 x 380
 	private static final String[] BOARD_ELEMENT_STYLES = new String[] {
-			"padding", "25px 19px",
+			"aspect-ratio", "43 / 38",
 			"background-color", "#27272A",
 			"border-radius", "25px"
 	};
