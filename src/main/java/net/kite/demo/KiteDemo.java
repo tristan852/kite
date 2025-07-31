@@ -338,14 +338,18 @@ public class KiteDemo {
 		githubLogoElement = createAnchorElement(GITHUB_LOGO_ELEMENT_TARGET_PATH, githubLogoElement);
 		
 		HTMLElement githubLogoContainerElement = createColumnFlexboxElement();
-		githubLogoContainerElement.setClassName(TOP_GITHUB_LOGO_ELEMENT_CLASS_NAME);
 		
 		setElementStyles(githubLogoContainerElement, GITHUB_LOGO_CONTAINER_ELEMENT_STYLES);
 		
 		githubLogoContainerElement.appendChild(githubLogoElement);
 		
+		HTMLElement githubLogoContainerContainerElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
+		githubLogoContainerContainerElement.setClassName(TOP_GITHUB_LOGO_ELEMENT_CLASS_NAME);
+		
+		githubLogoContainerContainerElement.appendChild(githubLogoContainerElement);
+		
 		brandElement.appendChild(logoAndVersionElement);
-		brandElement.appendChild(githubLogoContainerElement);
+		brandElement.appendChild(githubLogoContainerContainerElement);
 		
 		modeButtonElement = (HTMLButtonElement) createControlElement(BUTTON_ELEMENT_TYPE);
 		undoButtonElement = (HTMLButtonElement) createControlElement(BUTTON_ELEMENT_TYPE);
