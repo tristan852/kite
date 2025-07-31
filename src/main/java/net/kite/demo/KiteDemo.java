@@ -151,11 +151,11 @@ public class KiteDemo {
 	};
 	
 	private static final String APP_ELEMENT_CLASS_NAME = "app";
+	private static final String SIDEBAR_ELEMENT_CLASS_NAME = "sidebar";
 	private static final String CONTROLS_ELEMENT_CLASS_NAME = "controls";
 	private static final String TOP_GITHUB_LOGO_ELEMENT_CLASS_NAME = "top-github-logo";
 	private static final String BOTTOM_GITHUB_LOGO_ELEMENT_CLASS_NAME = "bottom-github-logo";
 	
-	private static final int SIDEBAR_ELEMENT_GAP = 54;
 	private static final int BRAND_ELEMENT_GAP = 40;
 	private static final int BOARD_AND_LABELS_ELEMENT_GAP = 30;
 	
@@ -303,7 +303,7 @@ public class KiteDemo {
 		}
 		
 		HTMLElement appElement = createFlexboxElementWithClass(APP_ELEMENT_CLASS_NAME);
-		HTMLElement sidebarElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, SIDEBAR_ELEMENT_GAP);
+		HTMLElement sidebarElement = createFlexboxElementWithClass(SIDEBAR_ELEMENT_CLASS_NAME);
 		HTMLElement controlsElement = createFlexboxElementWithClass(CONTROLS_ELEMENT_CLASS_NAME);
 		HTMLElement brandElement = createFlexboxElement(FLEXBOX_ELEMENT_ROW_DIRECTION, BRAND_ELEMENT_GAP);
 		HTMLElement logoAndVersionElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, BRAND_ELEMENT_GAP);
@@ -398,6 +398,8 @@ public class KiteDemo {
 		sidebarElement.appendChild(brandElement);
 		sidebarElement.appendChild(controlsElement);
 		sidebarElement.appendChild(githubLogoElement2);
+		
+		sidebarElement.setClassName(SIDEBAR_ELEMENT_CLASS_NAME);
 		
 		HTMLElement boardElement = createFlexboxElement(FLEXBOX_ELEMENT_ROW_DIRECTION, 0);
 		
