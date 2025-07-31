@@ -302,10 +302,11 @@ public class KiteDemo {
 		
 		HTMLElement appElement = createFlexboxElementWithClass(APP_ELEMENT_CLASS_NAME);
 		HTMLElement sidebarElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, SIDEBAR_ELEMENT_GAP);
-		HTMLElement controlsElement = createFlexboxElement(CONTROLS_ELEMENT_CLASS_NAME);
+		HTMLElement controlsElement = createFlexboxElementWithClass(CONTROLS_ELEMENT_CLASS_NAME);
 		HTMLElement brandElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, BRAND_ELEMENT_GAP);
+		HTMLElement logoAndVersionElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, BRAND_ELEMENT_GAP);
 		
-		setElementStyles(brandElement, BRAND_ELEMENT_STYLES);
+		setElementStyles(logoAndVersionElement, BRAND_ELEMENT_STYLES);
 		
 		HTMLElement logoImageElement = createImageElement(LOGO_ELEMENT_SOURCE_PATH, LOGO_ELEMENT_ALTERNATIVE_TEXT, LOGO_ELEMENT_SIZE);
 		HTMLElement versionElement = createSpanElement(0, 0);
@@ -317,8 +318,10 @@ public class KiteDemo {
 		
 		setElementStyles(versionElement, VERSION_ELEMENT_STYLES);
 		
-		brandElement.appendChild(logoImageElement);
-		brandElement.appendChild(versionElement);
+		logoAndVersionElement.appendChild(logoImageElement);
+		logoAndVersionElement.appendChild(versionElement);
+		
+		s
 		
 		modeButtonElement = (HTMLButtonElement) createControlElement(BUTTON_ELEMENT_TYPE);
 		undoButtonElement = (HTMLButtonElement) createControlElement(BUTTON_ELEMENT_TYPE);
