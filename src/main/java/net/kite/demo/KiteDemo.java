@@ -163,7 +163,7 @@ public class KiteDemo {
 	private static final String TOP_GITHUB_LOGO_ELEMENT_CLASS_NAME = "top-github-logo";
 	private static final String BOTTOM_GITHUB_LOGO_ELEMENT_CLASS_NAME = "bottom-github-logo";
 	
-	private static final int BRAND_ELEMENT_GAP = 18;
+	private static final int BRAND_ELEMENT_GAP = 38;
 	private static final int BOARD_AND_LABELS_ELEMENT_GAP = 30;
 	
 	private static final String LOGO_ELEMENT_SOURCE_PATH = "https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png";
