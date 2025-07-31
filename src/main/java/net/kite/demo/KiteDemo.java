@@ -128,9 +128,9 @@ public class KiteDemo {
 	};
 	
 	private static final String[] CELL_COLUMN_ELEMENT_STYLES = new String[] {
-			"width", "calc(100% / 430 * 50)",
-			"padding-left", "calc(100% / 430 * 3)",
-			"padding-right", "calc(100% / 430 * 3)",
+			"width", "calc(min(80dvw / 430 * 50, 50px))",
+			"padding-left", "calc(min(80dvw / 430 * 3, 3px))",
+			"padding-right", "calc(min(80dvw / 430 * 3, 3px))",
 			"cursor", "pointer"
 	};
 	
@@ -148,7 +148,7 @@ public class KiteDemo {
 			"max-width", "430px",
 			"aspect-ratio", "43 / 38",
 			"background-color", "#27272A",
-			"border-radius", "calc(100% / 430 * 25) / calc(100% / 380 * 25)"
+			"border-radius", "calc(min(80dvw / 430 * 25, 25px))"
 	};
 	
 	private static final String APP_ELEMENT_CLASS_NAME = "app";
