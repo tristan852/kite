@@ -101,6 +101,11 @@ public class KiteDemo {
 			"padding", "6px"
 	};
 	
+	private static final String[] GITHUB_LOGO_CONTAINER_ELEMENT_STYLES = new String[] {
+			"width", "92px",
+			"height", "92px"
+	};
+	
 	private static final String[] VERSION_ELEMENT_STYLES = new String[] {
 			"font-style", "italic"
 	};
@@ -333,8 +338,13 @@ public class KiteDemo {
 		githubLogoElement = createAnchorElement(GITHUB_LOGO_ELEMENT_TARGET_PATH, githubLogoElement);
 		githubLogoElement.setClassName(TOP_GITHUB_LOGO_ELEMENT_CLASS_NAME);
 		
+		HTMLElement githubLogoContainerElement = createColumnFlexboxElement();
+		setElementStyles(githubLogoContainerElement, GITHUB_LOGO_CONTAINER_ELEMENT_STYLES);
+		
+		githubLogoContainerElement.appendChild(githubLogoElement);
+		
 		brandElement.appendChild(logoAndVersionElement);
-		brandElement.appendChild(githubLogoElement);
+		brandElement.appendChild(githubLogoContainerElement);
 		
 		modeButtonElement = (HTMLButtonElement) createControlElement(BUTTON_ELEMENT_TYPE);
 		undoButtonElement = (HTMLButtonElement) createControlElement(BUTTON_ELEMENT_TYPE);
