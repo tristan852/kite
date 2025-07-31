@@ -121,8 +121,10 @@ public class KiteDemo {
 	private static final String[] CELL_ELEMENT_STYLES = new String[] {
 			"width", "100%",
 			"aspect-ratio", "1",
-			"border-radius", "50%",
-			"background-color", "#09090B"
+			"margin-top", "calc(100% / 430 * 3)",
+			"margin-bottom", "calc(100% / 430 * 3)",
+			"background-color", "#09090B",
+			"border-radius", "50%"
 	};
 	
 	private static final String[] CELL_COLUMN_ELEMENT_STYLES = new String[] {
@@ -131,8 +133,6 @@ public class KiteDemo {
 			"padding-right", "calc(100% / 430 * 3)",
 			"cursor", "pointer"
 	};
-	
-	// TODO space between cell columns should be "6px" again
 	
 	private static final String[] CELL_LABEL_ELEMENT_STYLES = new String[] {
 			"text-align", "center",
