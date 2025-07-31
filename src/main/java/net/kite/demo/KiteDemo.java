@@ -152,6 +152,8 @@ public class KiteDemo {
 	
 	private static final String APP_ELEMENT_CLASS_NAME = "app";
 	private static final String CONTROLS_ELEMENT_CLASS_NAME = "controls";
+	private static final String TOP_GITHUB_LOGO_ELEMENT_CLASS_NAME = "top-github-logo";
+	private static final String BOTTOM_GITHUB_LOGO_ELEMENT_CLASS_NAME = "bottom-github-logo";
 	
 	private static final int SIDEBAR_ELEMENT_GAP = 54;
 	private static final int BRAND_ELEMENT_GAP = 40;
@@ -325,6 +327,7 @@ public class KiteDemo {
 		setElementStyles(githubLogoElement, GITHUB_LOGO_ELEMENT_STYLES);
 		
 		githubLogoElement = createAnchorElement(GITHUB_LOGO_ELEMENT_TARGET_PATH, githubLogoElement);
+		githubLogoElement.setClassName(TOP_GITHUB_LOGO_ELEMENT_CLASS_NAME);
 		
 		brandElement.appendChild(logoAndVersionElement);
 		brandElement.appendChild(githubLogoElement);
@@ -390,6 +393,7 @@ public class KiteDemo {
 		setElementStyles(githubLogoElement2, GITHUB_LOGO_ELEMENT_STYLES);
 		
 		githubLogoElement2 = createAnchorElement(GITHUB_LOGO_ELEMENT_TARGET_PATH, githubLogoElement2);
+		githubLogoElement2.setClassName(BOTTOM_GITHUB_LOGO_ELEMENT_CLASS_NAME);
 		
 		sidebarElement.appendChild(brandElement);
 		sidebarElement.appendChild(controlsElement);
