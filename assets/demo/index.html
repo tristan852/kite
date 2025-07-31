@@ -35,8 +35,14 @@
         }
         
         .app {
-            
+            flex-direction: row;
             gap: 80px;
+        }
+        
+        @media(max-width: 800px) {
+            .app {
+                flex-direction: column;
+            }
         }
     </style>
 </head>

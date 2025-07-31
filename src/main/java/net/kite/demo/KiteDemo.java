@@ -300,7 +300,7 @@ public class KiteDemo {
 			bodyElement.removeChild(node);
 		}
 		
-		HTMLElement appElement = createFlexboxElement(FLEXBOX_ELEMENT_ROW_DIRECTION, APP_ELEMENT_CLASS_NAME);
+		HTMLElement appElement = createFlexboxElementWithClass(APP_ELEMENT_CLASS_NAME);
 		HTMLElement sidebarElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, SIDEBAR_ELEMENT_GAP);
 		HTMLElement controlsElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, CONTROLS_ELEMENT_GAP);
 		HTMLElement brandElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, BRAND_ELEMENT_GAP);
@@ -856,6 +856,16 @@ public class KiteDemo {
 		return anchorElement;
 	}
 	
+	private static HTMLElement createFlexboxElementWithClass(String flexboxClassName) {
+		HTMLElement flexboxElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
+		
+		flexboxElement.setClassName(flexboxClassName);
+		
+		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_STYLES);
+		
+		return flexboxElement;
+	}
+	
 	private static HTMLElement createFlexboxElement(String flexboxDirection, int flexboxGap) {
 		HTMLElement flexboxElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
 		
@@ -863,17 +873,6 @@ public class KiteDemo {
 		
 		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_STYLES);
 		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_DIRECTION_STYLE_KEY, flexboxDirection, FLEXBOX_ELEMENT_GAP_STYLE_KEY, s);
-		
-		return flexboxElement;
-	}
-	
-	private static HTMLElement createFlexboxElement(String flexboxDirection, String flexboxClassName) {
-		HTMLElement flexboxElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
-		
-		flexboxElement.setClassName(flexboxClassName);
-		
-		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_STYLES);
-		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_DIRECTION_STYLE_KEY, flexboxDirection);
 		
 		return flexboxElement;
 	}
