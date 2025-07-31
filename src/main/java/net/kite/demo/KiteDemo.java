@@ -150,9 +150,9 @@ public class KiteDemo {
 	};
 	
 	private static final String APP_ELEMENT_CLASS_NAME = "app";
+	private static final String CONTROLS_ELEMENT_CLASS_NAME = "controls";
 	
 	private static final int SIDEBAR_ELEMENT_GAP = 54;
-	private static final int CONTROLS_ELEMENT_GAP = 10;
 	private static final int BRAND_ELEMENT_GAP = 40;
 	private static final int BOARD_AND_LABELS_ELEMENT_GAP = 30;
 	
@@ -302,7 +302,7 @@ public class KiteDemo {
 		
 		HTMLElement appElement = createFlexboxElementWithClass(APP_ELEMENT_CLASS_NAME);
 		HTMLElement sidebarElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, SIDEBAR_ELEMENT_GAP);
-		HTMLElement controlsElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, CONTROLS_ELEMENT_GAP);
+		HTMLElement controlsElement = createFlexboxElement(CONTROLS_ELEMENT_CLASS_NAME);
 		HTMLElement brandElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, BRAND_ELEMENT_GAP);
 		
 		setElementStyles(brandElement, BRAND_ELEMENT_STYLES);
