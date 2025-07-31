@@ -336,9 +336,10 @@ public class KiteDemo {
 		setElementStyles(githubLogoElement, GITHUB_LOGO_ELEMENT_STYLES);
 		
 		githubLogoElement = createAnchorElement(GITHUB_LOGO_ELEMENT_TARGET_PATH, githubLogoElement);
-		githubLogoElement.setClassName(TOP_GITHUB_LOGO_ELEMENT_CLASS_NAME);
 		
 		HTMLElement githubLogoContainerElement = createColumnFlexboxElement();
+		githubLogoContainerElement.setClassName(TOP_GITHUB_LOGO_ELEMENT_CLASS_NAME);
+		
 		setElementStyles(githubLogoContainerElement, GITHUB_LOGO_CONTAINER_ELEMENT_STYLES);
 		
 		githubLogoContainerElement.appendChild(githubLogoElement);
