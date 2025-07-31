@@ -121,8 +121,8 @@ public class KiteDemo {
 	private static final String[] CELL_ELEMENT_STYLES = new String[] {
 			"width", "100%",
 			"aspect-ratio", "1",
-			"margin-top", "calc(100% / 430 * 3)",
-			"margin-bottom", "calc(100% / 430 * 3)",
+			"margin-top", "calc(100% / 330 * 3)",
+			"margin-bottom", "calc(100% / 330 * 3)",
 			"background-color", "#09090B",
 			"border-radius", "50%"
 	};
@@ -144,6 +144,8 @@ public class KiteDemo {
 	};
 	
 	private static final String[] BOARD_ELEMENT_STYLES = new String[] {
+			"width", "80dvw",
+			"max-width", "430px",
 			"aspect-ratio", "43 / 38",
 			"background-color", "#27272A",
 			"border-radius", "calc(100% / 430 * 25) / calc(100% / 380 * 25)"
