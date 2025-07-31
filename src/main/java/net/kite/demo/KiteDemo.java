@@ -59,7 +59,8 @@ public class KiteDemo {
 	private static final String[] FLEXBOX_ELEMENT_STYLES = new String[] {
 			"display", "flex",
 			"justify-content", "center",
-			"align-items", "center"
+			"align-items", "center",
+			"flex-wrap", "wrap"
 	};
 	
 	private static final String FLEXBOX_ELEMENT_DIRECTION_STYLE_KEY = "flex-direction";
