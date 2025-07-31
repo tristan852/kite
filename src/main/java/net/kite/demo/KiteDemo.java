@@ -119,21 +119,21 @@ public class KiteDemo {
 	private static final String[] CELL_ELEMENT_STYLES = new String[] {
 			"width", "100%",
 			"aspect-ratio", "1",
-			"margin-top", "calc(min(80dvw / 430 * 3, 3px))",
-			"margin-bottom", "calc(min(80dvw / 430 * 3, 3px))",
+			"margin-top", "calc(min(80dvw / 436 * 3, 3px))",
+			"margin-bottom", "calc(min(80dvw / 436 * 3, 3px))",
 			"background-color", "#09090B",
 			"border-radius", "50%"
 	};
 	
 	private static final String[] CELL_COLUMN_ELEMENT_STYLES = new String[] {
-			"width", "calc(min(80dvw / 430 * 50, 50px))",
-			"padding-left", "calc(min(80dvw / 430 * 3, 3px))",
-			"padding-right", "calc(min(80dvw / 430 * 3, 3px))",
+			"width", "calc(min(80dvw / 436 * 50, 50px))",
+			"padding-left", "calc(min(80dvw / 436 * 3, 3px))",
+			"padding-right", "calc(min(80dvw / 436 * 3, 3px))",
 			"cursor", "pointer"
 	};
 	
 	private static final String[] CELL_LABEL_ELEMENT_STYLES = new String[] {
-			"width", "calc(min(80dvw / 430 * 56, 56px))",
+			"width", "calc(min(80dvw / 436 * 56, 56px))",
 			"text-align", "center",
 			"font-weight", "bold"
 	};
@@ -144,10 +144,10 @@ public class KiteDemo {
 	
 	private static final String[] BOARD_ELEMENT_STYLES = new String[] {
 			"width", "80dvw",
-			"max-width", "430px",
-			"aspect-ratio", "43 / 38",
+			"max-width", "436px",
+			"aspect-ratio", "109 / 95",
 			"background-color", "#27272A",
-			"border-radius", "calc(min(80dvw / 430 * 25, 25px))"
+			"border-radius", "calc(min(80dvw / 436 * 25, 25px))"
 	};
 	
 	private static final String APP_ELEMENT_CLASS_NAME = "app";
