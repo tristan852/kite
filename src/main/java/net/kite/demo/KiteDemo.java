@@ -303,7 +303,7 @@ public class KiteDemo {
 		HTMLElement appElement = createFlexboxElementWithClass(APP_ELEMENT_CLASS_NAME);
 		HTMLElement sidebarElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, SIDEBAR_ELEMENT_GAP);
 		HTMLElement controlsElement = createFlexboxElementWithClass(CONTROLS_ELEMENT_CLASS_NAME);
-		HTMLElement brandElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, BRAND_ELEMENT_GAP);
+		HTMLElement brandElement = createFlexboxElement(FLEXBOX_ELEMENT_ROW_DIRECTION, BRAND_ELEMENT_GAP);
 		HTMLElement logoAndVersionElement = createFlexboxElement(FLEXBOX_ELEMENT_COLUMN_DIRECTION, BRAND_ELEMENT_GAP);
 		
 		setElementStyles(logoAndVersionElement, BRAND_ELEMENT_STYLES);
@@ -321,7 +321,13 @@ public class KiteDemo {
 		logoAndVersionElement.appendChild(logoImageElement);
 		logoAndVersionElement.appendChild(versionElement);
 		
+		HTMLElement githubLogoElement = createImageElement(GITHUB_LOGO_ELEMENT_SOURCE_PATH, GITHUB_LOGO_ELEMENT_ALTERNATIVE_TEXT, GITHUB_LOGO_ELEMENT_SIZE);
+		setElementStyles(githubLogoElement, GITHUB_LOGO_ELEMENT_STYLES);
 		
+		githubLogoElement = createAnchorElement(GITHUB_LOGO_ELEMENT_TARGET_PATH, githubLogoElement);
+		
+		brandElement.appendChild(logoAndVersionElement);
+		brandElement.appendChild(githubLogoElement);
 		
 		modeButtonElement = (HTMLButtonElement) createControlElement(BUTTON_ELEMENT_TYPE);
 		undoButtonElement = (HTMLButtonElement) createControlElement(BUTTON_ELEMENT_TYPE);
@@ -380,14 +386,14 @@ public class KiteDemo {
 		controlsElement.appendChild(undoButtonElement);
 		controlsElement.appendChild(redoButtonElement);
 		
-		HTMLElement githubLogoElement = createImageElement(GITHUB_LOGO_ELEMENT_SOURCE_PATH, GITHUB_LOGO_ELEMENT_ALTERNATIVE_TEXT, GITHUB_LOGO_ELEMENT_SIZE);
-		setElementStyles(githubLogoElement, GITHUB_LOGO_ELEMENT_STYLES);
+		HTMLElement githubLogoElement2 = createImageElement(GITHUB_LOGO_ELEMENT_SOURCE_PATH, GITHUB_LOGO_ELEMENT_ALTERNATIVE_TEXT, GITHUB_LOGO_ELEMENT_SIZE);
+		setElementStyles(githubLogoElement2, GITHUB_LOGO_ELEMENT_STYLES);
 		
-		githubLogoElement = createAnchorElement(GITHUB_LOGO_ELEMENT_TARGET_PATH, githubLogoElement);
+		githubLogoElement2 = createAnchorElement(GITHUB_LOGO_ELEMENT_TARGET_PATH, githubLogoElement2);
 		
 		sidebarElement.appendChild(brandElement);
 		sidebarElement.appendChild(controlsElement);
-		sidebarElement.appendChild(githubLogoElement);
+		sidebarElement.appendChild(githubLogoElement2);
 		
 		HTMLElement boardElement = createFlexboxElement(FLEXBOX_ELEMENT_ROW_DIRECTION, 0);
 		
