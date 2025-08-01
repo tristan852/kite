@@ -65,6 +65,8 @@ public class Board {
 	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
 	
+	private static final int MIRRORED_BITBOARD_SHIFT_AMOUNT = 8;
+	
 	private static final int LOGARITHMIC_BITBOARD_LENGTH = 3;
 	
 	private static final int LARGEST_MOVE_CELL_X = 6;
@@ -109,6 +111,8 @@ public class Board {
 	
 	private final int[] cellColumnHeights = new int[WIDTH];
 	
+	private boolean symmetrical = true;
+	
 	private int filledCellAmount;
 	private int evenParityCellColumnAmount = WIDTH;
 	
@@ -116,11 +120,6 @@ public class Board {
 	private long activeBitboard = Bitboards.EMPTY;
 	private long maskBitboard = Bitboards.EMPTY;
 	private long ceilingBitboard = Bitboards.EMPTY_CEILING;
-	
-	private long mirroredBitboard = Bitboards.EMPTY_CEILING;
-	private long mirroredActiveBitboard = Bitboards.EMPTY;
-	private long mirroredMaskBitboard = Bitboards.EMPTY;
-	private long mirroredCeilingBitboard = Bitboards.EMPTY_CEILING;
 	
 	private BoardOutcome outcome = BoardOutcome.UNDECIDED;
 	
@@ -543,10 +542,8 @@ public class Board {
 				long moveBitboard = 1L << movePosition;
 				movesBitboard ^= moveBitboard;
 				
-				long mirroredMoveBitboard = Bitboards.MIRRORED_BOARD_CELL_BITBOARDS[movePosition];
-				
 				long h1 = (bitboard ^ maskBitboard) + moveBitboard;
-				long h2 = (mirroredBitboard ^ mirroredMaskBitboard) + mirroredMoveBitboard;
+				long h2 = Long.reverseBytes(h1) >>> MIRRORED_BITBOARD_SHIFT_AMOUNT;
 				
 				if(h2 < h1) h1 = h2;
 				
@@ -622,9 +619,7 @@ public class Board {
 		int moveAmount = 0;
 		
 		long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
-		
-		boolean symmetric = bitboard == mirroredBitboard;
-		if(symmetric) movesBitboard &= Bitboards.SYMMETRY_PRUNE_BITBOARD;
+		if(symmetrical) movesBitboard &= Bitboards.SYMMETRY_PRUNE_BITBOARD;
 		
 		while(movesBitboard != 0) {
 			
@@ -762,8 +757,8 @@ public class Board {
 	public void playMove(int moveCellX) {
 		BoardHistoryEntry entry = history.entry(filledCellAmount);
 		entry.fill(
+				symmetrical,
 				bitboard, activeBitboard, maskBitboard, ceilingBitboard,
-				mirroredBitboard, mirroredActiveBitboard, mirroredMaskBitboard, mirroredCeilingBitboard,
 				hash, mixedHash
 		);
 		
@@ -781,24 +776,17 @@ public class Board {
 		int p = BITBOARD_HEIGHT * moveCellX + moveCellY;
 		
 		long b1 = 1L << p;
-		long b2 = Bitboards.MIRRORED_BOARD_CELL_BITBOARDS[p];
 		
 		activeBitboard = activeBitboard ^ maskBitboard;
 		maskBitboard |= b1;
 		ceilingBitboard ^= b1;
 		
-		mirroredActiveBitboard = mirroredActiveBitboard ^ mirroredMaskBitboard;
-		mirroredMaskBitboard |= b2;
-		mirroredCeilingBitboard ^= b2;
-		
 		b1 <<= 1;
-		b2 <<= 1;
 		
 		ceilingBitboard |= b1;
 		bitboard = activeBitboard | ceilingBitboard;
 		
-		mirroredCeilingBitboard |= b2;
-		mirroredBitboard = mirroredActiveBitboard | mirroredCeilingBitboard;
+		long mirroredBitboard = Long.reverseBytes(bitboard) >>> MIRRORED_BITBOARD_SHIFT_AMOUNT;
 		
 		long board = activeBitboard ^ maskBitboard;
 		if(bitboardContainsConnection(board)) {
@@ -811,7 +799,11 @@ public class Board {
 		
 		if(filledCellAmount == FULL_CELL_AMOUNT) outcome = BoardOutcome.DRAW;
 		
-		updateHash();
+		hash = bitboard;
+		if(hash > mirroredBitboard) hash = mirroredBitboard;
+		
+		mixedHash = mixedHash(hash);
+		symmetrical = bitboard == mirroredBitboard;
 	}
 	
 	public void undoMove() {
@@ -830,25 +822,15 @@ public class Board {
 		if(isEven) evenParityCellColumnAmount++;
 		else evenParityCellColumnAmount--;
 		
+		symmetrical = entry.isSymmetrical();
+		
 		bitboard = entry.getBitboard();
 		activeBitboard = entry.getActiveBitboard();
 		maskBitboard = entry.getMaskBitboard();
 		ceilingBitboard = entry.getCeilingBitboard();
 		
-		mirroredBitboard = entry.getMirroredBitboard();
-		mirroredActiveBitboard = entry.getMirroredActiveBitboard();
-		mirroredMaskBitboard = entry.getMirroredMaskBitboard();
-		mirroredCeilingBitboard = entry.getMirroredCeilingBitboard();
-		
 		hash = entry.getHash();
 		mixedHash = entry.getMixedHash();
-	}
-	
-	private void updateHash() {
-		hash = bitboard;
-		if(hash > mirroredBitboard) hash = mirroredBitboard;
-		
-		mixedHash = mixedHash(hash);
 	}
 	
 	public int cellColumnHeight(int cellColumnIndex) {
