@@ -540,11 +540,7 @@ public class KiteDemo {
 		} else {
 			
 			disableSelectElement(aiSkillLevelSelectElement);
-			
-			if(playedMoveAmount == 0) {
-				
-				updateCellLabelElements();
-			}
+			updateCellLabelElements();
 		}
 		
 		bodyElement.appendChild(appElement);
