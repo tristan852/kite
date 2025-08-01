@@ -127,7 +127,6 @@ public class Board {
 	private final int[][] moveScores;
 	
 	private final int[] playedMoves;
-	private final int[] nodesVisited;
 	
 	private long hash = Bitboards.EMPTY_CEILING;
 	private long mixedHash = EMPTY_MIXED_HASH;
@@ -141,11 +140,6 @@ public class Board {
 		this.moves = new int[FULL_CELL_AMOUNT][WIDTH];
 		this.moveScores = new int[FULL_CELL_AMOUNT][WIDTH];
 		this.playedMoves = new int[FULL_CELL_AMOUNT];
-		
-		int l = FULL_CELL_AMOUNT;
-		l++;
-		
-		this.nodesVisited = new int[l];
 		
 		this.history = new BoardHistory();
 	}
@@ -454,10 +448,6 @@ public class Board {
 	
 	// only interested in scores in between min and max (excluding min and max tho)
 	private int evaluateWithNoImmediateWin(int minimalScore, int maximalScore) {
-		int depth = filledCellAmount;
-		int nextDepth = depth + 1;
-		nodesVisited[depth] = 1;
-		
 		if(outcome != BoardOutcome.UNDECIDED) {
 			
 			if(outcome == BoardOutcome.DRAW) return BoardScore.DRAW;
@@ -593,23 +583,18 @@ public class Board {
 			playMove(forcedX);
 			
 			int s = -evaluateWithNoImmediateWin(-maximalScore, -minimalScore);
-			nodesVisited[depth] += nodesVisited[nextDepth];
 			
 			undoMove();
 			
 			if(s >= maximalScore) {
 				
-				int nodes = nodesVisited[depth];
-				
-				scoreCache.updateEntry(hash, mixedHash, s, maxScore, nodes);
+				scoreCache.updateEntry(hash, mixedHash, s, maxScore);
 				return s;
 			}
 			
 			if(s > minimalScore) minimalScore = s;
 			
-			int nodes = nodesVisited[depth];
-			
-			scoreCache.updateEntry(hash, mixedHash, minScore, minimalScore, nodes);
+			scoreCache.updateEntry(hash, mixedHash, minScore, minimalScore);
 			
 			return minimalScore;
 		}
@@ -667,15 +652,12 @@ public class Board {
 			playMove(moveCellX);
 			
 			int s = -evaluateWithNoImmediateWin(-maximalScore, -minimalScore);
-			nodesVisited[depth] += nodesVisited[nextDepth];
 			
 			undoMove();
 			
 			if(s >= maximalScore) {
 				
-				int nodes = nodesVisited[depth];
-				
-				scoreCache.updateEntry(hash, mixedHash, s, maxScore, nodes);
+				scoreCache.updateEntry(hash, mixedHash, s, maxScore);
 				return s;
 			}
 			
@@ -685,9 +667,7 @@ public class Board {
 			}
 		}
 		
-		int nodes = nodesVisited[depth];
-		
-		scoreCache.updateEntry(hash, mixedHash, minScore, minimalScore, nodes);
+		scoreCache.updateEntry(hash, mixedHash, minScore, minimalScore);
 		
 		return minimalScore;
 	}

@@ -4,9 +4,6 @@ import net.kite.board.bit.Bitboards;
 
 public class BoardScoreCache {
 	
-	private static final byte MAXIMAL_ENTRY_AGE = 10;
-	private static final int MAXIMAL_ENTRY_LOW_EFFORT_NODES_VISITED = 100;
-	
 	private static final int DEFAULT_CAPACITY = 8388608;
 	
 	private static final int MISSING_ENTRY_KEY = -1;
@@ -15,9 +12,6 @@ public class BoardScoreCache {
 	
 	private final byte[] entryMinimalScores;
 	private final byte[] entryMaximalScores;
-	
-	private final int[] entryNodesVisited;
-	private final byte[] entryAges;
 	
 	private final long keyMask;
 	
@@ -29,13 +23,11 @@ public class BoardScoreCache {
 		this.entryHashes = new long[capacity];
 		this.entryMinimalScores = new byte[capacity];
 		this.entryMaximalScores = new byte[capacity];
-		this.entryNodesVisited = new int[capacity];
-		this.entryAges = new byte[capacity];
 		
 		this.keyMask = capacity - 1;
 	}
 	
-	public void updateEntry(long hash, long mixedHash, int minimalScore, int maximalScore, int nodesVisited) {
+	public void updateEntry(long hash, long mixedHash, int minimalScore, int maximalScore) {
 		int key = (int) (mixedHash & keyMask);
 		
 		long h = entryHashes[key];
@@ -47,23 +39,12 @@ public class BoardScoreCache {
 			if(minimalScore > min) entryMinimalScores[key] = (byte) minimalScore;
 			if(maximalScore < max) entryMaximalScores[key] = (byte) maximalScore;
 			
-			entryNodesVisited[key] += nodesVisited;
-			
 			return;
-		}
-		
-		int nodes = entryNodesVisited[key];
-		if(nodes > MAXIMAL_ENTRY_LOW_EFFORT_NODES_VISITED && nodesVisited <= nodes) {
-			
-			entryAges[key]++;
-			if(entryAges[key] <= MAXIMAL_ENTRY_AGE) return;
 		}
 		
 		entryHashes[key] = hash;
 		entryMinimalScores[key] = (byte) minimalScore;
 		entryMaximalScores[key] = (byte) maximalScore;
-		entryNodesVisited[key] = nodesVisited;
-		entryAges[key] = 0;
 	}
 	
 	public boolean entryFilled(int entryKey) {
@@ -80,14 +61,6 @@ public class BoardScoreCache {
 	
 	public int entryMaximalScore(int entryKey) {
 		return entryMaximalScores[entryKey];
-	}
-	
-	public int entryNodesVisited(int entryKey) {
-		return entryNodesVisited[entryKey];
-	}
-	
-	public int entryAge(int entryKey) {
-		return entryAges[entryKey];
 	}
 	
 	public int entryKey(long hash, long mixedHash) {
