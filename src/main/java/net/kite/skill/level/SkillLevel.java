@@ -3,8 +3,9 @@ package net.kite.skill.level;
 /**
  * Represents the skill level of
  * a Connect Four player.
- * Skill levels may range from level {@link SkillLevel#ONE}
- * (weakest) up to level {@link SkillLevel#TEN} (strongest).
+ * Skill levels may range from the {@link SkillLevel#BEGINNER}
+ * level (weakest) up to {@link SkillLevel#SUPER_GRANDMASTER} level
+ * (strongest).
  * <p>
  * Additionally, there exists three special
  * skill levels: {@link SkillLevel#RANDOM}, {@link SkillLevel#PERFECT}
@@ -23,7 +24,7 @@ public enum SkillLevel {
 	 * that always plays uniformly sampled
 	 * random moves.
 	 */
-	RANDOM(Integer.MAX_VALUE, 1120),
+	RANDOM("Random", Integer.MAX_VALUE, 1120),
 	
 	/**
 	 * Level one (the weakest level above random;
@@ -31,57 +32,57 @@ public enum SkillLevel {
 	 * {@link SkillLevel#RANDOM} the distribution is
 	 * not uniform)
 	 */
-	ONE(222, 1200),
+	BEGINNER("Beginner", 222, 1200),
 	
 	/**
 	 * Level two
 	 */
-	TWO(69, 1400),
+	NOVICE("Novice", 69, 1400),
 	
 	/**
 	 * Level three
 	 */
-	THREE(32, 1600),
+	AMATEUR("Amateur", 32, 1600),
 	
 	/**
 	 * Level four
 	 */
-	FOUR(21, 1800),
+	INTERMEDIATE("Intermediate", 21, 1800),
 	
 	/**
 	 * Level five
 	 */
-	FIVE(13, 2000),
+	SKILLED("Skilled", 13, 2000),
 	
 	/**
 	 * Level six
 	 */
-	SIX(8, 2200),
+	ADVANCED("Advanced", 8, 2200),
 	
 	/**
 	 * Level seven
 	 */
-	SEVEN(5, 2400),
+	EXPERT("Expert", 5, 2400),
 	
 	/**
 	 * Level eight
 	 */
-	EIGHT(3, 2600),
+	MASTER("Master", 3, 2600),
 	
 	/**
 	 * Level nine
 	 */
-	NINE(2, 2800),
+	GRANDMASTER("Grandmaster", 2, 2800),
 	
 	/**
 	 * Level ten (the strongest level; equivalent to {@link SkillLevel#PERFECT})
 	 */
-	TEN(0, 3000),
+	SUPER_GRANDMASTER("Super Grandmaster", 0, 3000),
 	
 	/**
 	 * The level of a perfect Connect Four player
 	 */
-	PERFECT(0, 3000),
+	PERFECT("Perfect", 0, 3000),
 	
 	/**
 	 * This skill level always tries to match
@@ -89,19 +90,34 @@ public enum SkillLevel {
 	 * opponent by attempting to equalize the
 	 * position.
 	 */
-	ADAPTIVE(Integer.MAX_VALUE, -1);
+	ADAPTIVE("Adaptive", Integer.MAX_VALUE, -1);
 	
 	private static final SkillLevel[] ORDERED_LEVELS = new SkillLevel[] {
-			ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN
+			BEGINNER, NOVICE, AMATEUR, INTERMEDIATE, SKILLED, ADVANCED, EXPERT, MASTER, GRANDMASTER, SUPER_GRANDMASTER
 	};
+	
+	private final String displayName;
 	
 	private final int maximalScoreLoss;
 	
 	private final int approximateEloRating;
 	
-	SkillLevel(int maximalScoreLoss, int approximateEloRating) {
+	SkillLevel(String displayName, int maximalScoreLoss, int approximateEloRating) {
+		this.displayName = displayName;
 		this.maximalScoreLoss = maximalScoreLoss;
 		this.approximateEloRating = approximateEloRating;
+	}
+	
+	/**
+	 * Returns the name of this skill
+	 * level that should for example
+	 * be displayed inside a user
+	 * interface.
+	 *
+	 * @return display name of this skill level
+	 */
+	public String getDisplayName() {
+		return displayName;
 	}
 	
 	/**
@@ -131,11 +147,11 @@ public enum SkillLevel {
 	}
 	
 	/**
-	 * Returns a skill level from {@link SkillLevel#ONE}
-	 * to {@link SkillLevel#TEN} given the requested
+	 * Returns a skill level from {@link SkillLevel#BEGINNER}
+	 * to {@link SkillLevel#SUPER_GRANDMASTER} given the requested
 	 * level.
-	 * {@code level(1)} returns {@link SkillLevel#ONE},
-	 * {@code level(2)} returns {@link SkillLevel#TWO}
+	 * {@code level(1)} returns {@link SkillLevel#BEGINNER},
+	 * {@code level(2)} returns {@link SkillLevel#NOVICE}
 	 * and so on.
 	 *
 	 * @param level an integer from {@code 1} to {@code 10}

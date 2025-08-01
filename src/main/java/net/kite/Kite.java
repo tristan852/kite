@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.6.0";
+	private static final String VERSION = "1.7.0";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -200,7 +200,7 @@ public class Kite {
 	 * @return a skill based one-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
 	 */
 	public synchronized int skilledMove(SkillLevel skillLevel) {
-		boolean perfect = skillLevel == SkillLevel.PERFECT || skillLevel == SkillLevel.TEN;
+		boolean perfect = skillLevel == SkillLevel.PERFECT || skillLevel == SkillLevel.SUPER_GRANDMASTER;
 		
 		if(perfect) return optimalMove();
 		if(skillLevel == SkillLevel.RANDOM) return randomMove();

@@ -59,7 +59,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tristan852:kite:1.6.0")
+    implementation("io.github.tristan852:kite:1.7.0")
 }
 ```
 
@@ -73,7 +73,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.tristan852:kite:1.6.0'
+    implementation 'io.github.tristan852:kite:1.7.0'
 }
 ```
 
@@ -93,7 +93,7 @@ Add the following code snippet to your `pom.xml` file:
     <dependency>
         <groupId>io.github.tristan852</groupId>
         <artifactId>kite</artifactId>
-        <version>1.6.0</version>
+        <version>1.7.0</version>
     </dependency>
 </dependencies>
 ```
@@ -199,8 +199,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
 	
-	// opponent of skill level six
-	private static final SkillLevel OPPONENT_SKILL_LEVEL = SkillLevel.SIX;
+	// opponent of advanced skill level
+	private static final SkillLevel OPPONENT_SKILL_LEVEL = SkillLevel.ADVANCED;
 	
 	public static void main(String[] programArguments) {
 		// initialize a new solver instance and a scanner
@@ -269,35 +269,35 @@ Kite uses the following score metric to represent the value of a board or a move
 ## ⚔️ Skill levels
 
 The Kite solver is capable of not only playing perfectly but also generating moves at fixed skill levels.
-Its API supports thirteen distinct skill levels, ranging from `SkillLevel.RANDOM` up to `SkillLevel.PERFECT`, including intermediate levels like `SkillLevel.ONE`, `SkillLevel.TWO`, ..., and `SkillLevel.TEN`.
+Its API supports thirteen distinct skill levels, ranging from `SkillLevel.RANDOM` up to `SkillLevel.PERFECT`, including intermediate levels like `SkillLevel.BEGINNER`, `SkillLevel.NOVICE`, ..., and `SkillLevel.SUPER_GRANDMASTER`.
 
 These skill levels are ordered by increasing playing strength, with each level designed to be stronger than the previous one.
 A special skill level, `SkillLevel.ADAPTIVE`, adjusts move selection to match the opponent's playing strength.
 You can use all available skill levels or choose a subset that fits your project.
 
-The skill level `SkillLevel.TEN` always plays perfectly and is therefore equivalent to `SkillLevel.PERFECT`.
-`SkillLevel.ONE` plays slightly better than the random bot.
+The `SkillLevel.SUPER_GRANDMASTER` skill level always plays perfectly and is therefore equivalent to `SkillLevel.PERFECT`.
+`SkillLevel.BEGINNER` plays slightly better than the random bot.
 The Elo ratings of all the different skill levels are given in the table below:
 
-| Skill level | Elo rating estimate |
-|-------------|---------------------|
-| Random      | 1120                |
-| One         | 1200                |
-| Two         | 1400                |
-| Three       | 1600                |
-| Four        | 1800                |
-| Five        | 2000                |
-| Six         | 2200                |
-| Seven       | 2400                |
-| Eight       | 2600                |
-| Nine        | 2800                |
-| Ten         | 3000                |
-| Perfect     | 3000                |
+| Skill level       | Elo rating estimate |
+|-------------------|---------------------|
+| Random            | 1120                |
+| Beginner          | 1200                |
+| Novice            | 1400                |
+| Amateur           | 1600                |
+| Intermediate      | 1800                |
+| Skilled           | 2000                |
+| Advanced          | 2200                |
+| Expert            | 2400                |
+| Master            | 2600                |
+| Grandmaster       | 2800                |
+| Super Grandmaster | 3000                |
+| Perfect           | 3000                |
 
 An Elo rating difference of approximately *400* corresponds to a *91%* win rate for the higher-rated player. A difference in Elo of *200* corresponds to a *76%* win probability.
 
 For reference, the Elo ratings have been normalized so that the `SkillLevel.PERFECT` bot has a rating of *3000*.
-Since `SkillLevel.TEN` and `SkillLevel.PERFECT` represent the same level of play, they share the same rating estimate.
+Since `SkillLevel.SUPER_GRANDMASTER` and `SkillLevel.PERFECT` represent the same level of play, they share the same rating estimate.
 
 If you want to translate these Elo ratings to your own scale — or vice versa — try to identify a reference point by comparing one of these skill levels to a skill level in your system with a known Elo rating.
 

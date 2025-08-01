@@ -393,10 +393,9 @@ public class KiteDemo {
 		
 		for(SkillLevel skillLevel : ORDERED_AI_SKILL_LEVELS) {
 			
-			String skillLevelName = skillLevel.name();
-			skillLevelName = formatSkillLevelName(skillLevelName);
+			String skillLevelDisplayName = skillLevel.getDisplayName();
 			
-			HTMLOptionElement optionElement = createOptionElement(skillLevelName);
+			HTMLOptionElement optionElement = createOptionElement(skillLevelDisplayName);
 			aiSkillLevelSelectElement.appendChild(optionElement);
 		}
 		
@@ -931,15 +930,6 @@ public class KiteDemo {
 		if(moveScore > 0) return POSITIVE_MOVE_SCORE_FORMAT_PREFIX + moveScore;
 		
 		return String.valueOf(moveScore);
-	}
-	
-	private static String formatSkillLevelName(String skillLevelName) {
-		char c = skillLevelName.charAt(0);
-		
-		skillLevelName = skillLevelName.substring(1);
-		skillLevelName = skillLevelName.toLowerCase();
-		
-		return c + skillLevelName;
 	}
 	
 }
