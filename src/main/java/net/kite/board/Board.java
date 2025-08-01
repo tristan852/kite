@@ -79,11 +79,13 @@ public class Board {
 			0xC4CEB9FE1A85EC53L
 	};
 	
+	private static final long EMPTY_MIXED_HASH = 0x2373BFB0BD385EEAL;
+	
 	private static final int HASH_MIX_SHIFT_AMOUNT = 33;
 	
 	private static final int COLUMN_HASH_BASE = 3;
 	
-	private static final int MINIMAL_CHILD_CACHE_LOOKUP_DEPTH = 10;
+	private static final int MINIMAL_CHILD_CACHE_LOOKUP_DEPTH = 13;
 	
 	private static final int BITBOARD_HEIGHT = 8;
 	
@@ -129,7 +131,7 @@ public class Board {
 	private final int[] nodesVisited;
 	
 	private long hash = Bitboards.EMPTY_CEILING;
-	private long mixedHash = 0x2373BFB0BD385EEAL;
+	private long mixedHash = EMPTY_MIXED_HASH;
 	
 	private final BoardHistory history;
 	private final BoardScoreCache scoreCache;
