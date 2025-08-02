@@ -127,6 +127,7 @@ public class Board {
 	private final int[][] moveScores;
 	
 	private final int[] playedMoves;
+	private final int[] undoneMoves;
 	
 	private long hash = Bitboards.EMPTY_CEILING;
 	private long mixedHash = EMPTY_MIXED_HASH;
@@ -140,6 +141,7 @@ public class Board {
 		this.moves = new int[FULL_CELL_AMOUNT][WIDTH];
 		this.moveScores = new int[FULL_CELL_AMOUNT][WIDTH];
 		this.playedMoves = new int[FULL_CELL_AMOUNT];
+		this.undoneMoves = new int[FULL_CELL_AMOUNT];
 		
 		this.history = new BoardHistory();
 	}
@@ -205,6 +207,8 @@ public class Board {
 		while(filledCellAmount != 0) {
 			
 			undoMove();
+			
+			undoneMoves[filledCellAmount] = playedMoves[filledCellAmount];
 		}
 		
 		int redTotalScoreLoss = 0;
@@ -219,7 +223,7 @@ public class Board {
 		
 		for(int i = 0; i < n; i++) {
 			
-			int move = playedMoves[i];
+			int move = undoneMoves[i];
 			
 			playMove(move);
 			
@@ -272,6 +276,8 @@ public class Board {
 		while(filledCellAmount != 0) {
 			
 			undoMove();
+			
+			undoneMoves[filledCellAmount] = playedMoves[filledCellAmount];
 		}
 		
 		int totalScoreLoss = 0;
@@ -283,7 +289,7 @@ public class Board {
 		
 		for(int i = 0; i < n; i++) {
 			
-			int move = playedMoves[i];
+			int move = undoneMoves[i];
 			
 			playMove(move);
 			
