@@ -612,6 +612,9 @@ public class Board {
 		long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
 		if(symmetrical) movesBitboard &= Bitboards.SYMMETRY_PRUNE_BITBOARD;
 		
+		int bestMoveIndex = 0;
+		int bestMoveScore = Integer.MIN_VALUE;
+		
 		while(movesBitboard != 0) {
 			
 			int movePosition = Long.numberOfTrailingZeros(movesBitboard);
@@ -634,22 +637,23 @@ public class Board {
 			moveScores[moveIndex] = moveScore;
 			
 			moveAmount++;
+			
+			if(moveScore > bestMoveScore) {
+				
+				bestMoveIndex = moveIndex;
+				bestMoveScore = moveScore;
+			}
 		}
 		
-		for(int i = 0; i < moveAmount; i++) {
+		if(moveAmount == 0) {
 			
-			int bestMoveIndex = 0;
-			int bestMoveScore = moveScores[0];
+			scoreCache.updateEntry(hash, mixedHash, minScore, minimalScore);
 			
-			for(int j = 1; j < moveAmount; j++) {
-				
-				int s = moveScores[j];
-				if(s > bestMoveScore) {
-					
-					bestMoveIndex = j;
-					bestMoveScore = s;
-				}
-			}
+			return minimalScore;
+		}
+		
+		int i = 0;
+		while(true) {
 			
 			moveScores[bestMoveIndex] = MISSING_MOVE_SCORE;
 			
@@ -670,6 +674,22 @@ public class Board {
 			if(s > minimalScore) {
 				
 				minimalScore = s;
+			}
+			
+			i++;
+			if(i == moveAmount) break;
+			
+			bestMoveIndex = 0;
+			bestMoveScore = moveScores[0];
+			
+			for(int j = 1; j < moveAmount; j++) {
+				
+				int moveScore = moveScores[j];
+				if(moveScore > bestMoveScore) {
+					
+					bestMoveIndex = j;
+					bestMoveScore = moveScore;
+				}
 			}
 		}
 		
