@@ -10,6 +10,7 @@
 ![GitHub license](https://img.shields.io/github/license/tristan852/kite?style=for-the-badge)
 [![Java documentation](https://javadoc.io/badge2/io.github.tristan852/kite/javadoc.svg?style=for-the-badge)](https://javadoc.io/doc/io.github.tristan852/kite)
     
+
 </span>
 
 Kite is a lightweight, high-performance Connect Four solver capable of solving any board position blazingly fast — even on modest hardware. It can be used to power AI bots with adjustable playing strength — from deliberately weak to perfectly optimal, making only provably best moves. Kite is well-suited for integration into GUI applications, backend systems, or for programmatic position analysis.
