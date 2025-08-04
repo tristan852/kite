@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "io.github.tristan852"
-version = "1.7.4"
+version = "1.7.5"
 
 repositories {
     mavenCentral()
@@ -24,6 +24,7 @@ dependencies {
 }
 
 tasks.javadoc {
+    exclude("net/kite/Main.java")
     exclude("net/kite/board/Board.java")
     exclude("net/kite/board/bit/**")
     exclude("net/kite/board/history/**")
