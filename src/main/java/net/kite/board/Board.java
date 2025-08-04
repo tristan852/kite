@@ -454,12 +454,6 @@ public class Board {
 	
 	// only interested in scores in between min and max (excluding min and max tho)
 	private int evaluateWithNoImmediateWin(int minimalScore, int maximalScore) {
-		if(outcome != BoardOutcome.UNDECIDED) {
-			
-			if(outcome == BoardOutcome.DRAW) return BoardScore.DRAW;
-			return BoardScore.loss(filledCellAmount);
-		}
-		
 		int minScore = BoardScore.minimal(filledCellAmount);
 		int maxScore = BoardScore.maximalWithNoImmediateWin(filledCellAmount);
 		
