@@ -43,6 +43,7 @@ public class BoardScoreCache {
 		}
 		
 		entryHashes[key] = hash;
+		
 		entryMinimalScores[key] = (byte) minimalScore;
 		entryMaximalScores[key] = (byte) maximalScore;
 	}
