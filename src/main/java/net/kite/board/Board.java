@@ -463,10 +463,10 @@ public class Board {
 		int minScore = BoardScore.minimal(filledCellAmount);
 		int maxScore = BoardScore.maximalWithNoImmediateWin(filledCellAmount);
 		
-		long emptyCells = ~maskBitboard;
-		emptyCells &= Bitboards.FULL_BOARD;
-		
 		if(maximalScore > 0) {
+			
+			long emptyCells = ~maskBitboard;
+			emptyCells &= Bitboards.FULL_BOARD;
 			
 			boolean canStillWin = bitboardContainsConnection(activeBitboard | emptyCells);
 			if(!canStillWin) maxScore = 0;
@@ -551,7 +551,12 @@ public class Board {
 					int entryMinScore = -scoreCache.entryMaximalScore(entryKey);
 					int entryMaxScore = -scoreCache.entryMinimalScore(entryKey);
 					
-					if(entryMinScore > minimalScore) minimalScore = entryMinScore;
+					if(entryMinScore > minimalScore) {
+						
+						minimalScore = entryMinScore;
+						if(minimalScore >= maximalScore) return minimalScore;
+					}
+					
 					if(entryMaxScore > max) max = entryMaxScore;
 					
 				} else {
@@ -560,8 +565,12 @@ public class Board {
 				}
 			}
 			
-			if(max < maximalScore) maximalScore = max;
-			if(minimalScore >= maximalScore) return minimalScore;
+			if(max < maximalScore) {
+				
+				maximalScore = max;
+				
+				if(minimalScore >= maximalScore) return minimalScore;
+			}
 		}
 		
 		long opponentWinBitboard = opponentWinBitboard();
@@ -629,8 +638,7 @@ public class Board {
 				continue;
 			}
 			
-			long opponentOpenThreats = opponentWinBitboard & ~movesBitboard;
-			int moveScore = moveScore(movePosition, moveBitboard, opponentOpenThreats);
+			int moveScore = moveScore(movePosition, moveBitboard, opponentWinBitboard);
 			int moveIndex = moveAmount;
 			
 			moves[moveIndex] = moveCellX;
@@ -647,7 +655,7 @@ public class Board {
 		
 		if(moveAmount == 0) {
 			
-			scoreCache.updateEntry(hash, mixedHash, minScore, minimalScore);
+			scoreCache.updateEntry(hash, mixedHash, minScore, minScore);
 			
 			return minimalScore;
 		}
@@ -717,24 +725,24 @@ public class Board {
 		result &= ~mask;
 		result &= ~(opponentOpenThreats << 1);
 		
-		int openScore = Long.bitCount(result) * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT;
+		int moveScore = Long.bitCount(result) * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT;
 		
 		long responseMoves = ceiling & Bitboards.FULL_BOARD;
 		
-		openScore += Long.bitCount(result & responseMoves) * MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT;
+		moveScore += Long.bitCount(result & responseMoves) * MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT;
 		
 		responseMoves <<= 1;
 		
-		openScore += Long.bitCount(result & responseMoves) * MOVE_SCORE_SOON_THREAT_WEIGHT;
+		moveScore += Long.bitCount(result & responseMoves) * MOVE_SCORE_SOON_THREAT_WEIGHT;
 		
 		result &= result << 1;
 		
-		openScore += Long.bitCount(result) * MOVE_SCORE_COLUMN_FORK_WEIGHT;
+		moveScore += Long.bitCount(result) * MOVE_SCORE_COLUMN_FORK_WEIGHT;
 		
 		boolean redAtTurn = (filledCellAmount & 1) == 0;
 		int[] moveCellScores = redAtTurn ? RED_MOVE_CELL_SCORES : YELLOW_MOVE_CELL_SCORES;
 		
-		return openScore + moveCellScores[moveCellPosition];
+		return moveScore + moveCellScores[moveCellPosition];
 	}
 	
 	private boolean activePlayerHasImmediateWin() {
