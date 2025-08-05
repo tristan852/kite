@@ -4,7 +4,8 @@ import net.kite.board.bit.Bitboards;
 
 public class BoardScoreCache {
 	
-	private static final int DEFAULT_CAPACITY = 8388608;
+	private static final int CAPACITY = 1048576;
+	private static final long KEY_MASK = 1048575;
 	
 	private static final int MISSING_ENTRY_KEY = -1;
 	
@@ -13,22 +14,14 @@ public class BoardScoreCache {
 	private final byte[] entryMinimalScores;
 	private final byte[] entryMaximalScores;
 	
-	private final long keyMask;
-	
 	public BoardScoreCache() {
-		this(DEFAULT_CAPACITY);
-	}
-	
-	public BoardScoreCache(int capacity) {
-		this.entryHashes = new long[capacity];
-		this.entryMinimalScores = new byte[capacity];
-		this.entryMaximalScores = new byte[capacity];
-		
-		this.keyMask = capacity - 1;
+		this.entryHashes = new long[CAPACITY];
+		this.entryMinimalScores = new byte[CAPACITY];
+		this.entryMaximalScores = new byte[CAPACITY];
 	}
 	
 	public void updateEntry(long hash, long mixedHash, int minimalScore, int maximalScore) {
-		int key = (int) (mixedHash & keyMask);
+		int key = (int) (mixedHash & KEY_MASK);
 		
 		long h = entryHashes[key];
 		if(h == hash) {
@@ -65,14 +58,14 @@ public class BoardScoreCache {
 	}
 	
 	public int entryKey(long hash, long mixedHash) {
-		int key = (int) (mixedHash & keyMask);
+		int key = (int) (mixedHash & KEY_MASK);
 		
 		long h = entryHashes[key];
 		return h == hash ? key : MISSING_ENTRY_KEY;
 	}
 	
-	public int capacity() {
-		return entryHashes.length;
+	public static int getCapacity() {
+		return CAPACITY;
 	}
 	
 }

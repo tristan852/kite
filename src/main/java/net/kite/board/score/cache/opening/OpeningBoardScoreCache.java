@@ -9,25 +9,17 @@ import java.io.InputStream;
 
 public class OpeningBoardScoreCache {
 	
-	private static final int DEFAULT_CAPACITY = 16777259;
-	private static final int DEFAULT_MAXIMAL_DEPTH = 14;
+	private static final int CAPACITY = 16777259;
+	private static final int MAXIMAL_DEPTH = 14;
 	
 	private static final long BOARD_PARTIAL_COLUMN_HASH_MASK = 0x00000000000000FFL;
 	
 	private final byte[] boardPartialColumnHashes;
 	private final byte[] boardScores;
 	
-	private final int maximalDepth;
-	
 	public OpeningBoardScoreCache() {
-		this(DEFAULT_CAPACITY, DEFAULT_MAXIMAL_DEPTH);
-	}
-	
-	public OpeningBoardScoreCache(int capacity, int maximalDepth) {
-		this.boardPartialColumnHashes = new byte[capacity];
-		this.boardScores = new byte[capacity];
-		
-		this.maximalDepth = maximalDepth;
+		this.boardPartialColumnHashes = new byte[CAPACITY];
+		this.boardScores = new byte[CAPACITY];
 	}
 	
 	public void loadFromResources(String resourcePath) {
@@ -41,12 +33,10 @@ public class OpeningBoardScoreCache {
 		
 		try(inputStream) {
 			
-			int c = boardPartialColumnHashes.length;
+			inputStream.readNBytes(boardPartialColumnHashes, 0, CAPACITY);
+			inputStream.readNBytes(boardScores, 0, CAPACITY);
 			
-			inputStream.readNBytes(boardPartialColumnHashes, 0, c);
-			inputStream.readNBytes(boardScores, 0, c);
-			
-			for(int i = 0; i < c; i++) {
+			for(int i = 0; i < CAPACITY; i++) {
 				
 				boardScores[i] += BoardScore.INVALID;
 			}
@@ -67,12 +57,10 @@ public class OpeningBoardScoreCache {
 		
 		try {
 			
-			int c = boardPartialColumnHashes.length;
+			System.arraycopy(bytes, 0, boardPartialColumnHashes, 0, CAPACITY);
+			System.arraycopy(bytes, CAPACITY, boardScores, 0, CAPACITY);
 			
-			System.arraycopy(bytes, 0, boardPartialColumnHashes, 0, c);
-			System.arraycopy(bytes, c, boardScores, 0, c);
-			
-			for(int i = 0; i < c; i++) {
+			for(int i = 0; i < CAPACITY; i++) {
 				
 				boardScores[i] += BoardScore.INVALID;
 			}
@@ -86,12 +74,10 @@ public class OpeningBoardScoreCache {
 	
 	public int boardScore(Board board) {
 		int n = board.playedMoveAmount();
-		if(n > maximalDepth) return Integer.MIN_VALUE;
-		
-		int capacity = boardPartialColumnHashes.length;
+		if(n > MAXIMAL_DEPTH) return Integer.MIN_VALUE;
 		
 		long columnHash = board.columnHash();
-		int index = (int) Long.remainderUnsigned(columnHash, capacity);
+		int index = (int) Long.remainderUnsigned(columnHash, CAPACITY);
 		
 		byte boardScore = boardScores[index];
 		if(boardScore == BoardScore.INVALID) return Integer.MIN_VALUE;

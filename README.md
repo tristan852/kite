@@ -14,7 +14,7 @@
 
 Kite is a lightweight, high-performance Connect Four solver capable of solving any board position blazingly fast — even on modest hardware. It can be used to power AI bots with adjustable playing strength — from deliberately weak to perfectly optimal, making only provably best moves. Kite is well-suited for integration into GUI applications, backend systems, or for programmatic position analysis.
 
-Even with the opening book **turned off** and an entirely empty transposition table, this solver can solve the empty board — the most difficult game state in Connect Four, as it represents the root of the game tree — in about *3 minutes and 19 seconds* on a modern laptop (using an *Intel i7-1165G7* processor) or in around *58 seconds* on a modern desktop PC (using an *Intel i9-11900KF* processor).
+Even with the opening book **turned off** and an entirely empty transposition table, this solver can solve the empty board — the most difficult game state in Connect Four, as it represents the root of the game tree — in about *2 minutes and 53 seconds* on a modern laptop (using an *Intel i7-1165G7* processor) or in around *47 seconds* on a modern desktop PC (using an *Intel i9-11900KF* processor).
 
 Internally, Kite leverages **alpha-beta pruning**, **symmetry reduction**, **bitboards**, **position hashing** and **opening book lookups** to provide fast and accurate game tree evaluation.
 
@@ -59,7 +59,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tristan852:kite:1.7.6")
+    implementation("io.github.tristan852:kite:1.7.7")
 }
 ```
 
@@ -73,7 +73,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.tristan852:kite:1.7.6'
+    implementation 'io.github.tristan852:kite:1.7.7'
 }
 ```
 
@@ -93,7 +93,7 @@ Add the following code snippet to your `pom.xml` file:
     <dependency>
         <groupId>io.github.tristan852</groupId>
         <artifactId>kite</artifactId>
-        <version>1.7.6</version>
+        <version>1.7.7</version>
     </dependency>
 </dependencies>
 ```
