@@ -14,8 +14,6 @@
 
 Kite is a lightweight, high-performance Connect Four solver capable of solving any board position blazingly fast — even on modest hardware. It can be used to power AI bots with adjustable playing strength — from deliberately weak to perfectly optimal, making only provably best moves. Kite is well-suited for integration into GUI applications, backend systems, or for programmatic position analysis.
 
-Even with the opening book **turned off** and an entirely empty transposition table, this solver can solve the empty board — the most difficult game state in Connect Four, as it represents the root of the game tree — in about *2 minutes and 53 seconds* on a modern laptop (using an *Intel i7-1165G7* processor) or in around *47 seconds* on a modern desktop PC (using an *Intel i9-11900KF* processor).
-
 Internally, Kite leverages **alpha-beta pruning**, **symmetry reduction**, **bitboards**, **position hashing** and **opening book lookups** to provide fast and accurate game tree evaluation.
 
 ---
@@ -45,6 +43,30 @@ The demo runs natively in *WebAssembly* and is generally slower than the Java li
 
 ---
 
+## 📊 Benchmark
+
+The empty Connect Four board is considered the most challenging position to solve, as it represents the root of the entire game tree. Successfully evaluating this state is a significant achievement and serves as an excellent benchmark for testing the performance of a Connect Four solver.
+
+Typically, an **opening book** is used to store precomputed evaluations of early-game positions — including the empty board — allowing such evaluations to be retrieved instantly via a simple table lookup. However, to properly assess the solver’s raw computational strength, the opening book was **turned off**, and the **transposition table was cleared** before evaluating the empty board.
+
+Two hardware configurations were used to run this benchmark, representing different levels of processing power:
+
+* **Setup 1**: Modern laptop with an *Intel i7-1165G7* processor
+* **Setup 2**: Modern desktop PC with an *Intel i9-11900KF* processor
+
+The benchmark results are as follows:
+
+| Kite Version | Node Evaluations | Compute Time (Setup 1)     | Compute Time (Setup 2) |
+|--------------| ---------------- | -------------------------- | ---------------------- |
+| 1.7.8        | `298,565,585`    | *2 minutes and 45 seconds* | *44 seconds*           |
+| 1.7.7        | `312,998,949`    | *2 minutes and 53 seconds* | *47 seconds*           |
+
+**Note:** "Node evaluations" refers to the number of times the `negamax` function was invoked to assess different game states.
+
+Some internal constants — such as the transposition table size and the minimum depth threshold for enhanced transposition table lookups — were tuned specifically for the task of evaluating the empty board. These settings differ from those optimized for use with an opening book.
+
+---
+
 ## 📦 Installation
 
 Kite is available via **Maven Central** and can be easily added to any **Gradle** or **Maven** project.
@@ -59,7 +81,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tristan852:kite:1.7.7")
+    implementation("io.github.tristan852:kite:1.7.8")
 }
 ```
 
@@ -73,7 +95,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.tristan852:kite:1.7.7'
+    implementation 'io.github.tristan852:kite:1.7.8'
 }
 ```
 
@@ -93,7 +115,7 @@ Add the following code snippet to your `pom.xml` file:
     <dependency>
         <groupId>io.github.tristan852</groupId>
         <artifactId>kite</artifactId>
-        <version>1.7.7</version>
+        <version>1.7.8</version>
     </dependency>
 </dependencies>
 ```
