@@ -61,7 +61,7 @@ The benchmark results are as follows:
 | 1.7.8        | `298,565,585`    | *2 minutes and 45 seconds* | *44 seconds*           |
 | 1.7.7        | `312,998,949`    | *2 minutes and 53 seconds* | *47 seconds*           |
 
-**Note:** "Node evaluations" refers to the number of times the `negamax` function was invoked to assess different game states.
+**Note:** "Node evaluations" refers to the number of times the *negamax* function was invoked to evaluate different game states.
 
 Some internal constants — such as the transposition table size and the minimum depth threshold for enhanced transposition table lookups — were tuned specifically for the task of evaluating the empty board. These settings differ from those optimized for use with an opening book.
 
