@@ -57,13 +57,16 @@ Two hardware configurations were used to run this benchmark, representing differ
 The benchmark results are as follows:
 
 | Kite Version | Node Evaluations | Compute Time (Setup 1)     | Compute Time (Setup 2) |
-|--------------| ---------------- | -------------------------- | ---------------------- |
+|--------------|------------------|----------------------------|------------------------|
+| 1.7.9        | `282,023,140`    | *2 minutes and 35 seconds* | *41 seconds*           |
 | 1.7.8        | `298,565,585`    | *2 minutes and 45 seconds* | *44 seconds*           |
 | 1.7.7        | `312,998,949`    | *2 minutes and 53 seconds* | *47 seconds*           |
 
 **Note:** "Node evaluations" refers to the number of times the *negamax* function was invoked to evaluate different game states.
 
 Some internal constants — such as the transposition table size and the minimum depth threshold for enhanced transposition table lookups — were tuned specifically for the task of evaluating the empty board. These settings differ from those optimized for use with an opening book.
+
+Also note that Kite is a lightweight Java solver library designed to support running multiple solvers in parallel. However, each individual solver evaluates boards using a single thread only. As a result, compute times reflect single-threaded performance per solver.
 
 ---
 
@@ -81,7 +84,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tristan852:kite:1.7.8")
+    implementation("io.github.tristan852:kite:1.7.9")
 }
 ```
 
@@ -95,7 +98,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.tristan852:kite:1.7.8'
+    implementation 'io.github.tristan852:kite:1.7.9'
 }
 ```
 
@@ -115,7 +118,7 @@ Add the following code snippet to your `pom.xml` file:
     <dependency>
         <groupId>io.github.tristan852</groupId>
         <artifactId>kite</artifactId>
-        <version>1.7.8</version>
+        <version>1.7.9</version>
     </dependency>
 </dependencies>
 ```
@@ -322,6 +325,15 @@ For reference, the Elo ratings have been normalized so that the `SkillLevel.PERF
 Since `SkillLevel.SUPER_GRANDMASTER` and `SkillLevel.PERFECT` represent the same level of play, they share the same rating estimate.
 
 If you want to translate these Elo ratings to your own scale — or vice versa — try to identify a reference point by comparing one of these skill levels to a skill level in your system with a known Elo rating.
+
+---
+
+## 🔗 References
+
+The following resources were instrumental in shaping the design and implementation of this solver:
+
+1. **[Pascal Pons' Connect Four solver](http://blog.gamesolver.org/)** – A detailed breakdown of the core architecture behind an efficient alpha-beta solver.
+2. **[Chris Steininger's Connect Four solver](https://github.com/ChristopheSteininger/c4)** – Offers additional optimizations, tips, and implementation insights.
 
 ---
 
