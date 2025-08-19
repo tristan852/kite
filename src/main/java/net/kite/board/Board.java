@@ -38,30 +38,32 @@ public class Board {
 			3, 2, 4, 1, 5, 0, 6
 	};
 	
-	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 14;
-	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 15;
-	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 29;
-	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 37;
+	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 218;
+	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 233;
+	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 465;
+	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 602;
 	
 	private static final int[] RED_MOVE_CELL_SCORES = new int[] {
-			 0,  2,  1, 11,  4, 30,  0,  0,
-			 6,  8,  6, 12, 13, 20,  0,  0,
-			 8, 12, 32, 25, 12, 27,  0,  0,
-			22, 25, 22, 18, 26, 29,  0,  0,
-			 8, 12, 32, 25, 12, 27,  0,  0,
-			 6,  8,  6, 12, 13, 20,  0,  0,
-			 0,  2,  1, 11,  4, 30
+			 15,  44,  23, 175,  68, 479,   0,   0,
+			 93, 125,  97, 179, 209, 309,   0,   0,
+			123, 204, 501, 389, 197, 421,   0,   0,
+			337, 385, 351, 289, 428, 450,   0,   0,
+			123, 204, 501, 389, 197, 421,   0,   0,
+			 93, 125,  97, 179, 209, 309,   0,   0,
+			 15,  44,  23, 175,  68, 479
 	};
 	
 	private static final int[] YELLOW_MOVE_CELL_SCORES = new int[] {
-			 4,  9,  0, 13,  9, 29,  0,  0,
-			 3, 11, 16, 16,  2, 29,  0,  0,
-			 8, 18, 16, 26, 13, 24,  0,  0,
-			12, 26, 38, 37, 32, 32,  0,  0,
-			 8, 18, 16, 26, 13, 24,  0,  0,
-			 3, 11, 16, 16,  2, 29,  0,  0,
-			 4,  9,  0, 13,  9, 29
+			 66, 149,  10, 196, 141, 463,   0,   0,
+			 33, 176, 242, 268,  31, 469,   0,   0,
+			132, 285, 257, 419, 219, 375,   0,   0,
+			177, 414, 599, 583, 516, 513,   0,   0,
+			132, 285, 257, 419, 219, 375,   0,   0,
+			 33, 176, 242, 268,  31, 469,   0,   0,
+			 66, 149,  10, 196, 141, 463
 	};
+	
+	private static final int MISSING_MOVE_SCORE = Integer.MIN_VALUE;
 	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
 	
@@ -71,8 +73,6 @@ public class Board {
 	
 	private static final int LARGEST_MOVE_CELL_X = 6;
 	private static final int LARGEST_MOVE_CELL_Y = 5;
-	
-	private static final int MISSING_MOVE_SCORE = Integer.MIN_VALUE;
 	
 	private static final char SMALLEST_MOVE_CHARACTER = '1';
 	
