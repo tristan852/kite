@@ -459,8 +459,7 @@ public class Board {
 		
 		if(maximalScore > 0) {
 			
-			long emptyCells = ~maskBitboard;
-			emptyCells &= Bitboards.FULL_BOARD;
+			long emptyCells = Bitboards.FULL_BOARD ^ maskBitboard;
 			
 			boolean canNoLongerWin = !bitboardContainsNonVerticalConnection(activeBitboard | emptyCells);
 			if(canNoLongerWin) maxScore = 0;
@@ -719,24 +718,28 @@ public class Board {
 		result &= ~mask;
 		result &= ~(opponentOpenThreats << 1);
 		
-		int moveScore = Long.bitCount(result) * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT;
+		boolean redAtTurn = (filledCellAmount & 1) == 0;
+		int[] moveCellScores = redAtTurn ? RED_MOVE_CELL_SCORES : YELLOW_MOVE_CELL_SCORES;
+		
+		int moveScore = moveCellScores[moveCellPosition];
+		
+		moveScore += Long.bitCount(result) * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT;
 		
 		long responseMoves = ceiling & Bitboards.FULL_BOARD;
+		long l1 = result & responseMoves;
 		
-		moveScore += Long.bitCount(result & responseMoves) * MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT;
+		moveScore += Long.bitCount(l1) * MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT;
 		
 		responseMoves <<= 1;
+		long l2 = result & responseMoves;
 		
-		moveScore += Long.bitCount(result & responseMoves) * MOVE_SCORE_SOON_THREAT_WEIGHT;
+		moveScore += Long.bitCount(l2) * MOVE_SCORE_SOON_THREAT_WEIGHT;
 		
 		result &= result << 1;
 		
 		moveScore += Long.bitCount(result) * MOVE_SCORE_COLUMN_FORK_WEIGHT;
 		
-		boolean redAtTurn = (filledCellAmount & 1) == 0;
-		int[] moveCellScores = redAtTurn ? RED_MOVE_CELL_SCORES : YELLOW_MOVE_CELL_SCORES;
-		
-		return moveScore + moveCellScores[moveCellPosition];
+		return moveScore;
 	}
 	
 	private boolean activePlayerHasImmediateWin() {

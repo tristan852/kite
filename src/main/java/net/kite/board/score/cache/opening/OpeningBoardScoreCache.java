@@ -87,9 +87,9 @@ public class OpeningBoardScoreCache {
 		columnHash &= BOARD_PARTIAL_COLUMN_HASH_MASK;
 		partialColumnHash &= BOARD_PARTIAL_COLUMN_HASH_MASK;
 		
-		if(columnHash != partialColumnHash) return Integer.MIN_VALUE;
+		if(columnHash == partialColumnHash) return boardScore;
 		
-		return boardScore;
+		return Integer.MIN_VALUE;
 	}
 	
 }
