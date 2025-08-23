@@ -91,6 +91,8 @@ public class Board {
 	
 	private static final int BITBOARD_HEIGHT = 8;
 	
+	private static final int MAXIMAL_DISABLED_ITERATIVE_DEEPENING_SCORE_RANGE = 9;
+	
 	private static final float ELO_APPROXIMATION_FIRST_COEFFICIENT = 53.167f;
 	private static final float ELO_APPROXIMATION_SECOND_COEFFICIENT = 0.000661f;
 	private static final float ELO_APPROXIMATION_THIRD_COEFFICIENT = -414.261f;
@@ -426,16 +428,21 @@ public class Board {
 		while(minimalScore < maximalScore) {
 			
 			int s1 = (minimalScore + maximalScore) >> 1;
-			int s2 = minimalScore >> 1;
-			int s3 = maximalScore >> 1;
 			
-			if(s1 >= 0 && s1 < s3) {
+			int range = maximalScore - minimalScore;
+			if(range > MAXIMAL_DISABLED_ITERATIVE_DEEPENING_SCORE_RANGE) {
 				
-				s1 = s3;
+				int s2 = minimalScore >> 1;
+				int s3 = maximalScore >> 1;
 				
-			} else if(s1 <= 0 && s1 > s2) {
-				
-				s1 = s2;
+				if(s1 >= 0 && s1 < s3) {
+					
+					s1 = s3;
+					
+				} else if(s1 <= 0 && s1 > s2) {
+					
+					s1 = s2;
+				}
 			}
 			
 			int evaluationResult = evaluateWithNoImmediateWin(s1, s1 + 1);
