@@ -58,6 +58,7 @@ The benchmark results are as follows:
 
 | Kite Version | Node Evaluations | Compute Time (Setup 1)     | Compute Time (Setup 2) |
 |--------------|------------------|----------------------------|------------------------|
+| 1.8.0        | `264,328,020`    | *2 minutes and 26 seconds* | *39 seconds*           |
 | 1.7.10       | `282,023,140`    | *2 minutes and 35 seconds* | *41 seconds*           |
 | 1.7.9        | `282,023,140`    | *2 minutes and 35 seconds* | *41 seconds*           |
 | 1.7.8        | `298,565,585`    | *2 minutes and 45 seconds* | *44 seconds*           |
@@ -85,7 +86,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tristan852:kite:1.7.10")
+    implementation("io.github.tristan852:kite:1.8.0")
 }
 ```
 
@@ -99,7 +100,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.tristan852:kite:1.7.10'
+    implementation 'io.github.tristan852:kite:1.8.0'
 }
 ```
 
@@ -119,7 +120,7 @@ Add the following code snippet to your `pom.xml` file:
     <dependency>
         <groupId>io.github.tristan852</groupId>
         <artifactId>kite</artifactId>
-        <version>1.7.10</version>
+        <version>1.8.0</version>
     </dependency>
 </dependencies>
 ```

@@ -915,11 +915,12 @@ public class Board {
 			
 			while(wins != 0) {
 				
-				long winBitboard = wins & -wins;
+				int winPosition = Long.numberOfTrailingZeros(wins);
+				
+				long winBitboard = 1L << winPosition;
 				wins ^= winBitboard;
 				
-				long winCells = winBitboardOfDirection(winBitboard, direction);
-				long redBuilds = cellsBelowBitboard(winCells);
+				long redBuilds = Bitboards.CELLS_BELOW_LINE_BITBOARDS[direction][winPosition];
 				
 				long cells = currentYellowCells | (~currentMask & yellowCells & redBuilds);
 				if(bitboardContainsConnection(cells)) continue;
@@ -969,13 +970,6 @@ public class Board {
 		}
 		
 		return result;
-	}
-	
-	private static long winBitboardOfDirection(long bitboard, int direction) {
-		bitboard &= bitboard << direction;
-		bitboard &= bitboard << (direction << 1);
-		
-		return bitboard;
 	}
 	
 	private static long bitboardConnectionOpportunities(long bitboard) {
@@ -1039,20 +1033,6 @@ public class Board {
 		}
 		
 		return false;
-	}
-	
-	private static long cellsBelowBitboard(long bitboard) {
-		long result = 0;
-		
-		while(bitboard != 0) {
-			
-			int p = Long.numberOfTrailingZeros(bitboard);
-			
-			bitboard ^= 1L << p;
-			result |= Bitboards.CELLS_BELOW_CELL_BITBOARDS[p];
-		}
-		
-		return result;
 	}
 	
 	public static Board boardWithMoves(String moves, BoardScoreCache scoreCache) {
