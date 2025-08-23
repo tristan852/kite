@@ -91,7 +91,7 @@ public class Board {
 	
 	private static final int BITBOARD_HEIGHT = 8;
 	
-	private static final int MAXIMAL_DISABLED_ITERATIVE_DEEPENING_SCORE_RANGE = 9;
+	private static final int MAXIMAL_DISABLED_ITERATIVE_DEEPENING_SCORE_RANGE = 11;
 	
 	private static final float ELO_APPROXIMATION_FIRST_COEFFICIENT = 53.167f;
 	private static final float ELO_APPROXIMATION_SECOND_COEFFICIENT = 0.000661f;
