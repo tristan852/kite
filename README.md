@@ -51,8 +51,8 @@ Typically, an **opening book** is used to store precomputed evaluations of early
 
 Two hardware configurations were used to run this benchmark, representing different levels of processing power:
 
-* **Setup 1**: Modern laptop with an *Intel i7-1165G7* processor (1.8 Mnodes/s)
-* **Setup 2**: Modern desktop PC with an *Intel i9-11900KF* processor (6.9 Mnodes/s)
+* **Setup 1**: Modern laptop with an *Intel i7-1165G7* processor (1.8 Mnodes/s per thread)
+* **Setup 2**: Modern desktop PC with an *Intel i9-11900KF* processor (6.9 Mnodes/s per thread)
 
 The benchmark results are as follows:
 
