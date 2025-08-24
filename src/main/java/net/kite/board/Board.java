@@ -448,11 +448,11 @@ public class Board {
 			int evaluationResult = evaluateWithNoImmediateWin(s1, s1 + 1);
 			if(evaluationResult <= s1) {
 				
-				maximalScore = s1;
+				maximalScore = evaluationResult;
 				
 			} else {
 				
-				minimalScore = s1 + 1;
+				minimalScore = evaluationResult;
 			}
 		}
 		
