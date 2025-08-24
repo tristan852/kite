@@ -804,8 +804,6 @@ public class Board {
 		ceilingBitboard |= b1;
 		bitboard = activeBitboard | ceilingBitboard;
 		
-		long mirroredBitboard = Long.reverseBytes(bitboard) >>> MIRRORED_BITBOARD_SHIFT_AMOUNT;
-		
 		long board = activeBitboard ^ maskBitboard;
 		if(bitboardContainsConnection(board)) {
 			
@@ -818,7 +816,9 @@ public class Board {
 		if(filledCellAmount == FULL_CELL_AMOUNT) outcome = BoardOutcome.DRAW;
 		
 		hash = bitboard;
-		if(hash > mirroredBitboard) hash = mirroredBitboard;
+		
+		long mirroredBitboard = Long.reverseBytes(bitboard) >>> MIRRORED_BITBOARD_SHIFT_AMOUNT;
+		if(mirroredBitboard < hash) hash = mirroredBitboard;
 		
 		mixedHash = mixedHash(hash);
 		symmetrical = bitboard == mirroredBitboard;
