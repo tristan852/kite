@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d03954f0-0e5b-4d9e-a884-f7c6e8b74218" name="Changes" comment="" />
+    <list default="true" id="d03954f0-0e5b-4d9e-a884-f7c6e8b74218" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,7 +48,19 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="kite" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="help" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="kite" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="publishing" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="kite" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="teavm" type="c8890929:TasksNode$1" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
@@ -84,11 +98,17 @@
   &quot;keyToString&quot;: {
     &quot;Gradle.kite [:net.kite.Kite.main()].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.kite [:net.kite.Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.kite [appRun].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.kite [buildWasmGC].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.kite [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.kite [generateWasmGC].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.kite [generateWasm].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.kite [help].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.kite [publishMavenPublicationToMavenLocal].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.kite [publishToMavenCentral].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.kite [publishToMavenLocal].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.kite [publish].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.kite [tasks].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.kite [test].executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
@@ -104,26 +124,15 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Tristan (TUDO)\Documents\kite\assets" />
       <recent name="C:\Users\Tristan (TUDO)\Documents\kite" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="net.kite.demo" />
       <recent name="net.kite.command.commands" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.kite [build]">
-    <configuration name="Kite" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="net.kite.Kite" />
-      <module name="kite.main" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="net.kite.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Gradle.kite [publishToMavenCentral]">
     <configuration name="kite [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -146,7 +155,7 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="kite [publishMavenPublicationToMavenLocal]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+    <configuration name="kite [help]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -157,7 +166,7 @@
         </option>
         <option name="taskNames">
           <list>
-            <option value="publishMavenPublicationToMavenLocal" />
+            <option value="help" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -190,18 +199,64 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="kite [publishToMavenLocal]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="publishToMavenLocal" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="kite [tasks]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="tasks" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <list>
-      <item itemvalue="Application.Kite" />
       <item itemvalue="Gradle.kite [build]" />
-      <item itemvalue="Gradle.kite [publishMavenPublicationToMavenLocal]" />
+      <item itemvalue="Gradle.kite [help]" />
       <item itemvalue="Gradle.kite [publishToMavenCentral]" />
+      <item itemvalue="Gradle.kite [publishToMavenLocal]" />
+      <item itemvalue="Gradle.kite [tasks]" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.kite [build]" />
         <item itemvalue="Gradle.kite [publishToMavenCentral]" />
-        <item itemvalue="Gradle.kite [publishMavenPublicationToMavenLocal]" />
-        <item itemvalue="Application.Kite" />
+        <item itemvalue="Gradle.kite [build]" />
+        <item itemvalue="Gradle.kite [publishToMavenLocal]" />
+        <item itemvalue="Gradle.kite [help]" />
+        <item itemvalue="Gradle.kite [tasks]" />
       </list>
     </recent_temporary>
   </component>
