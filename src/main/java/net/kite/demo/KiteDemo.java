@@ -660,7 +660,7 @@ public class KiteDemo {
 			int lastMoveX = playedMoves[playedMoveAmount - 1];
 			int lastMoveY = columnPlayedMoveAmounts[lastMoveX] - 1;
 			
-			int i = redAtTurn ? RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
+			int i = redAtTurn ? YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
 			
 			setCellElementBackgroundColor(lastMoveX, lastMoveY, i, true);
 		}
