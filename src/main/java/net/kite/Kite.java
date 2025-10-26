@@ -1,6 +1,7 @@
 package net.kite;
 
 import net.kite.board.Board;
+import net.kite.board.line.BoardLine;
 import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.player.color.BoardPlayerColor;
 import net.kite.board.score.BoardScore;
@@ -23,7 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.8.6";
+	private static final String VERSION = "1.9.0";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -143,6 +144,26 @@ public class Kite {
 	 */
 	public synchronized BoardPlayerColor activePlayerColor() {
 		return board.activePlayerColor();
+	}
+	
+	/**
+	 * Returns the line(s) of cells that
+	 * mark a win for a player.
+	 * If no player has won yet ({@link BoardOutcome#UNDECIDED})
+	 * or the game ended in a draw ({@link BoardOutcome#DRAW})
+	 * then {@code null} is being returned instead
+	 * (see also {@link BoardOutcome#isWin()}).
+	 * Each line has maximal length and at most
+	 * one line is being returned per each of the
+	 * four unique directions (horizontally, vertically, up-right
+	 * diagonally and down-right diagonally).
+	 * This means that at most four lines are being returned.
+	 * The maximal length of a line is {@code 7}.
+	 *
+	 * @return all win lines
+	 */
+	public synchronized BoardLine[] winLines() {
+		return board.winningPlayerLines();
 	}
 	
 	/**
