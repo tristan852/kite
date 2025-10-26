@@ -131,8 +131,8 @@ public class KiteDemo {
 	};
 	
 	private static final String[] CELL_MARKER_ELEMENT_STYLES = new String[] {
-			"width", "8px",
-			"height", "8px",
+			"width", "16%",
+			"aspect-ratio", "1",
 			"background-color", "#09090B",
 			"border-radius", "50%"
 	};
