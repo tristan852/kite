@@ -1,8 +1,10 @@
 package net.kite.board;
 
+import net.kite.board.bit.Bitboard;
 import net.kite.board.bit.Bitboards;
 import net.kite.board.history.BoardHistory;
 import net.kite.board.history.entry.BoardHistoryEntry;
+import net.kite.board.line.BoardLine;
 import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.player.color.BoardPlayerColor;
 import net.kite.board.score.BoardScore;
@@ -32,6 +34,20 @@ public class Board {
 			DOWN_RIGHT_BITBOARD_DIRECTION,
 			UP_RIGHT_BITBOARD_DIRECTION,
 			UP_BITBOARD_DIRECTION
+	};
+	
+	private static final int[] BITBOARD_CONNECTION_DIRECTION_XS = new int[] {
+			 1,
+			 1,
+			 1,
+			 0
+	};
+	
+	private static final int[] BITBOARD_CONNECTION_DIRECTION_YS = new int[] {
+			 0,
+			-1,
+			 1,
+			 1
 	};
 	
 	private static final int[] ORDERED_MOVE_COLUMN_INDICES = new int[] {
@@ -70,6 +86,7 @@ public class Board {
 	private static final int MIRRORED_BITBOARD_SHIFT_AMOUNT = 8;
 	
 	private static final int LOGARITHMIC_BITBOARD_LENGTH = 3;
+	private static final int LARGEST_BITBOARD_Y = 7;
 	
 	private static final int LARGEST_MOVE_CELL_X = 6;
 	private static final int LARGEST_MOVE_CELL_Y = 5;
@@ -111,6 +128,8 @@ public class Board {
 	
 	private static final String WINNING_MOVE_FORMAT_PREFIX = "+";
 	
+	private static final int MAXIMAL_LINE_AMOUNT = 4;
+	
 	private final int[] cellColumnHeights = new int[WIDTH];
 	
 	private boolean symmetrical = true;
@@ -136,6 +155,8 @@ public class Board {
 	
 	private final BoardHistory history;
 	private final BoardScoreCache scoreCache;
+	
+	private final BoardLine[] lines = new BoardLine[MAXIMAL_LINE_AMOUNT];
 	
 	public Board(BoardScoreCache scoreCache) {
 		this.scoreCache = scoreCache;
@@ -202,6 +223,48 @@ public class Board {
 		stringBuilder.append(outcome);
 		
 		return stringBuilder.toString();
+	}
+	
+	public BoardLine[] winningPlayerLines() {
+		boolean won = outcome.isWin();
+		if(!won) return null;
+		
+		int lineAmount = 0;
+		
+		long wonPlayerCells = maskBitboard ^ activeBitboard;
+		
+		int directionAmount = BITBOARD_CONNECTION_DIRECTIONS.length;
+		for(int i = 0; i < directionAmount; i++) {
+			
+			int direction = BITBOARD_CONNECTION_DIRECTIONS[i];
+			
+			long b = winAnchorCellsBitboard(wonPlayerCells, direction);
+			if(b == 0) continue;
+			
+			int l = Long.bitCount(b) + BITBOARD_CONNECTION_OPPORTUNITY_LENGTH;
+			
+			int dx = BITBOARD_CONNECTION_DIRECTION_XS[i];
+			int dy = BITBOARD_CONNECTION_DIRECTION_YS[i];
+			
+			int p = Bitboard.lastCellPosition(b);
+			
+			int ex = p >>> LOGARITHMIC_BITBOARD_LENGTH;
+			int ey = p & LARGEST_BITBOARD_Y;
+			
+			int n = l - 1;
+			
+			int sx = ex - dx * n;
+			int sy = ey - dy * n;
+			
+			lines[lineAmount] = new BoardLine(sx, sy, ex, ey, dx, dy, l);
+			lineAmount++;
+		}
+		
+		BoardLine[] winningLines = new BoardLine[lineAmount];
+		
+		System.arraycopy(lines, 0, winningLines, 0, lineAmount);
+		
+		return winningLines;
 	}
 	
 	public void approximateEloRatingOfBothPlayer(float[] eloBuffer) {
@@ -957,6 +1020,15 @@ public class Board {
 		}
 		
 		return result;
+	}
+	
+	private static long winAnchorCellsBitboard(long bitboard, int direction) {
+		int doubleDirection = direction << 1;
+		
+		bitboard &= bitboard << direction;
+		bitboard &= bitboard << doubleDirection;
+		
+		return bitboard;
 	}
 	
 	private static long winCellsBitboard(long bitboard) {
