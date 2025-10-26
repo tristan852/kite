@@ -130,6 +130,13 @@ public class KiteDemo {
 			"border-radius", "50%"
 	};
 	
+	private static final String[] CELL_MARKER_ELEMENT_STYLES = new String[] {
+			"width", "8px",
+			"height", "8px",
+			"background-color", "#FF0000", // #09090B
+			"border-radius", "50%"
+	};
+	
 	private static final String[] CELL_COLUMN_ELEMENT_STYLES = new String[] {
 			"width", "calc(min(80dvw / 436 * 50, 50px))",
 			"padding-left", "calc(min(80dvw / 436 * 3, 3px))",
@@ -237,6 +244,8 @@ public class KiteDemo {
 	private HTMLSelectElement aiSkillLevelSelectElement;
 	
 	private final HTMLElement[][] cellElements = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
+	private final HTMLElement[][] cellMarkerElements = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
+	
 	private final HTMLElement[] cellLabelElements = new HTMLElement[BOARD_WIDTH];
 	
 	private HTMLElement winnerLabelElement;
@@ -428,10 +437,16 @@ public class KiteDemo {
 			int maxY = BOARD_HEIGHT - 1;
 			for(int y = maxY; y >= 0; y--) {
 				
-				HTMLElement cellElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
+				HTMLElement cellElement = createColumnFlexboxElement();
 				setElementStyles(cellElement, CELL_ELEMENT_STYLES);
 				
+				HTMLElement cellMarkerElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
+				setElementStyles(cellMarkerElement, CELL_MARKER_ELEMENT_STYLES);
+				
+				cellElement.appendChild(cellMarkerElement);
+				
 				cellElements[x][y] = cellElement;
+				cellMarkerElements[x][y] = cellMarkerElement;
 				
 				cellColumnElement.appendChild(cellElement);
 			}
