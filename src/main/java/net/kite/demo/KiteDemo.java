@@ -133,7 +133,7 @@ public class KiteDemo {
 	private static final String[] CELL_MARKER_ELEMENT_STYLES = new String[] {
 			"width", "8px",
 			"height", "8px",
-			"background-color", "#FF0000", // #09090B
+			"background-color", "#09090B",
 			"border-radius", "50%"
 	};
 	
@@ -203,6 +203,12 @@ public class KiteDemo {
 	private static final String[] CELL_ELEMENT_BACKGROUND_COLORS = new String[] {
 			"#FB2C36",
 			"#F0B100",
+			"#09090B"
+	};
+	
+	private static final String[] CELL_MARKER_ELEMENT_BACKGROUND_COLORS = new String[] {
+			"#FFA2A2",
+			"#FFDF20",
 			"#09090B"
 	};
 	
@@ -608,7 +614,7 @@ public class KiteDemo {
 				
 				int moveY = columnPlayedMoveAmounts[moveX];
 				
-				setCellElementBackgroundColor(moveX, moveY, EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX);
+				setCellElementBackgroundColor(moveX, moveY, EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX, false);
 			}
 			
 			playedMoveAmount = 0;
@@ -646,7 +652,18 @@ public class KiteDemo {
 		int moveY = columnPlayedMoveAmounts[moveX];
 		
 		solver.undoMove();
-		setCellElementBackgroundColor(moveX, moveY, EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX);
+		
+		setCellElementBackgroundColor(moveX, moveY, EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX, false);
+		
+		if(playedMoveAmount != 0) {
+			
+			int lastMoveX = playedMoves[playedMoveAmount - 1];
+			int lastMoveY = columnPlayedMoveAmounts[lastMoveX] - 1;
+			
+			int i = redAtTurn ? RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
+			
+			setCellElementBackgroundColor(lastMoveX, lastMoveY, i, true);
+		}
 		
 		if(!aiModeSelected) updateCellLabelElements();
 		updateWinnerLabelElement();
@@ -675,6 +692,16 @@ public class KiteDemo {
 		
 		int i = redAtTurn ? RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
 		
+		if(playedMoveAmount != 0) {
+			
+			int lastMoveX = playedMoves[playedMoveAmount - 1];
+			int lastMoveY = columnPlayedMoveAmounts[lastMoveX] - 1;
+			
+			int j = redAtTurn ? YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
+			
+			setCellElementBackgroundColor(lastMoveX, lastMoveY, j, false);
+		}
+		
 		playedMoves[playedMoveAmount] = moveX;
 		playedMoveAmount++;
 		
@@ -686,7 +713,7 @@ public class KiteDemo {
 		columnPlayedMoveAmounts[moveX]++;
 		
 		solver.playMove(moveX + 1);
-		setCellElementBackgroundColor(moveX, moveY, i);
+		setCellElementBackgroundColor(moveX, moveY, i, true);
 		
 		if(aiModeSelected) {
 			
@@ -705,10 +732,15 @@ public class KiteDemo {
 		}
 	}
 	
-	private void setCellElementBackgroundColor(int cellElementX, int cellElementY, int cellElementBackgroundColorIndex) {
+	private void setCellElementBackgroundColor(int cellElementX, int cellElementY, int cellElementBackgroundColorIndex, boolean marked) {
 		String s = CELL_ELEMENT_BACKGROUND_COLORS[cellElementBackgroundColorIndex];
 		
 		HTMLElement cellElement = cellElements[cellElementX][cellElementY];
+		setElementStyles(cellElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, s);
+		
+		if(marked) s = CELL_MARKER_ELEMENT_BACKGROUND_COLORS[cellElementBackgroundColorIndex];
+		
+		cellElement = cellMarkerElements[cellElementX][cellElementY];
 		setElementStyles(cellElement, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, s);
 	}
 	
