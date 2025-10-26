@@ -7,6 +7,8 @@ public class Bitboard {
 	
 	private static final int SIZE = 64;
 	
+	private static final int LARGEST_CELL_POSITION = 63;
+	
 	private static final String TO_STRING_CELL_STRING = "O";
 	private static final String TO_STRING_MISSING_CELL_STRING = ".";
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
@@ -34,6 +36,10 @@ public class Bitboard {
 	
 	public static int firstCellPosition(long bitboard) {
 		return Long.numberOfTrailingZeros(bitboard);
+	}
+	
+	public static int lastCellPosition(long bitboard) {
+		return LARGEST_CELL_POSITION - Long.numberOfLeadingZeros(bitboard);
 	}
 	
 	public static long toggleCell(long bitboard, int cellPosition) {
