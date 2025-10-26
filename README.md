@@ -339,8 +339,8 @@ If you want to translate these Elo ratings to your own scale — or vice versa �
 
 The following resources were instrumental in shaping the design and implementation of this solver:
 
-1. **[Pascal Pons' Connect Four solver](http://blog.gamesolver.org/)** – A detailed breakdown of the core architecture behind an efficient alpha-beta solver.
-2. **[Chris Steininger's Connect Four solver](https://github.com/ChristopheSteininger/c4)** – Offers additional optimizations, tips, and implementation insights.
+1. **[Pascal Pons' Connect Four solver](http://blog.gamesolver.org/)** – A detailed breakdown of the core architecture behind an efficient alpha-beta solver for Connect Four.
+2. **[Chris Steininger's Connect Four solver](https://github.com/ChristopheSteininger/c4)** – Offers additional optimizations, tips, and implementation insights for Connect Four solvers.
 
 ---
 
