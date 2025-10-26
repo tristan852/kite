@@ -43,6 +43,18 @@ public enum BoardOutcome {
 	}
 	
 	/**
+	 * Returns whether this outcome represents
+	 * a win for either player ({@link BoardOutcome#RED_WIN}
+	 * and {@link BoardOutcome#YELLOW_WIN}) or not
+	 * ({@link BoardOutcome#DRAW} and {@link BoardOutcome#UNDECIDED}).
+	 *
+	 * @return whether this outcome represents a win
+	 */
+	public boolean isWin() {
+		return winPlayerColor != null;
+	}
+	
+	/**
 	 * If this game outcome represents an outcome in
 	 * which either player has won the game then this
 	 * method may be used to return the {@link BoardPlayerColor}
