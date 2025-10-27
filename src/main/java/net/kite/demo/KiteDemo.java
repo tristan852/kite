@@ -10,7 +10,9 @@ import org.teavm.jso.browser.History;
 import org.teavm.jso.browser.Location;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.css.CSSStyleDeclaration;
+import org.teavm.jso.dom.css.ElementCSSInlineStyle;
 import org.teavm.jso.dom.html.*;
+import org.teavm.jso.dom.svg.SVGElement;
 import org.teavm.jso.dom.xml.Element;
 import org.teavm.jso.dom.xml.Node;
 import org.teavm.jso.typedarrays.ArrayBuffer;
@@ -171,7 +173,6 @@ public class KiteDemo {
 			"border-radius", "calc(min(80dvw / 436 * 25, 25px))"
 	};
 	
-	// TODO
 	private static final String[] BOARD_LINES_ELEMENT_STYLES = new String[] {
 			"position", "absolute",
 			"top", "0",
@@ -181,7 +182,6 @@ public class KiteDemo {
 			"pointer-events", "none"
 	};
 	
-	// TODO
 	private static final String[] BOARD_LINE_ELEMENT_STYLES = new String[] {
 			"position", "absolute",
 			"top", "0",
@@ -249,6 +249,25 @@ public class KiteDemo {
 	
 	private static final int CELL_LABEL_ELEMENT_HEIGHT = 20;
 	private static final String EMPTY_CELL_LABEL_ELEMENT_TEXT = "";
+	
+	private static final String X1_ATTRIBUTE_NAME = "x1";
+	private static final String X2_ATTRIBUTE_NAME = "x2";
+	private static final String Y1_ATTRIBUTE_NAME = "y1";
+	private static final String Y2_ATTRIBUTE_NAME = "y2";
+	
+	private static final String STROKE_ATTRIBUTE_NAME = "stroke";
+	private static final String STROKE_WIDTH_ATTRIBUTE_NAME = "stroke-width";
+	private static final String STROKE_LINE_CAPE_ATTRIBUTE_NAME = "stroke-linecap";
+	
+	private static final String DEFAULT_STROKE_ATTRIBUTE_VALUE = "#F4F4F5";
+	private static final String DEFAULT_STROKE_WIDTH_ATTRIBUTE_VALUE = "8";
+	private static final String DEFAULT_STROKE_LINE_CAPE_ATTRIBUTE_VALUE = "round";
+	
+	private static final String XMLNS_ATTRIBUTE_NAME = "xmlns";
+	private static final String VIEW_BOX_ATTRIBUTE_NAME = "viewBox";
+	
+	private static final String DEFAULT_XMLNS_ATTRIBUTE_VALUE = "http://www.w3.org/2000/svg";
+	private static final String DEFAULT_VIEW_BOX_ATTRIBUTE_VALUE = "0 0 436 380";
 	
 	private static final String REQUEST_METHOD = "GET";
 	private static final String REQUEST_RESPONSE_TYPE = "arraybuffer";
@@ -803,31 +822,39 @@ public class KiteDemo {
 			x2 += BOARD_ELEMENT_GRID_OFFSET;
 			y2 += BOARD_ELEMENT_GRID_OFFSET;
 			
-			Element lineElement = DOCUMENT.createElementNS(SVG_ELEMENT_NAMESPACE, SVG_ELEMENT_TYPE);
+			SVGElement lineElement = (SVGElement) DOCUMENT.createElementNS(SVG_ELEMENT_NAMESPACE, SVG_ELEMENT_TYPE);
 			Element lineElementLine = DOCUMENT.createElementNS(SVG_ELEMENT_NAMESPACE, LINE_ELEMENT_TYPE);
 			
-			System.out.println(lineElement);
+			setElementStyles(lineElement, BOARD_LINE_ELEMENT_STYLES);
 			
-			// TODO
-			// styles?
+			lineElement.setAttribute(XMLNS_ATTRIBUTE_NAME, DEFAULT_XMLNS_ATTRIBUTE_VALUE);
+			lineElement.setAttribute(VIEW_BOX_ATTRIBUTE_NAME, DEFAULT_VIEW_BOX_ATTRIBUTE_VALUE);
 			
-			lineElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-			lineElement.setAttribute("viewBox", "0 0 436 380");
+			String s1 = String.valueOf(x1);
+			String s2 = String.valueOf(y1);
+			String s3 = String.valueOf(x2);
+			String s4 = String.valueOf(y2);
 			
-			lineElementLine.setAttribute("x1", "" + x1);
-			lineElementLine.setAttribute("y1", "" + y1);
-			lineElementLine.setAttribute("x2", "" + x2);
-			lineElementLine.setAttribute("y2", "" + y2);
-			lineElementLine.setAttribute("stroke", "#F4F4F5");
-			lineElementLine.setAttribute("stroke-width", "8");
-			lineElementLine.setAttribute("stroke-linecap", "round");
+			lineElementLine.setAttribute(X1_ATTRIBUTE_NAME, s1);
+			lineElementLine.setAttribute(Y1_ATTRIBUTE_NAME, s2);
+			lineElementLine.setAttribute(X2_ATTRIBUTE_NAME, s3);
+			lineElementLine.setAttribute(Y2_ATTRIBUTE_NAME, s4);
 			
-			
+			lineElementLine.setAttribute(STROKE_ATTRIBUTE_NAME, DEFAULT_STROKE_ATTRIBUTE_VALUE);
+			lineElementLine.setAttribute(STROKE_WIDTH_ATTRIBUTE_NAME, DEFAULT_STROKE_WIDTH_ATTRIBUTE_VALUE);
+			lineElementLine.setAttribute(STROKE_LINE_CAPE_ATTRIBUTE_NAME, DEFAULT_STROKE_LINE_CAPE_ATTRIBUTE_VALUE);
 			
 			lineElement.appendChild(lineElementLine);
 			
 			boardLinesElement.appendChild(lineElement);
 		}
+		
+		int moveX = playedMoves[playedMoveAmount - 1];
+		int moveY = columnPlayedMoveAmounts[moveX] - 1;
+		
+		int i = redAtTurn ? YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
+		
+		setCellElementBackgroundColor(moveX, moveY, i, false);
 	}
 	
 	private void hideWinLines() {
@@ -1058,7 +1085,7 @@ public class KiteDemo {
 		return flexboxElement;
 	}
 	
-	private static void setElementStyles(HTMLElement element, String... styles) {
+	private static void setElementStyles(ElementCSSInlineStyle element, String... styles) {
 		CSSStyleDeclaration elementStyle = element.getStyle();
 		
 		int n = styles.length >>> 1;
