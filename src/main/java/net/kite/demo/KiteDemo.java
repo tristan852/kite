@@ -11,6 +11,7 @@ import org.teavm.jso.browser.Location;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.css.CSSStyleDeclaration;
 import org.teavm.jso.dom.html.*;
+import org.teavm.jso.dom.xml.Element;
 import org.teavm.jso.dom.xml.Node;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Int8Array;
@@ -773,13 +774,20 @@ public class KiteDemo {
 			
 			System.out.println(line);
 			
-			HTMLElement lineElement = DOCUMENT.createElement(SVG_ELEMENT_TYPE);
+			Element lineElement = DOCUMENT.createElementNS("http://www.w3.org/2000/svg", SVG_ELEMENT_TYPE);
+			Element lineElementLine = DOCUMENT.createElementNS("http://www.w3.org/2000/svg", "line");
 			
 			lineElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 			lineElement.setAttribute("viewBox", "0 0 100 100");
 			
-			setElementStyles(lineElement, BOARD_LINE_ELEMENT_STYLES);
-			lineElement.setInnerHTML("<line x1=\"0\" y1=\"0\" x2=\"300\" y2=\"200\" style=\"stroke:red;stroke-width:2;stroke-linecap: round;\" />");
+			lineElementLine.setAttribute("x1", "10");
+			lineElementLine.setAttribute("y1", "10");
+			lineElementLine.setAttribute("x2", "90");
+			lineElementLine.setAttribute("y2", "90");
+			lineElementLine.setAttribute("stroke", "green");
+			lineElementLine.setAttribute("stroke-width", "4");
+			
+			lineElement.appendChild(lineElementLine);
 			
 			boardLinesElement.appendChild(lineElement);
 		}
