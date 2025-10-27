@@ -776,7 +776,7 @@ public class KiteDemo {
 			HTMLElement lineElement = DOCUMENT.createElement(SVG_ELEMENT_TYPE);
 			
 			setElementStyles(lineElement, BOARD_LINE_ELEMENT_STYLES);
-			lineElement.setInnerHTML("<path d=\"M150 5 L75 200 Z\" style=\"fill:none;stroke:green;stroke-width:3\" />");
+			lineElement.setInnerHTML("<line x1=\"50\" y1=\"50\" x2=\"250\" y2=\"150\" style=\"stroke: green; stroke-width: 4; stroke-linecap: round;\" />");
 			
 			boardLinesElement.appendChild(lineElement);
 		}
