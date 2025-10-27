@@ -26,6 +26,8 @@ public class KiteDemo {
 	private static final int BOARD_HEIGHT = 6;
 	private static final int BOARD_SIZE = 42;
 	
+	private static final int MAXIMAL_BOARD_Y = 5;
+	
 	private static final String LOCATION_SEARCH_PREFIX = "?";
 	private static final String LOCATION_SEARCH_ITEM_SEPARATOR = "&";
 	private static final String LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR = "=";
@@ -46,9 +48,12 @@ public class KiteDemo {
 	private static final String SPAN_ELEMENT_TYPE = "span";
 	private static final String IMAGE_ELEMENT_TYPE = "img";
 	private static final String SVG_ELEMENT_TYPE = "svg";
+	private static final String LINE_ELEMENT_TYPE = "line";
 	private static final String BUTTON_ELEMENT_TYPE = "button";
 	private static final String SELECT_ELEMENT_TYPE = "select";
 	private static final String OPTION_ELEMENT_TYPE = "option";
+	
+	private static final String SVG_ELEMENT_NAMESPACE = "http://www.w3.org/2000/svg";
 	
 	private static final String ELEMENT_CHANGE_EVENT_TYPE = "change";
 	
@@ -166,6 +171,7 @@ public class KiteDemo {
 			"border-radius", "calc(min(80dvw / 436 * 25, 25px))"
 	};
 	
+	// TODO
 	private static final String[] BOARD_LINES_ELEMENT_STYLES = new String[] {
 			"position", "absolute",
 			"top", "0",
@@ -175,6 +181,7 @@ public class KiteDemo {
 			"pointer-events", "none"
 	};
 	
+	// TODO
 	private static final String[] BOARD_LINE_ELEMENT_STYLES = new String[] {
 			"position", "absolute",
 			"top", "0",
@@ -236,6 +243,9 @@ public class KiteDemo {
 	private static final int RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX = 0;
 	private static final int YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX = 1;
 	private static final int EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX = 2;
+	
+	private static final int BOARD_ELEMENT_GRID_SIZE = 56;
+	private static final int BOARD_ELEMENT_GRID_OFFSET = 50;
 	
 	private static final int CELL_LABEL_ELEMENT_HEIGHT = 20;
 	private static final String EMPTY_CELL_LABEL_ELEMENT_TEXT = "";
@@ -766,15 +776,11 @@ public class KiteDemo {
 		}
 	}
 	
-	// TODO
 	private void showWinLines() {
 		BoardLine[] lines = solver.winLines();
-		System.out.println("lines: " + lines);
 		if(lines == null) return;
 		
 		for(BoardLine line : lines) {
-			
-			System.out.println(line);
 			
 			int x1 = line.getStartCellX();
 			int y1 = line.getStartCellY();
@@ -782,23 +788,28 @@ public class KiteDemo {
 			int x2 = line.getEndCellX();
 			int y2 = line.getEndCellY();
 			
-			y1 = 5 - y1;
-			y2 = 5 - y2;
+			y1 = MAXIMAL_BOARD_Y - y1;
+			y2 = MAXIMAL_BOARD_Y - y2;
 			
-			x1 *= 56;
-			y1 *= 56;
+			x1 *= BOARD_ELEMENT_GRID_SIZE;
+			y1 *= BOARD_ELEMENT_GRID_SIZE;
 			
-			x2 *= 56;
-			y2 *= 56;
+			x2 *= BOARD_ELEMENT_GRID_SIZE;
+			y2 *= BOARD_ELEMENT_GRID_SIZE;
 			
-			x1 += 50;
-			y1 += 50;
+			x1 += BOARD_ELEMENT_GRID_OFFSET;
+			y1 += BOARD_ELEMENT_GRID_OFFSET;
 			
-			x2 += 50;
-			y2 += 50;
+			x2 += BOARD_ELEMENT_GRID_OFFSET;
+			y2 += BOARD_ELEMENT_GRID_OFFSET;
 			
-			Element lineElement = DOCUMENT.createElementNS("http://www.w3.org/2000/svg", SVG_ELEMENT_TYPE);
-			Element lineElementLine = DOCUMENT.createElementNS("http://www.w3.org/2000/svg", "line");
+			Element lineElement = DOCUMENT.createElementNS(SVG_ELEMENT_NAMESPACE, SVG_ELEMENT_TYPE);
+			Element lineElementLine = DOCUMENT.createElementNS(SVG_ELEMENT_NAMESPACE, LINE_ELEMENT_TYPE);
+			
+			System.out.println(lineElement);
+			
+			// TODO
+			// styles?
 			
 			lineElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 			lineElement.setAttribute("viewBox", "0 0 436 380");
@@ -810,6 +821,8 @@ public class KiteDemo {
 			lineElementLine.setAttribute("stroke", "#F4F4F5");
 			lineElementLine.setAttribute("stroke-width", "8");
 			lineElementLine.setAttribute("stroke-linecap", "round");
+			
+			
 			
 			lineElement.appendChild(lineElementLine);
 			
