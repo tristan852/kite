@@ -174,7 +174,6 @@ public class KiteDemo {
 			"pointer-events", "none"
 	};
 	
-	// TODO
 	private static final String[] BOARD_LINE_ELEMENT_STYLES = new String[] {
 			"position", "absolute",
 			"top", "0",
@@ -773,13 +772,14 @@ public class KiteDemo {
 		for(BoardLine line : lines) {
 			
 			System.out.println(line);
+			
+			HTMLElement lineElement = DOCUMENT.createElement(SVG_ELEMENT_TYPE);
+			
+			setElementStyles(lineElement, BOARD_LINE_ELEMENT_STYLES);
+			lineElement.setInnerHTML("<path d=\"M150 5 L75 200 Z\" style=\"fill:none;stroke:green;stroke-width:3\" />");
+			
+			boardLinesElement.appendChild(lineElement);
 		}
-		
-		HTMLElement lineElement = DOCUMENT.createElement(SVG_ELEMENT_TYPE);
-		
-		lineElement.setInnerHTML("<path d=\"M150 5 L75 200 Z\" style=\"fill:none;stroke:green;stroke-width:3\" />");
-		
-		boardLinesElement.appendChild(lineElement);
 	}
 	
 	private void hideWinLines() {
