@@ -807,7 +807,7 @@ public class KiteDemo {
 			lineElementLine.setAttribute("y1", "" + y1);
 			lineElementLine.setAttribute("x2", "" + x2);
 			lineElementLine.setAttribute("y2", "" + y2);
-			lineElementLine.setAttribute("stroke", "green");
+			lineElementLine.setAttribute("stroke", "#F4F4F5");
 			lineElementLine.setAttribute("stroke-width", "4");
 			
 			lineElement.appendChild(lineElementLine);
