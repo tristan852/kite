@@ -44,6 +44,7 @@ public class KiteDemo {
 	private static final String ANCHOR_ELEMENT_TYPE = "a";
 	private static final String SPAN_ELEMENT_TYPE = "span";
 	private static final String IMAGE_ELEMENT_TYPE = "img";
+	private static final String SVG_ELEMENT_TYPE = "svg";
 	private static final String BUTTON_ELEMENT_TYPE = "button";
 	private static final String SELECT_ELEMENT_TYPE = "select";
 	private static final String OPTION_ELEMENT_TYPE = "option";
@@ -772,6 +773,12 @@ public class KiteDemo {
 			
 			System.out.println(line);
 		}
+		
+		HTMLElement lineElement = DOCUMENT.createElement(SVG_ELEMENT_TYPE);
+		
+		lineElement.setInnerHTML("<path d=\"M150 5 L75 200 Z\" style=\"fill:none;stroke:green;stroke-width:3\" />");
+		
+		boardLinesElement.appendChild(lineElement);
 	}
 	
 	private void hideWinLines() {
