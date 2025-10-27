@@ -767,6 +767,7 @@ public class KiteDemo {
 	// TODO
 	private void showWinLines() {
 		BoardLine[] lines = solver.winLines();
+		System.out.println("lines: " + lines);
 		if(lines == null) return;
 		
 		for(BoardLine line : lines) {
