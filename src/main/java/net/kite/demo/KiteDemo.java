@@ -668,8 +668,6 @@ public class KiteDemo {
 	private void undoMove() {
 		if(playedMoveAmount == 0) return;
 		
-		hideWinLines();
-		
 		playedMoveAmount--;
 		undoneMoveAmount++;
 		
@@ -694,6 +692,8 @@ public class KiteDemo {
 			
 			setCellElementBackgroundColor(lastMoveX, lastMoveY, i, true);
 		}
+		
+		hideWinLines();
 		
 		if(!aiModeSelected) updateCellLabelElements();
 		updateWinnerLabelElement();
@@ -720,8 +720,6 @@ public class KiteDemo {
 		int moveY = columnPlayedMoveAmounts[moveX];
 		if(moveY == BOARD_HEIGHT) return;
 		
-		showWinLines();
-		
 		int i = redAtTurn ? RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
 		
 		if(playedMoveAmount != 0) {
@@ -746,6 +744,8 @@ public class KiteDemo {
 		
 		solver.playMove(moveX + 1);
 		setCellElementBackgroundColor(moveX, moveY, i, true);
+		
+		showWinLines();
 		
 		if(aiModeSelected) {
 			
