@@ -782,17 +782,20 @@ public class KiteDemo {
 			int x2 = line.getEndCellX();
 			int y2 = line.getEndCellY();
 			
+			y1 = 5 - y1;
+			y2 = 5 - y2;
+			
 			x1 *= 56;
 			y1 *= 56;
 			
 			x2 *= 56;
 			y2 *= 56;
 			
-			x1 += 25;
-			y1 += 25;
+			x1 += 50;
+			y1 += 50;
 			
-			x2 += 25;
-			y2 += 25;
+			x2 += 50;
+			y2 += 50;
 			
 			Element lineElement = DOCUMENT.createElementNS("http://www.w3.org/2000/svg", SVG_ELEMENT_TYPE);
 			Element lineElementLine = DOCUMENT.createElementNS("http://www.w3.org/2000/svg", "line");
