@@ -774,10 +774,12 @@ public class KiteDemo {
 			System.out.println(line);
 			
 			HTMLElement lineElement = DOCUMENT.createElement(SVG_ELEMENT_TYPE);
+			
+			lineElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
 			lineElement.setAttribute("viewBox", "0 0 100 100");
 			
 			setElementStyles(lineElement, BOARD_LINE_ELEMENT_STYLES);
-			lineElement.setInnerHTML("<line x1=\"50\" y1=\"50\" x2=\"250\" y2=\"150\" style=\"stroke: green; stroke-width: 4; stroke-linecap: round;\" />");
+			lineElement.setInnerHTML("<line x1=\"0\" y1=\"0\" x2=\"300\" y2=\"200\" style=\"stroke:red;stroke-width:2;stroke-linecap: round;\" />");
 			
 			boardLinesElement.appendChild(lineElement);
 		}
