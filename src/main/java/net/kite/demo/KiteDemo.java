@@ -158,8 +158,17 @@ public class KiteDemo {
 			"width", "80dvw",
 			"max-width", "436px",
 			"aspect-ratio", "109 / 95",
+			"position", "relative",
 			"background-color", "#27272A",
 			"border-radius", "calc(min(80dvw / 436 * 25, 25px))"
+	};
+	
+	private static final String[] BOARD_LINES_ELEMENT_STYLES = new String[] {
+			"position", "absolute",
+			"top", "0",
+			"bottom", "0",
+			"left", "0",
+			"right", "0"
 	};
 	
 	private static final String APP_ELEMENT_CLASS_NAME = "app";
@@ -468,6 +477,11 @@ public class KiteDemo {
 			
 			boardElement.appendChild(cellColumnElement);
 		}
+		
+		HTMLElement boardLinesElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
+		setElementStyles(boardLinesElement, BOARD_LINES_ELEMENT_STYLES);
+		
+		boardElement.appendChild(boardLinesElement);
 		
 		setElementStyles(boardElement, BOARD_ELEMENT_STYLES);
 		
