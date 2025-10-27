@@ -1,6 +1,7 @@
 package net.kite.demo;
 
 import net.kite.Kite;
+import net.kite.board.line.BoardLine;
 import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.skill.level.SkillLevel;
@@ -171,6 +172,14 @@ public class KiteDemo {
 			"right", "0"
 	};
 	
+	private static final String[] BOARD_LINE_ELEMENT_STYLES = new String[] {
+			"position", "absolute",
+			"top", "0",
+			"bottom", "0",
+			"left", "0",
+			"right", "0"
+	};
+	
 	private static final String APP_ELEMENT_CLASS_NAME = "app";
 	private static final String SIDEBAR_ELEMENT_CLASS_NAME = "sidebar";
 	private static final String CONTROLS_ELEMENT_CLASS_NAME = "controls";
@@ -257,6 +266,8 @@ public class KiteDemo {
 	private HTMLButtonElement redoButtonElement;
 	
 	private HTMLSelectElement aiSkillLevelSelectElement;
+	
+	private HTMLElement boardLinesElement;
 	
 	private final HTMLElement[][] cellElements = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
 	private final HTMLElement[][] cellMarkerElements = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
@@ -478,7 +489,7 @@ public class KiteDemo {
 			boardElement.appendChild(cellColumnElement);
 		}
 		
-		HTMLElement boardLinesElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
+		boardLinesElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
 		setElementStyles(boardLinesElement, BOARD_LINES_ELEMENT_STYLES);
 		
 		boardElement.appendChild(boardLinesElement);
@@ -654,6 +665,8 @@ public class KiteDemo {
 	private void undoMove() {
 		if(playedMoveAmount == 0) return;
 		
+		hideWinLines();
+		
 		playedMoveAmount--;
 		undoneMoveAmount++;
 		
@@ -704,6 +717,8 @@ public class KiteDemo {
 		int moveY = columnPlayedMoveAmounts[moveX];
 		if(moveY == BOARD_HEIGHT) return;
 		
+		showWinLines();
+		
 		int i = redAtTurn ? RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
 		
 		if(playedMoveAmount != 0) {
@@ -744,6 +759,20 @@ public class KiteDemo {
 			updateLocationSearch();
 			if(!aiModeSelected) updateCellLabelElements();
 		}
+	}
+	
+	private void showWinLines() {
+		BoardLine[] lines = solver.winLines();
+		if(lines == null) return;
+		
+		for(BoardLine line : lines) {
+			
+			System.out.println(line);
+		}
+	}
+	
+	private void hideWinLines() {
+		boardLinesElement.clear();
 	}
 	
 	private void setCellElementBackgroundColor(int cellElementX, int cellElementY, int cellElementBackgroundColorIndex, boolean marked) {
