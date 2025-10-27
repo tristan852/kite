@@ -663,6 +663,8 @@ public class KiteDemo {
 			if(aiPlaysRed) playAIMove();
 			else updateLocationSearch();
 		}
+		
+		hideWinLines();
 	}
 	
 	private void undoMove() {
@@ -774,16 +776,34 @@ public class KiteDemo {
 			
 			System.out.println(line);
 			
+			int x1 = line.getStartCellX();
+			int y1 = line.getStartCellY();
+			
+			int x2 = line.getEndCellX();
+			int y2 = line.getEndCellY();
+			
+			x1 *= 56;
+			y1 *= 56;
+			
+			x2 *= 56;
+			y2 *= 56;
+			
+			x1 += 25;
+			y1 += 25;
+			
+			x2 += 25;
+			y2 += 25;
+			
 			Element lineElement = DOCUMENT.createElementNS("http://www.w3.org/2000/svg", SVG_ELEMENT_TYPE);
 			Element lineElementLine = DOCUMENT.createElementNS("http://www.w3.org/2000/svg", "line");
 			
 			lineElement.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-			lineElement.setAttribute("viewBox", "0 0 100 100");
+			lineElement.setAttribute("viewBox", "0 0 436 380");
 			
-			lineElementLine.setAttribute("x1", "10");
-			lineElementLine.setAttribute("y1", "10");
-			lineElementLine.setAttribute("x2", "90");
-			lineElementLine.setAttribute("y2", "90");
+			lineElementLine.setAttribute("x1", "" + x1);
+			lineElementLine.setAttribute("y1", "" + y1);
+			lineElementLine.setAttribute("x2", "" + x2);
+			lineElementLine.setAttribute("y2", "" + y2);
 			lineElementLine.setAttribute("stroke", "green");
 			lineElementLine.setAttribute("stroke-width", "4");
 			
