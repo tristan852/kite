@@ -169,9 +169,11 @@ public class KiteDemo {
 			"top", "0",
 			"bottom", "0",
 			"left", "0",
-			"right", "0"
+			"right", "0",
+			"pointer-events", "none"
 	};
 	
+	// TODO
 	private static final String[] BOARD_LINE_ELEMENT_STYLES = new String[] {
 			"position", "absolute",
 			"top", "0",
@@ -761,6 +763,7 @@ public class KiteDemo {
 		}
 	}
 	
+	// TODO
 	private void showWinLines() {
 		BoardLine[] lines = solver.winLines();
 		if(lines == null) return;
