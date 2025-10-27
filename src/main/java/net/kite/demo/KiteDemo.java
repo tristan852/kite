@@ -261,7 +261,7 @@ public class KiteDemo {
 	
 	private static final String DEFAULT_STROKE_ATTRIBUTE_VALUE = "#F4F4F5";
 	private static final String DEFAULT_STROKE_WIDTH_ATTRIBUTE_VALUE = "8";
-	private static final String DEFAULT_STROKE_LINE_CAPE_ATTRIBUTE_VALUE = "round";
+	private static final String DEFAULT_STROKE_LINE_CAPE_ATTRIBUTE_VALUE = "square";
 	
 	private static final String XMLNS_ATTRIBUTE_NAME = "xmlns";
 	private static final String VIEW_BOX_ATTRIBUTE_NAME = "viewBox";
