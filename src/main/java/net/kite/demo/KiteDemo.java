@@ -813,7 +813,7 @@ public class KiteDemo {
 		
 		showWinLines();
 		
-		if(aiModeSelected) {
+		if(aiModeSelected && !initial) {
 			
 			if(aiPlaysRed == redAtTurn && !solver.gameOver()) {
 				
