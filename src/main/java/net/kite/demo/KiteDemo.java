@@ -819,7 +819,7 @@ public class KiteDemo {
 		
 		if(aiModeSelected) {
 			
-			if(!solver.gameOver()) {
+			if(aiPlaysRed == redAtTurn && !solver.gameOver()) {
 				
 				scheduleAIMove();
 				return;
