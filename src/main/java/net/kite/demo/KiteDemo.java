@@ -8,6 +8,7 @@ import net.kite.skill.level.SkillLevel;
 import org.teavm.jso.ajax.XMLHttpRequest;
 import org.teavm.jso.browser.History;
 import org.teavm.jso.browser.Location;
+import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.css.CSSStyleDeclaration;
 import org.teavm.jso.dom.css.ElementCSSInlineStyle;
@@ -29,6 +30,8 @@ public class KiteDemo {
 	private static final int BOARD_SIZE = 42;
 	
 	private static final int MAXIMAL_BOARD_Y = 5;
+	
+	private static final long AI_MOVE_TIME_DELAY = 1000;
 	
 	private static final String LOCATION_SEARCH_PREFIX = "?";
 	private static final String LOCATION_SEARCH_ITEM_SEPARATOR = "&";
@@ -310,6 +313,8 @@ public class KiteDemo {
 	
 	private Kite solver;
 	
+	private int eventID;
+	
 	public KiteDemo() {
 		this.redAtTurn = true;
 	}
@@ -434,20 +439,28 @@ public class KiteDemo {
 		
 		modeButtonElement.onClick((mouseEvent) -> {
 			
+			eventID++;
+			
 			changeMode();
 		});
 		
 		newGameButtonElement.onClick((mouseEvent) -> {
+			
+			eventID++;
 			
 			setupNewGame();
 		});
 		
 		undoButtonElement.onClick((mouseEvent) -> {
 			
+			eventID++;
+			
 			undoMove();
 		});
 		
 		redoButtonElement.onClick((mouseEvent) -> {
+			
+			eventID++;
 			
 			redoMove();
 		});
@@ -611,7 +624,13 @@ public class KiteDemo {
 			if(aiPlaysRed == redAtTurn) {
 				
 				boolean gameNotOver = !solver.gameOver();
-				if(gameNotOver) playAIMove();
+				if(gameNotOver) {
+					
+					// TODO test this
+					boolean boardEmpty = playedMoveAmount == 0;
+					if(boardEmpty) playAIMove();
+					else scheduleAIMove();
+				}
 			}
 			
 		} else {
@@ -738,6 +757,19 @@ public class KiteDemo {
 		playMove(moveX, true, false);
 	}
 	
+	private void scheduleAIMove() {
+		int id = eventID;
+		
+		TimerHandler timerHandler = () -> {
+			
+			if(eventID != id) return;
+			
+			playAIMove();
+		};
+		
+		Window.setTimeout(timerHandler, AI_MOVE_TIME_DELAY);
+	}
+	
 	private void playAIMove() {
 		int moveX = solver.skilledMove(aiSkillLevel);
 		moveX--;
@@ -747,9 +779,12 @@ public class KiteDemo {
 	
 	private void playMove(int moveX, boolean redo, boolean initial) {
 		if(solver.gameOver()) return;
+		if(aiModeSelected && aiPlaysRed == redAtTurn) return;
 		
 		int moveY = columnPlayedMoveAmounts[moveX];
 		if(moveY == BOARD_HEIGHT) return;
+		
+		eventID++;
 		
 		int i = redAtTurn ? RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
 		
@@ -780,9 +815,9 @@ public class KiteDemo {
 		
 		if(aiModeSelected) {
 			
-			if(!solver.gameOver() && aiPlaysRed == redAtTurn) {
+			if(!solver.gameOver()) {
 				
-				playAIMove();
+				scheduleAIMove();
 				return;
 			}
 		}
