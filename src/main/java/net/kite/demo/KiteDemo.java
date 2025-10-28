@@ -628,7 +628,6 @@ public class KiteDemo {
 				boolean gameNotOver = !solver.gameOver();
 				if(gameNotOver) {
 					
-					// TODO test this
 					boolean boardEmpty = playedMoveAmount == 0;
 					if(boardEmpty) playAIMove();
 					else scheduleAIMove();
@@ -760,7 +759,6 @@ public class KiteDemo {
 	}
 	
 	private void scheduleAIMove() {
-		System.out.println("schedule ai move");
 		int id = eventID;
 		
 		TimerHandler timerHandler = () -> {
@@ -774,7 +772,6 @@ public class KiteDemo {
 	}
 	
 	private void playAIMove() {
-		System.out.println("play ai move");
 		int moveX = solver.skilledMove(aiSkillLevel);
 		moveX--;
 		
@@ -782,7 +779,6 @@ public class KiteDemo {
 	}
 	
 	private void playMove(int moveX, boolean redo, boolean initial) {
-		System.out.println("play move");
 		if(solver.gameOver()) return;
 		
 		int moveY = columnPlayedMoveAmounts[moveX];

@@ -58,22 +58,14 @@ The benchmark results are as follows:
 
 | Kite version | Node evaluations | Compute time (Setup 1)     | Compute time (Setup 2) |
 |--------------|------------------|----------------------------|------------------------|
-| 1.9.2        | `233,863,140`    | *2 minutes and 9 seconds*  | *34 seconds*           |
-| 1.9.1        | `233,863,140`    | *2 minutes and 9 seconds*  | *34 seconds*           |
-| 1.9.0        | `233,863,140`    | *2 minutes and 9 seconds*  | *34 seconds*           |
-| 1.8.6        | `233,863,140`    | *2 minutes and 9 seconds*  | *34 seconds*           |
-| 1.8.5        | `233,863,140`    | *2 minutes and 9 seconds*  | *34 seconds*           |
-| 1.8.4        | `233,863,140`    | *2 minutes and 9 seconds*  | *34 seconds*           |
-| 1.8.3        | `233,863,140`    | *2 minutes and 9 seconds*  | *34 seconds*           |
-| 1.8.2        | `233,863,140`    | *2 minutes and 9 seconds*  | *34 seconds*           |
 | 1.8.1        | `233,863,140`    | *2 minutes and 9 seconds*  | *34 seconds*           |
 | 1.8.0        | `264,328,020`    | *2 minutes and 26 seconds* | *39 seconds*           |
-| 1.7.10       | `282,023,140`    | *2 minutes and 35 seconds* | *41 seconds*           |
 | 1.7.9        | `282,023,140`    | *2 minutes and 35 seconds* | *41 seconds*           |
 | 1.7.8        | `298,565,585`    | *2 minutes and 45 seconds* | *44 seconds*           |
 | 1.7.7        | `312,998,949`    | *2 minutes and 53 seconds* | *47 seconds*           |
 
 **Note:** "Node evaluations" refers to the number of times the *negamax* function was invoked to evaluate different game states.
+Additionally, all versions since `1.7.7` that did not affect the results of this benchmark have been omitted from the table.
 
 Some internal constants — such as the transposition table size and the minimum depth threshold for enhanced transposition table lookups — were tuned specifically for the task of evaluating the empty board. These settings differ from those optimized for use with an opening book.
 
