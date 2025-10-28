@@ -526,6 +526,8 @@ public class KiteDemo {
 			
 			cellColumnElement.onClick((mouseEvent) -> {
 				
+				if(aiModeSelected && aiPlaysRed == redAtTurn) return;
+				
 				playMove(moveX, false, false);
 			});
 			
@@ -780,8 +782,8 @@ public class KiteDemo {
 	}
 	
 	private void playMove(int moveX, boolean redo, boolean initial) {
+		System.out.println("play move");
 		if(solver.gameOver()) return;
-		if(aiModeSelected && aiPlaysRed == redAtTurn) return;
 		
 		int moveY = columnPlayedMoveAmounts[moveX];
 		if(moveY == BOARD_HEIGHT) return;
