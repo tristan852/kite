@@ -758,6 +758,7 @@ public class KiteDemo {
 	}
 	
 	private void scheduleAIMove() {
+		System.out.println("schedule ai move");
 		int id = eventID;
 		
 		TimerHandler timerHandler = () -> {
@@ -771,6 +772,7 @@ public class KiteDemo {
 	}
 	
 	private void playAIMove() {
+		System.out.println("play ai move");
 		int moveX = solver.skilledMove(aiSkillLevel);
 		moveX--;
 		
