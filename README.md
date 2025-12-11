@@ -64,7 +64,7 @@ The benchmark results are as follows:
 | 1.7.8        | `298,565,585`    | *2 minutes and 45 seconds* | *44 seconds*           |
 | 1.7.7        | `312,998,949`    | *2 minutes and 53 seconds* | *47 seconds*           |
 
-**Note:** "Node evaluations" refers to the number of times the *negamax* function was invoked to evaluate different game states.
+**Note:** "Node evaluations" refers to the number of times the *negamax* function (see [here](https://github.com/tristan852/kite/blob/d35a0d06e755cb4e5bb3fa0dd3eae5bfc6a924fc/src/main/java/net/kite/board/Board.java#L526)) was invoked to evaluate different game states.
 Additionally, all versions since `1.7.7` that did not affect the results of this benchmark have been omitted from the table.
 
 Some internal constants — such as the transposition table size and the minimum depth threshold for enhanced transposition table lookups — were tuned specifically for the task of evaluating the empty board. These settings differ from those optimized for use with an opening book.
