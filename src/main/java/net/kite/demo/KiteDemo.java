@@ -204,11 +204,11 @@ public class KiteDemo {
 	private static final int BRAND_ELEMENT_GAP = 38;
 	private static final int BOARD_AND_LABELS_ELEMENT_GAP = 30;
 	
-	private static final String LOGO_ELEMENT_SOURCE_PATH = "https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/small_logo.png";
+	private static final String LOGO_ELEMENT_SOURCE_PATH = "https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/logo.svg";
 	private static final String LOGO_ELEMENT_ALTERNATIVE_TEXT = "The Kite logo";
 	private static final int LOGO_ELEMENT_SIZE = 120;
 	
-	private static final String GITHUB_LOGO_ELEMENT_SOURCE_PATH = "https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.png";
+	private static final String GITHUB_LOGO_ELEMENT_SOURCE_PATH = "https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.svg";
 	private static final String GITHUB_LOGO_ELEMENT_ALTERNATIVE_TEXT = "The GitHub logo";
 	private static final int GITHUB_LOGO_ELEMENT_SIZE = 50;
 	private static final String GITHUB_LOGO_ELEMENT_TARGET_PATH = "https://github.com/tristan852/kite";
