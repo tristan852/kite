@@ -4,8 +4,10 @@ import net.kite.board.Board;
 import net.kite.board.score.BoardScore;
 import net.kite.board.score.cache.BoardScoreCache;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public class OpeningBoardScoreCache {
 	
@@ -68,6 +70,29 @@ public class OpeningBoardScoreCache {
 		} catch(Exception exception) {
 			
 			String errorMessage = String.format("An exception occurred while loading opening score cache from bytes: %s", exception);
+			System.err.println(errorMessage);
+		}
+	}
+	
+	public void saveToFile(String filePath) {
+		try(OutputStream outputStream = new FileOutputStream(filePath)) {
+			
+			for(int i = 0; i < CAPACITY; i++) {
+				
+				boardScores[i] -= BoardScore.INVALID;
+			}
+			
+			outputStream.write(boardPartialColumnHashes);
+			outputStream.write(boardScores);
+			
+			for(int i = 0; i < CAPACITY; i++) {
+				
+				boardScores[i] += BoardScore.INVALID;
+			}
+			
+		} catch(IOException exception) {
+			
+			String errorMessage = String.format("An exception occurred while saving opening score cache to file: %s", exception);
 			System.err.println(errorMessage);
 		}
 	}

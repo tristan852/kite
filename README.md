@@ -12,7 +12,7 @@
     
 </span>
 
-Kite is a lightweight, high-performance Connect Four solver capable of solving any board position blazingly fast — even on modest hardware. It can be used to power AI bots with adjustable playing strength — from deliberately weak to perfectly optimal, making only provably best moves. Kite is well-suited for integration into GUI applications, backend systems, or for programmatic position analysis.
+Kite is a lightweight, high-performance Connect Four solver capable of solving any board position blazingly fast, even on modest hardware. It can be used to power AI bots with adjustable playing strength, from deliberately weak to perfectly optimal, making only provably best moves. Kite is well-suited for integration into GUI applications, backend systems, or for programmatic position analysis.
 
 Internally, Kite leverages **alpha-beta pruning**, **symmetry reduction**, **bitboards**, **position hashing** and **opening book lookups** to provide fast and accurate game tree evaluation.
 
@@ -37,17 +37,19 @@ Try the solver directly in your browser:
 
 👉 **[Launch the Demo](https://tristan852.github.io/kite)**
 
-You can set up and analyze positions, or play against AI opponents of varying strength — no installation required.
+You can set up and analyze positions, or play against AI opponents of varying strength, no installation required.
 
 The demo runs natively in *WebAssembly* and is generally slower than the Java library, though still fast enough for typical use.
 
 ---
 
-## 📊 Benchmark
+## 📊 Empty-Board Benchmark
+
+> **Note:** This benchmark is no longer relevant for the development of this solver. Instead, the benchmark created by Pascal Pons (see below) is now used.
 
 The empty Connect Four board is considered the most challenging position to solve, as it represents the root of the entire game tree. Successfully evaluating this state is a significant achievement and serves as an excellent benchmark for testing the performance of a Connect Four solver.
 
-Typically, an **opening book** is used to store precomputed evaluations of early-game positions — including the empty board — allowing such evaluations to be retrieved instantly via a simple table lookup. However, to properly assess the solver’s raw computational strength, the opening book was **turned off**, and the **transposition table was cleared** before evaluating the empty board.
+Typically, an **opening book** is used to store precomputed evaluations of early-game positions, including the empty board, allowing such evaluations to be retrieved instantly via a simple table lookup. However, to properly assess the solver’s raw computational strength, the opening book was **turned off**, and the **transposition table was cleared** before evaluating the empty board.
 
 Two hardware configurations were used to run this benchmark, representing different levels of processing power:
 
@@ -67,9 +69,55 @@ The benchmark results are as follows:
 **Note:** "Node evaluations" refers to the number of times the *negamax* function (see [here](https://github.com/tristan852/kite/blob/d35a0d06e755cb4e5bb3fa0dd3eae5bfc6a924fc/src/main/java/net/kite/board/Board.java#L526)) was invoked to evaluate different game states.
 Additionally, all versions since `1.7.7` that did not affect the results of this benchmark have been omitted from the table.
 
-Some internal constants — such as the transposition table size and the minimum depth threshold for enhanced transposition table lookups — were tuned specifically for the task of evaluating the empty board. These settings differ from those optimized for use with an opening book.
+Some internal constants, such as the transposition table size and the minimum depth threshold for enhanced transposition table lookups, were tuned specifically for the task of evaluating the empty board. These settings differ from those optimized for use with an opening book.
 
 Also note that Kite is a lightweight Java solver library designed to support running multiple solvers in parallel. However, each individual solver evaluates boards using a single thread only. As a result, compute times reflect single-threaded performance per solver.
+
+---
+
+## 📊 Pascal Pons Benchmark
+
+Rather than evaluating only the empty board, Kite is evaluated using a [benchmark created by Pascal Pons](http://blog.gamesolver.org/solving-connect-four/02-test-protocol/), which contains 6,000 positions from different stages of the game.
+
+Kite is compared against the following modern and historical solvers:
+
+* [John Tromp's Fhourstones solver](https://tromp.github.io/c4/fhour.html) (1996–2008), written in C
+* [Pascal Pons' Connect Four solver](http://blog.gamesolver.org/) (2016–2019), written in C++
+* [Ben Rall's Connect Four solver](https://github.com/benjaminrall/connect-four-ai) (2025), written in Rust
+
+For this benchmark, neither the Fhourstones solver nor Pascal Pons' solver uses an opening book.
+Additionally, the Fhourstones solver evaluates each benchmark position only *weakly*: it determines which player is winning, but does not compute the exact score of the position.
+
+| Position set      | Solver      | Average evaluation time | Average node evaluations | Node throughput (in Mnodes/s) |
+|-------------------|-------------|-------------------------|--------------------------|-------------------------------|
+| **end-easy**      | Fhourstones | 4.27 µs                 | 39.80                    | 9.33                          |
+|                   | Pascal Pons | 4.57 µs                 | 51.28                    | 11.23                         |
+|                   | Ben Rall    | 3.32 µs                 | 51                       | 14.80                         |
+|                   | **Kite**    | **2.70 µs**             | **38.17**                | **14.14**                     |
+| **middle-easy**   | Fhourstones | 137 µs                  | 2,101                    | 15.30                         |
+|                   | Pascal Pons | 37.45 µs                | 449.60                   | 12                            |
+|                   | Ben Rall    | 32.20 µs                | 449                      | 13.95                         |
+|                   | **Kite**    | **22.16 µs**            | **331.89**               | **14.98**                     |
+| **middle-medium** | Fhourstones | 1.70 ms                 | 28,725                   | 16.94                         |
+|                   | Pascal Pons | 3.21 ms                 | 39,900                   | 12.42                         |
+|                   | Ben Rall    | 2.87 ms                 | 39,855                   | 13.89                         |
+|                   | **Kite**    | **1.54 ms**             | **21,989.48**            | **14.24**                     |
+| **begin-easy**    | Fhourstones | 150 ms                  | 2,456,184                | 16.33                         |
+|                   | Pascal Pons | 254.60 µs               | 3,298                    | 12.95                         |
+|                   | Ben Rall    | 42 µs                   | 619                      | 14.71                         |
+|                   | **Kite**    | **53.50 µs**            | **735.80**               | **13.75**                     |
+| **begin-medium**  | Fhourstones | 80.60 ms                | 1,296,896                | 16.09                         |
+|                   | Pascal Pons | 96.63 ms                | 1,201,000                | 12.43                         |
+|                   | Ben Rall    | 7.44 ms                 | 95,156                   | 12.79                         |
+|                   | **Kite**    | **1.10 ms**             | **15,405.05**            | **14**                        |
+| **begin-hard**    | Fhourstones | 5.58 s                  | 93,425,554               | 16.74                         |
+|                   | Pascal Pons | 5.49 s                  | 65,920,000               | 12.01                         |
+|                   | Ben Rall    | 1.40 ms                 | 17,631                   | 12.62                         |
+|                   | **Kite**    | **33.06 µs**            | **468.98**               | **14.18**                     |
+
+As of early 2026, Kite appears to be both the most efficient Connect Four solver, measured by the number of node evaluations required per position, and the fastest overall.
+
+Despite being written in Java, Kite outperforms the C++ and Rust solvers included in this comparison.
 
 ---
 
@@ -87,7 +135,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tristan852:kite:1.9.3")
+    implementation("io.github.tristan852:kite:1.9.4")
 }
 ```
 
@@ -101,7 +149,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.tristan852:kite:1.9.3'
+    implementation 'io.github.tristan852:kite:1.9.4'
 }
 ```
 
@@ -121,7 +169,7 @@ Add the following code snippet to your `pom.xml` file:
     <dependency>
         <groupId>io.github.tristan852</groupId>
         <artifactId>kite</artifactId>
-        <version>1.9.3</version>
+        <version>1.9.4</version>
     </dependency>
 </dependencies>
 ```
@@ -281,11 +329,11 @@ public class Main {
 
 Kite uses the following score metric to represent the value of a board or a move under perfect play:
 
-| Evaluation score | Interpretation                                                                                                                                                |
-|------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `0`              | The position is a guaranteed draw if both players play perfectly.                                                                                             |
-| `n > 0`          | The current player will win, assuming perfect play, by placing their `n`th-to-last stone — the fastest possible win against perfect defense in this position. |
-| `n < 0`          | The opponent will win, assuming perfect play, by placing their `-n`th-to-last stone — the fastest possible win against perfect defense in this position.      |
+| Evaluation score | Interpretation                                                                                                                                               |
+|------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `0`              | The position is a guaranteed draw if both players play perfectly.                                                                                            |
+| `n > 0`          | The current player will win, assuming perfect play, by placing their `n`th-to-last stone, the fastest possible win against perfect defense in this position. |
+| `n < 0`          | The opponent will win, assuming perfect play, by placing their `-n`th-to-last stone, the fastest possible win against perfect defense in this position.      |
 
 **Examples:**
 
@@ -327,7 +375,7 @@ An Elo rating difference of approximately *400* corresponds to a *91%* win rate 
 For reference, the Elo ratings have been normalized so that the `SkillLevel.PERFECT` bot has a rating of *3000*.
 Since `SkillLevel.SUPER_GRANDMASTER` and `SkillLevel.PERFECT` represent the same level of play, they share the same rating estimate.
 
-If you want to translate these Elo ratings to your own scale — or vice versa — try to identify a reference point by comparing one of these skill levels to a skill level in your system with a known Elo rating.
+If you want to translate these Elo ratings to your own scale, or vice versa, try to identify a reference point by comparing one of these skill levels to a skill level in your system with a known Elo rating.
 
 ---
 

@@ -54,29 +54,29 @@ public class Board {
 			3, 2, 4, 1, 5, 0, 6
 	};
 	
-	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 218;
-	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 233;
-	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 465;
+	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 229;
+	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 282;
+	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 463;
 	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 602;
 	
 	private static final int[] RED_MOVE_CELL_SCORES = new int[] {
-			 15,  44,  23, 175,  68, 479,   0,   0,
-			 93, 125,  97, 179, 209, 309,   0,   0,
-			123, 204, 501, 389, 197, 421,   0,   0,
-			337, 385, 351, 289, 428, 450,   0,   0,
-			123, 204, 501, 389, 197, 421,   0,   0,
-			 93, 125,  97, 179, 209, 309,   0,   0,
-			 15,  44,  23, 175,  68, 479
+			  4,   8,  24, 139,  34, 450,   0,   0,
+			  0,  85,  25, 140, 137, 249,   0,   0,
+			121, 158, 461, 347, 175, 212,   0,   0,
+			319, 264, 347, 267, 386, 439,   0,   0,
+			121, 158, 461, 347, 175, 212,   0,   0,
+			  0,  85,  25, 140, 137, 249,   0,   0,
+			  4,   8,  24, 139,  34, 450
 	};
 	
 	private static final int[] YELLOW_MOVE_CELL_SCORES = new int[] {
-			 66, 149,  10, 196, 141, 463,   0,   0,
-			 33, 176, 242, 268,  31, 469,   0,   0,
-			132, 285, 257, 419, 219, 375,   0,   0,
-			177, 414, 599, 583, 516, 513,   0,   0,
-			132, 285, 257, 419, 219, 375,   0,   0,
-			 33, 176, 242, 268,  31, 469,   0,   0,
-			 66, 149,  10, 196, 141, 463
+			  8, 122,  29, 193, 105, 394,   0,   0,
+			  2, 164, 138, 205,  33, 424,   0,   0,
+			 87, 305, 195, 384, 174, 384,   0,   0,
+			127, 403, 472, 486, 434, 425,   0,   0,
+			 87, 305, 195, 384, 174, 384,   0,   0,
+			  2, 164, 138, 205,  33, 424,   0,   0,
+			  8, 122,  29, 193, 105, 394
 	};
 	
 	private static final int MISSING_MOVE_SCORE = Integer.MIN_VALUE;
