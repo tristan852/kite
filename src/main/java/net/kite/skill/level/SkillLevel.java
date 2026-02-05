@@ -23,6 +23,8 @@ public enum SkillLevel {
 	 * The level of a Connect Four player
 	 * that always plays uniformly sampled
 	 * random moves.
+	 * <p>
+	 * Elo rating: {@code 1120}
 	 */
 	RANDOM("Random", Integer.MAX_VALUE, 1120),
 	
@@ -31,56 +33,78 @@ public enum SkillLevel {
 	 * can play any legal move but compared to
 	 * {@link SkillLevel#RANDOM} the distribution is
 	 * not uniform)
+	 * <p>
+	 * Elo rating: {@code 1200}
 	 */
 	BEGINNER("Beginner", 222, 1200),
 	
 	/**
 	 * Level two
+	 * <p>
+	 * Elo rating: {@code 1400}
 	 */
 	NOVICE("Novice", 69, 1400),
 	
 	/**
 	 * Level three
+	 * <p>
+	 * Elo rating: {@code 1600}
 	 */
 	AMATEUR("Amateur", 32, 1600),
 	
 	/**
 	 * Level four
+	 * <p>
+	 * Elo rating: {@code 1800}
 	 */
 	INTERMEDIATE("Intermediate", 21, 1800),
 	
 	/**
 	 * Level five
+	 * <p>
+	 * Elo rating: {@code 2000}
 	 */
 	SKILLED("Skilled", 13, 2000),
 	
 	/**
 	 * Level six
+	 * <p>
+	 * Elo rating: {@code 2200}
 	 */
 	ADVANCED("Advanced", 8, 2200),
 	
 	/**
 	 * Level seven
+	 * <p>
+	 * Elo rating: {@code 2400}
 	 */
 	EXPERT("Expert", 5, 2400),
 	
 	/**
 	 * Level eight
+	 * <p>
+	 * Elo rating: {@code 2600}
 	 */
 	MASTER("Master", 3, 2600),
 	
 	/**
 	 * Level nine
+	 * <p>
+	 * Elo rating: {@code 2800}
 	 */
 	GRANDMASTER("Grandmaster", 2, 2800),
 	
 	/**
 	 * Level ten (the strongest level; equivalent to {@link SkillLevel#PERFECT})
+	 * <p>
+	 * Elo rating: {@code 3000}
 	 */
 	SUPER_GRANDMASTER("Super Grandmaster", 0, 3000),
 	
 	/**
 	 * The level of a perfect Connect Four player
+	 * <p>
+	 * Elo rating: {@code 3000}
 	 */
 	PERFECT("Perfect", 0, 3000),
 	

@@ -457,6 +457,10 @@ public class Kite {
 	 * be the first element of the returned array and the
 	 * rating approximation of the yellow player will be
 	 * the second element.
+	 * <p>
+	 * If any player color has not played any moves,
+	 * an Elo approximation of {@code 3000} is returned
+	 * for that player.
 	 *
 	 * @param playerRatingApproximations the buffer of length {@code 2} to write Elo rankings to
 	 * @return Elo rating approximation of both players
@@ -491,6 +495,10 @@ public class Kite {
 	 * Use {@link Kite#evaluatePlayerPerformances(float[] playerRatingApproximations)}
 	 * if you already have a buffer to write the player
 	 * evaluations into.
+	 * <p>
+	 * If any player color has not played any moves,
+	 * an Elo approximation of {@code 3000} is returned
+	 * for that player.
 	 *
 	 * @return Elo rating approximation of both players
 	 */
@@ -518,6 +526,9 @@ public class Kite {
 	 * is based upon the approximate Elo
 	 * ratings of the different {@link SkillLevel}s
 	 * (see also {@link SkillLevel#getApproximateEloRating()}).
+	 * <p>
+	 * If the requested player color has not played any moves,
+	 * an Elo approximation of {@code 3000} is returned.
 	 *
 	 * @param playerColor the color of the player whose performance is to be evaluated
 	 * @return Elo rating approximation
