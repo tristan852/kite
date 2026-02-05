@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.9.4";
+	private static final String VERSION = "1.10.0";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -57,7 +57,7 @@ public class Kite {
 	 * the internal game state of this solver.
 	 * <p>
 	 * This method is equivalent to
-	 * {@link Kite#boardString}.
+	 * {@link Kite#boardString()}.
 	 * <p>
 	 * Note that this method also blocks
 	 * any concurrent access from other
@@ -164,6 +164,32 @@ public class Kite {
 	 */
 	public synchronized BoardLine[] winLines() {
 		return board.winningPlayerLines();
+	}
+	
+	/**
+	 * Returns whether there is still a move left
+	 * to undo.
+	 * <p>
+	 * The only case in which there is no move left
+	 * to undo is when the board is fully empty.
+	 *
+	 * @return whether a move can still be undone
+	 */
+	public synchronized boolean canUndoMove() {
+		return board.canUndoMove();
+	}
+	
+	/**
+	 * Returns whether there is still a legal move left
+	 * to play.
+	 * <p>
+	 * Note that this is the negation of
+	 * {@link Kite#gameOver()}
+	 *
+	 * @return whether a move can still be played
+	 */
+	public synchronized boolean canPlayMove() {
+		return board.canPlayMove();
 	}
 	
 	/**

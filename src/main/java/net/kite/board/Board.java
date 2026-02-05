@@ -951,7 +951,11 @@ public class Board {
 		return filledCellAmount;
 	}
 	
-	public boolean canPlayMoves() {
+	public boolean canUndoMove() {
+		return filledCellAmount > 0;
+	}
+	
+	public boolean canPlayMove() {
 		return outcome == BoardOutcome.UNDECIDED;
 	}
 	
