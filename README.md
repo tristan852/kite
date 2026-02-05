@@ -88,32 +88,32 @@ Kite is compared against the following modern and historical solvers:
 For this benchmark, neither the Fhourstones solver nor Pascal Pons' solver uses an opening book.
 Additionally, the Fhourstones solver evaluates each benchmark position only *weakly*: it determines which player is winning, but does not compute the exact score of the position.
 
-| Position set      | Solver      | Average evaluation time | Average node evaluations | Node throughput (in Mnodes/s) |
-|-------------------|-------------|-------------------------|--------------------------|-------------------------------|
-| **end-easy**      | Fhourstones | 4.27 µs                 | 39.80                    | 9.33                          |
-|                   | Pascal Pons | 4.57 µs                 | 51.28                    | 11.23                         |
-|                   | Ben Rall    | 3.32 µs                 | 51                       | 14.80                         |
-|                   | **Kite**    | **2.70 µs**             | **38.17**                | **14.14**                     |
-| **middle-easy**   | Fhourstones | 137 µs                  | 2,101                    | 15.30                         |
-|                   | Pascal Pons | 37.45 µs                | 449.60                   | 12                            |
-|                   | Ben Rall    | 32.20 µs                | 449                      | 13.95                         |
-|                   | **Kite**    | **22.16 µs**            | **331.89**               | **14.98**                     |
-| **middle-medium** | Fhourstones | 1.70 ms                 | 28,725                   | 16.94                         |
-|                   | Pascal Pons | 3.21 ms                 | 39,900                   | 12.42                         |
-|                   | Ben Rall    | 2.87 ms                 | 39,855                   | 13.89                         |
-|                   | **Kite**    | **1.54 ms**             | **21,989.48**            | **14.24**                     |
-| **begin-easy**    | Fhourstones | 150 ms                  | 2,456,184                | 16.33                         |
-|                   | Pascal Pons | 254.60 µs               | 3,298                    | 12.95                         |
-|                   | Ben Rall    | 42 µs                   | 619                      | 14.71                         |
-|                   | **Kite**    | **53.50 µs**            | **735.80**               | **13.75**                     |
-| **begin-medium**  | Fhourstones | 80.60 ms                | 1,296,896                | 16.09                         |
-|                   | Pascal Pons | 96.63 ms                | 1,201,000                | 12.43                         |
-|                   | Ben Rall    | 7.44 ms                 | 95,156                   | 12.79                         |
-|                   | **Kite**    | **1.10 ms**             | **15,405.05**            | **14**                        |
-| **begin-hard**    | Fhourstones | 5.58 s                  | 93,425,554               | 16.74                         |
-|                   | Pascal Pons | 5.49 s                  | 65,920,000               | 12.01                         |
-|                   | Ben Rall    | 1.40 ms                 | 17,631                   | 12.62                         |
-|                   | **Kite**    | **33.06 µs**            | **468.98**               | **14.18**                     |
+| Position set       | Solver      | Average evaluation time | Average node evaluations | Node throughput (in Mnodes/s) |
+|--------------------|-------------|-------------------------|--------------------------|-------------------------------|
+| **endgame-easy**   | Fhourstones | 4.27 µs                 | 39.80                    | 9.33                          |
+|                    | Pascal Pons | 4.57 µs                 | 51.28                    | 11.23                         |
+|                    | Ben Rall    | 3.32 µs                 | 51                       | 14.80                         |
+|                    | **Kite**    | **2.70 µs**             | **38.17**                | **14.14**                     |
+| **midgame-easy**   | Fhourstones | 137 µs                  | 2,101                    | 15.30                         |
+|                    | Pascal Pons | 37.45 µs                | 449.60                   | 12                            |
+|                    | Ben Rall    | 32.20 µs                | 449                      | 13.95                         |
+|                    | **Kite**    | **22.16 µs**            | **331.89**               | **14.98**                     |
+| **midgame-medium** | Fhourstones | 1.70 ms                 | 28,725                   | 16.94                         |
+|                    | Pascal Pons | 3.21 ms                 | 39,900                   | 12.42                         |
+|                    | Ben Rall    | 2.87 ms                 | 39,855                   | 13.89                         |
+|                    | **Kite**    | **1.54 ms**             | **21,989.48**            | **14.24**                     |
+| **opening-easy**   | Fhourstones | 150 ms                  | 2,456,184                | 16.33                         |
+|                    | Pascal Pons | 254.60 µs               | 3,298                    | 12.95                         |
+|                    | Ben Rall    | 42 µs                   | 619                      | 14.71                         |
+|                    | **Kite**    | **53.50 µs**            | **735.80**               | **13.75**                     |
+| **opening-medium** | Fhourstones | 80.60 ms                | 1,296,896                | 16.09                         |
+|                    | Pascal Pons | 96.63 ms                | 1,201,000                | 12.43                         |
+|                    | Ben Rall    | 7.44 ms                 | 95,156                   | 12.79                         |
+|                    | **Kite**    | **1.10 ms**             | **15,405.05**            | **14**                        |
+| **opening-hard**   | Fhourstones | 5.58 s                  | 93,425,554               | 16.74                         |
+|                    | Pascal Pons | 5.49 s                  | 65,920,000               | 12.01                         |
+|                    | Ben Rall    | 1.40 ms                 | 17,631                   | 12.62                         |
+|                    | **Kite**    | **33.06 µs**            | **468.98**               | **14.18**                     |
 
 As of early 2026, Kite appears to be both the most efficient Connect Four solver, measured by the number of node evaluations required per position, and the fastest overall.
 
