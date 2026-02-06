@@ -322,6 +322,8 @@ public class KiteDemo {
 	
 	private HTMLElement winnerLabelElement;
 	
+	private String currentLoadingMessage;
+	
 	private Kite solver;
 	
 	private int eventID;
@@ -385,10 +387,7 @@ public class KiteDemo {
 	
 	private void onLoadError() {
 		System.err.println("An error occurred while loading the opening score cache!");
-		updateLoadingMessage("Error while loading Kite solver! retry...");
-		
-		// TODO maybe remove
-		Window.setTimeout(this::onStart, 1000);
+		updateLoadingMessage("Error while loading Kite solver!");
 	}
 	
 	private void computeAndUpdateLoadProgress(int loadedBytes) {
@@ -409,6 +408,9 @@ public class KiteDemo {
 	}
 	
 	private void updateLoadingMessage(String message) {
+		if(message.equals(currentLoadingMessage)) return;
+		
+		currentLoadingMessage = message;
 		loadingMessageElement.setInnerText(message);
 	}
 	
