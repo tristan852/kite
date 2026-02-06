@@ -330,17 +330,30 @@ public class KiteDemo {
 			int requestStatus = request.getStatus();
 			if(requestStatus == SUCCESSFUL_REQUEST_STATUS) {
 				
+				System.out.println("100%!");
+				long t = System.currentTimeMillis();
+				
 				ArrayBuffer arrayBuffer = (ArrayBuffer) request.getResponse();
 				Int8Array array = new Int8Array(arrayBuffer);
 				
 				byte[] bytes = array.copyToJavaArray();
 				OpeningBoardScoreCaches.ensureDefaultIsLoaded(bytes);
 				
+				System.out.println(System.currentTimeMillis() - t);
+				
 				buildApp();
 				
 			} else {
 				
 				onLoadError();
+			}
+		});
+		
+		request.onProgress((progressEvent) -> {
+			
+			if(progressEvent.isLengthComputable()) {
+				
+				System.out.println(progressEvent.getLoaded() + " / " + progressEvent.getTotal());
 			}
 		});
 		
