@@ -336,7 +336,7 @@ public class KiteDemo {
 		
 		loadingMessageElement = DOCUMENT.getElementById(LOADING_MESSAGE_ELEMENT_ID);
 		System.out.println("found this element: " + loadingMessageElement);
-		updateLoadProgress(16);
+		updateLoadProgress(16, 1500);
 		System.out.println("test done");
 		
 		XMLHttpRequest request = new XMLHttpRequest();
