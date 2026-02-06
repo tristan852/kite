@@ -404,14 +404,16 @@ public class KiteDemo {
 	}
 	
 	private void computeAndUpdateLoadProgress(int loadedBytes) {
-		if(loadedBytes < 0) loadedBytes = 0;
-		else if(loadedBytes > OPENING_SCORE_CACHE_SIZE_IN_BYTES) loadedBytes = OPENING_SCORE_CACHE_SIZE_IN_BYTES;
+		System.out.println("compute progress: " + loadedBytes);
 		
-		int progress = (loadedBytes * MAXIMAL_LOADING_PROGRESS + OPENING_SCORE_CACHE_HALF_SIZE_IN_BYTES) / OPENING_SCORE_CACHE_SIZE_IN_BYTES;
-		updateLoadProgress(progress);
+//		if(loadedBytes < 0) loadedBytes = 0;
+//		else if(loadedBytes > OPENING_SCORE_CACHE_SIZE_IN_BYTES) loadedBytes = OPENING_SCORE_CACHE_SIZE_IN_BYTES;
+//		
+//		int progress = (loadedBytes * MAXIMAL_LOADING_PROGRESS + OPENING_SCORE_CACHE_HALF_SIZE_IN_BYTES) / OPENING_SCORE_CACHE_SIZE_IN_BYTES;
+//		updateLoadProgress(progress);
 	}
 	
-	// TODO also show loaded mb / total mb
+	// TODO also show loaded mb out of total mb
 	
 	private void updateLoadProgress(int progress) {
 		String innerText = String.format(LOADING_MESSAGE_INNER_TEXT_TEMPLATE, progress);
