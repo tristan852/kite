@@ -330,6 +330,7 @@ public class KiteDemo {
 	
 	public void onStart() {
 		loadingMessageElement = DOCUMENT.getElementById(LOADING_MESSAGE_ELEMENT_ID);
+		System.out.println("found this element: " + loadingMessageElement);
 		
 		XMLHttpRequest request = new XMLHttpRequest();
 		
