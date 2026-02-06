@@ -329,6 +329,8 @@ public class KiteDemo {
 	}
 	
 	public void onStart() {
+		System.out.println("debug...");
+		
 		loadingMessageElement = DOCUMENT.getElementById(LOADING_MESSAGE_ELEMENT_ID);
 		System.out.println("found this element: " + loadingMessageElement);
 		
