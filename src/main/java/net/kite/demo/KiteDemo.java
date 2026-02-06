@@ -285,7 +285,6 @@ public class KiteDemo {
 	private static final String REQUEST_METHOD = "GET";
 	private static final String REQUEST_RESPONSE_TYPE = "arraybuffer";
 	private static final String REQUEST_URL = "WEB-INF/classes/board_score_caches/opening.cfc";
-	private static final int REQUEST_RETRY_TIME_DELAY = 1000;
 	
 	private static final int SUCCESSFUL_REQUEST_STATUS = 200;
 	
@@ -332,12 +331,7 @@ public class KiteDemo {
 	}
 	
 	public void onStart() {
-		System.out.println("debug...");
-		
 		loadingMessageElement = DOCUMENT.getElementById(LOADING_MESSAGE_ELEMENT_ID);
-		System.out.println("found this element: " + loadingMessageElement);
-		updateLoadProgress(16, 1500);
-		System.out.println("test done");
 		
 		XMLHttpRequest request = new XMLHttpRequest();
 		
@@ -361,9 +355,6 @@ public class KiteDemo {
 				
 			} else {
 				
-				int loadedBytes = progressEvent.getLoaded();
-				computeAndUpdateLoadProgress(loadedBytes);
-				
 				onLoadError();
 			}
 		});
@@ -376,24 +367,15 @@ public class KiteDemo {
 		
 		request.onError((progressEvent) -> {
 			
-			int loadedBytes = progressEvent.getLoaded();
-			computeAndUpdateLoadProgress(loadedBytes);
-			
 			onLoadError();
 		});
 		
 		request.onTimeout((progressEvent) -> {
 			
-			int loadedBytes = progressEvent.getLoaded();
-			computeAndUpdateLoadProgress(loadedBytes);
-			
 			onLoadError();
 		});
 		
 		request.onAbort((progressEvent) -> {
-			
-			int loadedBytes = progressEvent.getLoaded();
-			computeAndUpdateLoadProgress(loadedBytes);
 			
 			onLoadError();
 		});
@@ -402,11 +384,8 @@ public class KiteDemo {
 	}
 	
 	private void onLoadError() {
-		// TODO replace with error message
 		System.err.println("An error occurred while loading the opening score cache!");
-		
-		// TODO maybe remove
-		Window.setTimeout(this::onStart, REQUEST_RETRY_TIME_DELAY);
+		updateLoadingMessage("Error while loading Kite solver!");
 	}
 	
 	private void computeAndUpdateLoadProgress(int loadedBytes) {
