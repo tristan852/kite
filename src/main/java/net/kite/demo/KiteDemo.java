@@ -50,8 +50,11 @@ public class KiteDemo {
 	
 	private static final int OPENING_SCORE_CACHE_SIZE_IN_BYTES = 33554518;
 	private static final int OPENING_SCORE_CACHE_HALF_SIZE_IN_BYTES = 16777259;
+	private static final float OPENING_SCORE_CACHE_SIZE_IN_MEGABYTES = 33.6f;
 	private static final int MAXIMAL_LOADING_PROGRESS = 100;
-	private static final double MEGABYTE_IN_BYTES = 1000000.0;
+	
+	private static final float MEGABYTE_IN_BYTES = 1000000.0f;
+	private static final float MEGABYTE_FORMAT_PRECISION = 10.0f;
 	
 	private static final String DEFAULT_ELEMENT_TYPE = "div";
 	private static final String ANCHOR_ELEMENT_TYPE = "a";
@@ -346,7 +349,7 @@ public class KiteDemo {
 			int requestStatus = request.getStatus();
 			if(requestStatus == SUCCESSFUL_REQUEST_STATUS) {
 				
-				updateLoadProgress(MAXIMAL_LOADING_PROGRESS);
+				updateLoadProgress(MAXIMAL_LOADING_PROGRESS, OPENING_SCORE_CACHE_SIZE_IN_BYTES);
 				
 				ArrayBuffer arrayBuffer = (ArrayBuffer) request.getResponse();
 				Int8Array array = new Int8Array(arrayBuffer);
@@ -400,27 +403,31 @@ public class KiteDemo {
 	}
 	
 	private void onLoadError() {
+		// TODO replace with error message
 		System.err.println("An error occurred while loading the opening score cache!");
 		
+		// TODO maybe remove
 		Window.setTimeout(this::onStart, REQUEST_RETRY_TIME_DELAY);
 	}
 	
 	private void computeAndUpdateLoadProgress(int loadedBytes) {
-		System.out.println("compute progress: " + loadedBytes);
+		if(loadedBytes < 0) loadedBytes = 0;
+		else if(loadedBytes > OPENING_SCORE_CACHE_SIZE_IN_BYTES) loadedBytes = OPENING_SCORE_CACHE_SIZE_IN_BYTES;
 		
-//		if(loadedBytes < 0) loadedBytes = 0;
-//		else if(loadedBytes > OPENING_SCORE_CACHE_SIZE_IN_BYTES) loadedBytes = OPENING_SCORE_CACHE_SIZE_IN_BYTES;
-//		
-//		int progress = (loadedBytes * MAXIMAL_LOADING_PROGRESS + OPENING_SCORE_CACHE_HALF_SIZE_IN_BYTES) / OPENING_SCORE_CACHE_SIZE_IN_BYTES;
-//		updateLoadProgress(progress);
+		int progress = (loadedBytes * MAXIMAL_LOADING_PROGRESS + OPENING_SCORE_CACHE_HALF_SIZE_IN_BYTES) / OPENING_SCORE_CACHE_SIZE_IN_BYTES;
+		updateLoadProgress(progress, loadedBytes);
 	}
 	
-	// TODO also show loaded mb out of total mb
-	// (%.1f MB / %.1f MB): pass in doubles!
-	
-	private void updateLoadProgress(int progress) {
-		String message = "Loading Kite solver... " + progress + "%";
+	private void updateLoadProgress(int progress, int loadedBytes) {
+		float loadedMB = loadedBytes / MEGABYTE_IN_BYTES;
+		loadedMB = Math.round(loadedMB * MEGABYTE_FORMAT_PRECISION) / MEGABYTE_FORMAT_PRECISION;
 		
+		String message = "Loading Kite solver... " + progress + "% (" + loadedMB + " MB / " + OPENING_SCORE_CACHE_SIZE_IN_MEGABYTES + " MB)";
+		
+		updateLoadingMessage(message);
+	}
+	
+	private void updateLoadingMessage(String message) {
 		loadingMessageElement.setInnerText(message);
 	}
 	
