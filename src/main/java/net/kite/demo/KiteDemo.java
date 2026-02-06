@@ -333,6 +333,8 @@ public class KiteDemo {
 		
 		loadingMessageElement = DOCUMENT.getElementById(LOADING_MESSAGE_ELEMENT_ID);
 		System.out.println("found this element: " + loadingMessageElement);
+		updateLoadProgress(16);
+		System.out.println("test done");
 		
 		XMLHttpRequest request = new XMLHttpRequest();
 		
@@ -414,6 +416,7 @@ public class KiteDemo {
 	}
 	
 	// TODO also show loaded mb out of total mb
+	// (%.1f MB / %.1f MB): pass in doubles!
 	
 	private void updateLoadProgress(int progress) {
 		String innerText = String.format(LOADING_MESSAGE_INNER_TEXT_TEMPLATE, progress);
