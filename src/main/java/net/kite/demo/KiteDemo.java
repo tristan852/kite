@@ -385,7 +385,10 @@ public class KiteDemo {
 	
 	private void onLoadError() {
 		System.err.println("An error occurred while loading the opening score cache!");
-		updateLoadingMessage("Error while loading Kite solver!");
+		updateLoadingMessage("Error while loading Kite solver! retry...");
+		
+		// TODO maybe remove
+		Window.setTimeout(this::onStart, 1000);
 	}
 	
 	private void computeAndUpdateLoadProgress(int loadedBytes) {
