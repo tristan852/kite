@@ -51,6 +51,7 @@ public class KiteDemo {
 	private static final int OPENING_SCORE_CACHE_SIZE_IN_BYTES = 33554518;
 	private static final int OPENING_SCORE_CACHE_HALF_SIZE_IN_BYTES = 16777259;
 	private static final int MAXIMAL_LOADING_PROGRESS = 100;
+	private static final double MEGABYTE_IN_BYTES = 1000000.0;
 	
 	private static final String DEFAULT_ELEMENT_TYPE = "div";
 	private static final String ANCHOR_ELEMENT_TYPE = "a";
@@ -63,7 +64,6 @@ public class KiteDemo {
 	private static final String OPTION_ELEMENT_TYPE = "option";
 	
 	private static final String LOADING_MESSAGE_ELEMENT_ID = "loading-message";
-	private static final String LOADING_MESSAGE_INNER_TEXT_TEMPLATE = "Loading Kite solver... %d%%";
 	
 	private static final String SVG_ELEMENT_NAMESPACE = "http://www.w3.org/2000/svg";
 	
@@ -419,10 +419,9 @@ public class KiteDemo {
 	// (%.1f MB / %.1f MB): pass in doubles!
 	
 	private void updateLoadProgress(int progress) {
-		String innerText = String.format(LOADING_MESSAGE_INNER_TEXT_TEMPLATE, progress);
+		String message = "Loading Kite solver... " + progress + "%";
 		
-		System.out.println("update to: " + innerText + ", " + loadingMessageElement);
-		loadingMessageElement.setInnerText(innerText);
+		loadingMessageElement.setInnerText(message);
 	}
 	
 	private void buildApp() {
