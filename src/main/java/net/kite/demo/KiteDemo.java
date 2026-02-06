@@ -351,6 +351,9 @@ public class KiteDemo {
 		
 		request.onProgress((progressEvent) -> {
 			
+			System.out.println(progressEvent.getLoaded() + " / " + progressEvent.getTotal());
+			System.out.println(progressEvent.isLengthComputable());
+			
 			if(progressEvent.isLengthComputable()) {
 				
 				System.out.println(progressEvent.getLoaded() + " / " + progressEvent.getTotal());
