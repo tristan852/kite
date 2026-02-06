@@ -327,6 +327,9 @@ public class KiteDemo {
 		
 		request.onLoad((progressEvent) -> {
 			
+			System.out.println("onload: " + progressEvent.getLoaded() + " / " + progressEvent.getTotal());
+			System.out.println("onload: " + progressEvent.isLengthComputable());
+			
 			int requestStatus = request.getStatus();
 			if(requestStatus == SUCCESSFUL_REQUEST_STATUS) {
 				
