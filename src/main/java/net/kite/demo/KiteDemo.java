@@ -371,8 +371,7 @@ public class KiteDemo {
 		request.onProgress((progressEvent) -> {
 			
 			int loadedBytes = progressEvent.getLoaded();
-			System.out.println("onprogress: " + loadedBytes);
-			// computeAndUpdateLoadProgress(loadedBytes);
+			computeAndUpdateLoadProgress(loadedBytes);
 		});
 		
 		request.onError((progressEvent) -> {
