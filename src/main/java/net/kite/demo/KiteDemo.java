@@ -394,7 +394,7 @@ public class KiteDemo {
 		if(loadedBytes < 0) loadedBytes = 0;
 		else if(loadedBytes > OPENING_SCORE_CACHE_SIZE_IN_BYTES) loadedBytes = OPENING_SCORE_CACHE_SIZE_IN_BYTES;
 		
-		int progress = (loadedBytes * MAXIMAL_LOADING_PROGRESS + OPENING_SCORE_CACHE_HALF_SIZE_IN_BYTES) / OPENING_SCORE_CACHE_SIZE_IN_BYTES;
+		int progress = (int) (((long) loadedBytes * MAXIMAL_LOADING_PROGRESS + OPENING_SCORE_CACHE_HALF_SIZE_IN_BYTES) / OPENING_SCORE_CACHE_SIZE_IN_BYTES);
 		updateLoadProgress(progress, loadedBytes);
 	}
 	
