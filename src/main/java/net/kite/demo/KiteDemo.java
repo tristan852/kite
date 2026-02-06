@@ -48,6 +48,10 @@ public class KiteDemo {
 	
 	private static final String POSITIVE_MOVE_SCORE_FORMAT_PREFIX = "+";
 	
+	private static final int OPENING_SCORE_CACHE_SIZE_IN_BYTES = 33554518;
+	private static final int OPENING_SCORE_CACHE_HALF_SIZE_IN_BYTES = 16777259;
+	private static final int MAXIMAL_LOADING_PROGRESS = 100;
+	
 	private static final String DEFAULT_ELEMENT_TYPE = "div";
 	private static final String ANCHOR_ELEMENT_TYPE = "a";
 	private static final String SPAN_ELEMENT_TYPE = "span";
@@ -57,6 +61,9 @@ public class KiteDemo {
 	private static final String BUTTON_ELEMENT_TYPE = "button";
 	private static final String SELECT_ELEMENT_TYPE = "select";
 	private static final String OPTION_ELEMENT_TYPE = "option";
+	
+	private static final String LOADING_MESSAGE_ELEMENT_ID = "loading-message";
+	private static final String LOADING_MESSAGE_INNER_TEXT_TEMPLATE = "Loading Kite solver... %d%%";
 	
 	private static final String SVG_ELEMENT_NAMESPACE = "http://www.w3.org/2000/svg";
 	
@@ -296,6 +303,8 @@ public class KiteDemo {
 	
 	private final int[] movesScores = new int[BOARD_WIDTH];
 	
+	private HTMLElement loadingMessageElement;
+	
 	private HTMLButtonElement modeButtonElement;
 	private HTMLButtonElement undoButtonElement;
 	private HTMLButtonElement redoButtonElement;
@@ -320,6 +329,8 @@ public class KiteDemo {
 	}
 	
 	public void onStart() {
+		loadingMessageElement = DOCUMENT.getElementById(LOADING_MESSAGE_ELEMENT_ID);
+		
 		XMLHttpRequest request = new XMLHttpRequest();
 		
 		request.open(REQUEST_METHOD, REQUEST_URL);
@@ -327,14 +338,10 @@ public class KiteDemo {
 		
 		request.onLoad((progressEvent) -> {
 			
-			System.out.println("onload: " + progressEvent.getLoaded() + " / " + progressEvent.getTotal());
-			System.out.println("onload: " + progressEvent.isLengthComputable());
-			
 			int requestStatus = request.getStatus();
 			if(requestStatus == SUCCESSFUL_REQUEST_STATUS) {
 				
-				System.out.println("100%!");
-				long t = System.currentTimeMillis();
+				updateLoadProgress(MAXIMAL_LOADING_PROGRESS);
 				
 				ArrayBuffer arrayBuffer = (ArrayBuffer) request.getResponse();
 				Int8Array array = new Int8Array(arrayBuffer);
@@ -342,11 +349,12 @@ public class KiteDemo {
 				byte[] bytes = array.copyToJavaArray();
 				OpeningBoardScoreCaches.ensureDefaultIsLoaded(bytes);
 				
-				System.out.println(System.currentTimeMillis() - t);
-				
 				buildApp();
 				
 			} else {
+				
+				int loadedBytes = progressEvent.getLoaded();
+				computeAndUpdateLoadProgress(loadedBytes);
 				
 				onLoadError();
 			}
@@ -354,26 +362,30 @@ public class KiteDemo {
 		
 		request.onProgress((progressEvent) -> {
 			
-			System.out.println(progressEvent.getLoaded() + " / " + progressEvent.getTotal());
-			System.out.println(progressEvent.isLengthComputable());
-			
-			if(progressEvent.isLengthComputable()) {
-				
-				System.out.println(progressEvent.getLoaded() + " / " + progressEvent.getTotal());
-			}
+			int loadedBytes = progressEvent.getLoaded();
+			computeAndUpdateLoadProgress(loadedBytes);
 		});
 		
 		request.onError((progressEvent) -> {
+			
+			int loadedBytes = progressEvent.getLoaded();
+			computeAndUpdateLoadProgress(loadedBytes);
 			
 			onLoadError();
 		});
 		
 		request.onTimeout((progressEvent) -> {
 			
+			int loadedBytes = progressEvent.getLoaded();
+			computeAndUpdateLoadProgress(loadedBytes);
+			
 			onLoadError();
 		});
 		
 		request.onAbort((progressEvent) -> {
+			
+			int loadedBytes = progressEvent.getLoaded();
+			computeAndUpdateLoadProgress(loadedBytes);
 			
 			onLoadError();
 		});
@@ -385,6 +397,20 @@ public class KiteDemo {
 		System.err.println("An error occurred while loading the opening score cache!");
 		
 		Window.setTimeout(this::onStart, REQUEST_RETRY_TIME_DELAY);
+	}
+	
+	private void computeAndUpdateLoadProgress(int loadedBytes) {
+		if(loadedBytes < 0) loadedBytes = 0;
+		else if(loadedBytes > OPENING_SCORE_CACHE_SIZE_IN_BYTES) loadedBytes = OPENING_SCORE_CACHE_SIZE_IN_BYTES;
+		
+		int progress = (loadedBytes * MAXIMAL_LOADING_PROGRESS + OPENING_SCORE_CACHE_HALF_SIZE_IN_BYTES) / OPENING_SCORE_CACHE_SIZE_IN_BYTES;
+		updateLoadProgress(progress);
+	}
+	
+	private void updateLoadProgress(int progress) {
+		String innerText = String.format(LOADING_MESSAGE_INNER_TEXT_TEMPLATE, progress);
+		
+		loadingMessageElement.setInnerText(innerText);
 	}
 	
 	private void buildApp() {
