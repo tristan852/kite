@@ -410,6 +410,7 @@ public class KiteDemo {
 	private void updateLoadProgress(int progress) {
 		String innerText = String.format(LOADING_MESSAGE_INNER_TEXT_TEMPLATE, progress);
 		
+		System.out.println("update to: " + innerText + ", " + loadingMessageElement);
 		loadingMessageElement.setInnerText(innerText);
 	}
 	
