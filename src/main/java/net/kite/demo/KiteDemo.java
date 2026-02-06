@@ -366,7 +366,8 @@ public class KiteDemo {
 		request.onProgress((progressEvent) -> {
 			
 			int loadedBytes = progressEvent.getLoaded();
-			computeAndUpdateLoadProgress(loadedBytes);
+			System.out.println("onprogress: " + loadedBytes);
+			// computeAndUpdateLoadProgress(loadedBytes);
 		});
 		
 		request.onError((progressEvent) -> {
@@ -409,6 +410,8 @@ public class KiteDemo {
 		int progress = (loadedBytes * MAXIMAL_LOADING_PROGRESS + OPENING_SCORE_CACHE_HALF_SIZE_IN_BYTES) / OPENING_SCORE_CACHE_SIZE_IN_BYTES;
 		updateLoadProgress(progress);
 	}
+	
+	// TODO also show loaded mb / total mb
 	
 	private void updateLoadProgress(int progress) {
 		String innerText = String.format(LOADING_MESSAGE_INNER_TEXT_TEMPLATE, progress);
