@@ -8,9 +8,7 @@ import net.kite.board.score.BoardScore;
 import net.kite.board.score.cache.BoardScoreCache;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.skill.level.SkillLevel;
-
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import net.kite.util.random.Random;
 
 /**
  * This is the public API to a {@link Kite} solver.
@@ -24,7 +22,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.10.4";
+	private static final String VERSION = "1.10.5";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -39,6 +37,7 @@ public class Kite {
 	private static final int MAXIMAL_MOVE_SCORE_LOSS = 36;
 	
 	private final Board board;
+	private final Random random;
 	
 	private final int[] moveScores = new int[BOARD_WIDTH];
 	
@@ -46,6 +45,7 @@ public class Kite {
 		BoardScoreCache boardScoreCache = new BoardScoreCache();
 		
 		this.board = new Board(boardScoreCache);
+		this.random = new Random();
 		
 		OpeningBoardScoreCaches.ensureDefaultIsLoaded(null);
 		
@@ -291,8 +291,7 @@ public class Kite {
 			}
 		}
 		
-		Random random = ThreadLocalRandom.current();
-		int weightIndex = random.nextInt(totalWeight);
+		int weightIndex = random.randomInteger(totalWeight);
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
@@ -336,8 +335,7 @@ public class Kite {
 			if(moveScore == bestAbsoluteMoveScore) n++;
 		}
 		
-		Random random = ThreadLocalRandom.current();
-		int index = random.nextInt(n);
+		int index = random.randomInteger(n);
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
@@ -389,8 +387,7 @@ public class Kite {
 			}
 		}
 		
-		Random random = ThreadLocalRandom.current();
-		int index = random.nextInt(n);
+		int index = random.randomInteger(n);
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
@@ -421,8 +418,7 @@ public class Kite {
 			if(board.moveLegal(moveColumnIndex)) n++;
 		}
 		
-		Random random = ThreadLocalRandom.current();
-		int index = random.nextInt(n);
+		int index = random.randomInteger(n);
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
@@ -631,6 +627,22 @@ public class Kite {
 	 */
 	public synchronized int evaluateBoard() {
 		return board.evaluate();
+	}
+	
+	/**
+	 * Seeds the random number generator used for
+	 * generating moves via e.g. {@link Kite#skilledMove(SkillLevel skillLevel)}
+	 * or {@link Kite#optimalMove()}.
+	 * <p>
+	 * Move generation is non-deterministic by default but
+	 * can be made deterministic by using this method.
+	 * Deterministic move generation is particularly useful
+	 * when generated games need to be reproducible.
+	 *
+	 * @param seed the initial state of the random number generator
+	 */
+	public synchronized void seedRandomness(long seed) {
+		random.setSeed(seed);
 	}
 	
 	/**
