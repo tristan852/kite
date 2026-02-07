@@ -395,7 +395,7 @@ public class Board {
 		for(int x = LARGEST_MOVE_CELL_X; x >= 0; x--) h2 = partialColumnHash(h2, x);
 		
 		if(h2 < h1) h1 = h2;
-		return Long.divideUnsigned(h1, 3);
+		return Long.divideUnsigned(h1, COLUMN_HASH_BASE);
 	}
 	
 	private long partialColumnHash(long columnHash, int x) {
