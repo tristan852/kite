@@ -3,7 +3,7 @@ plugins {
     id("com.vanniktech.maven.publish") version "0.34.0"
     
     id("war")
-    id("org.teavm") version "0.12.3"
+    id("org.teavm") version "0.13.0"
     
     signing
     `maven-publish`
