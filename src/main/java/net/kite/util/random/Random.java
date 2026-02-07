@@ -1,5 +1,7 @@
 package net.kite.util.random;
 
+import net.kite.util.math.MathUtil;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Random {
@@ -23,7 +25,8 @@ public class Random {
 		ThreadLocalRandom currentThreadRandom = ThreadLocalRandom.current();
 		
 		long l1 = System.nanoTime();
-		long l2 = currentThread.threadId() * START_SEED_THREAD_ID_MULTIPLIER;
+		@SuppressWarnings("deprecation")
+		long l2 = currentThread.getId() * START_SEED_THREAD_ID_MULTIPLIER;
 		long l3 = currentThreadRandom.nextLong();
 		
 		long startSeed = l1 ^ l2 ^ l3;
@@ -41,7 +44,7 @@ public class Random {
 			
 			long randomLong = randomLong();
 			
-			long upperBits = Math.unsignedMultiplyHigh(randomLong, maximalValue);
+			long upperBits = MathUtil.unsignedMultiplyHigh(randomLong, maximalValue);
 			long lowerBits = randomLong * maximalValue;
 			
 			long threshold = Long.remainderUnsigned(-maximalValue, maximalValue);
