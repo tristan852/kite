@@ -45,7 +45,7 @@ The demo runs natively in *WebAssembly* and is generally slower than the Java li
 
 ## 📊 Empty-Board Benchmark
 
-> **Note:** This benchmark is no longer relevant for the development of this solver. Instead, the benchmark created by Pascal Pons (see below) is now used.
+> **Note:** This benchmark is no longer relevant for the development of this solver. Instead, the [benchmark created by Pascal Pons](#-pascal-pons-benchmark) is now used.
 
 The empty Connect Four board is considered the most challenging position to solve, as it represents the root of the entire game tree. Successfully evaluating this state is a significant achievement and serves as an excellent benchmark for testing the performance of a Connect Four solver.
 
