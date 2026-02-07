@@ -22,7 +22,7 @@ import net.kite.util.random.Random;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.10.5";
+	private static final String VERSION = "1.11.0";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;

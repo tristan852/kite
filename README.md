@@ -5,7 +5,7 @@
     
 # Kite
     
-![Java version](https://img.shields.io/badge/Java-17+-blue?style=for-the-badge)
+![Java version](https://img.shields.io/badge/Java-19+-blue?style=for-the-badge)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/tristan852/kite?style=for-the-badge)
 ![GitHub license](https://img.shields.io/github/license/tristan852/kite?style=for-the-badge)
 [![Java documentation](https://javadoc.io/badge2/io.github.tristan852/kite/javadoc.svg?style=for-the-badge)](https://javadoc.io/doc/io.github.tristan852/kite)
@@ -135,7 +135,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tristan852:kite:1.10.5")
+    implementation("io.github.tristan852:kite:1.11.0")
 }
 ```
 
@@ -149,7 +149,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.tristan852:kite:1.10.5'
+    implementation 'io.github.tristan852:kite:1.11.0'
 }
 ```
 
@@ -169,7 +169,7 @@ Add the following code snippet to your `pom.xml` file:
     <dependency>
         <groupId>io.github.tristan852</groupId>
         <artifactId>kite</artifactId>
-        <version>1.10.5</version>
+        <version>1.11.0</version>
     </dependency>
 </dependencies>
 ```
