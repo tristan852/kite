@@ -81,6 +81,8 @@ public class Board {
 	
 	private static final int MISSING_MOVE_SCORE = Integer.MIN_VALUE;
 	
+	private static final int CELLS_ABOVE_CELLS_MAXIMAL_ITERATION_AMOUNT = 5;
+	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
 	
 	private static final int MIRRORED_BITBOARD_SHIFT_AMOUNT = 8;
@@ -150,7 +152,6 @@ public class Board {
 	private final int[] playedMoves;
 	private final int[] undoneMoves;
 	
-	private long hash = Bitboards.EMPTY_CEILING;
 	private long mixedHash = EMPTY_MIXED_HASH;
 	
 	private final BoardHistory history;
@@ -478,7 +479,7 @@ public class Board {
 			playMove(lastMove);
 		}
 		
-		int entryKey = scoreCache.entryKey(hash, mixedHash);
+		int entryKey = scoreCache.entryKey(mixedHash);
 		if(entryKey >= 0) {
 			
 			int entryMinScore = scoreCache.entryMinimalScore(entryKey);
@@ -537,7 +538,7 @@ public class Board {
 		
 		if(evenParityCellColumnAmount == WIDTH) {
 			
-			long redCells = activeBitboard | (Bitboards.ODD_BOARD_ROWS & ~maskBitboard);
+			long redCells = activeBitboard | (Bitboards.ODD_BOARD_ROWS & (~maskBitboard));
 			long yellowCells = Bitboards.FULL_BOARD ^ redCells;
 			
 			long currentYellowCells = activeBitboard ^ maskBitboard;
@@ -577,7 +578,7 @@ public class Board {
 		int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
 		if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
 		
-		int entryKey = scoreCache.entryKey(hash, mixedHash);
+		int entryKey = scoreCache.entryKey(mixedHash);
 		if(entryKey >= 0) {
 			
 			int entryMinScore = scoreCache.entryMinimalScore(entryKey);
@@ -608,7 +609,7 @@ public class Board {
 				
 				long mixedHash = mixedHash(h1);
 				
-				entryKey = scoreCache.entryKey(h1, mixedHash);
+				entryKey = scoreCache.entryKey(mixedHash);
 				if(entryKey >= 0) {
 					
 					int entryMinScore = -scoreCache.entryMaximalScore(entryKey);
@@ -666,13 +667,13 @@ public class Board {
 			
 			if(s >= maximalScore) {
 				
-				scoreCache.updateEntry(hash, mixedHash, s, maxScore);
+				scoreCache.updateEntry(mixedHash, s, maxScore);
 				return s;
 			}
 			
 			if(s > minimalScore) minimalScore = s;
 			
-			scoreCache.updateEntry(hash, mixedHash, minScore, minimalScore);
+			scoreCache.updateEntry(mixedHash, minScore, minimalScore);
 			
 			return minimalScore;
 		}
@@ -718,7 +719,7 @@ public class Board {
 		
 		if(moveAmount == 0) {
 			
-			scoreCache.updateEntry(hash, mixedHash, minScore, minScore);
+			scoreCache.updateEntry(mixedHash, minScore, minScore);
 			
 			return minimalScore;
 		}
@@ -738,7 +739,7 @@ public class Board {
 			
 			if(s >= maximalScore) {
 				
-				scoreCache.updateEntry(hash, mixedHash, s, maxScore);
+				scoreCache.updateEntry(mixedHash, s, maxScore);
 				return s;
 			}
 			
@@ -764,7 +765,7 @@ public class Board {
 			}
 		}
 		
-		scoreCache.updateEntry(hash, mixedHash, minScore, minimalScore);
+		scoreCache.updateEntry(mixedHash, minScore, minimalScore);
 		
 		return minimalScore;
 	}
@@ -840,7 +841,7 @@ public class Board {
 		entry.fill(
 				symmetrical,
 				bitboard, activeBitboard, maskBitboard, ceilingBitboard,
-				hash, mixedHash
+				mixedHash
 		);
 		
 		int moveCellY = cellColumnHeights[moveCellX];
@@ -878,7 +879,7 @@ public class Board {
 		
 		if(filledCellAmount == FULL_CELL_AMOUNT) outcome = BoardOutcome.DRAW;
 		
-		hash = bitboard;
+		long hash = bitboard;
 		
 		long mirroredBitboard = Long.reverseBytes(bitboard) >>> MIRRORED_BITBOARD_SHIFT_AMOUNT;
 		if(mirroredBitboard < hash) hash = mirroredBitboard;
@@ -910,7 +911,6 @@ public class Board {
 		maskBitboard = entry.getMaskBitboard();
 		ceilingBitboard = entry.getCeilingBitboard();
 		
-		hash = entry.getHash();
 		mixedHash = entry.getMixedHash();
 	}
 	
@@ -1004,6 +1004,23 @@ public class Board {
 		}
 		
 		return false;
+	}
+	
+	private static long cellsAboveCells(long cells) {
+		cells <<= 1;
+		cells &= Bitboards.FULL_BOARD;
+		
+		for(int i = 0; i < CELLS_ABOVE_CELLS_MAXIMAL_ITERATION_AMOUNT; i++) {
+			
+			long cellsBefore = cells;
+			
+			cells |= cells << 1;
+			cells &= Bitboards.FULL_BOARD;
+			
+			if(cells == cellsBefore) return cells;
+		}
+		
+		return cells;
 	}
 	
 	private static long nonVerticalWinCellsBitboard(long bitboard) {

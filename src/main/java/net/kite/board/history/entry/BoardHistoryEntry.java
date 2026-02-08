@@ -9,13 +9,12 @@ public class BoardHistoryEntry {
 	private long maskBitboard;
 	private long ceilingBitboard;
 	
-	private long hash;
 	private long mixedHash;
 	
 	public void fill(
 			boolean symmetrical,
 			long bitboard, long activeBitboard, long maskBitboard, long ceilingBitboard,
-			long hash, long mixedHash
+			long mixedHash
 	) {
 		this.symmetrical = symmetrical;
 		
@@ -24,7 +23,6 @@ public class BoardHistoryEntry {
 		this.maskBitboard = maskBitboard;
 		this.ceilingBitboard = ceilingBitboard;
 		
-		this.hash = hash;
 		this.mixedHash = mixedHash;
 	}
 	
@@ -46,10 +44,6 @@ public class BoardHistoryEntry {
 	
 	public long getCeilingBitboard() {
 		return ceilingBitboard;
-	}
-	
-	public long getHash() {
-		return hash;
 	}
 	
 	public long getMixedHash() {
