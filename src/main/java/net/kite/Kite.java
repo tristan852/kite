@@ -22,7 +22,7 @@ import net.kite.util.random.Random;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.11.3";
+	private static final String VERSION = "1.12.0";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -35,6 +35,8 @@ public class Kite {
 	private static final int INVALID_MOVE_COLUMN_INDEX = 0;
 	
 	private static final int MAXIMAL_MOVE_SCORE_LOSS = 36;
+	
+	private static final int MOVE_COLUMN_INDEX_CHARACTER_OFFSET = 48;
 	
 	private final Board board;
 	private final Random random;
@@ -667,6 +669,25 @@ public class Kite {
 	 * The internal game state will be updated
 	 * unless no move is provided.
 	 *
+	 * @param moveColumnIndices the one-indexed column numbers (columns indexed from left to right) as a string
+	 */
+	public synchronized void playMoves(String moveColumnIndices) {
+		int n = moveColumnIndices.length();
+		for(int i = 0; i < n; i++) {
+			
+			int moveColumnIndex = moveColumnIndices.charAt(i) - MOVE_COLUMN_INDEX_CHARACTER_OFFSET;
+			
+			board.playMove(moveColumnIndex);
+		}
+	}
+	
+	/**
+	 * Plays multiple moves on behalf of the player
+	 * that is allowed to move next by inserting one
+	 * of their stones into the given column.
+	 * The internal game state will be updated
+	 * unless no move is provided.
+	 *
 	 * @param moveColumnIndices the one-indexed column numbers (columns indexed from left to right)
 	 */
 	public synchronized void playMoves(int... moveColumnIndices) {
@@ -714,11 +735,53 @@ public class Kite {
 	}
 	
 	/**
-	 * Plays multiple moves on behalf of the player
-	 * that is allowed to move next by inserting one
-	 * of their stones into the given column.
-	 * The internal game state will be updated
-	 * unless no move is provided.
+	 * Sets up a new board by undoing all already played
+	 * moves and playing moves on behalf of the two players.
+	 *
+	 * @param moveColumnIndicesString the one-indexed move column numbers (columns indexed from left to right) as a string
+	 */
+	public synchronized void setupBoard(String moveColumnIndicesString) {
+		int n = board.playedMoveAmount();
+		int l = moveColumnIndicesString.length();
+		
+		for(int i = 0; i < l; i++) {
+			
+			int moveColumnIndex = moveColumnIndicesString.charAt(i) - MOVE_COLUMN_INDEX_CHARACTER_OFFSET;
+			
+			if(i == n) {
+				
+				board.playMove(moveColumnIndex);
+				n++;
+				
+				continue;
+			}
+			
+			int x = board.playedMove(i);
+			if(x == moveColumnIndex) {
+				
+				continue;
+			}
+			
+			while(n > i) {
+				
+				board.undoMove();
+				n--;
+			}
+			
+			board.playMove(moveColumnIndex);
+			n++;
+		}
+		
+		while(n > l) {
+			
+			board.undoMove();
+			n--;
+		}
+	}
+	
+	/**
+	 * Sets up a new board by undoing all already played
+	 * moves and playing moves on behalf of the two players.
 	 *
 	 * @param moveColumnIndices the one-indexed move column numbers (columns indexed from left to right)
 	 */
