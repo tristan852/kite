@@ -22,7 +22,7 @@ import net.kite.util.random.Random;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.12.0";
+	private static final String VERSION = "1.12.1";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -36,7 +36,7 @@ public class Kite {
 	
 	private static final int MAXIMAL_MOVE_SCORE_LOSS = 36;
 	
-	private static final int MOVE_COLUMN_INDEX_CHARACTER_OFFSET = 48;
+	private static final int MOVE_COLUMN_INDEX_CHARACTER_OFFSET = 49;
 	
 	private final Board board;
 	private final Random random;
