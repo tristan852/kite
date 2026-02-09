@@ -13,6 +13,17 @@ public class Bitboard {
 	private static final String TO_STRING_MISSING_CELL_STRING = ".";
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
 	
+	private static final int TO_HEXADECIMAL_STRING_LENGTH = 16;
+	private static final String TO_HEXADECIMAL_STRING_PADDING_STRING = "0";
+	
+	public static String toHexadecimalString(long bitboard) {
+		String string = Long.toHexString(bitboard);
+		string = string.toUpperCase();
+		
+		int n = TO_HEXADECIMAL_STRING_LENGTH - string.length();
+		return TO_HEXADECIMAL_STRING_PADDING_STRING.repeat(n) + string;
+	}
+	
 	public static String toString(long bitboard) {
 		StringBuilder stringBuilder = new StringBuilder();
 		

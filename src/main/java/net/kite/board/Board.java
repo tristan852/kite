@@ -159,6 +159,8 @@ public class Board {
 	
 	private final BoardLine[] lines = new BoardLine[MAXIMAL_LINE_AMOUNT];
 	
+	private int nodeEvaluationAmount;
+	
 	public Board(BoardScoreCache scoreCache) {
 		this.scoreCache = scoreCache;
 		
@@ -525,6 +527,8 @@ public class Board {
 	
 	// only interested in scores in between min and max (excluding min and max tho)
 	private int evaluateWithNoImmediateWin(int minimalScore, int maximalScore) {
+		nodeEvaluationAmount++;
+		
 		int minScore = BoardScore.minimal(filledCellAmount);
 		int maxScore = BoardScore.maximalWithNoImmediateWin(filledCellAmount);
 		
@@ -957,6 +961,14 @@ public class Board {
 	
 	public boolean canPlayMove() {
 		return outcome == BoardOutcome.UNDECIDED;
+	}
+	
+	public void resetNodeEvaluationAmount() {
+		nodeEvaluationAmount = 0;
+	}
+	
+	public int getNodeEvaluationAmount() {
+		return nodeEvaluationAmount;
 	}
 	
 	public boolean over() {

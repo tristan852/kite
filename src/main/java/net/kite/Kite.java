@@ -9,6 +9,10 @@ import net.kite.board.score.cache.BoardScoreCache;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.skill.level.SkillLevel;
 import net.kite.util.random.Random;
+import net.kite.util.time.TimeUtil;
+
+import java.io.*;
+import java.util.Locale;
 
 /**
  * This is the public API to a {@link Kite} solver.
@@ -22,7 +26,7 @@ import net.kite.util.random.Random;
 public class Kite {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.12.1";
+	private static final String VERSION = "1.13.0";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final int BOARD_WIDTH = 7;
@@ -38,10 +42,28 @@ public class Kite {
 	
 	private static final int MOVE_COLUMN_INDEX_CHARACTER_OFFSET = 49;
 	
+	private static final String[] BENCHMARK_RESOURCE_PATHS = new String[] {
+			"/benchmarks/endgame_easy.txt",
+			"/benchmarks/midgame_easy.txt",
+			"/benchmarks/midgame_medium.txt",
+			"/benchmarks/opening_easy.txt",
+			"/benchmarks/opening_medium.txt",
+			"/benchmarks/opening_hard.txt"
+	};
+	
+	private static final int BENCHMARK_POSITION_AMOUNT = 1000;
+	private static final double BENCHMARK_THROUGHPUT_CONVERSION_FACTOR = 1000.0;
+	
+	private static final char BENCHMARK_ENTRY_SEPARATOR_CHARACTER = ' ';
+	
 	private final Board board;
 	private final Random random;
 	
 	private final int[] moveScores = new int[BOARD_WIDTH];
+	
+	private int metricsEvaluationAmount;
+	private long metricsEvaluationTime;
+	private long metricsRecordingStartTime;
 	
 	private Kite() {
 		BoardScoreCache boardScoreCache = new BoardScoreCache();
@@ -233,6 +255,60 @@ public class Kite {
 	 */
 	public synchronized int playedMoveAmount() {
 		return board.playedMoveAmount();
+	}
+	
+	/**
+	 * Starts recording the number of
+	 * nodes visited for all position
+	 * evaluations as well as the time
+	 * duration between this call and the
+	 * next stop-call.
+	 * <p>
+	 * Use {@link Kite#stopRecordingPerformanceMetrics()}
+	 * to stop the recording and use this method again
+	 * to continue recording the nodes visited and
+	 * the time elapsed.
+	 */
+	public synchronized void startRecordingPerformanceMetrics() {
+		board.resetNodeEvaluationAmount();
+		
+		metricsRecordingStartTime = System.nanoTime();
+	}
+	
+	/**
+	 * Pauses the recording of metrics started
+	 * by {@link Kite#startRecordingPerformanceMetrics()}.
+	 */
+	public synchronized void stopRecordingPerformanceMetrics() {
+		long endTime = System.nanoTime();
+		
+		int n = board.getNodeEvaluationAmount();
+		
+		metricsEvaluationAmount += n;
+		metricsEvaluationTime += endTime - metricsRecordingStartTime;
+	}
+	
+	/**
+	 * After using {@link Kite#startRecordingPerformanceMetrics()}
+	 * and {@link Kite#stopRecordingPerformanceMetrics()},
+	 * this method can be used to show the
+	 * recorded metrics as well as resetting
+	 * them.
+	 */
+	public synchronized void printAndResetPerformanceMetrics() {
+		double averageTime = (double) metricsEvaluationTime / BENCHMARK_POSITION_AMOUNT;
+		double averageAmount = (double) metricsEvaluationAmount / BENCHMARK_POSITION_AMOUNT;
+		
+		double throughput = (double) metricsEvaluationAmount / metricsEvaluationTime;
+		throughput *= BENCHMARK_THROUGHPUT_CONVERSION_FACTOR;
+		
+		String s = TimeUtil.formatDuration(averageTime);
+		
+		String message = String.format(Locale.US, "average evaluation time: %s, average node evaluations: %.2f, node throughput: %.2f", s, averageAmount, throughput);
+		System.out.println(message);
+		
+		metricsEvaluationAmount = 0;
+		metricsEvaluationTime = 0;
 	}
 	
 	/**
@@ -735,7 +811,7 @@ public class Kite {
 	}
 	
 	/**
-	 * Sets up a new board by undoing all already played
+	 * Sets up a new position by undoing all already played
 	 * moves and playing moves on behalf of the two players.
 	 *
 	 * @param moveColumnIndicesString the one-indexed move column numbers (columns indexed from left to right) as a string
@@ -780,7 +856,7 @@ public class Kite {
 	}
 	
 	/**
-	 * Sets up a new board by undoing all already played
+	 * Sets up a new position by undoing all already played
 	 * moves and playing moves on behalf of the two players.
 	 *
 	 * @param moveColumnIndices the one-indexed move column numbers (columns indexed from left to right)
@@ -868,6 +944,84 @@ public class Kite {
 	 */
 	public static String getAuthor() {
 		return AUTHOR;
+	}
+	
+	/**
+	 * Runs the benchmark by Pascal Pons
+	 * (see README for further information).
+	 * <p>
+	 * Running the benchmark consists of two
+	 * warmup-runs followed by a final
+	 * benchmark-run, the results of which
+	 * are being printed.
+	 * Note that error messages are being
+	 * printed in case the evaluation of
+	 * a benchmark position is wrong.
+	 */
+	public static void runBenchmark() {
+		for(int i = 1; i < 3; i++) {
+			
+			String message = String.format("Performing warmup... (%s/2)", i);
+			System.out.println(message);
+			
+			runBenchmark(false);
+		}
+		
+		runBenchmark(true);
+	}
+	
+	private static void runBenchmark(boolean recordMetrics) {
+		Kite solver = Kite.createInstance();
+		
+		for(String resourcePath : BENCHMARK_RESOURCE_PATHS) {
+			
+			if(recordMetrics) System.out.println(resourcePath);
+			
+			InputStream inputStream = Kite.class.getResourceAsStream(resourcePath);
+			if(inputStream == null) {
+				
+				System.err.printf("Benchmark cannot be found in resources: %s%n", resourcePath);
+				return;
+			}
+			
+			try(
+					inputStream;
+					Reader inputStreamReader = new InputStreamReader(inputStream);
+					BufferedReader bufferedReader = new BufferedReader(inputStreamReader)
+			) {
+				
+				while(true) {
+					
+					String line = bufferedReader.readLine();
+					if(line == null) break;
+					
+					int index = line.indexOf(BENCHMARK_ENTRY_SEPARATOR_CHARACTER);
+					
+					String s1 = line.substring(0, index);
+					String s2 = line.substring(index + 1);
+					
+					int score = Integer.parseInt(s2);
+					
+					solver.setupBoard(s1);
+					if(recordMetrics) solver.startRecordingPerformanceMetrics();
+					int s = solver.evaluateBoard();
+					if(recordMetrics) solver.stopRecordingPerformanceMetrics();
+					
+					if(s != score) {
+						
+						String errorMessage = String.format("Wrong evaluation: position=%s, evaluation=%s (should be %s)", s1, s, score);
+						System.err.println(errorMessage);
+					}
+				}
+				
+				if(recordMetrics) solver.printAndResetPerformanceMetrics();
+				
+			} catch(IOException exception) {
+				
+				String errorMessage = String.format("An exception occurred while loading benchmark from resources: %s", exception);
+				System.err.println(errorMessage);
+			}
+		}
 	}
 	
 	/**
