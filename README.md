@@ -119,6 +119,20 @@ As of early 2026, Kite appears to be both the most efficient Connect Four solver
 
 Despite being written in Java, Kite outperforms the C++ and Rust solvers included in this comparison.
 
+You can run the benchmark on your own machine, for example to test whether a change you made improves the solver, using the code snippet below. Keep in mind that results may vary depending on the hardware used.
+
+```java
+import net.kite.Kite;
+
+public class Main {
+	
+	public static void main(String[] programArguments) {
+		Kite.runBenchmark();
+	}
+	
+}
+```
+
 ---
 
 ## 📦 Installation
