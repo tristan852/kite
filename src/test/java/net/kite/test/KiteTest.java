@@ -111,6 +111,10 @@ public class KiteTest {
 				Assertions.assertEquals(e, testBoardEvaluation);
 			}
 			
+			// run test benchmark
+			// print stats on github server
+			Kite.runBenchmark();
+			
 		});
 	}
 	
