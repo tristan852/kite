@@ -97,6 +97,8 @@ public class KiteTest {
 	public void testKite() {
 		Assertions.assertDoesNotThrow(() -> {
 			
+			Assertions.assertTrue(Kite.runBenchmark(false));
+			
 			Kite solver = Kite.createInstance();
 			
 			int n = TEST_BOARD_MOVES.length;
@@ -110,8 +112,6 @@ public class KiteTest {
 				int e = solver.evaluateBoard();
 				Assertions.assertEquals(e, testBoardEvaluation);
 			}
-			
-			Assertions.assertTrue(Kite.runBenchmark(false));
 			
 		});
 	}
