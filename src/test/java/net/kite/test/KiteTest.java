@@ -113,7 +113,7 @@ public class KiteTest {
 			
 			// run test benchmark
 			// print stats on github server
-			Kite.runBenchmark();
+			Assertions.assertFalse(Kite.runBenchmark());
 			
 		});
 	}
