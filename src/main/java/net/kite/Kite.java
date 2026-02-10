@@ -958,21 +958,43 @@ public class Kite {
 	 * printed in case the evaluation of
 	 * a benchmark position is wrong.
 	 */
-	public static void runBenchmark() {
-		for(int i = 1; i < 3; i++) {
-			
-			String message = String.format("Performing warmup... (%s/2)", i);
-			System.out.println(message);
-			
-			runBenchmark(false);
-		}
-		
-		runBenchmark(true);
+	public static boolean runBenchmark() {
+		return runBenchmark(true);
 	}
 	
-	private static void runBenchmark(boolean recordMetrics) {
+	/**
+	 * Runs the benchmark by Pascal Pons
+	 * (see README for further information).
+	 * <p>
+	 * Running the benchmark consists of two
+	 * warmup-runs followed by a final
+	 * benchmark-run, the results of which
+	 * are being printed.
+	 * Note that error messages are being
+	 * printed in case the evaluation of
+	 * a benchmark position is wrong.
+	 *
+	 * @return whether to print metrics to standard output
+	 */
+	public static boolean runBenchmark(boolean printMetrics) {
+		if(printMetrics) {
+			
+			for(int i = 1; i < 3; i++) {
+				
+				String message = String.format("Performing warmup... (%s/2)", i);
+				System.out.println(message);
+				
+				if(!runAndRecordBenchmark(false)) return false;
+			}
+		}
+		
+		return runAndRecordBenchmark(printMetrics);
+	}
+	
+	private static boolean runAndRecordBenchmark(boolean recordMetrics) {
 		Kite solver = Kite.createInstance();
 		
+		boolean successful = true;
 		for(String resourcePath : BENCHMARK_RESOURCE_PATHS) {
 			
 			if(recordMetrics) System.out.println(resourcePath);
@@ -981,7 +1003,7 @@ public class Kite {
 			if(inputStream == null) {
 				
 				System.err.printf("Benchmark cannot be found in resources: %s%n", resourcePath);
-				return;
+				return false;
 			}
 			
 			try(
@@ -1011,6 +1033,9 @@ public class Kite {
 						
 						String errorMessage = String.format("Wrong evaluation: position=%s, evaluation=%s (should be %s)", s1, s, score);
 						System.err.println(errorMessage);
+						
+						if(recordMetrics) successful = false;
+						else return false;
 					}
 				}
 				
@@ -1020,8 +1045,12 @@ public class Kite {
 				
 				String errorMessage = String.format("An exception occurred while loading benchmark from resources: %s", exception);
 				System.err.println(errorMessage);
+				
+				return false;
 			}
 		}
+		
+		return successful;
 	}
 	
 	/**
