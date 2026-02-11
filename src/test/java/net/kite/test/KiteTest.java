@@ -93,6 +93,9 @@ public class KiteTest {
 			 11,   2,  -9,  11,  11,   0,  10,   5
 	};
 	
+	private static final int SELF_PLAY_GAME_AMOUNT = 100;
+	private static final int SELF_PLAY_INITIAL_BOARD_SCORE = 1;
+	
 	@Test
 	public void testKite() {
 		Assertions.assertDoesNotThrow(() -> {
@@ -110,7 +113,30 @@ public class KiteTest {
 				solver.setupBoard(testBoardMoves);
 				
 				int e = solver.evaluateBoard();
-				Assertions.assertEquals(e, testBoardEvaluation);
+				Assertions.assertEquals(testBoardEvaluation, e);
+			}
+			
+			for(int i = 0; i < SELF_PLAY_GAME_AMOUNT; i++) {
+				
+				solver.clearBoard();
+				
+				int expectedScore = SELF_PLAY_INITIAL_BOARD_SCORE;
+				
+				int s = solver.evaluateBoard();
+				Assertions.assertEquals(expectedScore, s);
+				
+				expectedScore = -expectedScore;
+				
+				while(solver.canPlayMove()) {
+					
+					int move = solver.optimalMove();
+					solver.playMove(move);
+					
+					s = solver.evaluateBoard();
+					Assertions.assertEquals(expectedScore, s);
+					
+					expectedScore = -expectedScore;
+				}
 			}
 			
 		});
