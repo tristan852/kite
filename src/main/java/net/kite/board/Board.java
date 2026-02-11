@@ -21,12 +21,6 @@ public class Board {
 	private static final int UP_RIGHT_BITBOARD_DIRECTION = 9;
 	private static final int DOWN_RIGHT_BITBOARD_DIRECTION = 7;
 	
-	private static final int[] NON_VERTICAL_BITBOARD_CONNECTION_DIRECTIONS = new int[] {
-			RIGHT_BITBOARD_DIRECTION,
-			DOWN_RIGHT_BITBOARD_DIRECTION,
-			UP_RIGHT_BITBOARD_DIRECTION
-	};
-	
 	private static final int[] BITBOARD_CONNECTION_DIRECTIONS = new int[] {
 			RIGHT_BITBOARD_DIRECTION,
 			DOWN_RIGHT_BITBOARD_DIRECTION,
@@ -951,65 +945,102 @@ public class Board {
 	}
 	
 	private static boolean canRedWinInClaimEven(long redCells, long yellowCells, long currentYellowCells, long currentMask) {
-		for(int direction : NON_VERTICAL_BITBOARD_CONNECTION_DIRECTIONS) {
+		long wins = redCells;
+		
+		wins &= wins << RIGHT_BITBOARD_DIRECTION;
+		wins &= wins << (RIGHT_BITBOARD_DIRECTION << 1);
+		
+		while(wins != 0) {
 			
-			long wins = redCells;
+			int winPosition = Long.numberOfTrailingZeros(wins);
 			
-			wins &= wins << direction;
-			wins &= wins << (direction << 1);
+			long winBitboard = 1L << winPosition;
+			wins ^= winBitboard;
 			
-			while(wins != 0) {
-				
-				int winPosition = Long.numberOfTrailingZeros(wins);
-				
-				long winBitboard = 1L << winPosition;
-				wins ^= winBitboard;
-				
-				long redBuilds = Bitboards.CELLS_BELOW_LINE_BITBOARDS[direction][winPosition];
-				
-				long cells = currentYellowCells | (~currentMask & yellowCells & redBuilds);
-				if(bitboardContainsConnection(cells)) continue;
-				
-				return true;
-			}
+			long redBuilds = Bitboards.CELLS_BELOW_LINE_BITBOARDS[RIGHT_BITBOARD_DIRECTION][winPosition];
+			
+			long cells = currentYellowCells | (~currentMask & yellowCells & redBuilds);
+			if(bitboardContainsConnection(cells)) continue;
+			
+			return true;
+		}
+		
+		wins = redCells;
+		
+		wins &= wins << DOWN_RIGHT_BITBOARD_DIRECTION;
+		wins &= wins << (DOWN_RIGHT_BITBOARD_DIRECTION << 1);
+		
+		while(wins != 0) {
+			
+			int winPosition = Long.numberOfTrailingZeros(wins);
+			
+			long winBitboard = 1L << winPosition;
+			wins ^= winBitboard;
+			
+			long redBuilds = Bitboards.CELLS_BELOW_LINE_BITBOARDS[DOWN_RIGHT_BITBOARD_DIRECTION][winPosition];
+			
+			long cells = currentYellowCells | (~currentMask & yellowCells & redBuilds);
+			if(bitboardContainsConnection(cells)) continue;
+			
+			return true;
+		}
+		
+		wins = redCells;
+		
+		wins &= wins << UP_RIGHT_BITBOARD_DIRECTION;
+		wins &= wins << (UP_RIGHT_BITBOARD_DIRECTION << 1);
+		
+		while(wins != 0) {
+			
+			int winPosition = Long.numberOfTrailingZeros(wins);
+			
+			long winBitboard = 1L << winPosition;
+			wins ^= winBitboard;
+			
+			long redBuilds = Bitboards.CELLS_BELOW_LINE_BITBOARDS[UP_RIGHT_BITBOARD_DIRECTION][winPosition];
+			
+			long cells = currentYellowCells | (~currentMask & yellowCells & redBuilds);
+			if(bitboardContainsConnection(cells)) continue;
+			
+			return true;
 		}
 		
 		return false;
 	}
 	
-	private static long cellsAboveCells(long cells) {
-		cells <<= 1;
-		cells &= Bitboards.FULL_BOARD;
-		
-		for(int i = 0; i < CELLS_ABOVE_CELLS_MAXIMAL_ITERATION_AMOUNT; i++) {
-			
-			long cellsBefore = cells;
-			
-			cells |= cells << 1;
-			cells &= Bitboards.FULL_BOARD;
-			
-			if(cells == cellsBefore) return cells;
-		}
-		
-		return cells;
-	}
-	
 	private static long nonVerticalWinCellsBitboard(long bitboard) {
-		long result = 0;
+		long b = bitboard;
+		int doubleDirection = RIGHT_BITBOARD_DIRECTION << 1;
 		
-		for(int direction : NON_VERTICAL_BITBOARD_CONNECTION_DIRECTIONS) {
-			
-			int doubleDirection = direction << 1;
-			long b = bitboard;
-			
-			b &= b >>> direction;
-			b &= b >>> doubleDirection;
-			
-			b |= b << direction;
-			b |= b << doubleDirection;
-			
-			result |= b;
-		}
+		b &= b >>> RIGHT_BITBOARD_DIRECTION;
+		b &= b >>> doubleDirection;
+		
+		b |= b << RIGHT_BITBOARD_DIRECTION;
+		b |= b << doubleDirection;
+		
+		long result = b;
+		
+		b = bitboard;
+		doubleDirection = DOWN_RIGHT_BITBOARD_DIRECTION << 1;
+		
+		b &= b >>> DOWN_RIGHT_BITBOARD_DIRECTION;
+		b &= b >>> doubleDirection;
+		
+		b |= b << DOWN_RIGHT_BITBOARD_DIRECTION;
+		b |= b << doubleDirection;
+		
+		result |= b;
+		
+		b = bitboard;
+		doubleDirection = UP_RIGHT_BITBOARD_DIRECTION << 1;
+		
+		b &= b >>> UP_RIGHT_BITBOARD_DIRECTION;
+		b &= b >>> doubleDirection;
+		
+		b |= b << UP_RIGHT_BITBOARD_DIRECTION;
+		b |= b << doubleDirection;
+		
+		result |= b;
 		
 		return result;
 	}
@@ -1023,51 +1054,50 @@ public class Board {
 		return bitboard;
 	}
 	
-	private static long winCellsBitboard(long bitboard) {
-		long result = 0;
-		
-		for(int direction : BITBOARD_CONNECTION_DIRECTIONS) {
-			
-			int doubleDirection = direction << 1;
-			long b = bitboard;
-			
-			b &= b >>> direction;
-			b &= b >>> doubleDirection;
-			
-			b |= b << direction;
-			b |= b << doubleDirection;
-			
-			result |= b;
-		}
-		
-		return result;
-	}
-	
 	private static long bitboardConnectionOpportunities(long bitboard) {
-		long result = 0;
+		long doubles = bitboard;
+		doubles &= doubles << UP_BITBOARD_DIRECTION;
 		
-		long verticalDoubles = bitboard;
-		verticalDoubles &= verticalDoubles << UP_BITBOARD_DIRECTION;
+		long triples = doubles;
+		triples &= triples << UP_BITBOARD_DIRECTION;
 		
-		long verticalTriples = verticalDoubles;
-		verticalTriples &= verticalTriples << UP_BITBOARD_DIRECTION;
+		long result = triples << UP_BITBOARD_DIRECTION;
 		
-		result |= verticalTriples << UP_BITBOARD_DIRECTION;
+		doubles = bitboard;
+		doubles &= doubles << RIGHT_BITBOARD_DIRECTION;
 		
-		for(int direction : NON_VERTICAL_BITBOARD_CONNECTION_DIRECTIONS) {
-			
-			long doubles = bitboard;
-			doubles &= doubles << direction;
-			
-			long triples = doubles;
-			triples &= triples << direction;
-			
-			result |= triples << direction;
-			result |= triples >>> (direction * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
-			
-			result |= (doubles >>> (direction << 1)) & (bitboard << direction);
-			result |= (doubles << direction) & (bitboard >>> direction);
-		}
+		triples = doubles;
+		triples &= triples << RIGHT_BITBOARD_DIRECTION;
+		
+		result |= triples << RIGHT_BITBOARD_DIRECTION;
+		result |= triples >>> (RIGHT_BITBOARD_DIRECTION * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
+		
+		result |= (doubles >>> (RIGHT_BITBOARD_DIRECTION << 1)) & (bitboard << RIGHT_BITBOARD_DIRECTION);
+		result |= (doubles << RIGHT_BITBOARD_DIRECTION) & (bitboard >>> RIGHT_BITBOARD_DIRECTION);
+		
+		doubles = bitboard;
+		doubles &= doubles << DOWN_RIGHT_BITBOARD_DIRECTION;
+		
+		triples = doubles;
+		triples &= triples << DOWN_RIGHT_BITBOARD_DIRECTION;
+		
+		result |= triples << DOWN_RIGHT_BITBOARD_DIRECTION;
+		result |= triples >>> (DOWN_RIGHT_BITBOARD_DIRECTION * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
+		
+		result |= (doubles >>> (DOWN_RIGHT_BITBOARD_DIRECTION << 1)) & (bitboard << DOWN_RIGHT_BITBOARD_DIRECTION);
+		result |= (doubles << DOWN_RIGHT_BITBOARD_DIRECTION) & (bitboard >>> DOWN_RIGHT_BITBOARD_DIRECTION);
+		
+		doubles = bitboard;
+		doubles &= doubles << UP_RIGHT_BITBOARD_DIRECTION;
+		
+		triples = doubles;
+		triples &= triples << UP_RIGHT_BITBOARD_DIRECTION;
+		
+		result |= triples << UP_RIGHT_BITBOARD_DIRECTION;
+		result |= triples >>> (UP_RIGHT_BITBOARD_DIRECTION * BITBOARD_CONNECTION_OPPORTUNITY_LENGTH);
+		
+		result |= (doubles >>> (UP_RIGHT_BITBOARD_DIRECTION << 1)) & (bitboard << UP_RIGHT_BITBOARD_DIRECTION);
+		result |= (doubles << UP_RIGHT_BITBOARD_DIRECTION) & (bitboard >>> UP_RIGHT_BITBOARD_DIRECTION);
 		
 		result &= Bitboards.FULL_BOARD;
 		return result;
@@ -1081,29 +1111,49 @@ public class Board {
 	}
 	
 	private static boolean bitboardContainsNonVerticalConnection(long bitboard) {
-		for(int direction : NON_VERTICAL_BITBOARD_CONNECTION_DIRECTIONS) {
-			
-			long board = bitboard;
-			board &= board << direction;
-			board &= board << (direction << 1);
-			
-			if(board != 0) return true;
-		}
+		long board = bitboard;
+		board &= board << RIGHT_BITBOARD_DIRECTION;
+		board &= board << (RIGHT_BITBOARD_DIRECTION << 1);
 		
-		return false;
+		if(board != 0) return true;
+		
+		board = bitboard;
+		board &= board << DOWN_RIGHT_BITBOARD_DIRECTION;
+		board &= board << (DOWN_RIGHT_BITBOARD_DIRECTION << 1);
+		
+		if(board != 0) return true;
+		
+		board = bitboard;
+		board &= board << UP_RIGHT_BITBOARD_DIRECTION;
+		board &= board << (UP_RIGHT_BITBOARD_DIRECTION << 1);
+		
+		return board != 0;
 	}
 	
 	private static boolean bitboardContainsConnection(long bitboard) {
-		for(int direction : BITBOARD_CONNECTION_DIRECTIONS) {
-			
-			long board = bitboard;
-			board &= board << direction;
-			board &= board << (direction << 1);
-			
-			if(board != 0) return true;
-		}
+		long board = bitboard;
+		board &= board << RIGHT_BITBOARD_DIRECTION;
+		board &= board << (RIGHT_BITBOARD_DIRECTION << 1);
 		
-		return false;
+		if(board != 0) return true;
+		
+		board = bitboard;
+		board &= board << DOWN_RIGHT_BITBOARD_DIRECTION;
+		board &= board << (DOWN_RIGHT_BITBOARD_DIRECTION << 1);
+		
+		if(board != 0) return true;
+		
+		board = bitboard;
+		board &= board << UP_RIGHT_BITBOARD_DIRECTION;
+		board &= board << (UP_RIGHT_BITBOARD_DIRECTION << 1);
+		
+		if(board != 0) return true;
+		
+		board = bitboard;
+		board &= board << UP_BITBOARD_DIRECTION;
+		board &= board << (UP_BITBOARD_DIRECTION << 1);
+		
+		return board != 0;
 	}
 	
 	public static int getWidth() {
