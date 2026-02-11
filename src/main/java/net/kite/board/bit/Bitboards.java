@@ -8,7 +8,16 @@ public class Bitboards {
 	public static final long EMPTY_CEILING = 0x0001010101010101L;
 	
 	public static final long ODD_BOARD_ROWS = 0x0015151515151515L;
-	public static final long EVEN_BOARD_ROWS = 0x002A2A2A2A2A2A2AL;
+	
+	public static final long[] COLUMNS = new long[] {
+			0x00000000000000FFL,
+			0x000000000000FF00L,
+			0x0000000000FF0000L,
+			0x00000000FF000000L,
+			0x000000FF00000000L,
+			0x0000FF0000000000L,
+			0x00FF000000000000L
+	};
 	
 	public static final long[] DESCENDINGLY_ORDERED_EVEN_BOARD_ROWS = new long[] {
 			0x0020202020202020L,
