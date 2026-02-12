@@ -21,6 +21,10 @@ public class Random {
 	private long currentSeed;
 	
 	public Random() {
+		setRandomSeed();
+	}
+	
+	public void setRandomSeed() {
 		Thread currentThread = Thread.currentThread();
 		ThreadLocalRandom currentThreadRandom = ThreadLocalRandom.current();
 		
