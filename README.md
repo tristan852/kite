@@ -5,7 +5,7 @@
     
 # Kite
     
-![Java version](https://img.shields.io/badge/Java-19+-blue?style=for-the-badge)
+![Java version](https://img.shields.io/badge/Java-25+-blue?style=for-the-badge)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/tristan852/kite?style=for-the-badge)
 ![GitHub license](https://img.shields.io/github/license/tristan852/kite?style=for-the-badge)
 [![Java documentation](https://javadoc.io/badge2/io.github.tristan852/kite/javadoc.svg?style=for-the-badge)](https://javadoc.io/doc/io.github.tristan852/kite)
@@ -93,27 +93,27 @@ Additionally, the Fhourstones solver evaluates each benchmark position only *wea
 | **endgame-easy**   | Fhourstones | 4.27 µs                 | 39.80                    | 9.33                          |
 |                    | Pascal Pons | 4.57 µs                 | 51.28                    | 11.23                         |
 |                    | Ben Rall    | 3.32 µs                 | 51                       | 14.80                         |
-|                    | **Kite**    | **2.32 µs**             | **38.17**                | **16.48**                     |
+|                    | **Kite**    | **1.90 µs**             | **33.81**                | **17.84**                     |
 | **midgame-easy**   | Fhourstones | 137 µs                  | 2,101                    | 15.30                         |
 |                    | Pascal Pons | 37.45 µs                | 449.60                   | 12                            |
 |                    | Ben Rall    | 32.20 µs                | 449                      | 13.95                         |
-|                    | **Kite**    | **21.74 µs**            | **332.24**               | **15.28**                     |
+|                    | **Kite**    | **22.22 µs**            | **379.49**               | **17.08**                     |
 | **midgame-medium** | Fhourstones | 1.70 ms                 | 28,725                   | 16.94                         |
 |                    | Pascal Pons | 3.21 ms                 | 39,900                   | 12.42                         |
 |                    | Ben Rall    | 2.87 ms                 | 39,855                   | 13.89                         |
-|                    | **Kite**    | **1.22 ms**             | **22,781.79**            | **18.64**                     |
+|                    | **Kite**    | **961.50 µs**           | **20,137.98**            | **20.94**                     |
 | **opening-easy**   | Fhourstones | 150 ms                  | 2,456,184                | 16.33                         |
 |                    | Pascal Pons | 254.60 µs               | 3,298                    | 12.95                         |
 |                    | Ben Rall    | 42 µs                   | 619                      | 14.71                         |
-|                    | **Kite**    | **46.54 µs**            | **745.41**               | **16.02**                     |
+|                    | **Kite**    | **47.56 µs**            | **953.61**               | **20.05**                     |
 | **opening-medium** | Fhourstones | 80.60 ms                | 1,296,896                | 16.09                         |
 |                    | Pascal Pons | 96.63 ms                | 1,201,000                | 12.43                         |
 |                    | Ben Rall    | 7.44 ms                 | 95,156                   | 12.79                         |
-|                    | **Kite**    | **0.90 ms**             | **16,270.34**            | **18.09**                     |
+|                    | **Kite**    | **715.97 µs**           | **14,677.80**            | **20.50**                     |
 | **opening-hard**   | Fhourstones | 5.58 s                  | 93,425,554               | 16.74                         |
 |                    | Pascal Pons | 5.49 s                  | 65,920,000               | 12.01                         |
 |                    | Ben Rall    | 1.40 ms                 | 17,631                   | 12.62                         |
-|                    | **Kite**    | **27.57 µs**            | **477.90**               | **17.34**                     |
+|                    | **Kite**    | **22.05 µs**            | **456.86**               | **20.72**                     |
 
 As of early 2026, Kite appears to be both the most efficient Connect Four solver, measured by the number of node evaluations required per position, and the fastest overall.
 
