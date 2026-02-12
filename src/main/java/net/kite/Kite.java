@@ -5,13 +5,13 @@ import net.kite.board.line.BoardLine;
 import net.kite.board.outcome.BoardOutcome;
 import net.kite.board.player.color.BoardPlayerColor;
 import net.kite.board.score.BoardScore;
-import net.kite.board.score.cache.BoardScoreCache;
 import net.kite.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.skill.level.SkillLevel;
 import net.kite.util.random.Random;
 import net.kite.util.time.TimeUtil;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -40,7 +40,7 @@ public class Kite {
 	
 	private static final int MAXIMAL_MOVE_SCORE_LOSS = 36;
 	
-	private static final int MOVE_COLUMN_INDEX_CHARACTER_OFFSET = 49;
+	private static final int MOVE_COLUMN_INDEX_SMALLEST_CHARACTER = 49;
 	
 	private static final String[] BENCHMARK_RESOURCE_PATHS = new String[] {
 			"/benchmarks/endgame_easy.txt",
@@ -51,7 +51,6 @@ public class Kite {
 			"/benchmarks/opening_hard.txt"
 	};
 	
-	private static final int BENCHMARK_POSITION_AMOUNT = 1000;
 	private static final double BENCHMARK_THROUGHPUT_CONVERSION_FACTOR = 1000.0;
 	
 	private static final char BENCHMARK_ENTRY_SEPARATOR_CHARACTER = ' ';
@@ -62,13 +61,12 @@ public class Kite {
 	private final int[] moveScores = new int[BOARD_WIDTH];
 	
 	private int metricsEvaluationAmount;
+	private int metricsNodeEvaluationAmount;
 	private long metricsEvaluationTime;
 	private long metricsRecordingStartTime;
 	
 	private Kite() {
-		BoardScoreCache boardScoreCache = new BoardScoreCache();
-		
-		this.board = new Board(boardScoreCache);
+		this.board = new Board();
 		this.random = new Random();
 		
 		OpeningBoardScoreCaches.ensureDefaultIsLoaded(null);
@@ -140,6 +138,19 @@ public class Kite {
 		cellColumnIndex--;
 		
 		return board.cellColumnHeight(cellColumnIndex);
+	}
+	
+	/**
+	 * Returns whether the cell is currently
+	 * occupied by a stone of either
+	 * player color.
+	 *
+	 * @param cellX x coordinate of the cell (zero indexed from left to right)
+	 * @param cellY y coordinate of the cell (zero indexed from bottom to top)
+	 * @return whether cell is occupied
+	 */
+	public synchronized boolean cellOccupied(int cellX, int cellY) {
+		return board.cellFilled(cellX, cellY);
 	}
 	
 	/**
@@ -228,7 +239,7 @@ public class Kite {
 	 * @return game outcome
 	 */
 	public synchronized BoardOutcome gameOutcome() {
-		return board.getOutcome();
+		return board.outcome();
 	}
 	
 	/**
@@ -270,7 +281,7 @@ public class Kite {
 	 * the time elapsed.
 	 */
 	public synchronized void startRecordingPerformanceMetrics() {
-		board.resetNodeEvaluationAmount();
+		board.resetEvaluationMetrics();
 		
 		metricsRecordingStartTime = System.nanoTime();
 	}
@@ -282,9 +293,8 @@ public class Kite {
 	public synchronized void stopRecordingPerformanceMetrics() {
 		long endTime = System.nanoTime();
 		
-		int n = board.getNodeEvaluationAmount();
-		
-		metricsEvaluationAmount += n;
+		metricsEvaluationAmount += board.getEvaluationAmount();
+		metricsNodeEvaluationAmount += board.getNodeEvaluationAmount();
 		metricsEvaluationTime += endTime - metricsRecordingStartTime;
 	}
 	
@@ -296,18 +306,29 @@ public class Kite {
 	 * them.
 	 */
 	public synchronized void printAndResetPerformanceMetrics() {
-		double averageTime = (double) metricsEvaluationTime / BENCHMARK_POSITION_AMOUNT;
-		double averageAmount = (double) metricsEvaluationAmount / BENCHMARK_POSITION_AMOUNT;
+		double averageTime = 0;
+		double averageAmount = 0;
+		double throughput = 0;
 		
-		double throughput = (double) metricsEvaluationAmount / metricsEvaluationTime;
-		throughput *= BENCHMARK_THROUGHPUT_CONVERSION_FACTOR;
+		if(metricsEvaluationAmount != 0) {
+			
+			averageTime = (double) metricsEvaluationTime / metricsEvaluationAmount;
+			averageAmount = (double) metricsNodeEvaluationAmount / metricsEvaluationAmount;
+		}
+		
+		if(metricsEvaluationTime != 0) {
+			
+			throughput = (double) metricsNodeEvaluationAmount / metricsEvaluationTime;
+			throughput *= BENCHMARK_THROUGHPUT_CONVERSION_FACTOR;
+		}
 		
 		String s = TimeUtil.formatDuration(averageTime);
 		
-		String message = String.format(Locale.US, "average evaluation time: %s, average node evaluations: %.2f, node throughput: %.2f", s, averageAmount, throughput);
+		String message = String.format(Locale.US, "positions evaluated: %d, average evaluation time: %s, average node evaluations: %.2f, node throughput: %.2f Mn/s", metricsEvaluationAmount, s, averageAmount, throughput);
 		System.out.println(message);
 		
 		metricsEvaluationAmount = 0;
+		metricsNodeEvaluationAmount = 0;
 		metricsEvaluationTime = 0;
 	}
 	
@@ -344,7 +365,7 @@ public class Kite {
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			int moveScore = board.moveLegal(moveColumnIndex) ? board.evaluateMove(moveColumnIndex, minimalScore - 1) : Integer.MIN_VALUE;
+			int moveScore = board.moveLegalWhileGameNotOver(moveColumnIndex) ? board.evaluateMove(moveColumnIndex, minimalScore - 1) : Integer.MIN_VALUE;
 			
 			moveScores[moveColumnIndex] = moveScore;
 			
@@ -395,7 +416,7 @@ public class Kite {
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			if(!board.moveLegal(moveColumnIndex)) continue;
+			if(!board.moveLegalWhileGameNotOver(moveColumnIndex)) continue;
 			
 			int moveScore = board.evaluateMove(moveColumnIndex, -bestAbsoluteMoveScore - 1);
 			if(moveScore < 0) moveScore = -moveScore;
@@ -417,7 +438,7 @@ public class Kite {
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			if(!board.moveLegal(moveColumnIndex)) continue;
+			if(!board.moveLegalWhileGameNotOver(moveColumnIndex)) continue;
 			
 			int absoluteMoveScore = moveScores[moveColumnIndex];
 			if(absoluteMoveScore != bestAbsoluteMoveScore) continue;
@@ -450,7 +471,7 @@ public class Kite {
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			int moveScore = board.moveLegal(moveColumnIndex) ? board.evaluateMove(moveColumnIndex, optimalMoveScore - 1) : Integer.MIN_VALUE;
+			int moveScore = board.moveLegalWhileGameNotOver(moveColumnIndex) ? board.evaluateMove(moveColumnIndex, optimalMoveScore - 1) : Integer.MIN_VALUE;
 			
 			moveScores[moveColumnIndex] = moveScore;
 			
@@ -493,14 +514,14 @@ public class Kite {
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			if(board.moveLegal(moveColumnIndex)) n++;
+			if(board.moveLegalWhileGameNotOver(moveColumnIndex)) n++;
 		}
 		
 		int index = random.randomInteger(n);
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			if(!board.moveLegal(moveColumnIndex)) continue;
+			if(!board.moveLegalWhileGameNotOver(moveColumnIndex)) continue;
 			
 			if(index == 0) return moveColumnIndex + 1;
 			index--;
@@ -625,9 +646,15 @@ public class Kite {
 	 * @return move evaluations ({@link Integer#MIN_VALUE} for illegal moves)
 	 */
 	public synchronized int[] evaluateAllMoves(int[] moveScores) {
+		if(board.over()) {
+			
+			Arrays.fill(moveScores, Integer.MIN_VALUE);
+			return moveScores;
+		}
+		
 		for(int x : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			if(board.moveLegal(x)) moveScores[x] = board.evaluateMove(x);
+			if(board.moveLegalWhileGameNotOver(x)) moveScores[x] = board.evaluateMove(x);
 			else moveScores[x] = Integer.MIN_VALUE;
 		}
 		
@@ -650,9 +677,15 @@ public class Kite {
 	public synchronized int[] evaluateAllMoves() {
 		int[] moveScores = new int[BOARD_WIDTH];
 		
+		if(board.over()) {
+			
+			Arrays.fill(moveScores, Integer.MIN_VALUE);
+			return moveScores;
+		}
+		
 		for(int x : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			if(board.moveLegal(x)) moveScores[x] = board.evaluateMove(x);
+			if(board.moveLegalWhileGameNotOver(x)) moveScores[x] = board.evaluateMove(x);
 			else moveScores[x] = Integer.MIN_VALUE;
 		}
 		
@@ -708,6 +741,21 @@ public class Kite {
 	}
 	
 	/**
+	 * Reseeds the random number generator used
+	 * for move generation (e.g., via
+	 * {@link Kite#skilledMove(SkillLevel skillLevel)}
+	 * or {@link Kite#optimalMove()}).
+	 * <p>
+	 * If move generation was previously made deterministic
+	 * using {@link Kite#seedRandomness(long seed)}, calling
+	 * this method will revert it back to non-deterministic
+	 * behavior.
+	 */
+	public synchronized void seedRandomness() {
+		random.setRandomSeed();
+	}
+	
+	/**
 	 * Seeds the random number generator used for
 	 * generating moves via e.g. {@link Kite#skilledMove(SkillLevel skillLevel)}
 	 * or {@link Kite#optimalMove()}.
@@ -751,7 +799,7 @@ public class Kite {
 		int n = moveColumnIndices.length();
 		for(int i = 0; i < n; i++) {
 			
-			int moveColumnIndex = moveColumnIndices.charAt(i) - MOVE_COLUMN_INDEX_CHARACTER_OFFSET;
+			int moveColumnIndex = moveColumnIndices.charAt(i) - MOVE_COLUMN_INDEX_SMALLEST_CHARACTER;
 			
 			board.playMove(moveColumnIndex);
 		}
@@ -822,7 +870,7 @@ public class Kite {
 		
 		for(int i = 0; i < l; i++) {
 			
-			int moveColumnIndex = moveColumnIndicesString.charAt(i) - MOVE_COLUMN_INDEX_CHARACTER_OFFSET;
+			int moveColumnIndex = moveColumnIndicesString.charAt(i) - MOVE_COLUMN_INDEX_SMALLEST_CHARACTER;
 			
 			if(i == n) {
 				
