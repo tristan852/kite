@@ -52,28 +52,27 @@ public class Board {
 	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 602;
 	
 	private static final int[] RED_MOVE_CELL_SCORES = new int[] {
-			  4,   8,  24, 139,  34, 450,   0,   0,
-			  0,  85,  25, 140, 137, 249,   0,   0,
-			121, 158, 461, 347, 175, 212,   0,   0,
-			319, 264, 347, 267, 386, 439,   0,   0,
-			121, 158, 461, 347, 175, 212,   0,   0,
-			  0,  85,  25, 140, 137, 249,   0,   0,
-			  4,   8,  24, 139,  34, 450
+			 13,  17,  33, 148,  43, 459,   0,   0,
+			  9,  94,  34, 153, 146, 258,   0,   0,
+			130, 167, 470, 356, 184, 221,   0,   0,
+			366, 273, 356, 276, 395, 471,   0,   0,
+			130, 167, 470, 356, 184, 221,   0,   0,
+			  9,  94,  34, 153, 146, 258,   0,   0,
+			 13,  17,  33, 148,  43, 459
 	};
 	
 	private static final int[] YELLOW_MOVE_CELL_SCORES = new int[] {
-			  8, 122,  29, 193, 105, 394,   0,   0,
-			  2, 164, 138, 205,  33, 424,   0,   0,
-			 87, 305, 195, 384, 174, 384,   0,   0,
-			127, 403, 472, 486, 434, 425,   0,   0,
-			 87, 305, 195, 384, 174, 384,   0,   0,
-			  2, 164, 138, 205,  33, 424,   0,   0,
-			  8, 122,  29, 193, 105, 394
+			 20, 134,  38, 172, 114, 403,   0,   0,
+			  0, 144, 137, 214, 118, 408,   0,   0,
+			 96, 295, 204, 405, 159, 398,   0,   0,
+			134, 421, 459, 436, 435, 445,   0,   0,
+			 96, 295, 204, 405, 159, 398,   0,   0,
+			  0, 144, 137, 214, 118, 408,   0,   0,
+			 20, 134,  38, 172, 114, 403
 	};
 	
+	private static final int INFINITE_MOVE_SCORE = 1000000;
 	private static final int MISSING_MOVE_SCORE = Integer.MIN_VALUE;
-	
-	private static final int CELLS_ABOVE_CELLS_MAXIMAL_ITERATION_AMOUNT = 5;
 	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
 	
@@ -117,6 +116,7 @@ public class Board {
 	private static final String TO_STRING_MOVES_PREFIX_STRING = "moves: ";
 	private static final String TO_STRING_MOVE_SCORES_PREFIX_STRING = "\nmove scores: ";
 	private static final String TO_STRING_MOVE_SCORE_SEPARATOR_STRING = ", ";
+	private static final String TO_STRING_GAME_OVER_MOVE_SCORES_STRING = "-, -, -, -, -, -, -";
 	private static final String TO_STRING_OUTCOME_PREFIX_STRING = "\noutcome: ";
 	private static final String TO_STRING_ILLEGAL_MOVE_STRING = "-";
 	
@@ -134,8 +134,6 @@ public class Board {
 	private long ceilingBitboard = Bitboards.EMPTY_CEILING;
 	
 	private long mixedHash = EMPTY_MIXED_HASH;
-	
-	private BoardOutcome outcome = BoardOutcome.UNDECIDED;
 	
 	private final int[] moves;
 	private final int[] moveScores;
@@ -185,23 +183,33 @@ public class Board {
 		
 		stringBuilder.append(TO_STRING_MOVE_SCORES_PREFIX_STRING);
 		
-		for(int x : ORDERED_MOVE_COLUMN_INDICES) {
-			
-			if(moveLegal(x)) moveScores[x] = evaluateMove(x);
-		}
+		BoardOutcome outcome = outcome();
+		boolean gameNotOver = outcome == BoardOutcome.UNDECIDED;
 		
-		for(int x = 0; x < WIDTH; x++) {
+		if(gameNotOver) {
 			
-			if(x != 0) stringBuilder.append(TO_STRING_MOVE_SCORE_SEPARATOR_STRING);
+			for(int x : ORDERED_MOVE_COLUMN_INDICES) {
+				
+				if(moveLegalWhileGameNotOver(x)) moveScores[x] = evaluateMove(x);
+			}
 			
-			if(moveLegal(x)) {
+			for(int x = 0; x < WIDTH; x++) {
 				
-				int score = moveScores[x];
-				String s = formatMoveScore(score);
+				if(x != 0) stringBuilder.append(TO_STRING_MOVE_SCORE_SEPARATOR_STRING);
 				
-				stringBuilder.append(s);
-				
-			} else stringBuilder.append(TO_STRING_ILLEGAL_MOVE_STRING);
+				if(moveLegalWhileGameNotOver(x)) {
+					
+					int score = moveScores[x];
+					String s = formatMoveScore(score);
+					
+					stringBuilder.append(s);
+					
+				} else stringBuilder.append(TO_STRING_ILLEGAL_MOVE_STRING);
+			}
+			
+		} else {
+			
+			stringBuilder.append(TO_STRING_GAME_OVER_MOVE_SCORES_STRING);
 		}
 		
 		stringBuilder.append(TO_STRING_OUTCOME_PREFIX_STRING);
@@ -211,8 +219,8 @@ public class Board {
 	}
 	
 	public BoardLine[] winningPlayerLines() {
-		boolean won = outcome.isWin();
-		if(!won) return null;
+		long board = activeBitboard ^ maskBitboard;
+		if(!bitboardContainsConnection(board)) return null;
 		
 		int lineAmount = 0;
 		
@@ -429,11 +437,10 @@ public class Board {
 	public int evaluate(int maxScore) {
 		evaluationAmount++;
 		
-		if(outcome != BoardOutcome.UNDECIDED) {
-			
-			if(outcome == BoardOutcome.DRAW) return BoardScore.DRAW;
-			return BoardScore.loss(filledCellAmount);
-		}
+		long board = activeBitboard ^ maskBitboard;
+		if(bitboardContainsConnection(board)) return BoardScore.loss(filledCellAmount);
+		
+		if(filledCellAmount == FULL_CELL_AMOUNT) return BoardScore.DRAW;
 		
 		if(activePlayerHasImmediateWin()) {
 			
@@ -518,10 +525,8 @@ public class Board {
 				
 				if(maxScore > BoardScore.DRAW) maxScore = BoardScore.DRAW;
 				
-				boolean yellowWon = bitboardContainsNonVerticalConnection(yellowCells);
-				if(yellowWon) {
-					
-					long yellowWinningStones = nonVerticalWinCellsBitboard(yellowCells);
+				long yellowWinningStones = nonVerticalWinCellsBitboard(yellowCells);
+				if(yellowWinningStones != 0) {
 					
 					int y = LARGEST_MOVE_CELL_Y;
 					for(long row : Bitboards.DESCENDINGLY_ORDERED_EVEN_BOARD_ROWS) {
@@ -658,6 +663,8 @@ public class Board {
 		boolean symmetrical = bitboard == mirroredBitboard;
 		if(symmetrical) movesBitboard &= Bitboards.SYMMETRY_PRUNE_BITBOARD;
 		
+		movesBitboard &= ~(opponentWinBitboard >>> 1);
+		
 		int moveIndex = movesBaseIndex;
 		
 		int bestMoveIndex = 0;
@@ -671,13 +678,8 @@ public class Board {
 			long moveBitboard = 1L << movePosition;
 			movesBitboard ^= moveBitboard;
 			
-			long upperCellBitboard = moveBitboard << 1;
-			if((upperCellBitboard & opponentWinBitboard) != 0) {
-				
-				continue;
-			}
-			
 			int moveScore = moveScore(movePosition, moveBitboard, opponentWinBitboard);
+			if(moveScore == INFINITE_MOVE_SCORE) return maximalScore;
 			
 			moves[moveIndex] = moveCellX;
 			moveScores[moveIndex] = moveScore;
@@ -750,19 +752,20 @@ public class Board {
 	
 	private int moveScore(int moveCellPosition, long moveBitboard, long opponentOpenThreats) {
 		long board = activeBitboard;
-		long mask = maskBitboard;
 		long ceiling = ceilingBitboard;
 		
 		board |= moveBitboard;
-		mask |= moveBitboard;
-		
-		ceiling ^= moveBitboard;
-		
-		moveBitboard <<= 1;
-		
-		ceiling |= moveBitboard;
+		ceiling += moveBitboard;
 		
 		long result = bitboardConnectionOpportunities(board);
+		long immediateThreats = result & ceiling;
+		if(Long.bitCount(immediateThreats) > 1) return INFINITE_MOVE_SCORE;
+		
+		immediateThreats &= result >>> 1;
+		if(immediateThreats != 0) return INFINITE_MOVE_SCORE;
+		
+		long mask = maskBitboard;
+		mask |= moveBitboard;
 		
 		result &= ~mask;
 		result &= ~(opponentOpenThreats << 1);
@@ -774,13 +777,12 @@ public class Board {
 		
 		moveScore += Long.bitCount(result) * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT;
 		
-		long responseMoves = ceiling & Bitboards.FULL_BOARD;
-		long l1 = result & responseMoves;
+		long l1 = result & ceiling;
 		
 		moveScore += Long.bitCount(l1) * MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT;
 		
-		responseMoves <<= 1;
-		long l2 = result & responseMoves;
+		ceiling <<= 1;
+		long l2 = result & ceiling;
 		
 		moveScore += Long.bitCount(l2) * MOVE_SCORE_SOON_THREAT_WEIGHT;
 		
@@ -798,8 +800,16 @@ public class Board {
 		return result != 0;
 	}
 	
+	public boolean moveLegalWhileGameNotOver(int moveCellX) {
+		long b = Bitboards.COLUMNS[moveCellX];
+		b &= ceilingBitboard;
+		
+		return (b & Bitboards.FULL_BOARD) != 0;
+	}
+	
 	public boolean moveLegal(int moveCellX) {
-		if(outcome != BoardOutcome.UNDECIDED) return false;
+		long board = activeBitboard ^ maskBitboard;
+		if(bitboardContainsConnection(board)) return false;
 		
 		long b = Bitboards.COLUMNS[moveCellX];
 		b &= ceilingBitboard;
@@ -822,17 +832,6 @@ public class Board {
 		ceilingBitboard += b;
 		bitboard = activeBitboard | ceilingBitboard;
 		
-		long board = activeBitboard ^ maskBitboard;
-		if(bitboardContainsConnection(board)) {
-			
-			boolean redAtTurn = (filledCellAmount & 1) == 0;
-			outcome = redAtTurn ? BoardOutcome.YELLOW_WIN : BoardOutcome.RED_WIN;
-			
-			return;
-		}
-		
-		if(filledCellAmount == FULL_CELL_AMOUNT) outcome = BoardOutcome.DRAW;
-		
 		long hash = bitboard;
 		
 		long mirroredBitboard = Long.reverseBytes(hash) >>> MIRRORED_BITBOARD_SHIFT_AMOUNT;
@@ -842,8 +841,6 @@ public class Board {
 	}
 	
 	public void undoMove() {
-		outcome = BoardOutcome.UNDECIDED;
-		
 		filledCellAmount--;
 		int moveCellX = playedMoves[filledCellAmount];
 		
@@ -908,7 +905,10 @@ public class Board {
 	}
 	
 	public boolean canPlayMove() {
-		return outcome == BoardOutcome.UNDECIDED;
+		long board = activeBitboard ^ maskBitboard;
+		if(bitboardContainsConnection(board)) return false;
+		
+		return filledCellAmount != FULL_CELL_AMOUNT;
 	}
 	
 	public void resetEvaluationMetrics() {
@@ -925,11 +925,21 @@ public class Board {
 	}
 	
 	public boolean over() {
-		return outcome != BoardOutcome.UNDECIDED;
+		long board = activeBitboard ^ maskBitboard;
+		if(bitboardContainsConnection(board)) return true;
+		
+		return filledCellAmount == FULL_CELL_AMOUNT;
 	}
 	
-	public BoardOutcome getOutcome() {
-		return outcome;
+	public BoardOutcome outcome() {
+		long board = activeBitboard ^ maskBitboard;
+		if(bitboardContainsConnection(board)) {
+			
+			boolean redAtTurn = (filledCellAmount & 1) == 0;
+			return redAtTurn ? BoardOutcome.YELLOW_WIN : BoardOutcome.RED_WIN;
+		}
+		
+		return filledCellAmount == FULL_CELL_AMOUNT ? BoardOutcome.DRAW : BoardOutcome.UNDECIDED;
 	}
 	
 	private static long mixedHash(long hash) {
