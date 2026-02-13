@@ -1,18 +1,11 @@
 package net.kite.api;
 
-import net.kite.internal.board.Board;
 import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.board.player.color.BoardPlayerColor;
-import net.kite.internal.board.score.BoardScore;
-import net.kite.internal.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.api.skill.level.SkillLevel;
-import net.kite.internal.util.random.Random;
-import net.kite.internal.util.time.TimeUtil;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Locale;
 
 /**
  * This is the public API to a {@link Kite} solver.
@@ -23,24 +16,11 @@ import java.util.Locale;
  * that can be updated using {@link Kite#playMove(int)},
  * {@link Kite#undoMove()} and {@link Kite#clearBoard()}.
  */
-public class Kite {
+public class Kite implements KiteAPI {
 	
 	private static final String NAME = "Kite";
 	private static final String VERSION = "1.14.0";
 	private static final String AUTHOR = "tristan852";
-	
-	private static final int BOARD_WIDTH = 7;
-	private static final int GAME_PLAYER_AMOUNT = 2;
-	
-	private static final int[] ORDERED_MOVE_COLUMN_INDICES = new int[] {
-			3, 2, 4, 1, 5, 0, 6
-	};
-	
-	private static final int INVALID_MOVE_COLUMN_INDEX = 0;
-	
-	private static final int MAXIMAL_MOVE_SCORE_LOSS = 36;
-	
-	private static final int MOVE_COLUMN_INDEX_SMALLEST_CHARACTER = 49;
 	
 	private static final String[] BENCHMARK_RESOURCE_PATHS = new String[] {
 			"/benchmarks/endgame_easy.txt",
@@ -51,27 +31,12 @@ public class Kite {
 			"/benchmarks/opening_hard.txt"
 	};
 	
-	private static final double BENCHMARK_THROUGHPUT_CONVERSION_FACTOR = 1000.0;
-	
 	private static final char BENCHMARK_ENTRY_SEPARATOR_CHARACTER = ' ';
 	
-	private final Board board;
-	private final Random random;
-	
-	private final int[] moveScores = new int[BOARD_WIDTH];
-	
-	private int metricsEvaluationAmount;
-	private int metricsNodeEvaluationAmount;
-	private long metricsEvaluationTime;
-	private long metricsRecordingStartTime;
+	private final KiteAPI internalSolver;
 	
 	private Kite() {
-		this.board = new Board();
-		this.random = new Random();
-		
-		OpeningBoardScoreCaches.ensureDefaultIsLoaded(null);
-		
-		board.evaluate();
+		this.internalSolver = new net.kite.internal.Kite();
 	}
 	
 	/**
@@ -91,7 +56,7 @@ public class Kite {
 	public String toString() {
 		synchronized(this) {
 			
-			return board.toString();
+			return internalSolver.boardString();
 		}
 	}
 	
@@ -105,8 +70,9 @@ public class Kite {
 	 *
 	 * @return played moves string representation
 	 */
+	@Override
 	public synchronized String boardMovesString() {
-		return board.movesString();
+		return internalSolver.boardMovesString();
 	}
 	
 	/**
@@ -122,8 +88,9 @@ public class Kite {
 	 *
 	 * @return game state string representation
 	 */
+	@Override
 	public synchronized String boardString() {
-		return board.toString();
+		return internalSolver.boardString();
 	}
 	
 	/**
@@ -134,10 +101,9 @@ public class Kite {
 	 * @param cellColumnIndex the index of the column (one indexed from left to right)
 	 * @return height of the column
 	 */
+	@Override
 	public synchronized int cellColumnHeight(int cellColumnIndex) {
-		cellColumnIndex--;
-		
-		return board.cellColumnHeight(cellColumnIndex);
+		return internalSolver.cellColumnHeight(cellColumnIndex);
 	}
 	
 	/**
@@ -149,8 +115,9 @@ public class Kite {
 	 * @param cellY y coordinate of the cell (zero indexed from bottom to top)
 	 * @return whether cell is occupied
 	 */
+	@Override
 	public synchronized boolean cellOccupied(int cellX, int cellY) {
-		return board.cellFilled(cellX, cellY);
+		return internalSolver.cellOccupied(cellX, cellY);
 	}
 	
 	/**
@@ -162,8 +129,9 @@ public class Kite {
 	 * @param cellY y coordinate of the cell (zero indexed from bottom to top)
 	 * @return player color of the stone or {@code null} if no stone
 	 */
+	@Override
 	public synchronized BoardPlayerColor cellPlayerColor(int cellX, int cellY) {
-		return board.cellPlayerColor(cellX, cellY);
+		return internalSolver.cellPlayerColor(cellX, cellY);
 	}
 	
 	/**
@@ -177,8 +145,9 @@ public class Kite {
 	 *
 	 * @return player color of the currently active player
 	 */
+	@Override
 	public synchronized BoardPlayerColor activePlayerColor() {
-		return board.activePlayerColor();
+		return internalSolver.activePlayerColor();
 	}
 	
 	/**
@@ -197,8 +166,9 @@ public class Kite {
 	 *
 	 * @return all win lines
 	 */
+	@Override
 	public synchronized BoardLine[] winLines() {
-		return board.winningPlayerLines();
+		return internalSolver.winLines();
 	}
 	
 	/**
@@ -210,8 +180,9 @@ public class Kite {
 	 *
 	 * @return whether a move can still be undone
 	 */
+	@Override
 	public synchronized boolean canUndoMove() {
-		return board.canUndoMove();
+		return internalSolver.canUndoMove();
 	}
 	
 	/**
@@ -223,8 +194,9 @@ public class Kite {
 	 *
 	 * @return whether a move can still be played
 	 */
+	@Override
 	public synchronized boolean canPlayMove() {
-		return board.canPlayMove();
+		return internalSolver.canPlayMove();
 	}
 	
 	/**
@@ -238,8 +210,9 @@ public class Kite {
 	 *
 	 * @return game outcome
 	 */
+	@Override
 	public synchronized BoardOutcome gameOutcome() {
-		return board.outcome();
+		return internalSolver.gameOutcome();
 	}
 	
 	/**
@@ -253,8 +226,9 @@ public class Kite {
 	 *
 	 * @return whether the game has finished
 	 */
+	@Override
 	public synchronized boolean gameOver() {
-		return board.over();
+		return internalSolver.gameOver();
 	}
 	
 	/**
@@ -264,8 +238,9 @@ public class Kite {
 	 *
 	 * @return number of moves played so far
 	 */
+	@Override
 	public synchronized int playedMoveAmount() {
-		return board.playedMoveAmount();
+		return internalSolver.playedMoveAmount();
 	}
 	
 	/**
@@ -280,22 +255,18 @@ public class Kite {
 	 * to continue recording the nodes visited and
 	 * the time elapsed.
 	 */
+	@Override
 	public synchronized void startRecordingPerformanceMetrics() {
-		board.resetEvaluationMetrics();
-		
-		metricsRecordingStartTime = System.nanoTime();
+		internalSolver.startRecordingPerformanceMetrics();
 	}
 	
 	/**
 	 * Pauses the recording of metrics started
 	 * by {@link Kite#startRecordingPerformanceMetrics()}.
 	 */
+	@Override
 	public synchronized void stopRecordingPerformanceMetrics() {
-		long endTime = System.nanoTime();
-		
-		metricsEvaluationAmount += board.getEvaluationAmount();
-		metricsNodeEvaluationAmount += board.getNodeEvaluationAmount();
-		metricsEvaluationTime += endTime - metricsRecordingStartTime;
+		internalSolver.stopRecordingPerformanceMetrics();
 	}
 	
 	/**
@@ -305,31 +276,9 @@ public class Kite {
 	 * recorded metrics as well as resetting
 	 * them.
 	 */
+	@Override
 	public synchronized void printAndResetPerformanceMetrics() {
-		double averageTime = 0;
-		double averageAmount = 0;
-		double throughput = 0;
-		
-		if(metricsEvaluationAmount != 0) {
-			
-			averageTime = (double) metricsEvaluationTime / metricsEvaluationAmount;
-			averageAmount = (double) metricsNodeEvaluationAmount / metricsEvaluationAmount;
-		}
-		
-		if(metricsEvaluationTime != 0) {
-			
-			throughput = (double) metricsNodeEvaluationAmount / metricsEvaluationTime;
-			throughput *= BENCHMARK_THROUGHPUT_CONVERSION_FACTOR;
-		}
-		
-		String s = TimeUtil.formatDuration(averageTime);
-		
-		String message = String.format(Locale.US, "positions evaluated: %d, average evaluation time: %s, average node evaluations: %.2f, node throughput: %.2f Mn/s", metricsEvaluationAmount, s, averageAmount, throughput);
-		System.out.println(message);
-		
-		metricsEvaluationAmount = 0;
-		metricsNodeEvaluationAmount = 0;
-		metricsEvaluationTime = 0;
+		internalSolver.printAndResetPerformanceMetrics();
 	}
 	
 	/**
@@ -345,110 +294,9 @@ public class Kite {
 	 * @param skillLevel the skill level that the move should be based on
 	 * @return a skill based one-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
 	 */
+	@Override
 	public synchronized int skilledMove(SkillLevel skillLevel) {
-		boolean perfect = skillLevel == SkillLevel.PERFECT || skillLevel == SkillLevel.SUPER_GRANDMASTER;
-		
-		if(perfect) return optimalMove();
-		if(skillLevel == SkillLevel.RANDOM) return randomMove();
-		if(skillLevel == SkillLevel.ADAPTIVE) return adaptiveMove();
-		
-		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
-		int n = board.playedMoveAmount();
-		
-		int optimalMoveScore = Integer.MIN_VALUE;
-		int theoreticallyWorstScoreLoss = BoardScore.maximalScoreLoss(n);
-		
-		int maximalScoreLoss = skillLevel.getMaximalScoreLoss();
-		maximalScoreLoss = maximalScoreLoss * theoreticallyWorstScoreLoss / MAXIMAL_MOVE_SCORE_LOSS;
-		
-		int minimalScore = Integer.MIN_VALUE + 2;
-		
-		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
-			
-			int moveScore = board.moveLegalWhileGameNotOver(moveColumnIndex) ? board.evaluateMove(moveColumnIndex, minimalScore - 1) : Integer.MIN_VALUE;
-			
-			moveScores[moveColumnIndex] = moveScore;
-			
-			if(moveScore > optimalMoveScore) {
-				
-				optimalMoveScore = moveScore;
-				minimalScore = optimalMoveScore - maximalScoreLoss;
-			}
-		}
-		
-		int totalWeight = 0;
-		
-		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
-			
-			int moveScore = moveScores[moveColumnIndex];
-			if(moveScore >= minimalScore) {
-				
-				int weight = moveScore - minimalScore + 1;
-				weight *= weight * weight;
-				
-				totalWeight += weight;
-			}
-		}
-		
-		int weightIndex = random.randomInteger(totalWeight);
-		
-		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
-			
-			int moveScore = moveScores[moveColumnIndex];
-			if(moveScore < minimalScore) continue;
-			
-			int weight = moveScore - minimalScore + 1;
-			weight *= weight * weight;
-			
-			if(weightIndex < weight) return moveColumnIndex + 1;
-			weightIndex -= weight;
-		}
-		
-		// impossible to reach
-		return INVALID_MOVE_COLUMN_INDEX;
-	}
-	
-	private int adaptiveMove() {
-		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
-		
-		int bestAbsoluteMoveScore = Integer.MAX_VALUE - 1;
-		int n = 0;
-		
-		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
-			
-			if(!board.moveLegalWhileGameNotOver(moveColumnIndex)) continue;
-			
-			int moveScore = board.evaluateMove(moveColumnIndex, -bestAbsoluteMoveScore - 1);
-			if(moveScore < 0) moveScore = -moveScore;
-			
-			moveScores[moveColumnIndex] = moveScore;
-			
-			if(moveScore < bestAbsoluteMoveScore) {
-				
-				bestAbsoluteMoveScore = moveScore;
-				n = 1;
-				
-				continue;
-			}
-			
-			if(moveScore == bestAbsoluteMoveScore) n++;
-		}
-		
-		int index = random.randomInteger(n);
-		
-		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
-			
-			if(!board.moveLegalWhileGameNotOver(moveColumnIndex)) continue;
-			
-			int absoluteMoveScore = moveScores[moveColumnIndex];
-			if(absoluteMoveScore != bestAbsoluteMoveScore) continue;
-			
-			if(index == 0) return moveColumnIndex + 1;
-			index--;
-		}
-		
-		// impossible to reach
-		return INVALID_MOVE_COLUMN_INDEX;
+		return internalSolver.skilledMove(skillLevel);
 	}
 	
 	/**
@@ -463,42 +311,9 @@ public class Kite {
 	 *
 	 * @return an optimal one-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
 	 */
+	@Override
 	public synchronized int optimalMove() {
-		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
-		
-		int optimalMoveScore = Integer.MIN_VALUE + 2;
-		int n = 0;
-		
-		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
-			
-			int moveScore = board.moveLegalWhileGameNotOver(moveColumnIndex) ? board.evaluateMove(moveColumnIndex, optimalMoveScore - 1) : Integer.MIN_VALUE;
-			
-			moveScores[moveColumnIndex] = moveScore;
-			
-			if(moveScore > optimalMoveScore) {
-				
-				optimalMoveScore = moveScore;
-				n = 1;
-				
-			} else if(moveScore == optimalMoveScore) {
-				
-				n++;
-			}
-		}
-		
-		int index = random.randomInteger(n);
-		
-		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
-			
-			int moveScore = moveScores[moveColumnIndex];
-			if(moveScore != optimalMoveScore) continue;
-			
-			if(index == 0) return moveColumnIndex + 1;
-			index--;
-		}
-		
-		// impossible to reach
-		return INVALID_MOVE_COLUMN_INDEX;
+		return internalSolver.optimalMove();
 	}
 	
 	/**
@@ -507,28 +322,9 @@ public class Kite {
 	 *
 	 * @return a random one-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
 	 */
+	@Override
 	public synchronized int randomMove() {
-		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
-		
-		int n = 0;
-		
-		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
-			
-			if(board.moveLegalWhileGameNotOver(moveColumnIndex)) n++;
-		}
-		
-		int index = random.randomInteger(n);
-		
-		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
-			
-			if(!board.moveLegalWhileGameNotOver(moveColumnIndex)) continue;
-			
-			if(index == 0) return moveColumnIndex + 1;
-			index--;
-		}
-		
-		// impossible to reach
-		return INVALID_MOVE_COLUMN_INDEX;
+		return internalSolver.randomMove();
 	}
 	
 	/**
@@ -560,10 +356,9 @@ public class Kite {
 	 * @param playerRatingApproximations the buffer of length {@code 2} to write Elo rankings to
 	 * @return Elo rating approximation of both players
 	 */
+	@Override
 	public synchronized float[] evaluatePlayerPerformances(float[] playerRatingApproximations) {
-		board.approximateEloRatingOfBothPlayer(playerRatingApproximations);
-		
-		return playerRatingApproximations;
+		return internalSolver.evaluatePlayerPerformances(playerRatingApproximations);
 	}
 	
 	/**
@@ -597,12 +392,9 @@ public class Kite {
 	 *
 	 * @return Elo rating approximation of both players
 	 */
+	@Override
 	public synchronized float[] evaluatePlayerPerformances() {
-		float[] eloBuffer = new float[GAME_PLAYER_AMOUNT];
-		
-		board.approximateEloRatingOfBothPlayer(eloBuffer);
-		
-		return eloBuffer;
+		return internalSolver.evaluatePlayerPerformances();
 	}
 	
 	/**
@@ -628,8 +420,9 @@ public class Kite {
 	 * @param playerColor the color of the player whose performance is to be evaluated
 	 * @return Elo rating approximation
 	 */
+	@Override
 	public synchronized float evaluatePlayerPerformance(BoardPlayerColor playerColor) {
-		return board.approximateEloRatingOfPlayer(playerColor);
+		return internalSolver.evaluatePlayerPerformance(playerColor);
 	}
 	
 	/**
@@ -645,20 +438,9 @@ public class Kite {
 	 * @param moveScores the buffer to write move evaluations into
 	 * @return move evaluations ({@link Integer#MIN_VALUE} for illegal moves)
 	 */
+	@Override
 	public synchronized int[] evaluateAllMoves(int[] moveScores) {
-		if(board.over()) {
-			
-			Arrays.fill(moveScores, Integer.MIN_VALUE);
-			return moveScores;
-		}
-		
-		for(int x : ORDERED_MOVE_COLUMN_INDICES) {
-			
-			if(board.moveLegalWhileGameNotOver(x)) moveScores[x] = board.evaluateMove(x);
-			else moveScores[x] = Integer.MIN_VALUE;
-		}
-		
-		return moveScores;
+		return internalSolver.evaluateAllMoves(moveScores);
 	}
 	
 	/**
@@ -674,22 +456,9 @@ public class Kite {
 	 *
 	 * @return move evaluations ({@link Integer#MIN_VALUE} for illegal moves)
 	 */
+	@Override
 	public synchronized int[] evaluateAllMoves() {
-		int[] moveScores = new int[BOARD_WIDTH];
-		
-		if(board.over()) {
-			
-			Arrays.fill(moveScores, Integer.MIN_VALUE);
-			return moveScores;
-		}
-		
-		for(int x : ORDERED_MOVE_COLUMN_INDICES) {
-			
-			if(board.moveLegalWhileGameNotOver(x)) moveScores[x] = board.evaluateMove(x);
-			else moveScores[x] = Integer.MIN_VALUE;
-		}
-		
-		return moveScores;
+		return internalSolver.evaluateAllMoves();
 	}
 	
 	/**
@@ -712,10 +481,9 @@ public class Kite {
 	 * @param moveColumnIndex the one-indexed column number (from left to right)
 	 * @return move evaluation
 	 */
+	@Override
 	public synchronized int evaluateMove(int moveColumnIndex) {
-		moveColumnIndex--;
-		
-		return board.evaluateMove(moveColumnIndex);
+		return internalSolver.evaluateMove(moveColumnIndex);
 	}
 	
 	/**
@@ -736,8 +504,9 @@ public class Kite {
 	 *
 	 * @return board evaluation
 	 */
+	@Override
 	public synchronized int evaluateBoard() {
-		return board.evaluate();
+		return internalSolver.evaluateBoard();
 	}
 	
 	/**
@@ -751,8 +520,9 @@ public class Kite {
 	 * this method will revert it back to non-deterministic
 	 * behavior.
 	 */
+	@Override
 	public synchronized void seedRandomness() {
-		random.setRandomSeed();
+		internalSolver.seedRandomness();
 	}
 	
 	/**
@@ -767,8 +537,9 @@ public class Kite {
 	 *
 	 * @param seed the initial state of the random number generator
 	 */
+	@Override
 	public synchronized void seedRandomness(long seed) {
-		random.setSeed(seed);
+		internalSolver.seedRandomness(seed);
 	}
 	
 	/**
@@ -780,10 +551,9 @@ public class Kite {
 	 * @param moveColumnIndex the one-indexed column number (from left to right)
 	 * @return whether the move is legal
 	 */
+	@Override
 	public synchronized boolean moveLegal(int moveColumnIndex) {
-		moveColumnIndex--;
-		
-		return board.moveLegal(moveColumnIndex);
+		return internalSolver.moveLegal(moveColumnIndex);
 	}
 	
 	/**
@@ -795,14 +565,9 @@ public class Kite {
 	 *
 	 * @param moveColumnIndices the one-indexed column numbers (columns indexed from left to right) as a string
 	 */
+	@Override
 	public synchronized void playMoves(String moveColumnIndices) {
-		int n = moveColumnIndices.length();
-		for(int i = 0; i < n; i++) {
-			
-			int moveColumnIndex = moveColumnIndices.charAt(i) - MOVE_COLUMN_INDEX_SMALLEST_CHARACTER;
-			
-			board.playMove(moveColumnIndex);
-		}
+		internalSolver.playMoves(moveColumnIndices);
 	}
 	
 	/**
@@ -814,13 +579,9 @@ public class Kite {
 	 *
 	 * @param moveColumnIndices the one-indexed column numbers (columns indexed from left to right)
 	 */
+	@Override
 	public synchronized void playMoves(int... moveColumnIndices) {
-		for(int moveColumnIndex : moveColumnIndices) {
-			
-			moveColumnIndex--;
-			
-			board.playMove(moveColumnIndex);
-		}
+		internalSolver.playMoves(moveColumnIndices);
 	}
 	
 	/**
@@ -831,10 +592,9 @@ public class Kite {
 	 *
 	 * @param moveColumnIndex the one-indexed column number (from left to right)
 	 */
+	@Override
 	public synchronized void playMove(int moveColumnIndex) {
-		moveColumnIndex--;
-		
-		board.playMove(moveColumnIndex);
+		internalSolver.playMove(moveColumnIndex);
 	}
 	
 	/**
@@ -843,19 +603,18 @@ public class Kite {
 	 *
 	 * @param moveAmount number of moves to undo
 	 */
+	@Override
 	public synchronized void undoMoves(int moveAmount) {
-		for(int i = 0; i < moveAmount; i++) {
-			
-			board.undoMove();
-		}
+		internalSolver.undoMoves(moveAmount);
 	}
 	
 	/**
 	 * Updates the internal game state by undoing
 	 * the last move.
 	 */
+	@Override
 	public synchronized void undoMove() {
-		board.undoMove();
+		internalSolver.undoMove();
 	}
 	
 	/**
@@ -864,43 +623,9 @@ public class Kite {
 	 *
 	 * @param moveColumnIndicesString the one-indexed move column numbers (columns indexed from left to right) as a string
 	 */
+	@Override
 	public synchronized void setupBoard(String moveColumnIndicesString) {
-		int n = board.playedMoveAmount();
-		int l = moveColumnIndicesString.length();
-		
-		for(int i = 0; i < l; i++) {
-			
-			int moveColumnIndex = moveColumnIndicesString.charAt(i) - MOVE_COLUMN_INDEX_SMALLEST_CHARACTER;
-			
-			if(i == n) {
-				
-				board.playMove(moveColumnIndex);
-				n++;
-				
-				continue;
-			}
-			
-			int x = board.playedMove(i);
-			if(x == moveColumnIndex) {
-				
-				continue;
-			}
-			
-			while(n > i) {
-				
-				board.undoMove();
-				n--;
-			}
-			
-			board.playMove(moveColumnIndex);
-			n++;
-		}
-		
-		while(n > l) {
-			
-			board.undoMove();
-			n--;
-		}
+		internalSolver.setupBoard(moveColumnIndicesString);
 	}
 	
 	/**
@@ -909,43 +634,9 @@ public class Kite {
 	 *
 	 * @param moveColumnIndices the one-indexed move column numbers (columns indexed from left to right)
 	 */
+	@Override
 	public synchronized void setupBoard(int... moveColumnIndices) {
-		int n = board.playedMoveAmount();
-		int l = moveColumnIndices.length;
-		
-		for(int i = 0; i < l; i++) {
-			
-			int moveColumnIndex = moveColumnIndices[i] - 1;
-			
-			if(i == n) {
-				
-				board.playMove(moveColumnIndex);
-				n++;
-				
-				continue;
-			}
-			
-			int x = board.playedMove(i);
-			if(x == moveColumnIndex) {
-				
-				continue;
-			}
-			
-			while(n > i) {
-				
-				board.undoMove();
-				n--;
-			}
-			
-			board.playMove(moveColumnIndex);
-			n++;
-		}
-		
-		while(n > l) {
-			
-			board.undoMove();
-			n--;
-		}
+		internalSolver.setupBoard(moveColumnIndices);
 	}
 	
 	/**
@@ -954,14 +645,9 @@ public class Kite {
 	 * game state will be a completely
 	 * empty board.
 	 */
+	@Override
 	public synchronized void clearBoard() {
-		int n = board.playedMoveAmount();
-		
-		while(n != 0) {
-			
-			board.undoMove();
-			n--;
-		}
+		internalSolver.clearBoard();
 	}
 	
 	/**
