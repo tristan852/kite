@@ -122,7 +122,7 @@ Despite being written in Java, Kite outperforms the C++ and Rust solvers include
 You can run the benchmark on your own machine, for example to test whether a change you made improves the solver, using the code snippet below. Keep in mind that results may vary depending on the hardware used.
 
 ```java
-import net.kite.Kite;
+import net.kite.api.Kite;
 
 public class Main {
 	
@@ -190,11 +190,32 @@ Add the following code snippet to your `pom.xml` file:
 
 ---
 
+## 🔧 Development Setup
+
+To start developing **Kite** locally, ensure the following requirements are installed:
+
+* **JDK 25+**
+* **Latest version of Gradle**
+* An IDE (**IntelliJ IDEA** is highly recommended)
+
+Clone the repository:
+
+```bash
+git clone https://github.com/tristan852/kite.git
+cd kite
+```
+
+Open the project as a **Gradle project** in your IDE and wait for the Gradle import/sync to complete.
+
+You can then build, run, and test the project using Gradle. Feel free to improve the solver or extend the project with new features.
+
+---
+
 ## 🚀 Getting Started
 
 The Kite solver can be used by obtaining a newly created solver instance.
 Note that each solver instance cannot be used by multiple threads in parallel.
-If your project involves only a single game (even with multiple bots), a single solver instance is sufficient. However, if you're running multiple games in parallel, each game will need its own solver instance to avoid delays caused by mutual exclusion. In that case, the best approach is to recycle solver instances when possible and create new ones as needed. A single Connect Four game should use only one solver instance, as each maintains its own transposition table. Additionally, a solver instance should not alternate between different games, as this can pollute the table with irrelevant entries and negatively impact performance.
+If your project involves only a single game (even with two bots playing in it), a single solver instance is sufficient. However, if you're running multiple games in parallel, each game will need its own solver instance to avoid delays caused by mutual exclusion. In that case, the best approach is to recycle solver instances when possible and create new ones as needed. A single Connect Four game should use only one solver instance, as each maintains its own transposition table. Additionally, a solver instance should not alternate between different games, as this can pollute the table with irrelevant entries and negatively impact performance.
 
 The first time a Kite solver instance is obtained, a warm-up and additional initialization is done, which may take a bit of time.
 
@@ -280,8 +301,8 @@ public class B {
 Want to quickly try out and experiment with the Kite solver? Here's a simple demo class that pits you against the solver using a fixed skill level:
 
 ```java
-import net.kite.board.outcome.BoardOutcome;
-import net.kite.skill.level.SkillLevel;
+import net.kite.api.board.outcome.BoardOutcome;
+import net.kite.api.skill.level.SkillLevel;
 
 import java.util.Random;
 import java.util.Scanner;

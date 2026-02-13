@@ -24,12 +24,7 @@ dependencies {
 }
 
 tasks.javadoc {
-    exclude("net/kite/Main.java")
-    exclude("net/kite/board/Board.java")
-    exclude("net/kite/board/bit/**")
-    exclude("net/kite/board/history/**")
-    exclude("net/kite/board/score/**")
-    exclude("net/kite/demo/**")
+    exclude("net/kite/internal/**")
 }
 
 tasks.test {
@@ -60,7 +55,7 @@ signing {
 
 teavm {
     all {
-        mainClass = "net.kite.Main"
+        mainClass = "net.kite.internal.Main"
     }
     
     wasmGC {
