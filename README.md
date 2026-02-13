@@ -188,6 +188,14 @@ Add the following code snippet to your `pom.xml` file:
 </dependencies>
 ```
 
+If your project uses the **Java Module System (JPMS)**, regardless of whether you build with Gradle or Maven, also add the following to your `module-info.java`:
+
+```java
+module your.module.name {
+    requires kite.main;
+}
+```
+
 ---
 
 ## 🔧 Development Setup
