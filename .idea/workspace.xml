@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d03954f0-0e5b-4d9e-a884-f7c6e8b74218" name="Changes" comment="" />
+    <list default="true" id="d03954f0-0e5b-4d9e-a884-f7c6e8b74218" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/kite/api/Kite.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/kite/api/Kite.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -65,6 +71,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
+        <option value="module-info" />
         <option value="Class" />
       </list>
     </option>
@@ -80,47 +87,52 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.kite [:net.kite.Kite.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.kite [:net.kite.Main.main()].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.kite [build].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.kite [publishMavenPublicationToMavenLocal].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.kite [publishToMavenCentral].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.kite [publishToMavenLocal].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.kite [publish].executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.kite [test].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/Tristan (TUDO)/Documents/kite/src/main/java/net/kite/Main.java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.import&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.Download Sources.executor": "Run",
+    "Gradle.kite [:net.kite.Kite.main()].executor": "Run",
+    "Gradle.kite [:net.kite.Main.main()].executor": "Run",
+    "Gradle.kite [build].executor": "Run",
+    "Gradle.kite [publishMavenPublicationToMavenLocal].executor": "Run",
+    "Gradle.kite [publishToMavenCentral].executor": "Run",
+    "Gradle.kite [publishToMavenLocal].executor": "Run",
+    "Gradle.kite [publish].executor": "Run",
+    "Gradle.kite [test].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "onboarding.tips.debug.path": "C:/Users/Tristan (TUDO)/Documents/kite/src/main/java/net/kite/Main.java",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "Errors"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Tristan (TUDO)\Documents\kite\src\main\resources" />
       <recent name="C:\Users\Tristan (TUDO)\Documents\kite\src\main\resources\board_score_caches" />
       <recent name="C:\Users\Tristan (TUDO)\Documents\kite" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="net.kite.internal" />
+      <recent name="net.kite.api" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="net.kite" />
       <recent name="net.kite.board" />
       <recent name="net.kite.command.commands" />
     </key>
   </component>
   <component name="RunManager" selected="Gradle.kite [publishToMavenCentral]">
     <configuration name="Kite" type="Application" factoryName="Application" singleton="false" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="net.kite.Kite" />
+      <option name="MAIN_CLASS_NAME" value="net.kite.api.Kite" />
       <module name="kite.main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="net.kite.*" />
+          <option name="PATTERN" value="net.kite.api.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -194,17 +206,41 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="kite [test]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Application.Kite" />
+      <item itemvalue="Gradle.kite [test]" />
       <item itemvalue="Gradle.kite [build]" />
       <item itemvalue="Gradle.kite [publishMavenPublicationToMavenLocal]" />
       <item itemvalue="Gradle.kite [publishToMavenCentral]" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.kite [publishMavenPublicationToMavenLocal]" />
-        <item itemvalue="Gradle.kite [publishToMavenCentral]" />
         <item itemvalue="Gradle.kite [build]" />
+        <item itemvalue="Gradle.kite [test]" />
+        <item itemvalue="Gradle.kite [publishToMavenCentral]" />
+        <item itemvalue="Gradle.kite [publishMavenPublicationToMavenLocal]" />
         <item itemvalue="Application.Kite" />
       </list>
     </recent_temporary>
