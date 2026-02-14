@@ -309,6 +309,7 @@ public class B {
 Want to quickly try out and experiment with the Kite solver? Here's a simple demo class that pits you against the solver using a fixed skill level:
 
 ```java
+import net.kite.api.Kite;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.skill.level.SkillLevel;
 
