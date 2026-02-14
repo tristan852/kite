@@ -9,6 +9,8 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/tristan852/kite?style=for-the-badge)
 ![GitHub license](https://img.shields.io/github/license/tristan852/kite?style=for-the-badge)
 [![Java documentation](https://javadoc.io/badge2/io.github.tristan852/kite/javadoc.svg?style=for-the-badge)](https://javadoc.io/doc/io.github.tristan852/kite)
+![Test Status](https://img.shields.io/github/actions/workflow/status/tristan852/kite/teavm.yml?style=for-the-badge&label=Tests)
+![Demo Status](https://img.shields.io/website?url=https://tristan852.github.io/kite&style=for-the-badge&label=Demo&up_message=Online&down_message=Offline)
     
 </span>
 
