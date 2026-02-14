@@ -31,6 +31,9 @@ jobs:
           java --version
           native-image --version
 
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
       - name: Build native executable
         run: ./gradlew clean nativeCompile
 
