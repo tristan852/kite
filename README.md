@@ -5,13 +5,13 @@
     
 # Kite
     
-![Java version](https://img.shields.io/badge/Java-25+-blue?style=for-the-badge)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/tristan852/kite?style=for-the-badge)
-![GitHub license](https://img.shields.io/github/license/tristan852/kite?style=for-the-badge)
+[![Java version](https://img.shields.io/badge/Java-25+-blue?style=for-the-badge)](https://openjdk.org/projects/jdk/25/)
+[![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/tristan852/kite?style=for-the-badge)](https://github.com/tristan852/kite/tree/main/src)
+[![GitHub license](https://img.shields.io/github/license/tristan852/kite?style=for-the-badge)](https://github.com/tristan852/kite/blob/main/LICENSE)
     <br>
 [![Java documentation](https://javadoc.io/badge2/io.github.tristan852/kite/javadoc.svg?style=for-the-badge)](https://javadoc.io/doc/io.github.tristan852/kite)
-![Test Status](https://img.shields.io/github/actions/workflow/status/tristan852/kite/teavm.yml?style=for-the-badge&label=Tests)
-![Demo Status](https://img.shields.io/website?url=https://tristan852.github.io/kite&style=for-the-badge&label=Demo&up_message=Online&down_message=Offline)
+[![Test Status](https://img.shields.io/github/actions/workflow/status/tristan852/kite/teavm.yml?style=for-the-badge&label=Tests)](https://github.com/tristan852/kite/actions/workflows/teavm.yml)
+[![Demo Status](https://img.shields.io/website?url=https://tristan852.github.io/kite&style=for-the-badge&label=Demo&up_message=Online&down_message=Offline)](https://tristan852.github.io/kite)
     
 </span>
 
