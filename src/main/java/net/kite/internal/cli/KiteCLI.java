@@ -18,6 +18,8 @@ public class KiteCLI {
 		System.out.println(message);
 		System.out.println(solver);
 		
+		Kite.runBenchmark();
+		
 //		while(true) {
 //			
 //			message = scanner.nextLine();
