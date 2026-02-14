@@ -24,7 +24,6 @@ jobs:
         with:
           java-version: '25'
           distribution: 'graalvm'
-          components: 'native-image'
 
       - name: Verify GraalVM setup
         run: |
