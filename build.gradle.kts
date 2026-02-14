@@ -56,6 +56,8 @@ tasks.processResources {
     }
     
     into(layout.buildDirectory.dir("resources").get())
+    
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 signing {
