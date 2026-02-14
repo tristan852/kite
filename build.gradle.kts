@@ -1,6 +1,7 @@
 plugins {
     id("java")
     id("com.vanniktech.maven.publish") version "0.34.0"
+    id("org.graalvm.buildtools.native") version "0.11.4"
     
     id("war")
     id("org.teavm") version "0.13.0"
@@ -55,10 +56,27 @@ signing {
 
 teavm {
     all {
-        mainClass = "net.kite.internal.Main"
+        mainClass = "net.kite.internal.demo.Main"
     }
     
     wasmGC {
         addedToWebApp = true
+    }
+}
+
+graalvmNative {
+    binaries {
+        named("main") {
+            imageName.set("kite")
+            mainClass.set("net.kite.internal.cli.Main")
+            
+            javaLauncher.set(javaToolchains.launcherFor {
+                languageVersion.set(JavaLanguageVersion.of(25))
+            })
+            
+            buildArgs.add("--no-fallback")
+            buildArgs.add("--no-server")
+            buildArgs.add("-H:+ReportExceptionStackTraces")
+        }
     }
 }

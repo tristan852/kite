@@ -1,6 +1,4 @@
-package net.kite.internal;
-
-import net.kite.internal.demo.KiteDemo;
+package net.kite.internal.demo;
 
 public class Main {
 	
