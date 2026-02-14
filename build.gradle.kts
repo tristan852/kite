@@ -89,6 +89,8 @@ graalvmNative {
             buildArgs.add("--no-fallback")
             buildArgs.add("--no-server")
             buildArgs.add("-H:+ReportExceptionStackTraces")
+            
+            buildArgs.add("--allow-expert-options")
             buildArgs.add("-H:StripDebugSymbols=all")
         }
     }
