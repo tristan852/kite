@@ -50,6 +50,14 @@ tasks.register<Copy>("copyDemoAssetFiles") {
     into("build/war-unpacked")
 }
 
+tasks.processResources {
+    from("src/main/resources") {
+        include("**/*")
+    }
+    
+    into(layout.buildDirectory.dir("resources").get())
+}
+
 signing {
     useGpgCmd()
 }
@@ -73,6 +81,8 @@ graalvmNative {
             javaLauncher.set(javaToolchains.launcherFor {
                 languageVersion.set(JavaLanguageVersion.of(25))
             })
+            
+            buildArgs.add("-H:IncludeResources=.*")
             
             buildArgs.add("--no-fallback")
             buildArgs.add("--no-server")
