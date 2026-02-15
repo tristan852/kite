@@ -74,7 +74,7 @@ graalvmNative {
                 languageVersion.set(JavaLanguageVersion.of(25))
             })
             
-            buildArgs.add("--exclude=net.kite.internal.demo.*")
+            // buildArgs.add("--exclude=net.kite.internal.demo.*")
             
             buildArgs.add("--no-fallback")
             buildArgs.add("--no-server")

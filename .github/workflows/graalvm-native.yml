@@ -50,9 +50,7 @@ jobs:
           case "$OS" in
             windows-latest)
               ARCHIVE=kite-$VERSION-windows-x64.zip
-              cd "$BIN_DIR"
-              7z a "../../$ARCHIVE" *
-              cd -
+              7z a "$ARCHIVE" "$BIN_DIR"/*
               ;;
             ubuntu-latest)
               ARCHIVE=kite-$VERSION-linux-x64.tar.gz
