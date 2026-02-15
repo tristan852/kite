@@ -77,7 +77,6 @@ graalvmNative {
             buildArgs.add("--no-fallback")
             buildArgs.add("--no-server")
             buildArgs.add("-H:+ReportExceptionStackTraces")
-            buildArgs.add("--thin")
         }
     }
 }
