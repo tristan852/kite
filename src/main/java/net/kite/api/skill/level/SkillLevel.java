@@ -120,6 +120,7 @@ public enum SkillLevel {
 			BEGINNER, NOVICE, AMATEUR, INTERMEDIATE, SKILLED, ADVANCED, EXPERT, MASTER, GRANDMASTER, SUPER_GRANDMASTER
 	};
 	
+	private final String name;
 	private final String displayName;
 	
 	private final int maximalScoreLoss;
@@ -127,9 +128,21 @@ public enum SkillLevel {
 	private final int approximateEloRating;
 	
 	SkillLevel(String displayName, int maximalScoreLoss, int approximateEloRating) {
+		this.name = name().toLowerCase();
 		this.displayName = displayName;
 		this.maximalScoreLoss = maximalScoreLoss;
 		this.approximateEloRating = approximateEloRating;
+	}
+	
+	/**
+	 * Returns the name of this skill
+	 * level that should for example
+	 * be displayed inside a CLI.
+	 *
+	 * @return name of this skill level
+	 */
+	public String getName() {
+		return name;
 	}
 	
 	/**
@@ -168,6 +181,24 @@ public enum SkillLevel {
 	 */
 	public int getApproximateEloRating() {
 		return approximateEloRating;
+	}
+	
+	/**
+	 * Returns a skill level from {@link SkillLevel#BEGINNER}
+	 * to {@link SkillLevel#SUPER_GRANDMASTER} given the requested
+	 * level name.
+	 * {@code level("beginner")} returns {@link SkillLevel#BEGINNER},
+	 * {@code level("BEGINNER")} returns {@link SkillLevel#BEGINNER},
+	 * {@code level("super_grandmaster")} returns {@link SkillLevel#SUPER_GRANDMASTER},
+	 * and so on.
+	 *
+	 * @param levelName the level name in snake case
+	 * @return corresponding skill level
+	 */
+	public static SkillLevel level(String levelName) {
+		levelName = levelName.toUpperCase();
+		
+		return valueOf(levelName);
 	}
 	
 	/**
