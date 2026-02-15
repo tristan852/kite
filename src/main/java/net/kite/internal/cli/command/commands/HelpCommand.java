@@ -12,6 +12,8 @@ public class HelpCommand extends Command {
 	
 	@Override
 	public boolean execute(String[] arguments, Kite solver) {
+		System.out.println("available commands:");
+		
 		for(Command command : Commands.COMMANDS) {
 			
 			String helpMessage = command.getHelpMessage();
