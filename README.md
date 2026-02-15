@@ -46,6 +46,16 @@ The demo runs natively in *WebAssembly* and is generally slower than the Java li
 
 ---
 
+## 💻 Command-Line Interface
+
+Kite is also available as a **command-line tool**. Native executables for Linux (Ubuntu), macOS, and Windows are published with each release on GitHub:
+
+👉 **[Download CLI Binaries](https://github.com/tristan852/kite/releases)**
+
+You can use the CLI to analyze positions, run benchmarks, or play directly from your terminal, without needing to install Java.
+
+---
+
 ## 📊 Empty-Board Benchmark
 
 > **Note:** This benchmark is no longer relevant for the development of this solver. Instead, the [benchmark created by Pascal Pons](#-pascal-pons-benchmark) is now used.
