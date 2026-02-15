@@ -2,6 +2,7 @@ Publishing steps of a new Kite release
 (in case I ever forget or someone else would like to know)
 
 0) prerequisite: enhance or improve the solver and or project in some way
+0.1) prerequisite: check that everything functions correctly (by trying it out and by running the unit tests)
 
 1) increase the version number (best done using the Replace in Files tool in Intellij IDEA)
     - version format is MAJOR.MINOR.PATCH
@@ -24,3 +25,4 @@ Publishing steps of a new Kite release
         - tag: create new tag given the version (e.g. "v1.0.0")
         - title: "Kite vX.X.X CLI tool"
         - description: "This release provides the prebuilt binaries for the Kite CLI tool. Performance and throughput may be lower when using the solver through the CLI compared to using it as a library."
+        - attached binaries: every archived (!) binary produced by the latest workflow run

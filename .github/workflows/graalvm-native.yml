@@ -39,8 +39,28 @@ jobs:
       - name: List binaries
         run: ls -R build/native/nativeCompile/
 
-      - name: Upload native binaries
+      # Package Linux and macOS into tar.gz, Windows into zip
+      - name: Package binaries
+        run: |
+          VERSION=1.16.0
+          OS=${{ matrix.os }}
+          BIN_DIR=build/native/nativeCompile
+
+          if [[ "$OS" == "windows-latest" ]]; then
+            ARCHIVE=kite-$VERSION-windows-x64.zip
+            zip -r "$ARCHIVE" "$BIN_DIR"/*
+          elif [[ "$OS" == "ubuntu-latest" ]]; then
+            ARCHIVE=kite-$VERSION-linux-x64.tar.gz
+            tar -czf "$ARCHIVE" -C "$BIN_DIR" .
+          elif [[ "$OS" == "macos-latest" ]]; then
+            ARCHIVE=kite-$VERSION-macos-x64.tar.gz
+            tar -czf "$ARCHIVE" -C "$BIN_DIR" .
+          fi
+
+          echo "ARCHIVE=$ARCHIVE" >> $GITHUB_ENV
+
+      - name: Upload packaged binary
         uses: actions/upload-artifact@v4
         with:
           name: kite-${{ matrix.os }}
-          path: build/native/nativeCompile/**
+          path: ${{ env.ARCHIVE }}
