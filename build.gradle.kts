@@ -50,15 +50,16 @@ tasks.register<Copy>("copyDemoAssetFiles") {
     into("build/war-unpacked")
 }
 
-tasks.processResources {
-    from("src/main/resources") {
-        include("**/*")
-    }
-    
-    into(layout.buildDirectory.dir("resources").get())
-    
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
+// TDOD
+//tasks.processResources {
+//    from("src/main/resources") {
+//        include("**/*")
+//    }
+//    
+//    into(layout.buildDirectory.dir("resources").get())
+//    
+//    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//}
 
 signing {
     useGpgCmd()
@@ -84,7 +85,8 @@ graalvmNative {
                 languageVersion.set(JavaLanguageVersion.of(25))
             })
             
-            buildArgs.add("-H:+UnlockExperimentalVMOptions")
+            // TDOD
+            // buildArgs.add("-H:+UnlockExperimentalVMOptions")
             buildArgs.add("-H:IncludeResources=.*")
             
             buildArgs.add("--no-fallback")
