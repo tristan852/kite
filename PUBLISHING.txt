@@ -1,0 +1,26 @@
+Publishing steps of a new Kite release
+(in case I ever forget or someone else would like to know)
+
+0) prerequisite: enhance or improve the solver and or project in some way
+
+1) increase the version number (best done using the Replace in Files tool in Intellij IDEA)
+    - version format is MAJOR.MINOR.PATCH
+    - increase MAJOR if: the project underwent a complete rewrite or the purpose of the project changed in a very meaningful way
+    - increase MINOR if: the project has changed in a way that is noticeable to an end-user (e.g. new API method)
+    - increase PATCH if: a change was done that is not directly visible from the outside
+
+2) push all changes to the GitHub repository
+
+3) publish the new release to Maven Central (done via publishToMavenCentral-task in Intellij IDEA)
+    - this requires access to the Maven Central account as well as the private key used for signing
+
+4) optional: refresh the javadoc.io page over at https://javadoc.io/doc/io.github.tristan852/kite
+
+5) optional: refresh the JavaDoc README-badge using 'curl -w "\n" -s -X PURGE https://camo.githubusercontent.com/...'
+
+6) create a new GitHub release for the CLI tool
+    - download the binaries built by GitHub actions on the latest commit: https://github.com/tristan852/kite/actions/workflows/graalvm-native.yml
+    - create a new GitHub release with following details:
+        - tag: create new tag given the version (e.g. "v1.0.0")
+        - title: "Kite vX.X.X CLI tool"
+        - description: "This release provides the prebuilt binaries for the Kite CLI tool. Performance and throughput may be lower when using the solver through the CLI compared to using it as a library."

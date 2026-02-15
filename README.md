@@ -54,6 +54,8 @@ Kite is also available as a **command-line tool**. Native executables for Linux 
 
 You can use the CLI to analyze positions, run benchmarks, or play directly from your terminal, without needing to install Java.
 
+The CLI tool runs completely natively, built with *GraalVM native images* for each platform.
+
 ---
 
 ## 📊 Empty-Board Benchmark
