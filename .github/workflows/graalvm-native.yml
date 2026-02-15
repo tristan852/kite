@@ -41,6 +41,7 @@ jobs:
 
       # Package Linux and macOS into tar.gz, Windows into zip
       - name: Package binaries
+        shell: bash
         run: |
           VERSION=1.16.0
           OS=${{ matrix.os }}
