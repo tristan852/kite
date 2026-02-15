@@ -4,7 +4,7 @@ Publishing steps of a new Kite release
 0) prerequisite: enhance or improve the solver and or project in some way
 0.1) prerequisite: check that everything functions correctly (by trying it out and by running the unit tests)
 
-1) increase the version number (best done using the Replace in Files tool in Intellij IDEA)
+1) increase the version number (best done using the 'Replace in Files'-tool in Intellij IDEA)
     - version format is MAJOR.MINOR.PATCH
     - increase MAJOR if: the project underwent a complete rewrite or the purpose of the project changed in a very meaningful way
     - increase MINOR if: the project has changed in a way that is noticeable to an end-user (e.g. new API method)
