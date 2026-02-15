@@ -25,4 +25,4 @@ Publishing steps of a new Kite release
         - tag: create new tag given the version (e.g. "v1.0.0")
         - title: "Kite vX.X.X CLI tool"
         - description: "This release provides the prebuilt binaries for the Kite CLI tool. Performance and throughput may be lower when using the solver through the CLI compared to using it as a library."
-        - attached binaries: every archived (!) binary produced by the latest workflow run
+        - attached binaries: every archived (!) binary produced by the latest workflow run (downloading from the workflow run might compress the archives again -> unpack them)

@@ -47,16 +47,20 @@ jobs:
           OS=${{ matrix.os }}
           BIN_DIR=build/native/nativeCompile
 
-          if [[ "$OS" == "windows-latest" ]]; then
-            ARCHIVE=kite-$VERSION-windows-x64.zip
-            zip -r "$ARCHIVE" "$BIN_DIR"/*
-          elif [[ "$OS" == "ubuntu-latest" ]]; then
-            ARCHIVE=kite-$VERSION-linux-x64.tar.gz
-            tar -czf "$ARCHIVE" -C "$BIN_DIR" .
-          elif [[ "$OS" == "macos-latest" ]]; then
-            ARCHIVE=kite-$VERSION-macos-x64.tar.gz
-            tar -czf "$ARCHIVE" -C "$BIN_DIR" .
-          fi
+          case "$OS" in
+            windows-latest)
+              ARCHIVE=kite-$VERSION-windows-x64.zip
+              7z a "$ARCHIVE" "$BIN_DIR"/*
+              ;;
+            ubuntu-latest)
+              ARCHIVE=kite-$VERSION-linux-x64.tar.gz
+              tar -czf "$ARCHIVE" -C "$BIN_DIR" .
+              ;;
+            macos-latest)
+              ARCHIVE=kite-$VERSION-macos-x64.tar.gz
+              tar -czf "$ARCHIVE" -C "$BIN_DIR" .
+              ;;
+          esac
 
           echo "ARCHIVE=$ARCHIVE" >> $GITHUB_ENV
 
