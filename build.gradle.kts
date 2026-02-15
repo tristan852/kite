@@ -74,9 +74,6 @@ graalvmNative {
                 languageVersion.set(JavaLanguageVersion.of(25))
             })
             
-            buildArgs.add("-H:+UnlockExperimentalVMOptions")
-            buildArgs.add("-H:IncludeResources=.*")
-            
             buildArgs.add("--no-fallback")
             buildArgs.add("--no-server")
             buildArgs.add("-H:+ReportExceptionStackTraces")
