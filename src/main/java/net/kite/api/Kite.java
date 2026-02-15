@@ -19,7 +19,7 @@ import java.io.*;
 public class Kite implements KiteAPI {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.15.0";
+	private static final String VERSION = "1.16.0";
 	private static final String AUTHOR = "tristan852";
 	
 	private static final String[] BENCHMARK_RESOURCE_PATHS = new String[] {
