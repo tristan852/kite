@@ -75,7 +75,7 @@ graalvmNative {
             })
             
             // buildArgs.add("--exclude=net.kite.internal.demo.*")
-            buildArgs.add("-H:ExcludeClasses=net.kite.internal.demo.*")
+            buildArgs.add("--exclude-config=*.jar net/kite/internal/demo/.*")
             
             buildArgs.add("--no-fallback")
             buildArgs.add("--no-server")
