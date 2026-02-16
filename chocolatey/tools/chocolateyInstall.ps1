@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop'
 $packageName   = 'kite-c4'
 $toolsDir      = Join-Path (Get-ToolsLocation) $packageName
 $url           = 'https://github.com/tristan852/kite/releases/download/v1.16.3/kite-1.16.3-windows-x64.zip'
-$checksum      = '902806079259FF41E98AF96C6EE813A455B11F8500B942E76E376C82F8052F11'
+$checksum      = 'BDE9EFF4C3705DEF63C2893373728896735993ED00850885FA02E719863A0585'
 $checksumType  = 'sha256'
 
 # Ensure tools directory exists
