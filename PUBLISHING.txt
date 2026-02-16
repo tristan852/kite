@@ -10,18 +10,18 @@ Publishing steps of a new Kite release
     - increase MINOR if: the project has changed in a way that is noticeable to an end-user (e.g. new API method)
     - increase PATCH if: a change was done that is not directly visible from the outside
 
-2) push all changes to the GitHub repository
-
-3) publish the new release to Maven Central (done via publishToMavenCentral Gradle task)
+2) publish the new release to Maven Central (done via publishToMavenCentral Gradle task)
     - this requires access to the Maven Central account as well as the private key used for signing
 
-4) publish CLI release to Homebrew and Chocolatey
+3) publish CLI release to Homebrew and Chocolatey (requires Chocolatey API key)
     - download the binaries built by GitHub actions on the latest commit: https://github.com/tristan852/kite/actions/workflows/graalvm-native.yml
     - unpack the archives if they have been zipped
     - compute SHA256 for all archives (e.g. Windows PowerShell: "Get-FileHash .\kite-1.0.0-windows-x64.zip -Algorithm SHA256")
     - update Formula/kite.rb with new SHA256 hash for Linux and macOS
     - update chocolatey/chocolateyInstall.ps1 with new SHA256 hash for Windows
     - inside chocolatey folder: "choco pack" then "choco push kite-c4.1.0.0.nupkg --source https://push.chocolatey.org/"
+
+4) push all changes to the GitHub repository
 
 5) optional: refresh the javadoc.io page over at https://javadoc.io/doc/io.github.tristan852/kite
 
