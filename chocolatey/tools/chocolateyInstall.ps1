@@ -1,12 +1,17 @@
 $ErrorActionPreference = 'Stop'
 
 $packageName   = 'kite-c4'
-$toolsDir      = "$(Split-Path -Parent $MyInvocation.MyCommand.Definition)"
+$toolsDir      = Join-Path $env:ChocolateyToolsLocation $packageName
 $url           = 'https://github.com/tristan852/kite/releases/download/v1.16.2/kite-1.16.2-windows-x64.zip'
 $checksum      = '902806079259FF41E98AF96C6EE813A455B11F8500B942E76E376C82F8052F11'
 $checksumType  = 'sha256'
 
-# Download and extract
+# Ensure tools directory exists
+if (!(Test-Path $toolsDir)) {
+    New-Item -ItemType Directory -Path $toolsDir | Out-Null
+}
+
+# Download and extract the ZIP package
 Install-ChocolateyZipPackage `
     -PackageName $packageName `
     -Url $url `

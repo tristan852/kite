@@ -1,6 +1,7 @@
 $ErrorActionPreference = 'Stop'
 
-$toolsDir = "$(Split-Path -Parent $MyInvocation.MyCommand.Definition)"
+$packageName = 'kite-c4'
+$toolsDir    = Join-Path $env:ChocolateyToolsLocation $packageName
 
 # Remove installation folder
 if (Test-Path $toolsDir) {
