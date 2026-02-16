@@ -11,12 +11,19 @@ public class KiteCLI {
 	private static final char COMMAND_ARGUMENT_SEPARATOR_CHARACTER = ' ';
 	private static final String COMMAND_ARGUMENT_SEPARATOR_STRING = " ";
 	
-	public void onStart() {
+	public void onStart(String[] programArguments) {
+		String version = Kite.getVersion();
+		
+		if(programArguments.length != 0) {
+			
+			System.out.println(version);
+			return;
+		}
+		
 		Kite solver = Kite.createInstance();
 		Scanner scanner = new Scanner(System.in);
 		
 		String name = Kite.getName();
-		String version = Kite.getVersion();
 		String author = Kite.getAuthor();
 		
 		String message = String.format("%s v%s by %s%n%nEnter 'help' to get a list of available commands.%nAlso, please be careful as there is very little input sanitization!%n", name, version, author);
