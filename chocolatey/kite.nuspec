@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>kite-c4</id>
+    <version>1.16.2</version>
+    <title>Kite - Connect four solver</title>
+    <authors>tristan852</authors>
+    <owners>tristan852</owners>
+    <description>A Connect Four solver</description>
+    <summary>A Connect Four solver</summary>
+    <tags>connect4 connect-four solver cli command-line game puzzle board-game ai</tags>
+  </metadata>
+</package>

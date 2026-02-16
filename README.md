@@ -56,6 +56,21 @@ You can use the CLI to analyze positions, run benchmarks, or play directly from 
 
 The CLI tool runs completely natively, built with *GraalVM native images* for each platform.
 
+You can also install via your platform's package manager:
+
+**macOS & Linux**
+
+```bash
+brew tap tristan852/kite
+brew install kite
+```
+
+**Windows**
+
+```powershell
+choco install kite-c4
+```
+
 ---
 
 ## 📊 Empty-Board Benchmark
@@ -64,7 +79,7 @@ The CLI tool runs completely natively, built with *GraalVM native images* for ea
 
 The empty Connect Four board is considered the most challenging position to solve, as it represents the root of the entire game tree. Successfully evaluating this state is a significant achievement and serves as an excellent benchmark for testing the performance of a Connect Four solver.
 
-Typically, an **opening book** is used to store precomputed evaluations of early-game positions, including the empty board, allowing such evaluations to be retrieved instantly via a simple table lookup. However, to properly assess the solver’s raw computational strength, the opening book was **turned off**, and the **transposition table was cleared** before evaluating the empty board.
+Typically, an **opening book** is used to store precomputed evaluations of early-game positions, including the empty board, allowing such evaluations to be retrieved instantly via a simple table lookup. However, to properly assess the solver's raw computational strength, the opening book was **turned off**, and the **transposition table was cleared** before evaluating the empty board.
 
 Two hardware configurations were used to run this benchmark, representing different levels of processing power:
 
