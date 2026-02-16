@@ -164,7 +164,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tristan852:kite:1.16.0")
+    implementation("io.github.tristan852:kite:1.16.1")
 }
 ```
 
@@ -178,7 +178,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.tristan852:kite:1.16.0'
+    implementation 'io.github.tristan852:kite:1.16.1'
 }
 ```
 
@@ -198,7 +198,7 @@ Add the following code snippet to your `pom.xml` file:
     <dependency>
         <groupId>io.github.tristan852</groupId>
         <artifactId>kite</artifactId>
-        <version>1.16.0</version>
+        <version>1.16.1</version>
     </dependency>
 </dependencies>
 ```
@@ -217,9 +217,11 @@ module your.module.name {
 
 To start developing **Kite** locally, ensure the following requirements are installed:
 
-* **JDK 25+**
-* **Latest version of Gradle**
-* An IDE (**IntelliJ IDEA** is highly recommended)
+* **JDK 25+** (*GraalVM* is recommended and required for building the CLI tool)
+* Latest version of **Gradle**
+* An **IDE** (*IntelliJ IDEA* is highly recommended)
+
+> **Note:** The JDK can be installed directly through *IntelliJ IDEA*.
 
 Clone the repository:
 
@@ -231,6 +233,42 @@ cd kite
 Open the project as a **Gradle project** in your IDE and wait for the Gradle import/sync to complete.
 
 You can then build, run, and test the project using Gradle. Feel free to improve the solver or extend the project with new features.
+
+### Native Binary Build Setup
+
+Native images of the CLI tool can be built with `./gradlew clean nativeCompile`.
+Install the required system toolchain for your OS before building native images of the CLI tool.
+
+#### 🪟 Windows
+
+Install **[Visual Studio Build Tools](https://visualstudio.microsoft.com/downloads/)**.
+
+During setup select:
+
+* **Desktop development with C++**
+* MSVC (latest)
+* Windows 10/11 SDK
+
+Ensure MSVC is installed and on your *PATH*.
+
+#### 🐧 Linux (Ubuntu/Debian)
+
+```bash
+sudo apt update
+sudo apt install build-essential zlib1g-dev
+```
+
+This installs GCC, development headers, and linker tools.
+
+#### 🍎 macOS
+
+Install Xcode Command Line Tools:
+
+```bash
+xcode-select --install
+```
+
+Provides Clang and macOS SDK headers. Full Xcode is not required.
 
 ---
 

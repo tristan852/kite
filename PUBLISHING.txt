@@ -12,7 +12,7 @@ Publishing steps of a new Kite release
 
 2) push all changes to the GitHub repository
 
-3) publish the new release to Maven Central (done via publishToMavenCentral-task in Intellij IDEA)
+3) publish the new release to Maven Central (done via publishToMavenCentral Gradle task)
     - this requires access to the Maven Central account as well as the private key used for signing
 
 4) optional: refresh the javadoc.io page over at https://javadoc.io/doc/io.github.tristan852/kite

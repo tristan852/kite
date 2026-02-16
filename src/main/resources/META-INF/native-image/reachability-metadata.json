@@ -1,0 +1,25 @@
+{
+  "resources": [
+    {
+      "glob": "board_score_caches/opening.cfc"
+    },
+    {
+      "glob": "benchmarks/endgame_easy.txt"
+    },
+    {
+      "glob": "benchmarks/midgame_easy.txt"
+    },
+    {
+      "glob": "benchmarks/midgame_medium.txt"
+    },
+    {
+      "glob": "benchmarks/opening_easy.txt"
+    },
+    {
+      "glob": "benchmarks/opening_medium.txt"
+    },
+    {
+      "glob": "benchmarks/opening_hard.txt"
+    }
+  ]
+}
