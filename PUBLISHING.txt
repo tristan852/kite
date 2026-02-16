@@ -13,7 +13,9 @@ Publishing steps of a new Kite release
 2) publish the new release to Maven Central (done via publishToMavenCentral Gradle task)
     - this requires access to the Maven Central account as well as the private key used for signing
 
-3) publish CLI release to Homebrew and Chocolatey (requires Chocolatey API key)
+3) push all changes to the GitHub repository
+
+4) publish CLI release to Homebrew and Chocolatey (requires Chocolatey API key)
     - download the binaries built by GitHub actions on the latest commit: https://github.com/tristan852/kite/actions/workflows/graalvm-native.yml
     - unpack the archives if they have been zipped
     - compute SHA256 for all archives (e.g. Windows PowerShell: "Get-FileHash .\kite-1.0.0-windows-x64.zip -Algorithm SHA256")
@@ -21,13 +23,13 @@ Publishing steps of a new Kite release
     - update chocolatey/chocolateyInstall.ps1 with new SHA256 hash for Windows
     - inside chocolatey folder: "choco pack" then "choco push kite-c4.1.0.0.nupkg --source https://push.chocolatey.org/"
 
-4) push all changes to the GitHub repository
+5) push all changes to the GitHub repository again
 
-5) optional: refresh the javadoc.io page over at https://javadoc.io/doc/io.github.tristan852/kite
+6) optional: refresh the javadoc.io page over at https://javadoc.io/doc/io.github.tristan852/kite
 
-6) optional: refresh the JavaDoc README-badge using 'curl -w "\n" -s -X PURGE https://camo.githubusercontent.com/...'
+7) optional: refresh the JavaDoc README-badge using 'curl -w "\n" -s -X PURGE https://camo.githubusercontent.com/...'
 
-7) create a new GitHub release for the CLI tool
+8) create a new GitHub release for the CLI tool
     - download the binaries built by GitHub actions on the latest commit: https://github.com/tristan852/kite/actions/workflows/graalvm-native.yml
     - create a new GitHub release with following details:
         - tag: create new tag given the version (e.g. "v1.0.0")

@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>kite-c4</id>
-    <version>1.16.2</version>
+    <version>1.16.3</version>
     <title>Kite - Connect four solver</title>
     <authors>tristan852</authors>
     <owners>tristan852</owners>

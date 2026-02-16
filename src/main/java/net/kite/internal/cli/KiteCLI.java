@@ -4,6 +4,7 @@ import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 import net.kite.internal.cli.command.Commands;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class KiteCLI {
@@ -23,6 +24,11 @@ public class KiteCLI {
 		Kite solver = Kite.createInstance();
 		Scanner scanner = new Scanner(System.in);
 		
+		Runtime runtime = Runtime.getRuntime();
+		Thread shutdownThread = new Thread(() -> System.out.println("\nExiting Kite..."));
+		
+		runtime.addShutdownHook(shutdownThread);
+		
 		String name = Kite.getName();
 		String author = Kite.getAuthor();
 		
@@ -31,7 +37,14 @@ public class KiteCLI {
 		
 		while(true) {
 			
-			message = scanner.nextLine();
+			try {
+				
+				message = scanner.nextLine();
+				
+			} catch(NoSuchElementException exception) {
+				
+				return;
+			}
 			
 			int i = message.indexOf(COMMAND_ARGUMENT_SEPARATOR_CHARACTER);
 			

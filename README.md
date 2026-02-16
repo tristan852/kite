@@ -71,6 +71,8 @@ brew install kite
 choco install kite-c4
 ```
 
+Use `kite` to start the Kite CLI tool, or `kite --version` to check its version.
+
 ---
 
 ## 📊 Empty-Board Benchmark
@@ -179,7 +181,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.tristan852:kite:1.16.2")
+    implementation("io.github.tristan852:kite:1.16.3")
 }
 ```
 
@@ -193,7 +195,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.github.tristan852:kite:1.16.2'
+    implementation 'io.github.tristan852:kite:1.16.3'
 }
 ```
 
@@ -213,7 +215,7 @@ Add the following code snippet to your `pom.xml` file:
     <dependency>
         <groupId>io.github.tristan852</groupId>
         <artifactId>kite</artifactId>
-        <version>1.16.2</version>
+        <version>1.16.3</version>
     </dependency>
 </dependencies>
 ```
