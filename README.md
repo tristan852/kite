@@ -237,6 +237,8 @@ You can then build, run, and test the project using Gradle. Feel free to improve
 ### Native Binary Build Setup
 
 Native images of the CLI tool can be built with `./gradlew clean nativeCompile`.
+In IntelliJ IDEA, you can also run this Gradle task directly by creating a **run configuration**.
+
 Install the required system toolchain for your OS before building native images of the CLI tool.
 
 #### 🪟 Windows
