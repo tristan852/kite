@@ -24,7 +24,6 @@ For full documentation, visit the [project's GitHub repository](https://github.c
     <tags>connect4 connect-four solver cli command-line game puzzle board-game ai</tags>
     
     <projectUrl>https://github.com/tristan852/kite</projectUrl>
-    <projectSourceUrl>https://github.com/tristan852/kite</projectSourceUrl>
     <packageSourceUrl>https://github.com/tristan852/kite</packageSourceUrl>
     <releaseNotes>https://github.com/tristan852/kite/releases</releaseNotes>
     <bugTrackerUrl>https://github.com/tristan852/kite/issues</bugTrackerUrl>
