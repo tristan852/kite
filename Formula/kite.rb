@@ -16,6 +16,7 @@ class Kite < Formula
   end
 
   test do
-    system "#{bin}/kite", "--version"
+    output = shell_output("#{bin}/kite --version")
+    assert_match "1.16.2", output
   end
 end
