@@ -5,8 +5,6 @@ import net.kite.internal.cli.command.Command;
 
 public class ColorCommand extends Command {
 	
-	private static final int COORDINATE_OFFSET = 48;
-	
 	public ColorCommand() {
 		super("color", "color [x y]");
 	}
@@ -19,11 +17,17 @@ public class ColorCommand extends Command {
 			return false;
 		}
 		
-		char c1 = arguments[0].charAt(0);
-		char c2 = arguments[1].charAt(0);
+		if(arguments.length != 2) {
+			
+			System.err.println("Incorrect number of arguments!");
+			return false;
+		}
 		
-		int x = c1 - COORDINATE_OFFSET;
-		int y = c2 - COORDINATE_OFFSET;
+		int x = parseCoordinateArgument(arguments[0], "x", true);
+		if(x < 0) return false;
+		
+		int y = parseCoordinateArgument(arguments[1], "y", false);
+		if(y < 0) return false;
 		
 		System.out.println(solver.cellPlayerColor(x, y));
 		

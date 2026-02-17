@@ -11,6 +11,12 @@ public class CanPlayCommand extends Command {
 	
 	@Override
 	public boolean execute(String[] arguments, Kite solver) {
+		if(arguments.length != 0) {
+			
+			System.err.println("Too many arguments!");
+			return false;
+		}
+		
 		System.out.println(solver.canPlayMove());
 		
 		return false;

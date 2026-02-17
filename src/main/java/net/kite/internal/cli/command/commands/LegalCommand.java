@@ -5,18 +5,22 @@ import net.kite.internal.cli.command.Command;
 
 public class LegalCommand extends Command {
 	
-	private static final int MOVE_CHARACTER_OFFSET = 48;
-	
 	public LegalCommand() {
 		super("legal", "legal <move>");
 	}
 	
 	@Override
 	public boolean execute(String[] arguments, Kite solver) {
-		char c = arguments[0].charAt(0);
-		int i = c - MOVE_CHARACTER_OFFSET;
+		if(arguments.length != 1) {
+			
+			System.err.println("Incorrect number of arguments!");
+			return false;
+		}
 		
-		System.out.println(solver.moveLegal(i));
+		int x = parseCoordinateArgument(arguments[0], "move", true);
+		if(x < 0) return false;
+		
+		System.out.println(solver.moveLegal(x));
 		return false;
 	}
 	

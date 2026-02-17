@@ -22,4 +22,28 @@ public abstract class Command {
 		return helpMessage;
 	}
 	
+	public static int parseCoordinateArgument(String argument, String argumentName, boolean xCoordinate) {
+		int i;
+		
+		try {
+			
+			i = Integer.parseInt(argument);
+			
+		} catch(NumberFormatException exception) {
+			
+			System.err.printf("Unknown integer value for argument '%s': %s%n", argumentName, argument);
+			return Integer.MIN_VALUE;
+		}
+		
+		int max = xCoordinate ? 7 : 6;
+		
+		if(i < 0 || i >= max) {
+			
+			System.err.printf("Integer value for argument '%s' is out of bounds: %s%n", argumentName, argument);
+			return Integer.MIN_VALUE;
+		}
+		
+		return i;
+	}
+	
 }

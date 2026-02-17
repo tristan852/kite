@@ -12,9 +12,33 @@ public class SkilledCommand extends Command {
 	
 	@Override
 	public boolean execute(String[] arguments, Kite solver) {
-		SkillLevel level = SkillLevel.level(arguments[0]);
+		if(arguments.length != 1) {
+			
+			System.err.println("Incorrect number of arguments!");
+			return false;
+		}
 		
-		System.out.println(solver.skilledMove(level));
+		String s = arguments[0];
+		SkillLevel level;
+		
+		try {
+			
+			level = SkillLevel.level(s);
+			
+		} catch(IllegalArgumentException exception) {
+			
+			System.err.printf("Unknown skill level for argument 'level': %s%n", s);
+			return false;
+		}
+		
+		int move = solver.skilledMove(level);
+		if(move == 0) {
+			
+			System.err.println("The game is over!");
+			return false;
+		}
+		
+		System.out.println(move);
 		
 		return false;
 	}

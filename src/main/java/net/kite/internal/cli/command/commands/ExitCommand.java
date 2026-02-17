@@ -11,6 +11,12 @@ public class ExitCommand extends Command {
 	
 	@Override
 	public boolean execute(String[] arguments, Kite solver) {
+		if(arguments.length != 0) {
+			
+			System.err.println("Too many arguments!");
+			return false;
+		}
+		
 		return true;
 	}
 	

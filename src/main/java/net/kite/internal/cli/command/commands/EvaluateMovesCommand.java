@@ -21,6 +21,12 @@ public class EvaluateMovesCommand extends Command {
 	
 	@Override
 	public boolean execute(String[] arguments, Kite solver) {
+		if(arguments.length != 0) {
+			
+			System.err.println("Too many arguments!");
+			return false;
+		}
+		
 		solver.evaluateAllMoves(moveEvaluations);
 		
 		for(int i = 0; i < BOARD_WIDTH; i++) {

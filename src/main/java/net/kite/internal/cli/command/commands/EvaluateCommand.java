@@ -5,8 +5,6 @@ import net.kite.internal.cli.command.Command;
 
 public class EvaluateCommand extends Command {
 	
-	private static final int MOVE_CHARACTER_OFFSET = 48;
-	
 	public EvaluateCommand() {
 		super("evaluate", "evaluate [move]");
 	}
@@ -17,12 +15,22 @@ public class EvaluateCommand extends Command {
 			
 			System.out.println(solver.evaluateBoard());
 			
+		} else if(arguments.length == 1) {
+			
+			int x = parseCoordinateArgument(arguments[0], "move", true);
+			if(x < 0) return false;
+			
+			if(!solver.moveLegal(x)) {
+				
+				System.err.printf("Move is not legal: %s%n", x);
+				return false;
+			}
+			
+			System.out.println(solver.evaluateMove(x));
+			
 		} else {
 			
-			char c = arguments[0].charAt(0);
-			int i = c - MOVE_CHARACTER_OFFSET;
-			
-			System.out.println(solver.evaluateMove(i));
+			System.err.println("Too many arguments!");
 		}
 		
 		return false;

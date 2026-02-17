@@ -27,8 +27,22 @@ public class PerformanceCommand extends Command {
 			return false;
 		}
 		
+		if(arguments.length != 1) {
+			
+			System.err.println("Too many arguments!");
+			return false;
+		}
+		
 		String s = arguments[0];
-		BoardPlayerColor color = BoardPlayerColor.color(s);
+		
+		BoardPlayerColor color;
+		if(s.equalsIgnoreCase("red")) color = BoardPlayerColor.RED;
+		else if(s.equalsIgnoreCase("yellow")) color = BoardPlayerColor.YELLOW;
+		else {
+			
+			System.err.printf("Unknown color value for argument 'color': %s%n", s);
+			return false;
+		}
 		
 		float f = solver.evaluatePlayerPerformance(color);
 		System.out.printf("%.2f%n", f);

@@ -11,20 +11,35 @@ public class BenchmarkCommand extends Command {
 	
 	@Override
 	public boolean execute(String[] arguments, Kite solver) {
-		boolean successful;
-		
 		if(arguments.length == 0) {
 			
-			successful = Kite.runBenchmark();
+			boolean successful = Kite.runBenchmark();
+			
+			String message = successful ? "Benchmark completed successfully!" : "Benchmark was not completed successfully!";
+			System.out.println(message);
+			
+		} else if(arguments.length == 1) {
+			
+			String s = arguments[0];
+			
+			boolean printMetrics;
+			if(s.equalsIgnoreCase("true")) printMetrics = true;
+			else if(s.equalsIgnoreCase("false")) printMetrics = false;
+			else {
+				
+				System.err.printf("Unknown boolean value for argument 'printMetrics': %s%n", s);
+				return false;
+			}
+			
+			boolean successful = Kite.runBenchmark(printMetrics);
+			
+			String message = successful ? "Benchmark completed successfully!" : "Benchmark was not completed successfully!";
+			System.out.println(message);
 			
 		} else {
 			
-			boolean printMetrics = Boolean.parseBoolean(arguments[0]);
-			successful = Kite.runBenchmark(printMetrics);
+			System.err.println("Too many arguments!");
 		}
-		
-		String message = successful ? "Benchmark completed successfully!" : "Benchmark was not completed successfully!";
-		System.out.println(message);
 		
 		return false;
 	}

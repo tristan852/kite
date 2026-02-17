@@ -11,7 +11,20 @@ public class RandomCommand extends Command {
 	
 	@Override
 	public boolean execute(String[] arguments, Kite solver) {
-		System.out.println(solver.randomMove());
+		if(arguments.length != 0) {
+			
+			System.err.println("Too many arguments!");
+			return false;
+		}
+		
+		int move = solver.randomMove();
+		if(move == 0) {
+			
+			System.err.println("The game is over!");
+			return false;
+		}
+		
+		System.out.println(move);
 		
 		return false;
 	}

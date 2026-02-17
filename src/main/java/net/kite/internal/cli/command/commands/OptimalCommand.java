@@ -11,7 +11,20 @@ public class OptimalCommand extends Command {
 	
 	@Override
 	public boolean execute(String[] arguments, Kite solver) {
-		System.out.println(solver.optimalMove());
+		if(arguments.length != 0) {
+			
+			System.err.println("Too many arguments!");
+			return false;
+		}
+		
+		int move = solver.optimalMove();
+		if(move == 0) {
+			
+			System.err.println("The game is over!");
+			return false;
+		}
+		
+		System.out.println(move);
 		
 		return false;
 	}
