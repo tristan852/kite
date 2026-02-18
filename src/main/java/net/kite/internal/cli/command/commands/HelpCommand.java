@@ -22,7 +22,7 @@ public class HelpCommand extends Command {
 			return false;
 		}
 		
-		System.out.println("available commands:");
+		System.out.println("Available commands:");
 		
 		for(Command command : Commands.COMMANDS) {
 			
