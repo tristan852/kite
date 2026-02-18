@@ -80,9 +80,9 @@ jobs:
           # Run CLI and capture output
           if [[ "$OS" == "windows-latest" ]]; then
             # On Windows use PowerShell to normalize line endings and capture stderr
-            powershell.exe -Command "& {
+            powershell.exe -NoProfile -Command "& { 
               $output = & '$EXECUTABLE' --script '$SCRIPT_FILE' 2>&1;
-              $output -replace \"`r`n\", \"`n\" | Out-File -Encoding utf8 test_script_output.txt -NoNewline
+              $output -replace '\r\n','\n' | Out-File -Encoding utf8 test_script_output.txt -NoNewline
             }"
           else
             # On Linux/macOS just run the executable and capture stderr
