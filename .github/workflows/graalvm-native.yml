@@ -80,7 +80,7 @@ jobs:
           # Run CLI and capture output
           if [[ "$OS" == "windows-latest" ]]; then
             # Create temporary PowerShell script
-            echo "& '$EXECUTABLE' --script '$SCRIPT_FILE' 2>&1 | ForEach-Object { \$_ -replace '\r','' } | Out-File -Encoding utf8 test_script_output.txt" > cli.ps1
+            echo "& '$EXECUTABLE' --script '$SCRIPT_FILE' 2>&1 | ForEach-Object { \$_ -replace '\r','' } | Out-File -Encoding utf8NoBOM test_script_output.txt" > cli.ps1
 
             # Run it
             powershell.exe -NoProfile -ExecutionPolicy Bypass -File cli.ps1
