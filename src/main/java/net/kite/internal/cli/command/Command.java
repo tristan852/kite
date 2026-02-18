@@ -31,7 +31,7 @@ public abstract class Command {
 		return helpMessage;
 	}
 	
-	public static int parseCoordinateArgument(String argument, String argumentName, boolean xCoordinate, PrintStream errorStream, boolean exitOnError) {
+	public static int parseCoordinateArgument(String argument, String argumentName, int min, int max, PrintStream errorStream, boolean exitOnError) {
 		int i;
 		
 		try {
@@ -45,9 +45,7 @@ public abstract class Command {
 			return Integer.MIN_VALUE;
 		}
 		
-		int max = xCoordinate ? 7 : 6;
-		
-		if(i < 0 || i >= max) {
+		if(i < min || i > max) {
 			
 			errorStream.printf("Integer value for argument '%s' is out of bounds: \"%s\"%n", argumentName, argument);
 			if(exitOnError) System.exit(1);

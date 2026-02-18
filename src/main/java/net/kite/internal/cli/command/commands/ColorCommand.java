@@ -28,10 +28,10 @@ public class ColorCommand extends Command {
 			return false;
 		}
 		
-		int x = parseCoordinateArgument(arguments[0], "x", true, errorStream, exitOnError);
+		int x = parseCoordinateArgument(arguments[0], "x", 0, 6, errorStream, exitOnError);
 		if(x < 0) return false;
 		
-		int y = parseCoordinateArgument(arguments[1], "y", false, errorStream, exitOnError);
+		int y = parseCoordinateArgument(arguments[1], "y", 0, 5, errorStream, exitOnError);
 		if(y < 0) return false;
 		
 		BoardPlayerColor color = solver.cellPlayerColor(x, y);

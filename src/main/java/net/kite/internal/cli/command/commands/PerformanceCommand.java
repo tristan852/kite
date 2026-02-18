@@ -26,7 +26,7 @@ public class PerformanceCommand extends Command {
 			
 			solver.evaluatePlayerPerformances(playerPerformances);
 			
-			System.out.printf(Locale.ROOT, "red player performance: %.2f%nyellow player performance: %.2f%n", playerPerformances[0], playerPerformances[1]);
+			System.out.printf(Locale.ROOT, "red player's performance: %.2f%nyellow player's performance: %.2f%n", playerPerformances[0], playerPerformances[1]);
 			
 			return false;
 		}

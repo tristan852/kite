@@ -88,7 +88,7 @@ public class GameCommand extends Command {
 			message = message.toLowerCase(Locale.ROOT);
 			if(message.equals("exit")) return false;
 			
-			int x = parseCoordinateArgument(message, "move", true, errorStream, exitOnError);
+			int x = parseCoordinateArgument(message, "move", 1, 7, errorStream, exitOnError);
 			if(x < 0) continue;
 			
 			if(!solver.moveLegal(x)) {

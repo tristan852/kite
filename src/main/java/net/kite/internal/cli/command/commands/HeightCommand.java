@@ -21,7 +21,7 @@ public class HeightCommand extends Command {
 			return false;
 		}
 		
-		int x = parseCoordinateArgument(arguments[0], "x", true, errorStream, exitOnError);
+		int x = parseCoordinateArgument(arguments[0], "x", 1, 7, errorStream, exitOnError);
 		if(x < 0) return false;
 		
 		System.out.println(solver.cellColumnHeight(x));

@@ -20,7 +20,7 @@ public class EvaluateCommand extends Command {
 			
 		} else if(arguments.length == 1) {
 			
-			int x = parseCoordinateArgument(arguments[0], "move", true, errorStream, exitOnError);
+			int x = parseCoordinateArgument(arguments[0], "move", 1, 7, errorStream, exitOnError);
 			if(x < 0) return false;
 			
 			if(!solver.moveLegal(x)) {
