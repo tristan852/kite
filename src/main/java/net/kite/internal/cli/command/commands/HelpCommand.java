@@ -9,8 +9,10 @@ import java.util.Scanner;
 
 public class HelpCommand extends Command {
 	
+	private static final int LARGEST_COMMAND_NAME_LENGTH = 36;
+	
 	public HelpCommand() {
-		super("help", "Show help information", "help");
+		super("help", "h", "Show help information", "help");
 	}
 	
 	@Override
@@ -24,26 +26,18 @@ public class HelpCommand extends Command {
 		
 		System.out.println("Available commands:");
 		
-		int maxLength = 0;
-		
-		for(Command command : Commands.COMMANDS) {
-			
-			String helpMessage = command.getHelpMessage();
-			int l = helpMessage.length();
-			
-			if(l > maxLength) maxLength = l;
-		}
-		
 		for(Command[] commands : Commands.CATEGORIZED_COMMANDS) {
 			
 			System.out.println();
 			
 			for(Command command : commands) {
 				
+				String alias = command.getAlias();
 				String helpMessage = command.getHelpMessage();
 				String description = command.getDescription();
 				
-				System.out.printf("  %-" + maxLength + "s  %s%n", helpMessage, description);
+				String s = alias == null ? helpMessage : String.format("%s (alias: %s)", helpMessage, alias);
+				System.out.printf("  %-" + LARGEST_COMMAND_NAME_LENGTH + "s  %s%n", s, description);
 			}
 		}
 		

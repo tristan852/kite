@@ -11,7 +11,7 @@ public class PlayCommand extends Command {
 	private static final int MOVE_CHARACTER_OFFSET = 48;
 	
 	public PlayCommand() {
-		super("play", "Play one or more moves", "play [moves]");
+		super("play", "p", "Play one or more moves", "play [moves]");
 	}
 	
 	@Override

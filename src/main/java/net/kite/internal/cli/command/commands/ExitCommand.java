@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class ExitCommand extends Command {
 	
 	public ExitCommand() {
-		super("exit", "Exit the program", "exit");
+		super("exit", "quit", "Exit the program", "exit");
 	}
 	
 	@Override

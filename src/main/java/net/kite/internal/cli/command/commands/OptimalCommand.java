@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class OptimalCommand extends Command {
 	
 	public OptimalCommand() {
-		super("optimal", "Show an optimal move", "optimal");
+		super("optimal", "o", "Show an optimal move", "optimal");
 	}
 	
 	@Override

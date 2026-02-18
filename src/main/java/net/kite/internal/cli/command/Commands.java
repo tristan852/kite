@@ -84,7 +84,10 @@ public class Commands {
 		for(Command command : COMMANDS) {
 			
 			String name = command.getName();
+			String alias = command.getAlias();
+			
 			MAPPED_COMMANDS.put(name, command);
+			MAPPED_COMMANDS.put(alias, command);
 		}
 	}
 	

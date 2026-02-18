@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class UndoCommand extends Command {
 	
 	public UndoCommand() {
-		super("undo", "Undo one or more moves", "undo [move-amount]");
+		super("undo", "u", "Undo one or more moves", "undo [move-amount]");
 	}
 	
 	@Override

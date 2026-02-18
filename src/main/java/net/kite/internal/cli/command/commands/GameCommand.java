@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class GameCommand extends Command {
 	
 	public GameCommand() {
-		super("game", "Start a new interactive game", "game [skill-level]");
+		super("game", "g", "Start a new interactive game", "game [skill-level]");
 	}
 	
 	@Override
