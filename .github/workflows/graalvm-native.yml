@@ -68,13 +68,24 @@ jobs:
           fi
 
           # Run the CLI with the script file
-          "$EXECUTABLE" --script "$SCRIPT_FILE"
+          OUTPUT=$("$EXECUTABLE" --script "$SCRIPT_FILE")
 
           # Capture the exit code
           EXIT_CODE=$?
           if [ $EXIT_CODE -ne 0 ]; then
             echo "Error: CLI exited with code $EXIT_CODE."
             exit $EXIT_CODE
+          fi
+
+          EXPECTED=$(cat assets/cli/expected_test_script_output.txt)
+  
+          if [ "$OUTPUT" != "$EXPECTED" ]; then
+            echo "Error: CLI output does not match expected output!"
+            echo "Expected:"
+            cat assets/cli/expected_output.txt
+            echo "Got:"
+            echo "$OUTPUT"
+            exit 1
           fi
 
       # Package Linux and macOS into tar.gz, Windows into zip
