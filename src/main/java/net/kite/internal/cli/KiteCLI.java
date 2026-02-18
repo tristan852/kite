@@ -98,7 +98,7 @@ public class KiteCLI {
 			);
 			
 			System.out.println(message);
-			if(scriptFile != null) System.out.println("Enter 'help' to get a list of available commands.\n");
+			if(scriptFile == null) System.out.println("Enter 'help' to get a list of available commands.\n");
 		}
 		
 		if(scriptFile != null) {
