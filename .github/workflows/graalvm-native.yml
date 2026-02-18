@@ -82,7 +82,7 @@ jobs:
           if [ "$OUTPUT" != "$EXPECTED" ]; then
             echo "Error: CLI output does not match expected output!"
             echo "Expected:"
-            cat assets/cli/expected_output.txt
+            cat assets/cli/expected_test_script_output.txt
             echo "Got:"
             echo "$OUTPUT"
             exit 1
