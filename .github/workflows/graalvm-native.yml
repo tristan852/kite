@@ -78,11 +78,10 @@ jobs:
           fi
 
           # Run CLI and save output
-          "$EXECUTABLE" --script "$SCRIPT_FILE" > test_script_output.txt 2>&1
-          tr -d '\r' < test_script_output.txt > test_script_output_unix.txt
+          "$EXECUTABLE" --script "$SCRIPT_FILE" | sed 's/\r$//' > test_script_output.txt
 
           # Compare exact contents
-          diff -u assets/cli/expected_test_script_output.txt test_script_output_unix.txt
+          diff -u assets/cli/expected_test_script_output.txt test_script_output.txt
           if [ $? -ne 0 ]; then
             echo "Error: CLI output does not match expected output!"
             exit 1
