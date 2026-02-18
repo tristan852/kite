@@ -56,7 +56,7 @@ public class KiteCLI {
 					if (i == n) {
 						
 						errorStream.println("Please provide a script file using '--script <script-file>'!");
-						return;
+						System.exit(2);
 					}
 					
 					scriptFile = programArguments[i];
@@ -67,7 +67,7 @@ public class KiteCLI {
 				default -> {
 					
 					errorStream.printf("Unknown program argument: %s%n", argument);
-					return;
+					System.exit(2);
 				}
 			}
 		}
@@ -91,13 +91,14 @@ public class KiteCLI {
 			String author = Kite.getAuthor();
 			
 			String message = String.format(
-					" __  __    __    ______   ______   %n/\\ \\/ /   /\\ \\  /\\__  _\\ /\\  ___\\  %n\\ \\  _\"-. \\ \\ \\ \\/_/\\ \\/ \\ \\  __\\  %n \\ \\_\\ \\_\\ \\ \\_\\   \\ \\_\\  \\ \\_____\\%n  \\/_/\\/_/  \\/_/    \\/_/   \\/_____/%n%n%s v%s by %s%n%nEnter 'help' to get a list of available commands.%n",
+					" __  __    __    ______   ______   %n/\\ \\/ /   /\\ \\  /\\__  _\\ /\\  ___\\  %n\\ \\  _\"-. \\ \\ \\ \\/_/\\ \\/ \\ \\  __\\  %n \\ \\_\\ \\_\\ \\ \\_\\   \\ \\_\\  \\ \\_____\\%n  \\/_/\\/_/  \\/_/    \\/_/   \\/_____/%n%n%s v%s by %s%n",
 					name,
 					version,
 					author
 			);
 			
 			System.out.println(message);
+			if(scriptFile != null) System.out.println("Enter 'help' to get a list of available commands.%n");
 		}
 		
 		if(scriptFile != null) {
@@ -114,14 +115,14 @@ public class KiteCLI {
 					
 					if(!quiet) System.out.printf("> %s%n", message);
 					
-					boolean exit = processCommandMessage(message, solver, errorStream);
+					boolean exit = processCommandMessage(message, solver, errorStream, true);
 					if(exit) return;
 				}
 				
 			} catch(IOException exception) {
 				
 				errorStream.printf("Script file parsing raised an exception: %s%n", exception);
-				return;
+				System.exit(2);
 			}
 		}
 		
@@ -146,12 +147,12 @@ public class KiteCLI {
 				return;
 			}
 			
-			boolean exit = processCommandMessage(message, solver, errorStream);
+			boolean exit = processCommandMessage(message, solver, errorStream, false);
 			if(exit) return;
 		}
 	}
 	
-	private boolean processCommandMessage(String message, Kite solver, PrintStream errorStream) {
+	private boolean processCommandMessage(String message, Kite solver, PrintStream errorStream, boolean exitOnError) {
 		message = message.trim();
 		if(message.isBlank()) return false;
 		
@@ -181,10 +182,11 @@ public class KiteCLI {
 		if(command == null) {
 			
 			errorStream.printf("Command not found: %s%n", commandName);
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
-		return command.execute(commandArguments, solver, errorStream);
+		return command.execute(commandArguments, solver, errorStream, exitOnError);
 	}
 	
 }

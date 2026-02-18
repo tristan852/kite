@@ -19,7 +19,7 @@ public class PerformanceCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
 		if(arguments.length == 0) {
 			
 			solver.evaluatePlayerPerformances(playerPerformances);
@@ -32,6 +32,7 @@ public class PerformanceCommand extends Command {
 		if(arguments.length != 1) {
 			
 			errorStream.println("Too many arguments!");
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
@@ -43,6 +44,7 @@ public class PerformanceCommand extends Command {
 		else {
 			
 			errorStream.printf("Unknown color value for argument 'color': %s%n", s);
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		

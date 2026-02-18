@@ -14,7 +14,7 @@ public class SetupCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
 		if(arguments.length == 0) {
 			
 			solver.clearBoard();
@@ -24,6 +24,7 @@ public class SetupCommand extends Command {
 		if(arguments.length != 1) {
 			
 			errorStream.println("Too many arguments!");
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
@@ -31,12 +32,14 @@ public class SetupCommand extends Command {
 		if(moves.isBlank()) {
 			
 			errorStream.println("String value for argument 'moves' is empty!");
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
 		if(!moves.matches("[1-7]+")) {
 			
 			errorStream.printf("Invalid move found in moves argument: %s%n", moves);
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
@@ -53,6 +56,7 @@ public class SetupCommand extends Command {
 			} else {
 				
 				errorStream.printf("Illegal Connect Four game: %s%n", moves);
+				if(exitOnError) System.exit(1);
 				return false;
 			}
 		}

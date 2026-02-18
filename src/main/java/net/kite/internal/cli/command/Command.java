@@ -14,7 +14,7 @@ public abstract class Command {
 		this.helpMessage = helpMessage;
 	}
 	
-	public abstract boolean execute(String[] arguments, Kite solver, PrintStream errorStream);
+	public abstract boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError);
 	
 	public String getName() {
 		return name;
@@ -24,7 +24,7 @@ public abstract class Command {
 		return helpMessage;
 	}
 	
-	public static int parseCoordinateArgument(String argument, String argumentName, boolean xCoordinate, PrintStream errorStream) {
+	public static int parseCoordinateArgument(String argument, String argumentName, boolean xCoordinate, PrintStream errorStream, boolean exitOnError) {
 		int i;
 		
 		try {
@@ -34,6 +34,7 @@ public abstract class Command {
 		} catch(NumberFormatException exception) {
 			
 			errorStream.printf("Unknown integer value for argument '%s': %s%n", argumentName, argument);
+			if(exitOnError) System.exit(1);
 			return Integer.MIN_VALUE;
 		}
 		
@@ -42,6 +43,7 @@ public abstract class Command {
 		if(i < 0 || i >= max) {
 			
 			errorStream.printf("Integer value for argument '%s' is out of bounds: %s%n", argumentName, argument);
+			if(exitOnError) System.exit(1);
 			return Integer.MIN_VALUE;
 		}
 		

@@ -12,12 +12,13 @@ public class UndoCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
 		if(arguments.length == 0) {
 			
 			if(!solver.canUndoMove()) {
 				
 				errorStream.println("No moves have been played yet!");
+				if(exitOnError) System.exit(1);
 				return false;
 			}
 			
@@ -35,6 +36,7 @@ public class UndoCommand extends Command {
 			} catch(NumberFormatException exception) {
 				
 				errorStream.printf("Unknown integer value for argument 'move-amount': %s%n", s);
+				if(exitOnError) System.exit(1);
 				return false;
 			}
 			
@@ -42,6 +44,7 @@ public class UndoCommand extends Command {
 			if(n > playedMoves) {
 				
 				errorStream.println("That many moves have not been played yet!");
+				if(exitOnError) System.exit(1);
 				return false;
 			}
 			
@@ -50,6 +53,7 @@ public class UndoCommand extends Command {
 		} else {
 			
 			errorStream.println("Too many arguments!");
+			if(exitOnError) System.exit(1);
 		}
 		
 		return false;

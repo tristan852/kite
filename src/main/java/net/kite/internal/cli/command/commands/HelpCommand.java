@@ -13,10 +13,11 @@ public class HelpCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
 		if(arguments.length != 0) {
 			
 			errorStream.println("Too many arguments!");
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		

@@ -13,10 +13,11 @@ public class LinesCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
 		if(arguments.length != 0) {
 			
 			errorStream.println("Too many arguments!");
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
@@ -24,6 +25,7 @@ public class LinesCommand extends Command {
 		if(lines == null) {
 			
 			errorStream.println("The game has not ended yet or has ended in a draw!");
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		

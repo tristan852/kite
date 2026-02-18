@@ -12,7 +12,7 @@ public class SeedCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
 		if(arguments.length == 0) {
 			
 			solver.seedRandomness();
@@ -29,6 +29,7 @@ public class SeedCommand extends Command {
 			} catch(NumberFormatException exception) {
 				
 				errorStream.printf("Unknown long value for argument 'seed': %s%n", s);
+				if(exitOnError) System.exit(1);
 				return false;
 			}
 			
@@ -37,6 +38,7 @@ public class SeedCommand extends Command {
 		} else {
 			
 			errorStream.println("Too many arguments!");
+			if(exitOnError) System.exit(1);
 		}
 		
 		return false;

@@ -12,7 +12,7 @@ public class PrintCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
 		if(arguments.length == 0) {
 			
 			System.out.println(solver.boardString());
@@ -27,6 +27,7 @@ public class PrintCommand extends Command {
 			else {
 				
 				errorStream.printf("Unknown boolean value for argument 'movesOnly': %s%n", s);
+				if(exitOnError) System.exit(1);
 				return false;
 			}
 			
@@ -36,6 +37,7 @@ public class PrintCommand extends Command {
 		} else {
 			
 			errorStream.println("Too many arguments!");
+			if(exitOnError) System.exit(1);
 		}
 		
 		return false;

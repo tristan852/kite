@@ -12,14 +12,15 @@ public class HeightCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
 		if(arguments.length != 1) {
 			
 			errorStream.println("Incorrect number of arguments!");
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
-		int x = parseCoordinateArgument(arguments[0], "x", true, errorStream);
+		int x = parseCoordinateArgument(arguments[0], "x", true, errorStream, exitOnError);
 		if(x < 0) return false;
 		
 		System.out.println(solver.cellColumnHeight(x));

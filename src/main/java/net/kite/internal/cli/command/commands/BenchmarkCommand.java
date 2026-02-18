@@ -12,7 +12,7 @@ public class BenchmarkCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
 		if(arguments.length == 0) {
 			
 			boolean successful = Kite.runBenchmark();
@@ -30,6 +30,7 @@ public class BenchmarkCommand extends Command {
 			else {
 				
 				errorStream.printf("Unknown boolean value for argument 'printMetrics': %s%n", s);
+				if(exitOnError) System.exit(1);
 				return false;
 			}
 			
@@ -41,6 +42,7 @@ public class BenchmarkCommand extends Command {
 		} else {
 			
 			errorStream.println("Too many arguments!");
+			if(exitOnError) System.exit(1);
 		}
 		
 		return false;

@@ -12,19 +12,20 @@ public class EvaluateCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
 		if(arguments.length == 0) {
 			
 			System.out.println(solver.evaluateBoard());
 			
 		} else if(arguments.length == 1) {
 			
-			int x = parseCoordinateArgument(arguments[0], "move", true, errorStream);
+			int x = parseCoordinateArgument(arguments[0], "move", true, errorStream, exitOnError);
 			if(x < 0) return false;
 			
 			if(!solver.moveLegal(x)) {
 				
 				errorStream.printf("Move is not legal: %s%n", x);
+				if(exitOnError) System.exit(1);
 				return false;
 			}
 			
@@ -33,6 +34,7 @@ public class EvaluateCommand extends Command {
 		} else {
 			
 			errorStream.println("Too many arguments!");
+			if(exitOnError) System.exit(1);
 		}
 		
 		return false;

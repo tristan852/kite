@@ -14,10 +14,11 @@ public class PlayCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
 		if(arguments.length != 1) {
 			
 			errorStream.println("Incorrect number of arguments!");
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
@@ -25,12 +26,14 @@ public class PlayCommand extends Command {
 		if(moves.isBlank()) {
 			
 			errorStream.println("String value for argument 'moves' is empty!");
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
 		if(!moves.matches("[1-7]+")) {
 			
 			errorStream.printf("Invalid move found in moves argument: %s%n", moves);
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
@@ -45,6 +48,7 @@ public class PlayCommand extends Command {
 			} else {
 				
 				errorStream.printf("Illegal move '%s' found in moves argument: %s%n", x, moves);
+				if(exitOnError) System.exit(1);
 				return false;
 			}
 		}

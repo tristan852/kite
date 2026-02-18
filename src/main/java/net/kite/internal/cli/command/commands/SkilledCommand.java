@@ -13,10 +13,11 @@ public class SkilledCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
 		if(arguments.length != 1) {
 			
 			errorStream.println("Incorrect number of arguments!");
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
@@ -30,6 +31,7 @@ public class SkilledCommand extends Command {
 		} catch(IllegalArgumentException exception) {
 			
 			errorStream.printf("Unknown skill level for argument 'level': %s%n", s);
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
@@ -37,6 +39,7 @@ public class SkilledCommand extends Command {
 		if(move == 0) {
 			
 			errorStream.println("The game is over!");
+			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
