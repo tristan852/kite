@@ -4,7 +4,7 @@ import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 import net.kite.internal.cli.command.Commands;
 
-import java.io.PrintStream;
+import java.io.*;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -15,38 +15,70 @@ public class KiteCLI {
 	
 	private static final String VERSION_PROGRAM_ARGUMENT = "--version";
 	private static final String QUIET_PROGRAM_ARGUMENT = "--quiet";
+	private static final String VERBOSE_PROGRAM_ARGUMENT = "--verbose";
+	private static final String SCRIPT_PROGRAM_ARGUMENT = "--script";
 	
 	public void onStart(String[] programArguments) {
 		boolean quiet = System.console() == null;
+		boolean verbose = false;
 		
 		PrintStream errorStream = quiet ? System.err : System.out;
 		
-		if(programArguments.length != 0) {
-			if(programArguments.length != 1) {
-				
-				errorStream.println("Too many program arguments!");
-				return;
-			}
+		String scriptFile = null;
+		
+		int n = programArguments.length;
+		for(int i = 0; i < n; i++) {
 			
-			String argument = programArguments[0];
-			if(argument.equals(VERSION_PROGRAM_ARGUMENT)) {
+			String argument = programArguments[i];
+			switch(argument) {
+				case VERSION_PROGRAM_ARGUMENT -> {
+					
+					String version = Kite.getVersion();
+					System.out.println(version);
+					
+					return;
+				}
 				
-				String version = Kite.getVersion();
-				System.out.println(version);
+				case QUIET_PROGRAM_ARGUMENT -> {
+					
+					quiet = true;
+					errorStream = System.err;
+				}
 				
-				return;
-			}
-			
-			if(argument.equals(QUIET_PROGRAM_ARGUMENT)) {
+				case VERBOSE_PROGRAM_ARGUMENT -> {
+					
+					verbose = true;
+				}
 				
-				quiet = true;
-				errorStream = System.err;
+				case SCRIPT_PROGRAM_ARGUMENT -> {
+					
+					i++;
+					if (i == n) {
+						
+						errorStream.println("Please provide a script file using '--script <script-file>'!");
+						return;
+					}
+					
+					scriptFile = programArguments[i];
+					quiet = true;
+					errorStream = System.err;
+				}
+				
+				default -> {
+					
+					errorStream.printf("Unknown program argument: %s%n", argument);
+					return;
+				}
 			}
 		}
 		
-		Kite solver = Kite.createInstance();
-		Scanner scanner = new Scanner(System.in);
+		if(verbose) {
+			
+			quiet = false;
+			errorStream = System.out;
+		}
 		
+		Kite solver = Kite.createInstance();
 		if(!quiet) {
 			
 			Runtime runtime = Runtime.getRuntime();
@@ -68,6 +100,33 @@ public class KiteCLI {
 			System.out.println(message);
 		}
 		
+		if(scriptFile != null) {
+			
+			try(
+					Reader reader = new FileReader(scriptFile);
+					BufferedReader bufferedReader = new BufferedReader(reader)
+			) {
+				
+				while(true) {
+					
+					String message = bufferedReader.readLine();
+					if(message == null) return;
+					
+					if(!quiet) System.out.printf("> %s%n", message);
+					
+					boolean exit = processCommandMessage(message, solver, errorStream);
+					if(exit) return;
+				}
+				
+			} catch(IOException exception) {
+				
+				errorStream.printf("Script file parsing raised an exception: %s%n", exception);
+				return;
+			}
+		}
+		
+		Scanner scanner = new Scanner(System.in);
+		
 		while(true) {
 			
 			if(!quiet) {
@@ -81,47 +140,51 @@ public class KiteCLI {
 			try {
 				
 				message = scanner.nextLine();
-				message = message.trim();
-				
-				if(message.isBlank()) continue;
 				
 			} catch(NoSuchElementException exception) {
 				
 				return;
 			}
 			
-			int i = message.indexOf(COMMAND_ARGUMENT_SEPARATOR_CHARACTER);
-			
-			String commandName;
-			String[] commandArguments;
-			
-			if(i < 0) {
-				
-				commandName = message;
-				commandArguments = new String[] {};
-				
-			} else {
-				
-				commandName = message.substring(0, i);
-				
-				message = message.substring(i + 1);
-				message = message.trim();
-				
-				commandArguments = message.split(COMMAND_ARGUMENT_SEPARATOR_REGEX);
-			}
-			
-			commandName = commandName.toLowerCase();
-			
-			Command command = Commands.command(commandName);
-			if(command == null) {
-				
-				errorStream.printf("Command not found: %s%n", commandName);
-				continue;
-			}
-			
-			boolean exit = command.execute(commandArguments, solver, errorStream);
+			boolean exit = processCommandMessage(message, solver, errorStream);
 			if(exit) return;
 		}
+	}
+	
+	private boolean processCommandMessage(String message, Kite solver, PrintStream errorStream) {
+		message = message.trim();
+		if(message.isBlank()) return false;
+		
+		int i = message.indexOf(COMMAND_ARGUMENT_SEPARATOR_CHARACTER);
+		
+		String commandName;
+		String[] commandArguments;
+		
+		if(i < 0) {
+			
+			commandName = message;
+			commandArguments = new String[] {};
+			
+		} else {
+			
+			commandName = message.substring(0, i);
+			
+			message = message.substring(i + 1);
+			message = message.trim();
+			
+			commandArguments = message.split(COMMAND_ARGUMENT_SEPARATOR_REGEX);
+		}
+		
+		commandName = commandName.toLowerCase();
+		
+		Command command = Commands.command(commandName);
+		if(command == null) {
+			
+			errorStream.printf("Command not found: %s%n", commandName);
+			return false;
+		}
+		
+		return command.execute(commandArguments, solver, errorStream);
 	}
 	
 }
