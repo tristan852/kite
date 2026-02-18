@@ -44,7 +44,7 @@ public class Kite implements KiteAPI {
 	 * the internal game state of this solver.
 	 * <p>
 	 * This method is equivalent to
-	 * {@link Kite#boardString()}.
+	 * {@link Kite#boardAnalysisString()}.
 	 * <p>
 	 * Note that this method also blocks
 	 * any concurrent access from other
@@ -56,8 +56,22 @@ public class Kite implements KiteAPI {
 	public String toString() {
 		synchronized(this) {
 			
-			return internalSolver.boardString();
+			return internalSolver.boardAnalysisString();
 		}
+	}
+	
+	/**
+	 * Returns a string representation
+	 * of the internal game state
+	 * (as provided by {@link Kite#boardString()})
+	 * along with additional analysis
+	 * information from the solver.
+	 *
+	 * @return game state analysis
+	 */
+	@Override
+	public synchronized String boardAnalysisString() {
+		return internalSolver.boardAnalysisString();
 	}
 	
 	/**

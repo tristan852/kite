@@ -154,8 +154,7 @@ public class Board {
 		this.undoneMoves = new int[FULL_CELL_AMOUNT];
 	}
 	
-	@Override
-	public String toString() {
+	public String toString(boolean boardOnly) {
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		for(int y = HEIGHT - 1; y >= 0; y--) {
@@ -169,6 +168,8 @@ public class Board {
 			
 			stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
 		}
+		
+		if(boardOnly) return stringBuilder.toString();
 		
 		stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
 		stringBuilder.append(TO_STRING_MOVES_PREFIX_STRING);

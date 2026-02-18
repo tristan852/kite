@@ -15,6 +15,7 @@ import net.kite.api.skill.level.SkillLevel;
  */
 public interface KiteAPI {
 	
+	String boardAnalysisString();
 	String boardMovesString();
 	String boardString();
 	

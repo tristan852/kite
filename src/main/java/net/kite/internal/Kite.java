@@ -51,13 +51,18 @@ public class Kite implements KiteAPI {
 	}
 	
 	@Override
+	public String boardAnalysisString() {
+		return board.toString(false);
+	}
+	
+	@Override
 	public String boardMovesString() {
 		return board.movesString();
 	}
 	
 	@Override
 	public String boardString() {
-		return board.toString();
+		return board.toString(true);
 	}
 	
 	@Override
