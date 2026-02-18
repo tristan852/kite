@@ -29,7 +29,7 @@ public class BenchmarkCommand extends Command {
 			else if(s.equalsIgnoreCase("false")) printMetrics = false;
 			else {
 				
-				errorStream.printf("Unknown boolean value for argument 'printMetrics': %s%n", s);
+				errorStream.printf("Unknown boolean value for argument 'print-metrics': %s%n", s);
 				if(exitOnError) System.exit(1);
 				return false;
 			}

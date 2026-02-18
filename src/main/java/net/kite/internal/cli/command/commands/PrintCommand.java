@@ -8,30 +8,30 @@ import java.io.PrintStream;
 public class PrintCommand extends Command {
 	
 	public PrintCommand() {
-		super("print", "print [moves-only]");
+		super("print", "print [include-analysis]");
 	}
 	
 	@Override
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
 		if(arguments.length == 0) {
 			
-			System.out.println(solver.boardString());
+			System.out.println(solver.boardAnalysisString());
 			
 		} else if(arguments.length == 1) {
 			
 			String s = arguments[0];
 			
-			boolean movesOnly;
-			if(s.equalsIgnoreCase("true")) movesOnly = true;
-			else if(s.equalsIgnoreCase("false")) movesOnly = false;
+			boolean includeAnalysis;
+			if(s.equalsIgnoreCase("true")) includeAnalysis = true;
+			else if(s.equalsIgnoreCase("false")) includeAnalysis = false;
 			else {
 				
-				errorStream.printf("Unknown boolean value for argument 'movesOnly': %s%n", s);
+				errorStream.printf("Unknown boolean value for argument 'include-analysis': %s%n", s);
 				if(exitOnError) System.exit(1);
 				return false;
 			}
 			
-			if(movesOnly) System.out.println(solver.boardMovesString());
+			if(includeAnalysis) System.out.println(solver.boardAnalysisString());
 			else System.out.println(solver.boardString());
 			
 		} else {

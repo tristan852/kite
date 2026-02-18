@@ -28,6 +28,7 @@ public class Commands {
 			new PerformanceCommand(),
 			new PlayCommand(),
 			new PrintCommand(),
+			new PrintMovesCommand(),
 			new RandomCommand(),
 			new SeedCommand(),
 			new SetupCommand(),
