@@ -115,7 +115,7 @@ public class KiteCLI {
 					
 					if(!quiet) System.out.printf("> %s%n", message);
 					
-					boolean exit = processCommandMessage(message, solver, errorStream, true);
+					boolean exit = processCommandMessage(message, solver, errorStream, true, quiet, null);
 					if(exit) return;
 				}
 				
@@ -147,14 +147,16 @@ public class KiteCLI {
 				return;
 			}
 			
-			boolean exit = processCommandMessage(message, solver, errorStream, false);
+			boolean exit = processCommandMessage(message, solver, errorStream, false, quiet, scanner);
 			if(exit) return;
 		}
 	}
 	
-	private boolean processCommandMessage(String message, Kite solver, PrintStream errorStream, boolean exitOnError) {
+	private boolean processCommandMessage(String message, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		message = message.trim();
 		if(message.isBlank()) return false;
+		
+		message = message.toLowerCase();
 		
 		int i = message.indexOf(COMMAND_ARGUMENT_SEPARATOR_CHARACTER);
 		
@@ -176,8 +178,6 @@ public class KiteCLI {
 			commandArguments = message.split(COMMAND_ARGUMENT_SEPARATOR_REGEX);
 		}
 		
-		commandName = commandName.toLowerCase();
-		
 		Command command = Commands.command(commandName);
 		if(command == null) {
 			
@@ -186,7 +186,7 @@ public class KiteCLI {
 			return false;
 		}
 		
-		return command.execute(commandArguments, solver, errorStream, exitOnError);
+		return command.execute(commandArguments, solver, errorStream, exitOnError, quiet, scanner);
 	}
 	
 }

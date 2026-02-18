@@ -4,6 +4,7 @@ import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 
 import java.io.PrintStream;
+import java.util.Scanner;
 
 public class OccupiedCommand extends Command {
 	
@@ -12,7 +13,7 @@ public class OccupiedCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 2) {
 			
 			errorStream.println("Incorrect number of arguments!");

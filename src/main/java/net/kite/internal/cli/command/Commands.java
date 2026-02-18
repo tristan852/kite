@@ -17,6 +17,7 @@ public class Commands {
 			new ColorCommand(),
 			new EvaluateCommand(),
 			new EvaluateMovesCommand(),
+			new GameCommand(),
 			new HeightCommand(),
 			new LegalCommand(),
 			new LinesCommand(),

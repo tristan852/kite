@@ -5,15 +5,16 @@ import net.kite.api.skill.level.SkillLevel;
 import net.kite.internal.cli.command.Command;
 
 import java.io.PrintStream;
+import java.util.Scanner;
 
 public class SkilledCommand extends Command {
 	
 	public SkilledCommand() {
-		super("skilled", "skilled <level>");
+		super("skilled", "skilled <skill-level>");
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 1) {
 			
 			errorStream.println("Incorrect number of arguments!");
@@ -30,7 +31,7 @@ public class SkilledCommand extends Command {
 			
 		} catch(IllegalArgumentException exception) {
 			
-			errorStream.printf("Unknown skill level for argument 'level': %s%n", s);
+			errorStream.printf("Unknown skill level for argument 'skill-level': \"%s\"%n", s);
 			if(exitOnError) System.exit(1);
 			return false;
 		}

@@ -4,6 +4,7 @@ import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 
 import java.io.PrintStream;
+import java.util.Scanner;
 
 public class SetupCommand extends Command {
 	
@@ -14,7 +15,7 @@ public class SetupCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length == 0) {
 			
 			solver.clearBoard();
@@ -38,7 +39,7 @@ public class SetupCommand extends Command {
 		
 		if(!moves.matches("[1-7]+")) {
 			
-			errorStream.printf("Invalid move found in moves argument: %s%n", moves);
+			errorStream.printf("Invalid move found in moves argument: \"%s\"%n", moves);
 			if(exitOnError) System.exit(1);
 			return false;
 		}
@@ -55,7 +56,7 @@ public class SetupCommand extends Command {
 				
 			} else {
 				
-				errorStream.printf("Illegal Connect Four game: %s%n", moves);
+				errorStream.printf("Illegal Connect Four game: \"%s\"%n", moves);
 				if(exitOnError) System.exit(1);
 				return false;
 			}

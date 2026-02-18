@@ -5,6 +5,7 @@ import net.kite.api.board.player.color.BoardPlayerColor;
 import net.kite.internal.cli.command.Command;
 
 import java.io.PrintStream;
+import java.util.Scanner;
 
 public class PerformanceCommand extends Command {
 	
@@ -19,7 +20,7 @@ public class PerformanceCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length == 0) {
 			
 			solver.evaluatePlayerPerformances(playerPerformances);
@@ -39,11 +40,11 @@ public class PerformanceCommand extends Command {
 		String s = arguments[0];
 		
 		BoardPlayerColor color;
-		if(s.equalsIgnoreCase("red")) color = BoardPlayerColor.RED;
-		else if(s.equalsIgnoreCase("yellow")) color = BoardPlayerColor.YELLOW;
+		if(s.equals("red")) color = BoardPlayerColor.RED;
+		else if(s.equals("yellow")) color = BoardPlayerColor.YELLOW;
 		else {
 			
-			errorStream.printf("Unknown color value for argument 'color': %s%n", s);
+			errorStream.printf("Unknown color value for argument 'color': \"%s\"%n", s);
 			if(exitOnError) System.exit(1);
 			return false;
 		}

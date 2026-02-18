@@ -4,6 +4,7 @@ import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 
 import java.io.PrintStream;
+import java.util.Scanner;
 
 public class EvaluateMovesCommand extends Command {
 	
@@ -22,7 +23,7 @@ public class EvaluateMovesCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 0) {
 			
 			errorStream.println("Too many arguments!");

@@ -4,6 +4,7 @@ import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 
 import java.io.PrintStream;
+import java.util.Scanner;
 
 public class PrintCommand extends Command {
 	
@@ -12,7 +13,7 @@ public class PrintCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length == 0) {
 			
 			System.out.println(solver.boardAnalysisString());
@@ -22,11 +23,11 @@ public class PrintCommand extends Command {
 			String s = arguments[0];
 			
 			boolean includeAnalysis;
-			if(s.equalsIgnoreCase("true")) includeAnalysis = true;
-			else if(s.equalsIgnoreCase("false")) includeAnalysis = false;
+			if(s.equals("true")) includeAnalysis = true;
+			else if(s.equals("false")) includeAnalysis = false;
 			else {
 				
-				errorStream.printf("Unknown boolean value for argument 'include-analysis': %s%n", s);
+				errorStream.printf("Unknown boolean value for argument 'include-analysis': \"%s\"%n", s);
 				if(exitOnError) System.exit(1);
 				return false;
 			}

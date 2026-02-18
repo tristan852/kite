@@ -5,6 +5,7 @@ import net.kite.internal.cli.command.Command;
 import net.kite.internal.cli.command.Commands;
 
 import java.io.PrintStream;
+import java.util.Scanner;
 
 public class HelpCommand extends Command {
 	
@@ -13,7 +14,7 @@ public class HelpCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 0) {
 			
 			errorStream.println("Too many arguments!");

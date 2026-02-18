@@ -4,6 +4,7 @@ import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 
 import java.io.PrintStream;
+import java.util.Scanner;
 
 public class UndoCommand extends Command {
 	
@@ -12,7 +13,7 @@ public class UndoCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length == 0) {
 			
 			if(!solver.canUndoMove()) {
@@ -35,7 +36,7 @@ public class UndoCommand extends Command {
 				
 			} catch(NumberFormatException exception) {
 				
-				errorStream.printf("Unknown integer value for argument 'move-amount': %s%n", s);
+				errorStream.printf("Unknown integer value for argument 'move-amount': \"%s\"%n", s);
 				if(exitOnError) System.exit(1);
 				return false;
 			}

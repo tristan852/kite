@@ -3,6 +3,7 @@ package net.kite.internal.cli.command;
 import net.kite.api.Kite;
 
 import java.io.PrintStream;
+import java.util.Scanner;
 
 public abstract class Command {
 	
@@ -14,7 +15,7 @@ public abstract class Command {
 		this.helpMessage = helpMessage;
 	}
 	
-	public abstract boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError);
+	public abstract boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner);
 	
 	public String getName() {
 		return name;
@@ -33,7 +34,7 @@ public abstract class Command {
 			
 		} catch(NumberFormatException exception) {
 			
-			errorStream.printf("Unknown integer value for argument '%s': %s%n", argumentName, argument);
+			errorStream.printf("Unknown integer value for argument '%s': \"%s\"%n", argumentName, argument);
 			if(exitOnError) System.exit(1);
 			return Integer.MIN_VALUE;
 		}
@@ -42,7 +43,7 @@ public abstract class Command {
 		
 		if(i < 0 || i >= max) {
 			
-			errorStream.printf("Integer value for argument '%s' is out of bounds: %s%n", argumentName, argument);
+			errorStream.printf("Integer value for argument '%s' is out of bounds: \"%s\"%n", argumentName, argument);
 			if(exitOnError) System.exit(1);
 			return Integer.MIN_VALUE;
 		}

@@ -4,6 +4,7 @@ import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 
 import java.io.PrintStream;
+import java.util.Scanner;
 
 public class BenchmarkCommand extends Command {
 	
@@ -12,7 +13,7 @@ public class BenchmarkCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length == 0) {
 			
 			boolean successful = Kite.runBenchmark();
@@ -25,11 +26,11 @@ public class BenchmarkCommand extends Command {
 			String s = arguments[0];
 			
 			boolean printMetrics;
-			if(s.equalsIgnoreCase("true")) printMetrics = true;
-			else if(s.equalsIgnoreCase("false")) printMetrics = false;
+			if(s.equals("true")) printMetrics = true;
+			else if(s.equals("false")) printMetrics = false;
 			else {
 				
-				errorStream.printf("Unknown boolean value for argument 'print-metrics': %s%n", s);
+				errorStream.printf("Unknown boolean value for argument 'print-metrics': \"%s\"%n", s);
 				if(exitOnError) System.exit(1);
 				return false;
 			}
