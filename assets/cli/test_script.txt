@@ -1,0 +1,17 @@
+seed 1234
+print
+optimal
+play 4455
+print
+optimal
+play 3
+print
+optimal
+play 2
+print
+optimal
+skilled beginner
+play 6
+outcome
+undo
+outcome
