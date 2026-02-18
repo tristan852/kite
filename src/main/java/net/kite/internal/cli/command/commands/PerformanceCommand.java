@@ -5,6 +5,7 @@ import net.kite.api.board.player.color.BoardPlayerColor;
 import net.kite.internal.cli.command.Command;
 
 import java.io.PrintStream;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class PerformanceCommand extends Command {
@@ -14,7 +15,7 @@ public class PerformanceCommand extends Command {
 	private final float[] playerPerformances;
 	
 	public PerformanceCommand() {
-		super("performance <color>", "performance <color>");
+		super("performance", "Show Elo performance for a player or both players", "performance <color>");
 		
 		this.playerPerformances = new float[PLAYER_AMOUNT];
 	}
@@ -25,7 +26,7 @@ public class PerformanceCommand extends Command {
 			
 			solver.evaluatePlayerPerformances(playerPerformances);
 			
-			System.out.printf("red player performance: %.2f%nyellow player performance: %.2f%n", playerPerformances[0], playerPerformances[1]);
+			System.out.printf(Locale.ROOT, "red player performance: %.2f%nyellow player performance: %.2f%n", playerPerformances[0], playerPerformances[1]);
 			
 			return false;
 		}
@@ -50,7 +51,7 @@ public class PerformanceCommand extends Command {
 		}
 		
 		float f = solver.evaluatePlayerPerformance(color);
-		System.out.printf("%.2f%n", f);
+		System.out.printf(Locale.ROOT, "%.2f%n", f);
 		
 		return false;
 	}

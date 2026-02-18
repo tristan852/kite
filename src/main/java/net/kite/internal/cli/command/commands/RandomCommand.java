@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class RandomCommand extends Command {
 	
 	public RandomCommand() {
-		super("random", "random");
+		super("random", "Show a random legal move", "random");
 	}
 	
 	@Override

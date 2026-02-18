@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class PrintMovesCommand extends Command {
 	
 	public PrintMovesCommand() {
-		super("print-moves", "print-moves");
+		super("print-moves", "Show the sequence of played moves", "print-moves");
 	}
 	
 	@Override

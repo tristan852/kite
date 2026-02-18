@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class LegalCommand extends Command {
 	
 	public LegalCommand() {
-		super("legal", "legal <move>");
+		super("legal", "Check if a move is legal", "legal <move>");
 	}
 	
 	@Override

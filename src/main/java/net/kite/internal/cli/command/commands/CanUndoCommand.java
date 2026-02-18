@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class CanUndoCommand extends Command {
 	
 	public CanUndoCommand() {
-		super("can-undo", "can-undo");
+		super("can-undo", "Check if moves can be undone", "can-undo");
 	}
 	
 	@Override

@@ -1,6 +1,7 @@
 package net.kite.internal.cli.command.commands;
 
 import net.kite.api.Kite;
+import net.kite.api.board.player.color.BoardPlayerColor;
 import net.kite.internal.cli.command.Command;
 
 import java.io.PrintStream;
@@ -9,7 +10,7 @@ import java.util.Scanner;
 public class ColorCommand extends Command {
 	
 	public ColorCommand() {
-		super("color", "color [x y]");
+		super("color", "Show the player of a disc", "color [x y]");
 	}
 	
 	@Override
@@ -33,7 +34,10 @@ public class ColorCommand extends Command {
 		int y = parseCoordinateArgument(arguments[1], "y", false, errorStream, exitOnError);
 		if(y < 0) return false;
 		
-		System.out.println(solver.cellPlayerColor(x, y));
+		BoardPlayerColor color = solver.cellPlayerColor(x, y);
+		String s = color == null ? "empty" : color.getName();
+		
+		System.out.println(s);
 		
 		return false;
 	}

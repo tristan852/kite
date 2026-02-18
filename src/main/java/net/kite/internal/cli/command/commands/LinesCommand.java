@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class LinesCommand extends Command {
 	
 	public LinesCommand() {
-		super("lines", "lines");
+		super("lines", "Show completed lines on the board", "lines");
 	}
 	
 	@Override

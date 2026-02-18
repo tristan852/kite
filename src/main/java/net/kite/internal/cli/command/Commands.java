@@ -10,33 +10,72 @@ public class Commands {
 	public static final Command[] COMMANDS = new Command[] {
 			new HelpCommand(),
 			new ExitCommand(),
+			new SeedCommand(),
+			new GameCommand(),
 			
-			new CanPlayCommand(),
-			new CanUndoCommand(),
+			new PlayCommand(),
+			new UndoCommand(),
+			new SetupCommand(),
 			new ClearCommand(),
-			new ColorCommand(),
+			
 			new EvaluateCommand(),
 			new EvaluateMovesCommand(),
-			new GameCommand(),
-			new HeightCommand(),
-			new LegalCommand(),
-			new LinesCommand(),
-			new MoveCountCommand(),
-			new OccupiedCommand(),
 			new OptimalCommand(),
-			new OutcomeCommand(),
-			new OverCommand(),
+			new RandomCommand(),
+			new SkilledCommand(),
 			new PerformanceCommand(),
-			new PlayCommand(),
+			new BenchmarkCommand(),
+			
 			new PrintCommand(),
 			new PrintMovesCommand(),
-			new RandomCommand(),
-			new SeedCommand(),
-			new SetupCommand(),
-			new SkilledCommand(),
-			new UndoCommand(),
-			
-			new BenchmarkCommand()
+			new CanPlayCommand(),
+			new CanUndoCommand(),
+			new OverCommand(),
+			new OutcomeCommand(),
+			new MoveCountCommand(),
+			new OccupiedCommand(),
+			new ColorCommand(),
+			new HeightCommand(),
+			new LegalCommand(),
+			new LinesCommand()
+	};
+	
+	public static final Command[][] CATEGORIZED_COMMANDS = new Command[][] {
+			{
+				new HelpCommand(),
+				new ExitCommand(),
+				new SeedCommand(),
+				new GameCommand()
+			},
+			{
+				new PlayCommand(),
+				new UndoCommand(),
+				new SetupCommand(),
+				new ClearCommand()
+			},
+			{
+				new EvaluateCommand(),
+				new EvaluateMovesCommand(),
+				new OptimalCommand(),
+				new RandomCommand(),
+				new SkilledCommand(),
+				new PerformanceCommand(),
+				new BenchmarkCommand()
+			},
+			{
+				new PrintCommand(),
+				new PrintMovesCommand(),
+				new CanPlayCommand(),
+				new CanUndoCommand(),
+				new OverCommand(),
+				new OutcomeCommand(),
+				new MoveCountCommand(),
+				new OccupiedCommand(),
+				new ColorCommand(),
+				new HeightCommand(),
+				new LegalCommand(),
+				new LinesCommand()
+			}
 	};
 	
 	private static final Map<String, Command> MAPPED_COMMANDS = new HashMap<>();

@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class HelpCommand extends Command {
 	
 	public HelpCommand() {
-		super("help", "help");
+		super("help", "Show help information", "help");
 	}
 	
 	@Override
@@ -24,10 +24,27 @@ public class HelpCommand extends Command {
 		
 		System.out.println("Available commands:");
 		
+		int maxLength = 0;
+		
 		for(Command command : Commands.COMMANDS) {
 			
 			String helpMessage = command.getHelpMessage();
-			System.out.println(helpMessage);
+			int l = helpMessage.length();
+			
+			if(l > maxLength) maxLength = l;
+		}
+		
+		for(Command[] commands : Commands.CATEGORIZED_COMMANDS) {
+			
+			System.out.println();
+			
+			for(Command command : commands) {
+				
+				String helpMessage = command.getHelpMessage();
+				String description = command.getDescription();
+				
+				System.out.printf("  %-" + maxLength + "s  %s%n", helpMessage, description);
+			}
 		}
 		
 		return false;

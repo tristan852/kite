@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class OccupiedCommand extends Command {
 	
 	public OccupiedCommand() {
-		super("occupied", "occupied <x> <y>");
+		super("occupied", "Check if position <x> <y> is occupied", "occupied <x> <y>");
 	}
 	
 	@Override

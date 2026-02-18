@@ -153,7 +153,7 @@ public class Kite implements KiteAPI {
 		
 		String s = TimeUtil.formatDuration(averageTime);
 		
-		String message = String.format(Locale.US, "positions evaluated: %d, average evaluation time: %s, average node evaluations: %.2f, node throughput: %.2f Mn/s", metricsEvaluationAmount, s, averageAmount, throughput);
+		String message = String.format(Locale.ROOT, "positions evaluated: %d, average evaluation time: %s, average node evaluations: %.2f, node throughput: %.2f Mn/s", metricsEvaluationAmount, s, averageAmount, throughput);
 		System.out.println(message);
 		
 		metricsEvaluationAmount = 0;

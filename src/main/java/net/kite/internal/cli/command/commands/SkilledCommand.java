@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class SkilledCommand extends Command {
 	
 	public SkilledCommand() {
-		super("skilled", "skilled <skill-level>");
+		super("skilled", "Show a move at the specified skill level", "skilled <skill-level>");
 	}
 	
 	@Override

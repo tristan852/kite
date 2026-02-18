@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class ClearCommand extends Command {
 	
 	public ClearCommand() {
-		super("clear", "clear");
+		super("clear", "Reset the game state", "clear");
 	}
 	
 	@Override

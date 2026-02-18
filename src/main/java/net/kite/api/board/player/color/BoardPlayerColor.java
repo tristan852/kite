@@ -1,5 +1,7 @@
 package net.kite.api.board.player.color;
 
+import java.util.Locale;
+
 /**
  * Represents the color of a Connect Four player.
  * Connect Four is played by two players with the colors
@@ -12,20 +14,22 @@ public enum BoardPlayerColor {
 	 * The player color of the red player.
 	 * This player goes first.
 	 */
-	RED('X'),
+	RED("Red", 'X'),
 	
 	/**
 	 * The player color of the yellow player.
 	 * This player goes second.
 	 */
-	YELLOW('O');
+	YELLOW("Yellow", 'O');
 	
 	private final String name;
+	private final String displayName;
 	
 	private final char character;
 	
-	BoardPlayerColor(char character) {
-		this.name = name().toLowerCase();
+	BoardPlayerColor(String displayName, char character) {
+		this.name = name().toLowerCase(Locale.ROOT);
+		this.displayName = displayName;
 		this.character = character;
 	}
 	
@@ -51,6 +55,18 @@ public enum BoardPlayerColor {
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	/**
+	 * Returns the name of this player
+	 * color that should for example
+	 * be displayed inside a user
+	 * interface.
+	 *
+	 * @return display name of this player color
+	 */
+	public String getDisplayName() {
+		return displayName;
 	}
 	
 	/**

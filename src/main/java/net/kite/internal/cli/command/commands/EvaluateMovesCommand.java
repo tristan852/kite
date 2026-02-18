@@ -17,7 +17,7 @@ public class EvaluateMovesCommand extends Command {
 	private final int[] moveEvaluations;
 	
 	public EvaluateMovesCommand() {
-		super("evaluate-moves", "evaluate-moves");
+		super("evaluate-moves", "Evaluate all possible moves", "evaluate-moves");
 		
 		this.moveEvaluations = new int[BOARD_WIDTH];
 	}

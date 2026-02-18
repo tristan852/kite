@@ -6,6 +6,7 @@ import net.kite.api.skill.level.SkillLevel;
 import net.kite.internal.cli.command.Command;
 
 import java.io.PrintStream;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.Scanner;
@@ -14,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class GameCommand extends Command {
 	
 	public GameCommand() {
-		super("game", "game [skill-level]");
+		super("game", "Start a new interactive game", "game [skill-level]");
 	}
 	
 	@Override
@@ -84,7 +85,7 @@ public class GameCommand extends Command {
 			message = message.trim();
 			if(message.isBlank()) continue;
 			
-			message = message.toLowerCase();
+			message = message.toLowerCase(Locale.ROOT);
 			if(message.equals("exit")) return false;
 			
 			int x = parseCoordinateArgument(message, "move", true, errorStream, exitOnError);

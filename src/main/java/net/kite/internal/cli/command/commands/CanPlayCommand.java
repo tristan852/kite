@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class CanPlayCommand extends Command {
 	
 	public CanPlayCommand() {
-		super("can-play", "can-play");
+		super("can-play", "Check if a move can be played", "can-play");
 	}
 	
 	@Override

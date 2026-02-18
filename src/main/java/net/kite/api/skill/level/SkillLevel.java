@@ -1,5 +1,7 @@
 package net.kite.api.skill.level;
 
+import java.util.Locale;
+
 /**
  * Represents the skill level of
  * a Connect Four player.
@@ -128,7 +130,7 @@ public enum SkillLevel {
 	private final int approximateEloRating;
 	
 	SkillLevel(String displayName, int maximalScoreLoss, int approximateEloRating) {
-		this.name = name().toLowerCase();
+		this.name = name().toLowerCase(Locale.ROOT);
 		this.displayName = displayName;
 		this.maximalScoreLoss = maximalScoreLoss;
 		this.approximateEloRating = approximateEloRating;
@@ -196,7 +198,7 @@ public enum SkillLevel {
 	 * @return corresponding skill level
 	 */
 	public static SkillLevel level(String levelName) {
-		levelName = levelName.toUpperCase();
+		levelName = levelName.toUpperCase(Locale.ROOT);
 		
 		return valueOf(levelName);
 	}

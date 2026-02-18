@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class HeightCommand extends Command {
 	
 	public HeightCommand() {
-		super("height", "height <x>");
+		super("height", "Show the height of column <x>", "height <x>");
 	}
 	
 	@Override

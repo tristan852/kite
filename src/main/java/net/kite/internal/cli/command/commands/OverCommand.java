@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class OverCommand extends Command {
 	
 	public OverCommand() {
-		super("over", "over");
+		super("over", "Check if the game is over", "over");
 	}
 	
 	@Override

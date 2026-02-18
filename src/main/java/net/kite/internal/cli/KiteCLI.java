@@ -5,6 +5,7 @@ import net.kite.internal.cli.command.Command;
 import net.kite.internal.cli.command.Commands;
 
 import java.io.*;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -156,7 +157,7 @@ public class KiteCLI {
 		message = message.trim();
 		if(message.isBlank()) return false;
 		
-		message = message.toLowerCase();
+		message = message.toLowerCase(Locale.ROOT);
 		
 		int i = message.indexOf(COMMAND_ARGUMENT_SEPARATOR_CHARACTER);
 		

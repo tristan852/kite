@@ -1,5 +1,7 @@
 package net.kite.internal.board.bit;
 
+import java.util.Locale;
+
 public class Bitboard {
 	
 	private static final int WIDTH = 8;
@@ -18,7 +20,7 @@ public class Bitboard {
 	
 	public static String toHexadecimalString(long bitboard) {
 		String string = Long.toHexString(bitboard);
-		string = string.toUpperCase();
+		string = string.toUpperCase(Locale.ROOT);
 		
 		int n = TO_HEXADECIMAL_STRING_LENGTH - string.length();
 		return TO_HEXADECIMAL_STRING_PADDING_STRING.repeat(n) + string;

@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class OutcomeCommand extends Command {
 	
 	public OutcomeCommand() {
-		super("outcome", "outcome");
+		super("outcome", "Show the game outcome", "outcome");
 	}
 	
 	@Override

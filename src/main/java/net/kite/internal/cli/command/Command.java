@@ -8,10 +8,12 @@ import java.util.Scanner;
 public abstract class Command {
 	
 	private final String name;
+	private final String description;
 	private final String helpMessage;
 	
-	public Command(String name, String helpMessage) {
+	public Command(String name, String description, String helpMessage) {
 		this.name = name;
+		this.description = description;
 		this.helpMessage = helpMessage;
 	}
 	
@@ -19,6 +21,10 @@ public abstract class Command {
 	
 	public String getName() {
 		return name;
+	}
+	
+	public String getDescription() {
+		return description;
 	}
 	
 	public String getHelpMessage() {

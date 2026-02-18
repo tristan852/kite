@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class MoveCountCommand extends Command {
 	
 	public MoveCountCommand() {
-		super("move-count", "move-count");
+		super("move-count", "Show the number of played moves", "move-count");
 	}
 	
 	@Override

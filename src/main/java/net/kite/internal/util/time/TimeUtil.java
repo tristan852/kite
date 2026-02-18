@@ -23,7 +23,7 @@ public class TimeUtil {
 		}
 		
 		String notation = UNIT_NOTATIONS[unit];
-		return String.format(Locale.US, "%.2f %s", duration, notation);
+		return String.format(Locale.ROOT, "%.2f %s", duration, notation);
 	}
 	
 }

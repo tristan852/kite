@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class PrintCommand extends Command {
 	
 	public PrintCommand() {
-		super("print", "print [include-analysis]");
+		super("print", "Print the board (analysis included by default)", "print [include-analysis]");
 	}
 	
 	@Override
