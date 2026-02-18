@@ -59,7 +59,7 @@ jobs:
           chmod +x "$EXECUTABLE" || true
 
           # Define the script file path
-          SCRIPT_FILE=assets/cli/test-script.txt
+          SCRIPT_FILE=assets/cli/test_script.txt
 
           # Fail if the script file does not exist
           if [ ! -f "$SCRIPT_FILE" ]; then
