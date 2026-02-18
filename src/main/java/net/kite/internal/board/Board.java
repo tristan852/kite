@@ -166,11 +166,12 @@ public class Board {
 				stringBuilder.append(cellCharacter);
 			}
 			
-			stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
+			if(y != 0) stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
 		}
 		
 		if(boardOnly) return stringBuilder.toString();
 		
+		stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
 		stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
 		stringBuilder.append(TO_STRING_MOVES_PREFIX_STRING);
 		
