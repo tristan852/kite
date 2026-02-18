@@ -4,6 +4,8 @@ import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 import net.kite.internal.cli.command.Commands;
 
+import java.io.PrintStream;
+
 public class HelpCommand extends Command {
 	
 	public HelpCommand() {
@@ -11,10 +13,10 @@ public class HelpCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
 		if(arguments.length != 0) {
 			
-			System.err.println("Too many arguments!");
+			errorStream.println("Too many arguments!");
 			return false;
 		}
 		

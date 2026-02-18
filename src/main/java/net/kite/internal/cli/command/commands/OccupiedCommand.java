@@ -3,6 +3,8 @@ package net.kite.internal.cli.command.commands;
 import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 
+import java.io.PrintStream;
+
 public class OccupiedCommand extends Command {
 	
 	public OccupiedCommand() {
@@ -10,17 +12,17 @@ public class OccupiedCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
 		if(arguments.length != 2) {
 			
-			System.err.println("Incorrect number of arguments!");
+			errorStream.println("Incorrect number of arguments!");
 			return false;
 		}
 		
-		int x = parseCoordinateArgument(arguments[0], "x", true);
+		int x = parseCoordinateArgument(arguments[0], "x", true, errorStream);
 		if(x < 0) return false;
 		
-		int y = parseCoordinateArgument(arguments[1], "y", false);
+		int y = parseCoordinateArgument(arguments[1], "y", false, errorStream);
 		if(y < 0) return false;
 		
 		System.out.println(solver.cellOccupied(x, y));

@@ -3,6 +3,8 @@ package net.kite.internal.cli.command.commands;
 import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 
+import java.io.PrintStream;
+
 public class LegalCommand extends Command {
 	
 	public LegalCommand() {
@@ -10,14 +12,14 @@ public class LegalCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
 		if(arguments.length != 1) {
 			
-			System.err.println("Incorrect number of arguments!");
+			errorStream.println("Incorrect number of arguments!");
 			return false;
 		}
 		
-		int x = parseCoordinateArgument(arguments[0], "move", true);
+		int x = parseCoordinateArgument(arguments[0], "move", true, errorStream);
 		if(x < 0) return false;
 		
 		System.out.println(solver.moveLegal(x));

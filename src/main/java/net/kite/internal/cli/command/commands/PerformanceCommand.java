@@ -4,6 +4,8 @@ import net.kite.api.Kite;
 import net.kite.api.board.player.color.BoardPlayerColor;
 import net.kite.internal.cli.command.Command;
 
+import java.io.PrintStream;
+
 public class PerformanceCommand extends Command {
 	
 	private static final int PLAYER_AMOUNT = 2;
@@ -17,7 +19,7 @@ public class PerformanceCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
 		if(arguments.length == 0) {
 			
 			solver.evaluatePlayerPerformances(playerPerformances);
@@ -29,7 +31,7 @@ public class PerformanceCommand extends Command {
 		
 		if(arguments.length != 1) {
 			
-			System.err.println("Too many arguments!");
+			errorStream.println("Too many arguments!");
 			return false;
 		}
 		
@@ -40,7 +42,7 @@ public class PerformanceCommand extends Command {
 		else if(s.equalsIgnoreCase("yellow")) color = BoardPlayerColor.YELLOW;
 		else {
 			
-			System.err.printf("Unknown color value for argument 'color': %s%n", s);
+			errorStream.printf("Unknown color value for argument 'color': %s%n", s);
 			return false;
 		}
 		

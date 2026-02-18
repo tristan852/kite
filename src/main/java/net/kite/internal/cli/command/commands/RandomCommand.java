@@ -3,6 +3,8 @@ package net.kite.internal.cli.command.commands;
 import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 
+import java.io.PrintStream;
+
 public class RandomCommand extends Command {
 	
 	public RandomCommand() {
@@ -10,17 +12,17 @@ public class RandomCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
 		if(arguments.length != 0) {
 			
-			System.err.println("Too many arguments!");
+			errorStream.println("Too many arguments!");
 			return false;
 		}
 		
 		int move = solver.randomMove();
 		if(move == 0) {
 			
-			System.err.println("The game is over!");
+			errorStream.println("The game is over!");
 			return false;
 		}
 		

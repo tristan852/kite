@@ -3,6 +3,8 @@ package net.kite.internal.cli.command.commands;
 import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 
+import java.io.PrintStream;
+
 public class SeedCommand extends Command {
 	
 	public SeedCommand() {
@@ -10,7 +12,7 @@ public class SeedCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
 		if(arguments.length == 0) {
 			
 			solver.seedRandomness();
@@ -26,7 +28,7 @@ public class SeedCommand extends Command {
 				
 			} catch(NumberFormatException exception) {
 				
-				System.err.printf("Unknown long value for argument 'seed': %s%n", s);
+				errorStream.printf("Unknown long value for argument 'seed': %s%n", s);
 				return false;
 			}
 			
@@ -34,7 +36,7 @@ public class SeedCommand extends Command {
 			
 		} else {
 			
-			System.err.println("Too many arguments!");
+			errorStream.println("Too many arguments!");
 		}
 		
 		return false;

@@ -3,6 +3,8 @@ package net.kite.internal.cli.command.commands;
 import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 
+import java.io.PrintStream;
+
 public class PlayCommand extends Command {
 	
 	private static final int MOVE_CHARACTER_OFFSET = 48;
@@ -12,23 +14,23 @@ public class PlayCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
 		if(arguments.length != 1) {
 			
-			System.err.println("Incorrect number of arguments!");
+			errorStream.println("Incorrect number of arguments!");
 			return false;
 		}
 		
 		String moves = arguments[0];
 		if(moves.isBlank()) {
 			
-			System.err.println("String value for argument 'moves' is empty!");
+			errorStream.println("String value for argument 'moves' is empty!");
 			return false;
 		}
 		
 		if(!moves.matches("[1-7]+")) {
 			
-			System.err.printf("Invalid move found in moves argument: %s%n", moves);
+			errorStream.printf("Invalid move found in moves argument: %s%n", moves);
 			return false;
 		}
 		
@@ -42,7 +44,7 @@ public class PlayCommand extends Command {
 				
 			} else {
 				
-				System.err.printf("Illegal move '%s' found in moves argument: %s%n", x, moves);
+				errorStream.printf("Illegal move '%s' found in moves argument: %s%n", x, moves);
 				return false;
 			}
 		}

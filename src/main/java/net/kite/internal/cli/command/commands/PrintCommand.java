@@ -3,6 +3,8 @@ package net.kite.internal.cli.command.commands;
 import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 
+import java.io.PrintStream;
+
 public class PrintCommand extends Command {
 	
 	public PrintCommand() {
@@ -10,7 +12,7 @@ public class PrintCommand extends Command {
 	}
 	
 	@Override
-	public boolean execute(String[] arguments, Kite solver) {
+	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream) {
 		if(arguments.length == 0) {
 			
 			System.out.println(solver.boardString());
@@ -24,7 +26,7 @@ public class PrintCommand extends Command {
 			else if(s.equalsIgnoreCase("false")) movesOnly = false;
 			else {
 				
-				System.err.printf("Unknown boolean value for argument 'movesOnly': %s%n", s);
+				errorStream.printf("Unknown boolean value for argument 'movesOnly': %s%n", s);
 				return false;
 			}
 			
@@ -33,7 +35,7 @@ public class PrintCommand extends Command {
 			
 		} else {
 			
-			System.err.println("Too many arguments!");
+			errorStream.println("Too many arguments!");
 		}
 		
 		return false;

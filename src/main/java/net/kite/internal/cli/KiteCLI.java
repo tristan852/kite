@@ -4,6 +4,7 @@ import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 import net.kite.internal.cli.command.Commands;
 
+import java.io.PrintStream;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -18,10 +19,12 @@ public class KiteCLI {
 	public void onStart(String[] programArguments) {
 		boolean quiet = System.console() == null;
 		
+		PrintStream errorStream = quiet ? System.err : System.out;
+		
 		if(programArguments.length != 0) {
 			if(programArguments.length != 1) {
 				
-				System.err.println("Too many program arguments!");
+				errorStream.println("Too many program arguments!");
 				return;
 			}
 			
@@ -34,7 +37,11 @@ public class KiteCLI {
 				return;
 			}
 			
-			if(argument.equals(QUIET_PROGRAM_ARGUMENT)) quiet = true;
+			if(argument.equals(QUIET_PROGRAM_ARGUMENT)) {
+				
+				quiet = true;
+				errorStream = System.err;
+			}
 		}
 		
 		Kite solver = Kite.createInstance();
@@ -62,6 +69,12 @@ public class KiteCLI {
 		}
 		
 		while(true) {
+			
+			if(!quiet) {
+				
+				System.out.print("> ");
+				System.out.flush();
+			}
 			
 			String message;
 			
@@ -92,6 +105,7 @@ public class KiteCLI {
 				commandName = message.substring(0, i);
 				
 				message = message.substring(i + 1);
+				message = message.trim();
 				
 				commandArguments = message.split(COMMAND_ARGUMENT_SEPARATOR_REGEX);
 			}
@@ -101,11 +115,11 @@ public class KiteCLI {
 			Command command = Commands.command(commandName);
 			if(command == null) {
 				
-				System.err.printf("Command not found: %s%n", commandName);
+				errorStream.printf("Command not found: %s%n", commandName);
 				continue;
 			}
 			
-			boolean exit = command.execute(commandArguments, solver);
+			boolean exit = command.execute(commandArguments, solver, errorStream);
 			if(exit) return;
 		}
 	}

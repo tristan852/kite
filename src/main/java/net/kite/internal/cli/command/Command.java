@@ -2,6 +2,8 @@ package net.kite.internal.cli.command;
 
 import net.kite.api.Kite;
 
+import java.io.PrintStream;
+
 public abstract class Command {
 	
 	private final String name;
@@ -12,7 +14,7 @@ public abstract class Command {
 		this.helpMessage = helpMessage;
 	}
 	
-	public abstract boolean execute(String[] arguments, Kite solver);
+	public abstract boolean execute(String[] arguments, Kite solver, PrintStream errorStream);
 	
 	public String getName() {
 		return name;
@@ -22,7 +24,7 @@ public abstract class Command {
 		return helpMessage;
 	}
 	
-	public static int parseCoordinateArgument(String argument, String argumentName, boolean xCoordinate) {
+	public static int parseCoordinateArgument(String argument, String argumentName, boolean xCoordinate, PrintStream errorStream) {
 		int i;
 		
 		try {
@@ -31,7 +33,7 @@ public abstract class Command {
 			
 		} catch(NumberFormatException exception) {
 			
-			System.err.printf("Unknown integer value for argument '%s': %s%n", argumentName, argument);
+			errorStream.printf("Unknown integer value for argument '%s': %s%n", argumentName, argument);
 			return Integer.MIN_VALUE;
 		}
 		
@@ -39,7 +41,7 @@ public abstract class Command {
 		
 		if(i < 0 || i >= max) {
 			
-			System.err.printf("Integer value for argument '%s' is out of bounds: %s%n", argumentName, argument);
+			errorStream.printf("Integer value for argument '%s' is out of bounds: %s%n", argumentName, argument);
 			return Integer.MIN_VALUE;
 		}
 		
