@@ -79,11 +79,8 @@ jobs:
 
           # Run CLI and capture output
           if [[ "$OS" == "windows-latest" ]]; then
-            # Generate a temporary PowerShell script
-            echo "
-              \$output = & '$EXECUTABLE' --script '$SCRIPT_FILE' 2>&1
-              \$output | ForEach-Object { \$_ -replace '\r\n','\n' } | Out-File -Encoding utf8 test_script_output.txt -NoNewline
-            " > cli.ps1
+            # Create temporary PowerShell script
+            echo "& '$EXECUTABLE' --script '$SCRIPT_FILE' 2>&1 | ForEach-Object { \$_ -replace '\r','' } | Out-File -Encoding utf8 test_script_output.txt" > cli.ps1
 
             # Run it
             powershell.exe -NoProfile -ExecutionPolicy Bypass -File cli.ps1
