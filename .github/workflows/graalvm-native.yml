@@ -79,12 +79,17 @@ jobs:
 
           # Run CLI and capture output
           if [[ "$OS" == "windows-latest" ]]; then
-            # On Windows use PowerShell to normalize line endings and capture stderr
-            powershell.exe -NoProfile -Command "
-              '$EXECUTABLE' --script '$SCRIPT_FILE' 2>&1 |
-              ForEach-Object { \$_ -replace '\r\n','\n' } |
-              Out-File -Encoding utf8 test_script_output.txt -NoNewline
-            "
+            # Generate a temporary PowerShell script
+            echo "
+              \$output = & '$EXECUTABLE' --script '$SCRIPT_FILE' 2>&1
+              \$output | ForEach-Object { \$_ -replace '\r\n','\n' } | Out-File -Encoding utf8 test_script_output.txt -NoNewline
+            " > cli.ps1
+
+            # Run it
+            powershell.exe -NoProfile -ExecutionPolicy Bypass -File cli.ps1
+
+            # Clean up
+            rm cli.ps1
           else
             # On Linux/macOS just run the executable and capture stderr
             "$EXECUTABLE" --script "$SCRIPT_FILE" > test_script_output.txt 2>&1
