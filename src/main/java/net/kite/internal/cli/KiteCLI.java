@@ -4,6 +4,7 @@ import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 import net.kite.internal.cli.command.Commands;
 import net.kite.internal.util.ansi.AnsiUtil;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.io.*;
 import java.util.Locale;
@@ -19,15 +20,35 @@ public final class KiteCLI {
 	private static final String VERSION_PROGRAM_ARGUMENT = "--version";
 	private static final String QUIET_PROGRAM_ARGUMENT = "--quiet";
 	private static final String VERBOSE_PROGRAM_ARGUMENT = "--verbose";
-	private static final String NO_COLOR_PROGRAM_ARGUMENT = "--no-color";
+	private static final String NO_ANSI_PROGRAM_ARGUMENT = "--no-ansi";
 	private static final String SCRIPT_PROGRAM_ARGUMENT = "--script";
 	
 	public void onStart(String[] programArguments) {
-		boolean quiet = System.console() == null;
+		boolean ansiConsole = System.console() != null;
+		
+		boolean quiet = !ansiConsole;
 		boolean verbose = false;
 		
-		if(quiet) AnsiUtil.disableAnsiColors();
+		if(ansiConsole) {
+			
+			AnsiConsole.systemInstall();
+			
+		} else {
+			
+			AnsiUtil.disableAnsiCodes();
+		}
 		
+		try {
+			
+			runCLI(programArguments, quiet, verbose);
+			
+		} finally {
+			
+			if(AnsiConsole.isInstalled()) AnsiConsole.systemUninstall();
+		}
+	}
+	
+	private void runCLI(String[] programArguments, boolean quiet, boolean verbose) {
 		PrintStream errorStream = quiet ? System.err : System.out;
 		String scriptFile = null;
 		
@@ -51,7 +72,8 @@ public final class KiteCLI {
 						                   (enabled automatically if CLI is not connected to a terminal
 						                   or when running a script file)
 						  --verbose        Override quiet mode and show prompts and interactive messages
-						  --no-color       Disable all ANSI console colors
+						  --no-ansi        Disable all ANSI escape codes
+						                   (colors, cursor movements, screen clearing, etc.)
 						  --script <file>  Run the specified script file instead of starting interactive mode
 						
 						""";
@@ -81,9 +103,10 @@ public final class KiteCLI {
 					verbose = true;
 				}
 				
-				case NO_COLOR_PROGRAM_ARGUMENT -> {
+				case NO_ANSI_PROGRAM_ARGUMENT -> {
 					
-					AnsiUtil.disableAnsiColors();
+					AnsiUtil.disableAnsiCodes();
+					if(AnsiConsole.isInstalled()) AnsiConsole.systemUninstall();
 				}
 				
 				case SCRIPT_PROGRAM_ARGUMENT -> {
@@ -116,6 +139,8 @@ public final class KiteCLI {
 			Thread shutdownThread = new Thread(() -> System.out.println("\nExiting Kite..."));
 			
 			runtime.addShutdownHook(shutdownThread);
+			
+			AnsiUtil.clearScreen();
 			
 			String name = Kite.getName();
 			String version = Kite.getVersion();

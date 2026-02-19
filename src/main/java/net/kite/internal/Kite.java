@@ -11,6 +11,7 @@ import net.kite.internal.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.internal.util.ansi.AnsiUtil;
 import net.kite.internal.util.random.Random;
 import net.kite.internal.util.time.TimeUtil;
+import org.fusesource.jansi.AnsiConsole;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -37,8 +38,8 @@ public final class Kite implements KiteAPI {
 	static {
 		synchronized(AnsiUtil.class) {
 			
-			boolean disabled = AnsiUtil.areAnsiColorsDisabled();
-			if(disabled) AnsiUtil.enableAnsiColors();
+			boolean disabled = AnsiUtil.areAnsiCodesDisabled();
+			if(disabled) AnsiUtil.enableAnsiCodes();
 			
 			COLORED_METRICS_STRING_PATTERN =
 					AnsiUtil.cyanAnsi("positions evaluated: ") +
@@ -51,7 +52,7 @@ public final class Kite implements KiteAPI {
 					AnsiUtil.yellowAnsi("%.2f") +
 					AnsiUtil.cyanAnsi(" Mn/s");
 			
-			if(disabled) AnsiUtil.disableAnsiColors();
+			if(disabled) AnsiUtil.disableAnsiCodes();
 		}
 	}
 	
@@ -177,7 +178,11 @@ public final class Kite implements KiteAPI {
 		
 		String s = TimeUtil.formatDuration(averageTime);
 		
-		boolean noAnsiColors = AnsiUtil.areAnsiColorsDisabled() || System.console() == null;
+		boolean noAnsiColors = AnsiUtil.areAnsiCodesDisabled() || System.console() == null;
+		if(!noAnsiColors) {
+			
+			if(!AnsiConsole.isInstalled()) AnsiConsole.systemInstall();
+		}
 		
 		String pattern = noAnsiColors ? METRICS_STRING_PATTERN : COLORED_METRICS_STRING_PATTERN;
 		String message = String.format(Locale.ROOT, pattern, metricsEvaluationAmount, s, averageAmount, throughput);
