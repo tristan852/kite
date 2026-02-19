@@ -2,6 +2,8 @@ package net.kite.api.board.outcome;
 
 import net.kite.api.board.player.color.BoardPlayerColor;
 
+import java.util.Locale;
+
 /**
  * Represents the outcome of a Connect Four game.
  * A completed game can either be a {@link BoardOutcome#DRAW},
@@ -16,29 +18,34 @@ public enum BoardOutcome {
 	 * The game outcome in which the {@link BoardPlayerColor#RED}
 	 * player has won.
 	 */
-	RED_WIN(BoardPlayerColor.RED),
+	RED_WIN("Red wins", BoardPlayerColor.RED),
 	
 	/**
 	 * The game outcome in which the {@link BoardPlayerColor#YELLOW}
 	 * player has won.
 	 */
-	YELLOW_WIN(BoardPlayerColor.YELLOW),
+	YELLOW_WIN("Yellow wins", BoardPlayerColor.YELLOW),
 	
 	/**
 	 * The game outcome for a game with no winner
 	 * (meaning the board is entirely filled up).
 	 */
-	DRAW(null),
+	DRAW("Draw", null),
 	
 	/**
 	 * The game outcome for a game that has not
 	 * ended yet.
 	 */
-	UNDECIDED(null);
+	UNDECIDED("Undecided", null);
+	
+	private final String name;
+	private final String displayName;
 	
 	private final BoardPlayerColor winPlayerColor;
 	
-	BoardOutcome(BoardPlayerColor winPlayerColor) {
+	BoardOutcome(String displayName, BoardPlayerColor winPlayerColor) {
+		this.name = name().toLowerCase(Locale.ROOT);
+		this.displayName = displayName;
 		this.winPlayerColor = winPlayerColor;
 	}
 	
@@ -52,6 +59,29 @@ public enum BoardOutcome {
 	 */
 	public boolean isWin() {
 		return winPlayerColor != null;
+	}
+	
+	/**
+	 * Returns the name of this outcome
+	 * that should for example
+	 * be displayed inside a CLI.
+	 *
+	 * @return name of this outcome
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * Returns the name of this
+	 * outcome that should for example
+	 * be displayed inside a user
+	 * interface.
+	 *
+	 * @return display name of this outcome
+	 */
+	public String getDisplayName() {
+		return displayName;
 	}
 	
 	/**
