@@ -3,6 +3,8 @@
 # Git will convert to CRLF on checkout if needed (Windows)
 # ========================
 
+*.txt text eol=lf
+
 # Gradle & Kotlin build scripts
 *.gradle text eol=lf
 *.gradle.kts text eol=lf
