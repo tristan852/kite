@@ -4,7 +4,7 @@ import net.kite.internal.util.math.MathUtil;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Random {
+public final class Random {
 	
 	private static final long LCG_MULTIPLIER = 0x5851F42D4C957F2DL;
 	private static final long LCG_ADDEND = 0x14057B7EF767814FL;

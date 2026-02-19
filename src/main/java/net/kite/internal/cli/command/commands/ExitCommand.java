@@ -7,7 +7,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class ExitCommand extends Command {
+public final class ExitCommand extends Command {
 	
 	public ExitCommand() {
 		super("exit", "quit", "Exit the program", "exit");

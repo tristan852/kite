@@ -7,7 +7,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class SetupCommand extends Command {
+public final class SetupCommand extends Command {
 	
 	private static final int MOVE_CHARACTER_OFFSET = 48;
 	

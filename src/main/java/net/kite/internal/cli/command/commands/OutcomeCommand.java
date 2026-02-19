@@ -8,7 +8,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class OutcomeCommand extends Command {
+public final class OutcomeCommand extends Command {
 	
 	public OutcomeCommand() {
 		super("outcome", "Show the game outcome", "outcome");

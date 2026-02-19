@@ -2,7 +2,7 @@ package net.kite.internal.board.score.cache;
 
 import java.util.Arrays;
 
-public class BoardScoreCache {
+public final class BoardScoreCache {
 	
 	private static final int CAPACITY  = 65536;
 	private static final long KEY_MASK = 65535;

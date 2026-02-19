@@ -1,6 +1,6 @@
 package net.kite.internal.demo;
 
-public class Main {
+public final class Main {
 	
 	public static void main(String[] programArguments) {
 		KiteDemo kiteDemo = new KiteDemo();

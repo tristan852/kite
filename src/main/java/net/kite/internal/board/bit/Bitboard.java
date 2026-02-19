@@ -2,7 +2,7 @@ package net.kite.internal.board.bit;
 
 import java.util.Locale;
 
-public class Bitboard {
+public final class Bitboard {
 	
 	private static final int WIDTH = 8;
 	private static final int HEIGHT = 8;

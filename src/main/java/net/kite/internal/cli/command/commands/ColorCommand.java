@@ -8,7 +8,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class ColorCommand extends Command {
+public final class ColorCommand extends Command {
 	
 	public ColorCommand() {
 		super("color", "Show the player of a disc", "color [x y]");

@@ -2,7 +2,7 @@ package net.kite.internal.util.ansi;
 
 import org.fusesource.jansi.Ansi;
 
-public class AnsiUtil {
+public final class AnsiUtil {
 	
 	private static final int WHITE = 0xFFFFFF;
 	

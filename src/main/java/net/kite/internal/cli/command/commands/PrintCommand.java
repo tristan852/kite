@@ -7,7 +7,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class PrintCommand extends Command {
+public final class PrintCommand extends Command {
 	
 	public PrintCommand() {
 		super("print", "pr", "Print the board (analysis included by default)", "print [include-analysis]");

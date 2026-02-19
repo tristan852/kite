@@ -8,7 +8,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class EvaluateMovesCommand extends Command {
+public final class EvaluateMovesCommand extends Command {
 	
 	private static final int BOARD_WIDTH = 7;
 	

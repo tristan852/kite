@@ -13,7 +13,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class GameCommand extends Command {
+public final class GameCommand extends Command {
 	
 	public GameCommand() {
 		super("game", "g", "Start a new interactive game", "game [skill-level]");

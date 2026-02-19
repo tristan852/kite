@@ -7,7 +7,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class SeedCommand extends Command {
+public final class SeedCommand extends Command {
 	
 	public SeedCommand() {
 		super("seed", "Set the random seed", "seed [seed]");

@@ -7,7 +7,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class OptimalCommand extends Command {
+public final class OptimalCommand extends Command {
 	
 	public OptimalCommand() {
 		super("optimal", "o", "Show an optimal move", "optimal");

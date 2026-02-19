@@ -7,7 +7,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class HeightCommand extends Command {
+public final class HeightCommand extends Command {
 	
 	public HeightCommand() {
 		super("height", "Show the height of column <x>", "height <x>");

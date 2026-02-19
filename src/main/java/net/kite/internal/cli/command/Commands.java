@@ -5,7 +5,7 @@ import net.kite.internal.cli.command.commands.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Commands {
+public final class Commands {
 	
 	public static final Command[] COMMANDS = new Command[] {
 			new HelpCommand(),

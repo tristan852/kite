@@ -7,7 +7,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class BenchmarkCommand extends Command {
+public final class BenchmarkCommand extends Command {
 	
 	public BenchmarkCommand() {
 		super("benchmark", "Run benchmarks (metrics printed by default)", "benchmark [print-metrics]");

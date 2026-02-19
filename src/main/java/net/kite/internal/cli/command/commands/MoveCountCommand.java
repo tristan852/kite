@@ -7,7 +7,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class MoveCountCommand extends Command {
+public final class MoveCountCommand extends Command {
 	
 	public MoveCountCommand() {
 		super("move-count", "Show the number of played moves", "move-count");

@@ -9,7 +9,7 @@ import java.io.PrintStream;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class PerformanceCommand extends Command {
+public final class PerformanceCommand extends Command {
 	
 	private static final int PLAYER_AMOUNT = 2;
 	

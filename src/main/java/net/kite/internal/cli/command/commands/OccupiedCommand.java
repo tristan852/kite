@@ -7,7 +7,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class OccupiedCommand extends Command {
+public final class OccupiedCommand extends Command {
 	
 	public OccupiedCommand() {
 		super("occupied", "Check if position <x> <y> is occupied", "occupied <x> <y>");

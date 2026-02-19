@@ -1,6 +1,6 @@
 package net.kite.internal.board.score;
 
-public class BoardScore {
+public final class BoardScore {
 	
 	public static final int DRAW = 0;
 	

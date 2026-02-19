@@ -7,7 +7,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class RandomCommand extends Command {
+public final class RandomCommand extends Command {
 	
 	public RandomCommand() {
 		super("random", "r", "Show a random legal move", "random");

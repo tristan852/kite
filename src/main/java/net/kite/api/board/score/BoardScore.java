@@ -24,7 +24,7 @@ import net.kite.api.Kite;
  * using their {@code s}-th to last stone
  * under optimal play.
  */
-public class BoardScore {
+public final class BoardScore {
 	
 	private static final String COMPACT_FORMATTED_WIN_SCORE_PATTERN = "W(+%s)";
 	private static final String FORMATTED_WIN_SCORE_PATTERN = "Win (+%s)";

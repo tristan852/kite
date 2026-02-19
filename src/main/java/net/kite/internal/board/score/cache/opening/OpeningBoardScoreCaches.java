@@ -1,6 +1,6 @@
 package net.kite.internal.board.score.cache.opening;
 
-public class OpeningBoardScoreCaches {
+public final class OpeningBoardScoreCaches {
 	
 	public static final OpeningBoardScoreCache DEFAULT = new OpeningBoardScoreCache();
 	

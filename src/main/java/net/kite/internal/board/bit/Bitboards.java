@@ -1,6 +1,6 @@
 package net.kite.internal.board.bit;
 
-public class Bitboards {
+public final class Bitboards {
 	
 	public static final long EMPTY = 0x0000000000000000L;
 	public static final long FULL_BOARD = 0x003F3F3F3F3F3F3FL;

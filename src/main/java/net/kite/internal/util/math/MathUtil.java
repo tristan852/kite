@@ -1,6 +1,6 @@
 package net.kite.internal.util.math;
 
-public class MathUtil {
+public final class MathUtil {
 	
 	private static final long UNSIGNED_MULTIPLY_HIGH_MASK = 0x00000000FFFFFFFFL;
 	private static final long UNSIGNED_MULTIPLY_HIGH_FIRST_SHIFT_AMOUNT = 32;

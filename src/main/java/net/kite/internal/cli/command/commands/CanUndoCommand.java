@@ -7,7 +7,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class CanUndoCommand extends Command {
+public final class CanUndoCommand extends Command {
 	
 	public CanUndoCommand() {
 		super("can-undo", "Check if moves can be undone", "can-undo");

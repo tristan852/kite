@@ -2,7 +2,7 @@ package net.kite.internal.util.time;
 
 import java.util.Locale;
 
-public class TimeUtil {
+public final class TimeUtil {
 	
 	private static final String[] UNIT_NOTATIONS = new String[] {
 			"ns",

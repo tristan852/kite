@@ -8,7 +8,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class SkilledCommand extends Command {
+public final class SkilledCommand extends Command {
 	
 	public SkilledCommand() {
 		super("skilled", "s", "Show a move at the specified skill level", "skilled <skill-level>");

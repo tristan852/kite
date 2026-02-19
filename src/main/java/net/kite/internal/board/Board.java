@@ -10,7 +10,7 @@ import net.kite.internal.board.score.cache.BoardScoreCache;
 import net.kite.internal.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.internal.util.ansi.AnsiUtil;
 
-public class Board {
+public final class Board {
 	
 	private static final int WIDTH = 7;
 	private static final int HEIGHT = 6;

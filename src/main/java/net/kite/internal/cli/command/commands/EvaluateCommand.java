@@ -8,7 +8,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class EvaluateCommand extends Command {
+public final class EvaluateCommand extends Command {
 	
 	public EvaluateCommand() {
 		super("evaluate", "Evaluate the board or a specific move", "evaluate [move]");

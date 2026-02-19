@@ -7,7 +7,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class CanPlayCommand extends Command {
+public final class CanPlayCommand extends Command {
 	
 	public CanPlayCommand() {
 		super("can-play", "Check if a move can be played", "can-play");

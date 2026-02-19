@@ -16,7 +16,7 @@ import java.io.*;
  * that can be updated using {@link Kite#playMove(int)},
  * {@link Kite#undoMove()} and {@link Kite#clearBoard()}.
  */
-public class Kite implements KiteAPI {
+public final class Kite implements KiteAPI {
 	
 	private static final String NAME = "Kite";
 	private static final String VERSION = "1.16.3";

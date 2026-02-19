@@ -8,7 +8,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class LinesCommand extends Command {
+public final class LinesCommand extends Command {
 	
 	public LinesCommand() {
 		super("lines", "Show completed lines on the board", "lines");

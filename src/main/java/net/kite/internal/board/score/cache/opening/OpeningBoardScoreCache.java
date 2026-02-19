@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class OpeningBoardScoreCache {
+public final class OpeningBoardScoreCache {
 	
 	private static final int CAPACITY = 16777259;
 	private static final int MAXIMAL_DEPTH = 14;

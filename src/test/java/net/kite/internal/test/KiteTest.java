@@ -4,7 +4,7 @@ import net.kite.api.Kite;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class KiteTest {
+public final class KiteTest {
 	
 	private static final int[][] TEST_BOARD_MOVES = new int[][] {
 			{ },

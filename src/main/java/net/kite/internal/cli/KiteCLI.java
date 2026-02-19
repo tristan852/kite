@@ -10,7 +10,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public class KiteCLI {
+public final class KiteCLI {
 	
 	private static final char COMMAND_ARGUMENT_SEPARATOR_CHARACTER = ' ';
 	private static final String COMMAND_ARGUMENT_SEPARATOR_REGEX = "\\s+";

@@ -7,7 +7,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class ClearCommand extends Command {
+public final class ClearCommand extends Command {
 	
 	public ClearCommand() {
 		super("clear", "Reset the game state", "clear");

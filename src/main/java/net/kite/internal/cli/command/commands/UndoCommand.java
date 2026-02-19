@@ -7,7 +7,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public class UndoCommand extends Command {
+public final class UndoCommand extends Command {
 	
 	public UndoCommand() {
 		super("undo", "u", "Undo one or more moves", "undo [move-amount]");

@@ -21,7 +21,7 @@ import org.teavm.jso.typedarrays.Int8Array;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class KiteDemo {
+public final class KiteDemo {
 	
 	private static final String APP_TITLE = "Kite - Connect four solver";
 	

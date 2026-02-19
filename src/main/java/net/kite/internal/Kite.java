@@ -15,7 +15,7 @@ import net.kite.internal.util.time.TimeUtil;
 import java.util.Arrays;
 import java.util.Locale;
 
-public class Kite implements KiteAPI {
+public final class Kite implements KiteAPI {
 	
 	private static final int BOARD_WIDTH = 7;
 	private static final int GAME_PLAYER_AMOUNT = 2;

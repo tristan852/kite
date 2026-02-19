@@ -9,7 +9,7 @@ import net.kite.api.Kite;
  * the win lines as returned by
  * {@link Kite#winLines()}.
  */
-public class BoardLine {
+public final class BoardLine {
 	
 	private static final String TO_STRING_FORMAT = "[(%s, %s), (%s, %s)]";
 	
