@@ -4,7 +4,6 @@ import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 import net.kite.internal.cli.command.Commands;
 import net.kite.internal.util.ansi.AnsiUtil;
-import org.fusesource.jansi.AnsiConsole;
 
 import java.io.*;
 import java.util.Locale;
@@ -29,26 +28,6 @@ public final class KiteCLI {
 		boolean quiet = !ansiConsole;
 		boolean verbose = false;
 		
-		if(ansiConsole) {
-			
-			AnsiConsole.systemInstall();
-			
-		} else {
-			
-			AnsiUtil.disableAnsiCodes();
-		}
-		
-		try {
-			
-			runCLI(programArguments, quiet, verbose);
-			
-		} finally {
-			
-			if(AnsiConsole.isInstalled()) AnsiConsole.systemUninstall();
-		}
-	}
-	
-	private void runCLI(String[] programArguments, boolean quiet, boolean verbose) {
 		PrintStream errorStream = quiet ? System.err : System.out;
 		String scriptFile = null;
 		
@@ -106,7 +85,6 @@ public final class KiteCLI {
 				case NO_ANSI_PROGRAM_ARGUMENT -> {
 					
 					AnsiUtil.disableAnsiCodes();
-					if(AnsiConsole.isInstalled()) AnsiConsole.systemUninstall();
 				}
 				
 				case SCRIPT_PROGRAM_ARGUMENT -> {

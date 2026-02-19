@@ -11,7 +11,6 @@ import net.kite.internal.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.internal.util.ansi.AnsiUtil;
 import net.kite.internal.util.random.Random;
 import net.kite.internal.util.time.TimeUtil;
-import org.fusesource.jansi.AnsiConsole;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -179,10 +178,6 @@ public final class Kite implements KiteAPI {
 		String s = TimeUtil.formatDuration(averageTime);
 		
 		boolean noAnsiColors = AnsiUtil.areAnsiCodesDisabled() || System.console() == null;
-		if(!noAnsiColors) {
-			
-			if(!AnsiConsole.isInstalled()) AnsiConsole.systemInstall();
-		}
 		
 		String pattern = noAnsiColors ? METRICS_STRING_PATTERN : COLORED_METRICS_STRING_PATTERN;
 		String message = String.format(Locale.ROOT, pattern, metricsEvaluationAmount, s, averageAmount, throughput);
