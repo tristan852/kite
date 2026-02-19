@@ -70,7 +70,7 @@ jobs:
           # Run CLI and capture output
           if [[ "$OS" == "windows-latest" ]]; then
             # Create temporary PowerShell script
-            echo "& '$EXECUTABLE' --script '$SCRIPT_FILE' --quiet --no-color 2>&1 | ForEach-Object { \$_ -replace '\r','' } | Set-Content -Encoding ascii test_script_output.txt" > cli.ps1
+            echo "& '$EXECUTABLE' --script '$SCRIPT_FILE' --quiet --no-color 2>&1 | ForEach-Object { \$_ -replace '\r','' } | [System.IO.File]::WriteAllText('test_script_output.txt', \$o, [System.Text.Encoding]::ASCII)" > cli.ps1
             echo "exit \$LASTEXITCODE" >> cli.ps1
 
             # Run it
