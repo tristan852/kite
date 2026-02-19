@@ -15,6 +15,7 @@ public class KiteCLI {
 	private static final char COMMAND_ARGUMENT_SEPARATOR_CHARACTER = ' ';
 	private static final String COMMAND_ARGUMENT_SEPARATOR_REGEX = "\\s+";
 	
+	private static final String HELP_PROGRAM_ARGUMENT = "--help";
 	private static final String VERSION_PROGRAM_ARGUMENT = "--version";
 	private static final String QUIET_PROGRAM_ARGUMENT = "--quiet";
 	private static final String VERBOSE_PROGRAM_ARGUMENT = "--verbose";
@@ -35,6 +36,33 @@ public class KiteCLI {
 			
 			String argument = programArguments[i];
 			switch(argument) {
+				case HELP_PROGRAM_ARGUMENT -> {
+					
+					String messagePattern = """
+						%s v%s
+						
+						Usage:
+						  kite [arguments]
+						
+						Arguments:
+						  --help           Display this help message
+						  --version        Display the program version
+						  --quiet          Suppress prompts and interactive messages
+						                   (enabled automatically if CLI is not connected to a terminal
+						                   or when running a script file)
+						  --verbose        Override quiet mode and show prompts and interactive messages
+						  --no-color       Disable all ANSI console colors
+						  --script <file>  Run the specified script file instead of starting interactive mode
+						
+						""";
+					
+					String name = Kite.getName();
+					String version = Kite.getVersion();
+					System.out.printf(messagePattern, name, version);
+					
+					return;
+				}
+				
 				case VERSION_PROGRAM_ARGUMENT -> {
 					
 					String version = Kite.getVersion();
