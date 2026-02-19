@@ -143,7 +143,6 @@ public final class GameCommand extends Command {
 			
 			if(gameSolver.gameOver()) {
 				
-				// TODO better 
 				System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You lose.");
 				
 				gameOver = true;
