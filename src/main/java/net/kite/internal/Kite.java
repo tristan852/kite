@@ -31,19 +31,28 @@ public class Kite implements KiteAPI {
 	private static final int MOVE_COLUMN_INDEX_SMALLEST_CHARACTER = 49;
 	
 	private static final double METRICS_THROUGHPUT_CONVERSION_FACTOR = 1000.0;
-	private static final String METRICS_STRING_PATTERN;
+	private static final String METRICS_STRING_PATTERN = "positions evaluated: %d, average evaluation time: %s, average node evaluations: %.2f, node throughput: %.2f Mn/s";
+	private static final String COLORED_METRICS_STRING_PATTERN;
 	
 	static {
-		METRICS_STRING_PATTERN =
-				AnsiUtil.cyanAnsi("positions evaluated: ") +
-				AnsiUtil.yellowAnsi("%d") +
-				AnsiUtil.cyanAnsi(", average evaluation time: ") +
-				AnsiUtil.yellowAnsi("%s") +
-				AnsiUtil.cyanAnsi(", average node evaluations: ") +
-				AnsiUtil.yellowAnsi("%.2f") +
-				AnsiUtil.cyanAnsi(", node throughput: ") +
-				AnsiUtil.yellowAnsi("%.2f") +
-				AnsiUtil.cyanAnsi(" Mn/s");
+		synchronized(AnsiUtil.class) {
+			
+			boolean disabled = AnsiUtil.areAnsiColorsDisabled();
+			if(disabled) AnsiUtil.enableAnsiColors();
+			
+			COLORED_METRICS_STRING_PATTERN =
+					AnsiUtil.cyanAnsi("positions evaluated: ") +
+					AnsiUtil.yellowAnsi("%d") +
+					AnsiUtil.cyanAnsi(", average evaluation time: ") +
+					AnsiUtil.yellowAnsi("%s") +
+					AnsiUtil.cyanAnsi(", average node evaluations: ") +
+					AnsiUtil.yellowAnsi("%.2f") +
+					AnsiUtil.cyanAnsi(", node throughput: ") +
+					AnsiUtil.yellowAnsi("%.2f") +
+					AnsiUtil.cyanAnsi(" Mn/s");
+			
+			if(disabled) AnsiUtil.disableAnsiColors();
+		}
 	}
 	
 	private final Board board;
@@ -168,7 +177,10 @@ public class Kite implements KiteAPI {
 		
 		String s = TimeUtil.formatDuration(averageTime);
 		
-		String message = String.format(Locale.ROOT, METRICS_STRING_PATTERN, metricsEvaluationAmount, s, averageAmount, throughput);
+		boolean noAnsiColors = AnsiUtil.areAnsiColorsDisabled() || System.console() == null;
+		
+		String pattern = noAnsiColors ? METRICS_STRING_PATTERN : COLORED_METRICS_STRING_PATTERN;
+		String message = String.format(Locale.ROOT, pattern, metricsEvaluationAmount, s, averageAmount, throughput);
 		System.out.println(message);
 		
 		metricsEvaluationAmount = 0;

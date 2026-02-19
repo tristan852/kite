@@ -14,13 +14,22 @@ public class EvaluateMovesCommand extends Command {
 	
 	private static final String MOVE_EVALUATION_SEPARATOR_STRING = ", ";
 	private static final String ILLEGAL_MOVE_EVALUATION_STRING = "-";
-	private static final String GAME_OVER_MOVE_EVALUATIONS_STRING;
+	private static final String GAME_OVER_MOVE_EVALUATIONS_STRING = "-, -, -, -, -, -, -";
+	private static final String COLORED_GAME_OVER_MOVE_EVALUATIONS_STRING;
 	
 	static {
-		String s1 = AnsiUtil.boldCyanAnsi("-");
-		String s2 = ", ";
-		
-		GAME_OVER_MOVE_EVALUATIONS_STRING = s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1;
+		synchronized(AnsiUtil.class) {
+			
+			boolean disabled = AnsiUtil.areAnsiColorsDisabled();
+			if(disabled) AnsiUtil.enableAnsiColors();
+			
+			String s1 = AnsiUtil.boldCyanAnsi("-");
+			String s2 = ", ";
+			
+			COLORED_GAME_OVER_MOVE_EVALUATIONS_STRING = s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1;
+			
+			if(disabled) AnsiUtil.disableAnsiColors();
+		}
 	}
 	
 	private final int[] moveEvaluations;
@@ -42,7 +51,8 @@ public class EvaluateMovesCommand extends Command {
 		
 		if(solver.gameOver()) {
 			
-			System.out.println(GAME_OVER_MOVE_EVALUATIONS_STRING);
+			String s = AnsiUtil.areAnsiColorsDisabled() ? GAME_OVER_MOVE_EVALUATIONS_STRING : COLORED_GAME_OVER_MOVE_EVALUATIONS_STRING;
+			System.out.println(s);
 			return false;
 		}
 		

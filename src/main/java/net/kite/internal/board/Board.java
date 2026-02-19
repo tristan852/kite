@@ -118,15 +118,24 @@ public class Board {
 	private static final String TO_STRING_MOVE_SCORES_PREFIX_STRING = "\nmove scores: ";
 	private static final String TO_STRING_MOVE_SCORE_SEPARATOR_STRING = ", ";
 	private static final String TO_STRING_REMAINING_MOVE_AMOUNT_STRING = "\nmoves left (optimal play): ";
-	private static final String TO_STRING_GAME_OVER_MOVE_SCORES_STRING;
+	private static final String TO_STRING_GAME_OVER_MOVE_SCORES_STRING = "-, -, -, -, -, -, -";
+	private static final String COLORED_TO_STRING_GAME_OVER_MOVE_SCORES_STRING;
 	private static final String TO_STRING_OUTCOME_PREFIX_STRING = "\noutcome: ";
 	private static final String TO_STRING_ILLEGAL_MOVE_STRING = "-";
 	
 	static {
-		String s1 = AnsiUtil.boldCyanAnsi("-");
-		String s2 = ", ";
-		
-		TO_STRING_GAME_OVER_MOVE_SCORES_STRING = s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1;
+		synchronized(AnsiUtil.class) {
+			
+			boolean disabled = AnsiUtil.areAnsiColorsDisabled();
+			if(disabled) AnsiUtil.enableAnsiColors();
+			
+			String s1 = AnsiUtil.boldCyanAnsi("-");
+			String s2 = ", ";
+			
+			COLORED_TO_STRING_GAME_OVER_MOVE_SCORES_STRING = s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1;
+			
+			if(disabled) AnsiUtil.disableAnsiColors();
+		}
 	}
 	
 	private int filledCellAmount;
@@ -299,7 +308,8 @@ public class Board {
 		} else {
 			
 			remainingMoves = 0;
-			stringBuilder.append(TO_STRING_GAME_OVER_MOVE_SCORES_STRING);
+			String s = colored ? COLORED_TO_STRING_GAME_OVER_MOVE_SCORES_STRING : TO_STRING_GAME_OVER_MOVE_SCORES_STRING;
+			stringBuilder.append(s);
 		}
 		
 		stringBuilder.append(TO_STRING_REMAINING_MOVE_AMOUNT_STRING);

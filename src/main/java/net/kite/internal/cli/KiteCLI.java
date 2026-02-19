@@ -18,11 +18,14 @@ public class KiteCLI {
 	private static final String VERSION_PROGRAM_ARGUMENT = "--version";
 	private static final String QUIET_PROGRAM_ARGUMENT = "--quiet";
 	private static final String VERBOSE_PROGRAM_ARGUMENT = "--verbose";
+	private static final String NO_COLOR_PROGRAM_ARGUMENT = "--no-color";
 	private static final String SCRIPT_PROGRAM_ARGUMENT = "--script";
 	
 	public void onStart(String[] programArguments) {
 		boolean quiet = System.console() == null;
 		boolean verbose = false;
+		
+		if(quiet) AnsiUtil.disableAnsiColors();
 		
 		PrintStream errorStream = quiet ? System.err : System.out;
 		String scriptFile = null;
@@ -48,6 +51,11 @@ public class KiteCLI {
 				case VERBOSE_PROGRAM_ARGUMENT -> {
 					
 					verbose = true;
+				}
+				
+				case NO_COLOR_PROGRAM_ARGUMENT -> {
+					
+					AnsiUtil.disableAnsiColors();
 				}
 				
 				case SCRIPT_PROGRAM_ARGUMENT -> {
