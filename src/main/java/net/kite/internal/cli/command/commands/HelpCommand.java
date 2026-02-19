@@ -47,7 +47,7 @@ public final class HelpCommand extends Command {
 					
 				} else {
 					
-					s = AnsiUtil.brightYellowAnsi(helpMessage) + AnsiUtil.brightCyanAnsi(" (alias: ") + AnsiUtil.brightYellowAnsi(alias) + AnsiUtil.brightCyanAnsi(")");
+					s = AnsiUtil.brightYellowAnsi(helpMessage) + AnsiUtil.cyanAnsi(" (alias: ") + AnsiUtil.brightYellowAnsi(alias) + AnsiUtil.cyanAnsi(")");
 					l = helpMessage.length() + alias.length() + 10;
 				}
 				

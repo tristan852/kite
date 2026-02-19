@@ -41,15 +41,15 @@ public final class Kite implements KiteAPI {
 			if(disabled) AnsiUtil.enableAnsiCodes();
 			
 			COLORED_METRICS_STRING_PATTERN =
-					AnsiUtil.brightCyanAnsi("positions evaluated: ") +
+					AnsiUtil.cyanAnsi("positions evaluated: ") +
 					AnsiUtil.brightYellowAnsi("%d") +
-					AnsiUtil.brightCyanAnsi(", average evaluation time: ") +
+					AnsiUtil.cyanAnsi(", average evaluation time: ") +
 					AnsiUtil.brightYellowAnsi("%s") +
-					AnsiUtil.brightCyanAnsi(", average node evaluations: ") +
+					AnsiUtil.cyanAnsi(", average node evaluations: ") +
 					AnsiUtil.brightYellowAnsi("%.2f") +
-					AnsiUtil.brightCyanAnsi(", node throughput: ") +
+					AnsiUtil.cyanAnsi(", node throughput: ") +
 					AnsiUtil.brightYellowAnsi("%.2f") +
-					AnsiUtil.brightCyanAnsi(" Mn/s");
+					AnsiUtil.cyanAnsi(" Mn/s");
 			
 			if(disabled) AnsiUtil.disableAnsiCodes();
 		}
