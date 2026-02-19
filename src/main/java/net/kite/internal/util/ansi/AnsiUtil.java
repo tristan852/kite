@@ -4,10 +4,11 @@ import org.fusesource.jansi.Ansi;
 
 public final class AnsiUtil {
 	
+	private static final String BRIGHT_WHITE_ANSI = "\033[97m";
+	private static final String LIGHT_GRAY_ANSI = "\033[37m";
+	
 	private static final String SWITCH_TO_ALTERNATE_SCREEN_BUFFER_ANSI = "\033[?1049h";
 	private static final String SWITCH_TO_NORMAL_SCREEN_BUFFER_ANSI = "\033[?1049l";
-	
-	private static final int WHITE_RGB = 0xFFFFFF;
 	
 	private static boolean ansiCodesDisabled;
 	
@@ -61,7 +62,7 @@ public final class AnsiUtil {
 	public static String boldBrightRedBackgroundAnsi(String string) {
 		if(ansiCodesDisabled) return string;
 		
-		return Ansi.ansi().bgBrightRed().fgRgb(WHITE_RGB).bold().a(string).reset().toString();
+		return Ansi.ansi().bgBrightRed().a(BRIGHT_WHITE_ANSI).bold().a(string).reset().toString();
 	}
 	
 	public static String brightYellowAnsi(String string) {
@@ -79,7 +80,7 @@ public final class AnsiUtil {
 	public static String boldBrightYellowBackgroundAnsi(String string) {
 		if(ansiCodesDisabled) return string;
 		
-		return Ansi.ansi().bgBrightYellow().fgRgb(WHITE_RGB).bold().a(string).reset().toString();
+		return Ansi.ansi().bgBrightYellow().a(BRIGHT_WHITE_ANSI).bold().a(string).reset().toString();
 	}
 	
 	public static String brightGreenAnsi(String string) {
@@ -110,6 +111,12 @@ public final class AnsiUtil {
 		if(ansiCodesDisabled) return string;
 		
 		return Ansi.ansi().fgBrightMagenta().a(string).reset().toString();
+	}
+	
+	public static String lightGrayAnsi(String string) {
+		if(ansiCodesDisabled) return string;
+		
+		return Ansi.ansi().a(LIGHT_GRAY_ANSI).a(string).reset().toString();
 	}
 	
 	public static void enableAnsiCodes() {

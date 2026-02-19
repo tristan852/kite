@@ -210,7 +210,7 @@ public final class Board {
 				
 				if(cellPlayerColor == null) {
 					
-					s = colored ? AnsiUtil.cyanAnsi(TO_STRING_EMPTY_CELL_String) : TO_STRING_EMPTY_CELL_String;
+					s = colored ? AnsiUtil.lightGrayAnsi(TO_STRING_EMPTY_CELL_String) : TO_STRING_EMPTY_CELL_String;
 					
 				} else {
 					
