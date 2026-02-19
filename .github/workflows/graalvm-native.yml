@@ -78,7 +78,11 @@ jobs:
           fi
 
           # Normalize line endings (CRLF -> LF)
-          sed -i 's/\r$//' test_script_output.txt
+          if [[ "$OSTYPE" == "darwin"* ]]; then
+            sed -i '' 's/\r$//' test_script_output.txt
+          else
+            sed -i 's/\r$//' test_script_output.txt
+          fi
 
           # Force UTF-8 without BOM
           iconv -f UTF-8 -t UTF-8 -c test_script_output.txt -o test_script_output.txt
