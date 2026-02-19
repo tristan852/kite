@@ -3,6 +3,7 @@ package net.kite.internal.cli;
 import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
 import net.kite.internal.cli.command.Commands;
+import net.kite.internal.util.ansi.AnsiUtil;
 
 import java.io.*;
 import java.util.Locale;
@@ -24,7 +25,6 @@ public class KiteCLI {
 		boolean verbose = false;
 		
 		PrintStream errorStream = quiet ? System.err : System.out;
-		
 		String scriptFile = null;
 		
 		int n = programArguments.length;
@@ -43,7 +43,6 @@ public class KiteCLI {
 				case QUIET_PROGRAM_ARGUMENT -> {
 					
 					quiet = true;
-					errorStream = System.err;
 				}
 				
 				case VERBOSE_PROGRAM_ARGUMENT -> {
@@ -56,28 +55,23 @@ public class KiteCLI {
 					i++;
 					if (i == n) {
 						
-						errorStream.println("Please provide a script file using '--script <script-file>'!");
+						errorStream.println(AnsiUtil.redAnsi("Please provide a script file using '--script <script-file>'!"));
 						System.exit(2);
 					}
 					
 					scriptFile = programArguments[i];
 					quiet = true;
-					errorStream = System.err;
 				}
 				
 				default -> {
 					
-					errorStream.printf("Unknown program argument: %s%n", argument);
+					errorStream.println(AnsiUtil.redAnsi(String.format("Unknown program argument: %s", argument)));
 					System.exit(2);
 				}
 			}
 		}
 		
-		if(verbose) {
-			
-			quiet = false;
-			errorStream = System.out;
-		}
+		if(verbose) quiet = false;
 		
 		Kite solver = Kite.createInstance();
 		if(!quiet) {
@@ -91,15 +85,19 @@ public class KiteCLI {
 			String version = Kite.getVersion();
 			String author = Kite.getAuthor();
 			
+			String s = AnsiUtil.boldYellowAnsi(String.format("%s v%s", name, version));
 			String message = String.format(
-					" __  __    __    ______   ______   %n/\\ \\/ /   /\\ \\  /\\__  _\\ /\\  ___\\  %n\\ \\  _\"-. \\ \\ \\ \\/_/\\ \\/ \\ \\  __\\  %n \\ \\_\\ \\_\\ \\ \\_\\   \\ \\_\\  \\ \\_____\\%n  \\/_/\\/_/  \\/_/    \\/_/   \\/_____/%n%n%s v%s by %s%n",
-					name,
-					version,
+					" __  __    __    ______   ______   %n/\\ \\/ /   /\\ \\  /\\__  _\\ /\\  ___\\  %n\\ \\  _\"-. \\ \\ \\ \\/_/\\ \\/ \\ \\  __\\  %n \\ \\_\\ \\_\\ \\ \\_\\   \\ \\_\\  \\ \\_____\\%n  \\/_/\\/_/  \\/_/    \\/_/   \\/_____/%n%n%s by %s%n",
+					s,
 					author
 			);
 			
 			System.out.println(message);
-			if(scriptFile == null) System.out.println("Enter 'help' to get a list of available commands.\n");
+			if(scriptFile == null) {
+				
+				s = AnsiUtil.greenAnsi("help");
+				System.out.printf("Enter '%s' to get a list of available commands.%n%n", s);
+			}
 		}
 		
 		if(scriptFile != null) {
@@ -122,7 +120,7 @@ public class KiteCLI {
 				
 			} catch(IOException exception) {
 				
-				errorStream.printf("Script file parsing raised an exception: %s%n", exception);
+				errorStream.println(AnsiUtil.redAnsi(String.format("Script file parsing raised an exception: %s", exception)));
 				System.exit(2);
 			}
 		}
@@ -182,7 +180,7 @@ public class KiteCLI {
 		Command command = Commands.command(commandName);
 		if(command == null) {
 			
-			errorStream.printf("Command not found: %s%n", commandName);
+			errorStream.println(AnsiUtil.redAnsi(String.format("Command not found: %s", commandName)));
 			if(exitOnError) System.exit(1);
 			return false;
 		}

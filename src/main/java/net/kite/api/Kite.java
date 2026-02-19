@@ -56,7 +56,8 @@ public class Kite implements KiteAPI {
 	public String toString() {
 		synchronized(this) {
 			
-			return internalSolver.boardAnalysisString();
+			boolean ansiColored = System.console() != null;
+			return internalSolver.boardAnalysisString(ansiColored);
 		}
 	}
 	
@@ -69,9 +70,23 @@ public class Kite implements KiteAPI {
 	 *
 	 * @return game state analysis
 	 */
-	@Override
 	public synchronized String boardAnalysisString() {
-		return internalSolver.boardAnalysisString();
+		return internalSolver.boardAnalysisString(false);
+	}
+	
+	/**
+	 * Returns a string representation
+	 * of the internal game state
+	 * (as provided by {@link Kite#boardString()})
+	 * along with additional analysis
+	 * information from the solver.
+	 *
+	 * @param ansiColored whether to apply Ansi colors to the string representation
+	 * @return game state analysis
+	 */
+	@Override
+	public synchronized String boardAnalysisString(boolean ansiColored) {
+		return internalSolver.boardAnalysisString(ansiColored);
 	}
 	
 	/**
@@ -102,9 +117,27 @@ public class Kite implements KiteAPI {
 	 *
 	 * @return game state string representation
 	 */
-	@Override
 	public synchronized String boardString() {
-		return internalSolver.boardString();
+		return internalSolver.boardString(false);
+	}
+	
+	/**
+	 * Returns a string representation of
+	 * the internal game state.
+	 * The string representation consists of
+	 * a list of played moves as well as a board
+	 * showing the stones of the players.
+	 * The stones of the player with color {@link BoardPlayerColor#RED}
+	 * are shown as 'X' whereas the stones of
+	 * the player with color {@link BoardPlayerColor#YELLOW}
+	 * are shown as 'O'.
+	 *
+	 * @param ansiColored whether to apply Ansi colors to the string representation
+	 * @return game state string representation
+	 */
+	@Override
+	public synchronized String boardString(boolean ansiColored) {
+		return internalSolver.boardString(ansiColored);
 	}
 	
 	/**
@@ -177,6 +210,8 @@ public class Kite implements KiteAPI {
 	 * diagonally and down-right diagonally).
 	 * This means that at most four lines are being returned.
 	 * The maximal length of a line is {@code 7}.
+	 * The maximal number of unique cells being involved in
+	 * any line is {@code 20}.
 	 *
 	 * @return all win lines
 	 */
@@ -487,10 +522,10 @@ public class Kite implements KiteAPI {
 	 * if the active player will win or negative
 	 * if the active player will lose.
 	 * A score of {@code n > 0} means the active
-	 * player will win with their {@code n}th to last stone.
+	 * player will win with their {@code n}-th to last stone.
 	 * A score of {@code n < 0} means the opponent
 	 * of the active player will win with their
-	 * {@code -n}th to last stone.
+	 * {@code -n}-th to last stone.
 	 *
 	 * @param moveColumnIndex the one-indexed column number (from left to right)
 	 * @return move evaluation
@@ -511,10 +546,10 @@ public class Kite implements KiteAPI {
 	 * if the active player will win or negative
 	 * if the active player will lose.
 	 * A score of {@code n > 0} means the active
-	 * player will win with their {@code n}th to last stone.
+	 * player will win with their {@code n}-th to last stone.
 	 * A score of {@code n < 0} means the opponent
 	 * of the active player will win with their
-	 * {@code -n}th to last stone.
+	 * {@code -n}-th to last stone.
 	 *
 	 * @return board evaluation
 	 */
