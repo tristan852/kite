@@ -59,7 +59,7 @@ jobs:
           chmod +x "$EXECUTABLE" || true
 
           # Define the script file path
-          SCRIPT_FILE=assets/cli/test_script.txt
+          SCRIPT_FILE=assets/cli/test/test_script.txt
 
           # Fail if the script file does not exist
           if [ ! -f "$SCRIPT_FILE" ]; then
@@ -92,7 +92,7 @@ jobs:
           fi
 
           # Compare exact contents
-          diff -u assets/cli/expected_test_script_output.txt test_script_output.txt
+          diff -u assets/cli/test/expected_test_script_output.txt test_script_output.txt
           if [ $? -ne 0 ]; then
             echo "Error: CLI output does not match expected output!"
             exit 1
