@@ -32,7 +32,7 @@ public final class SkilledCommand extends Command {
 			
 		} catch(IllegalArgumentException exception) {
 			
-			errorStream.println(AnsiUtil.redAnsi(String.format("Unknown skill level for argument 'skill-level': \"%s\"", s)));
+			errorStream.println(AnsiUtil.redAnsi(String.format("Unknown skill level for argument 'skill-level': \"%s\"%nEnter 'skill-levels' for a list of skill levels.", s)));
 			if(exitOnError) System.exit(1);
 			return false;
 		}

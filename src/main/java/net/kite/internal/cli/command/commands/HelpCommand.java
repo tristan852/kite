@@ -57,6 +57,7 @@ public final class HelpCommand extends Command {
 			}
 		}
 		
+		System.out.println();
 		return false;
 	}
 	

@@ -9,6 +9,7 @@ public final class Commands {
 	
 	public static final Command[] COMMANDS = new Command[] {
 			new HelpCommand(),
+			new SkillLevelsCommand(),
 			new ExitCommand(),
 			new SeedCommand(),
 			new GameCommand(),
@@ -42,39 +43,40 @@ public final class Commands {
 	
 	public static final Command[][] CATEGORIZED_COMMANDS = new Command[][] {
 			{
-				new HelpCommand(),
-				new ExitCommand(),
-				new SeedCommand(),
-				new GameCommand()
+					new HelpCommand(),
+					new SkillLevelsCommand(),
+					new ExitCommand(),
+					new SeedCommand(),
+					new GameCommand()
 			},
 			{
-				new PlayCommand(),
-				new UndoCommand(),
-				new SetupCommand(),
-				new ClearCommand()
+					new PlayCommand(),
+					new UndoCommand(),
+					new SetupCommand(),
+					new ClearCommand()
 			},
 			{
-				new EvaluateCommand(),
-				new EvaluateMovesCommand(),
-				new OptimalCommand(),
-				new RandomCommand(),
-				new SkilledCommand(),
-				new PerformanceCommand(),
-				new BenchmarkCommand()
+					new EvaluateCommand(),
+					new EvaluateMovesCommand(),
+					new OptimalCommand(),
+					new RandomCommand(),
+					new SkilledCommand(),
+					new PerformanceCommand(),
+					new BenchmarkCommand()
 			},
 			{
-				new PrintCommand(),
-				new PrintMovesCommand(),
-				new CanPlayCommand(),
-				new CanUndoCommand(),
-				new OverCommand(),
-				new OutcomeCommand(),
-				new MoveCountCommand(),
-				new OccupiedCommand(),
-				new ColorCommand(),
-				new HeightCommand(),
-				new LegalCommand(),
-				new LinesCommand()
+					new PrintCommand(),
+					new PrintMovesCommand(),
+					new CanPlayCommand(),
+					new CanUndoCommand(),
+					new OverCommand(),
+					new OutcomeCommand(),
+					new MoveCountCommand(),
+					new OccupiedCommand(),
+					new ColorCommand(),
+					new HeightCommand(),
+					new LegalCommand(),
+					new LinesCommand()
 			}
 	};
 	

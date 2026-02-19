@@ -39,7 +39,7 @@ public final class GameCommand extends Command {
 				
 			} catch(IllegalArgumentException exception) {
 				
-				errorStream.println(AnsiUtil.redAnsi(String.format("Unknown skill level for argument 'skill-level': \"%s\"", s)));
+				errorStream.println(AnsiUtil.redAnsi(String.format("Unknown skill level for argument 'skill-level': \"%s\"%nEnter 'skill-levels' for a list of skill levels.", s)));
 				if(exitOnError) System.exit(1);
 				return false;
 			}
@@ -126,7 +126,7 @@ public final class GameCommand extends Command {
 				
 				AnsiUtil.restoreCheckpoint();
 				System.out.println(s);
-				System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "You drew." : "You won!");
+				System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You win!");
 				
 				gameOver = true;
 				continue;
@@ -140,10 +140,10 @@ public final class GameCommand extends Command {
 			
 			if(gameSolver.gameOver()) {
 				
-				System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "You drew." : "You lost!");
+				// TODO better 
+				System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You lose.");
 				
 				gameOver = true;
-				continue;
 			}
 		}
 	}
