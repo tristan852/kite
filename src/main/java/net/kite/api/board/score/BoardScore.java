@@ -43,13 +43,20 @@ public class BoardScore {
 	 * <p>
 	 * If you obtained a move score using e.g.
 	 * {@link Kite#evaluateMove(int moveColumnIndex)},
-	 * then:
+	 * then it holds that:
+	 * {@code gameOverInTotalMoves(-moveScore, playedMovesBeforeMove + 1) + 1
+	 * == gameOverInTotalMoves(moveScore, playedMovesBeforeMove)},
+	 * assuming the move with score {@code moveScore} is played
+	 * and optimal play continues from the resulting position.
 	 * <p>
-	 * For the position after the move use
-	 * {@code gameOverInTotalMoves(-moveScore, playedMovesBeforeMove + 1)}.
+	 * The expression
+	 * {@code gameOverInTotalMoves(-moveScore, playedMovesBeforeMove + 1)}
+	 * denotes the remaining moves after the move.
+	 * Adding {@code 1} accounts for the move itself.
 	 * <p>
-	 * For the position before the move use
-	 * {@code gameOverInTotalMoves(moveScore, playedMovesBeforeMove)}.
+	 * The expression
+	 * {@code gameOverInTotalMoves(moveScore, playedMovesBeforeMove)}
+	 * denotes the remaining moves before the move is played.
 	 *
 	 * @param score the board evaluation score
 	 * @param playedMoveAmount number of already played moves
