@@ -44,7 +44,7 @@ outcome: undecided
 moves: 445532
 move scores: L(-5), L(-4), W(+2), W(+2), L(-2), W(+18), L(-6)
 moves left (optimal play): 1
-outcome: undecide
+outcome: undecided
 6
 3
 red_win
