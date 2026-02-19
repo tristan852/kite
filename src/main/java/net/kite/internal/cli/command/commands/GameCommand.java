@@ -15,6 +15,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public final class GameCommand extends Command {
 	
+	private Kite gameSolver;
+	
 	public GameCommand() {
 		super("game", "g", "Start a new interactive game", "game [skill-level]");
 	}
@@ -61,12 +63,15 @@ public final class GameCommand extends Command {
 		String s2 = AnsiUtil.yellowAnsi("exit");
 		System.out.printf("Started new game against skill level: %s%n%nPlay moves by entering the column number.%nExit with '%s'.%n%n", s1, s2);
 		
-		solver = Kite.createInstance();
+		AnsiUtil.createCheckpoint();
+		
+		if(gameSolver == null) gameSolver = Kite.createInstance();
+		else gameSolver.clearBoard();
 		
 		Random random = ThreadLocalRandom.current();
-		if(random.nextBoolean()) solver.playMove(solver.skilledMove(level));
+		if(random.nextBoolean()) gameSolver.playMove(gameSolver.skilledMove(level));
 		
-		System.out.println(solver.boardString(true));
+		System.out.println(gameSolver.boardString(true));
 		
 		boolean gameOver = false;
 		while(true) {
@@ -108,29 +113,34 @@ public final class GameCommand extends Command {
 			int x = parseCoordinateArgument(message, "move", 1, 7, errorStream, exitOnError);
 			if(x < 0) continue;
 			
-			if(!solver.moveLegal(x)) {
+			if(!gameSolver.moveLegal(x)) {
 				
 				errorStream.println(AnsiUtil.redAnsi("Illegal move!"));
 				continue;
 			}
 			
-			solver.playMove(x);
-			
-			if(solver.gameOver()) {
+			gameSolver.playMove(x);
+			if(gameSolver.gameOver()) {
 				
-				System.out.println(solver.boardString(true));
-				System.out.println(solver.gameOutcome() == BoardOutcome.DRAW ? "You drew." : "You won!");
+				String s = gameSolver.boardString(true);
+				
+				AnsiUtil.restoreCheckpoint();
+				System.out.println(s);
+				System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "You drew." : "You won!");
 				
 				gameOver = true;
 				continue;
 			}
 			
-			solver.playMove(solver.skilledMove(level));
-			System.out.println(solver.boardString(true));
+			gameSolver.playMove(gameSolver.skilledMove(level));
+			String s = gameSolver.boardString(true);
 			
-			if(solver.gameOver()) {
+			AnsiUtil.restoreCheckpoint();
+			System.out.println(s);
+			
+			if(gameSolver.gameOver()) {
 				
-				System.out.println(solver.gameOutcome() == BoardOutcome.DRAW ? "You drew." : "You lost!");
+				System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "You drew." : "You lost!");
 				
 				gameOver = true;
 				continue;

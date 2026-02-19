@@ -8,6 +8,20 @@ public final class AnsiUtil {
 	
 	private static boolean ansiCodesDisabled;
 	
+	public static void restoreCheckpoint() {
+		if(ansiCodesDisabled) return;
+		
+		System.out.println(Ansi.ansi().restoreCursorPosition().eraseScreen(Ansi.Erase.FORWARD));
+		System.out.flush();
+	}
+	
+	public static void createCheckpoint() {
+		if(ansiCodesDisabled) return;
+		
+		System.out.println(Ansi.ansi().saveCursorPosition());
+		System.out.flush();
+	}
+	
 	public static void switchToAlternateScreenBuffer() {
 		if(ansiCodesDisabled) return;
 		
