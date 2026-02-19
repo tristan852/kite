@@ -72,6 +72,7 @@ public final class GameCommand extends Command {
 		if(random.nextBoolean()) gameSolver.playMove(gameSolver.skilledMove(level));
 		
 		System.out.println(gameSolver.boardString(true));
+		System.out.println();
 		
 		boolean gameOver = false;
 		while(true) {
@@ -126,6 +127,7 @@ public final class GameCommand extends Command {
 				
 				AnsiUtil.restoreCheckpoint();
 				System.out.println(s);
+				System.out.println();
 				System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You win!");
 				
 				gameOver = true;
@@ -137,6 +139,7 @@ public final class GameCommand extends Command {
 			
 			AnsiUtil.restoreCheckpoint();
 			System.out.println(s);
+			System.out.println();
 			
 			if(gameSolver.gameOver()) {
 				
