@@ -85,8 +85,8 @@ jobs:
           fi
 
           # Force UTF-8 without BOM
-          iconv -f UTF-8 -t UTF-8 -c test_script_output.txt -o test_script_output.tmp
-          mv test_script_output.tmp test_script_output.txt
+          iconv -f UTF-8 -t UTF-8 -c test_script_output.txt > temporary.txt
+          mv temporary.txt test_script_output.txt
 
           # Compare exact contents
           diff -u assets/cli/test/expected_test_script_output.txt test_script_output.txt
