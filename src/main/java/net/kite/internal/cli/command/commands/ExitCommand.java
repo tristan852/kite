@@ -17,7 +17,7 @@ public final class ExitCommand extends Command {
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 0) {
 			
-			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}

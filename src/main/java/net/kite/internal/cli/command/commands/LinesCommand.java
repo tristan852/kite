@@ -18,7 +18,7 @@ public final class LinesCommand extends Command {
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 0) {
 			
-			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
@@ -26,7 +26,7 @@ public final class LinesCommand extends Command {
 		BoardLine[] lines = solver.winLines();
 		if(lines == null) {
 			
-			errorStream.println(AnsiUtil.redAnsi("The game has not ended yet or has ended in a draw!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("The game has not ended yet or has ended in a draw!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}

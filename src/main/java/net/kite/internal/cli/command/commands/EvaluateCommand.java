@@ -28,7 +28,7 @@ public final class EvaluateCommand extends Command {
 			
 			if(!solver.moveLegal(x)) {
 				
-				errorStream.println(AnsiUtil.redAnsi(String.format("Move is not legal: %s", x)));
+				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Move is not legal: %s", x)));
 				if(exitOnError) System.exit(1);
 				return false;
 			}
@@ -38,7 +38,7 @@ public final class EvaluateCommand extends Command {
 			
 		} else {
 			
-			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 		}
 		
@@ -48,10 +48,10 @@ public final class EvaluateCommand extends Command {
 	private static String formatScore(int score) {
 		String s = BoardScore.formatScore(score);
 		
-		if(score == 0) return AnsiUtil.boldYellowAnsi(s);
-		if(score < 0) return AnsiUtil.boldRedAnsi(s);
+		if(score == 0) return AnsiUtil.boldBrightYellowAnsi(s);
+		if(score < 0) return AnsiUtil.boldBrightRedAnsi(s);
 		
-		return AnsiUtil.boldGreenAnsi(s);
+		return AnsiUtil.boldBrightGreenAnsi(s);
 	}
 	
 }

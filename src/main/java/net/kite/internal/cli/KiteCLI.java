@@ -92,7 +92,7 @@ public final class KiteCLI {
 					i++;
 					if (i == n) {
 						
-						errorStream.println(AnsiUtil.redAnsi("Please provide a script file using '--script <script-file>'!"));
+						errorStream.println(AnsiUtil.brightRedAnsi("Please provide a script file using '--script <script-file>'!"));
 						System.exit(2);
 					}
 					
@@ -102,7 +102,7 @@ public final class KiteCLI {
 				
 				default -> {
 					
-					errorStream.println(AnsiUtil.redAnsi(String.format("Unknown program argument: %s", argument)));
+					errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown program argument: %s", argument)));
 					System.exit(2);
 				}
 			}
@@ -124,7 +124,7 @@ public final class KiteCLI {
 			String version = Kite.getVersion();
 			String author = Kite.getAuthor();
 			
-			String s = AnsiUtil.boldYellowAnsi(String.format("%s v%s", name, version));
+			String s = AnsiUtil.boldBrightYellowAnsi(String.format("%s v%s", name, version));
 			String message = String.format(
 					" __  __    __    ______   ______   %n/\\ \\/ /   /\\ \\  /\\__  _\\ /\\  ___\\  %n\\ \\  _\"-. \\ \\ \\ \\/_/\\ \\/ \\ \\  __\\  %n \\ \\_\\ \\_\\ \\ \\_\\   \\ \\_\\  \\ \\_____\\%n  \\/_/\\/_/  \\/_/    \\/_/   \\/_____/%n%n%s by %s%n",
 					s,
@@ -134,7 +134,7 @@ public final class KiteCLI {
 			System.out.println(message);
 			if(scriptFile == null) {
 				
-				s = AnsiUtil.greenAnsi("help");
+				s = AnsiUtil.brightGreenAnsi("help");
 				System.out.printf("Enter '%s' to get a list of available commands.%n%n", s);
 			}
 		}
@@ -159,7 +159,7 @@ public final class KiteCLI {
 				
 			} catch(IOException exception) {
 				
-				errorStream.println(AnsiUtil.redAnsi(String.format("Script file parsing raised an exception: %s", exception)));
+				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Script file parsing raised an exception: %s", exception)));
 				System.exit(2);
 			}
 		}
@@ -219,7 +219,7 @@ public final class KiteCLI {
 		Command command = Commands.command(commandName);
 		if(command == null) {
 			
-			errorStream.println(AnsiUtil.redAnsi(String.format("Command not found: %s", commandName)));
+			errorStream.println(AnsiUtil.brightRedAnsi(String.format("Command not found: %s", commandName)));
 			if(exitOnError) System.exit(1);
 			return false;
 		}

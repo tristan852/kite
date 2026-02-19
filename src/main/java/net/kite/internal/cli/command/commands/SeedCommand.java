@@ -30,7 +30,7 @@ public final class SeedCommand extends Command {
 				
 			} catch(NumberFormatException exception) {
 				
-				errorStream.println(AnsiUtil.redAnsi(String.format("Unknown long value for argument 'seed': \"%s\"", s)));
+				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown long value for argument 'seed': \"%s\"", s)));
 				if(exitOnError) System.exit(1);
 				return false;
 			}
@@ -39,7 +39,7 @@ public final class SeedCommand extends Command {
 			
 		} else {
 			
-			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 		}
 		

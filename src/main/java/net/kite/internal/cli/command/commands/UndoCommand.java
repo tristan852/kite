@@ -19,7 +19,7 @@ public final class UndoCommand extends Command {
 			
 			if(!solver.canUndoMove()) {
 				
-				errorStream.println(AnsiUtil.redAnsi("No moves have been played yet!"));
+				errorStream.println(AnsiUtil.brightRedAnsi("No moves have been played yet!"));
 				if(exitOnError) System.exit(1);
 				return false;
 			}
@@ -37,7 +37,7 @@ public final class UndoCommand extends Command {
 				
 			} catch(NumberFormatException exception) {
 				
-				errorStream.println(AnsiUtil.redAnsi(String.format("Unknown integer value for argument 'move-amount': \"%s\"", s)));
+				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown integer value for argument 'move-amount': \"%s\"", s)));
 				if(exitOnError) System.exit(1);
 				return false;
 			}
@@ -45,7 +45,7 @@ public final class UndoCommand extends Command {
 			int playedMoves = solver.playedMoveAmount();
 			if(n > playedMoves) {
 				
-				errorStream.println(AnsiUtil.redAnsi("That many moves have not been played yet!"));
+				errorStream.println(AnsiUtil.brightRedAnsi("That many moves have not been played yet!"));
 				if(exitOnError) System.exit(1);
 				return false;
 			}
@@ -54,7 +54,7 @@ public final class UndoCommand extends Command {
 			
 		} else {
 			
-			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 		}
 		

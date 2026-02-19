@@ -25,7 +25,7 @@ public final class SetupCommand extends Command {
 		
 		if(arguments.length != 1) {
 			
-			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
@@ -33,14 +33,14 @@ public final class SetupCommand extends Command {
 		String moves = arguments[0];
 		if(moves.isBlank()) {
 			
-			errorStream.println(AnsiUtil.redAnsi("String value for argument 'moves' is empty!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("String value for argument 'moves' is empty!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
 		if(!moves.matches("[1-7]+")) {
 			
-			errorStream.println(AnsiUtil.redAnsi(String.format("Invalid move found in moves argument: \"%s\"", moves)));
+			errorStream.println(AnsiUtil.brightRedAnsi(String.format("Invalid move found in moves argument: \"%s\"", moves)));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
@@ -57,7 +57,7 @@ public final class SetupCommand extends Command {
 				
 			} else {
 				
-				errorStream.println(AnsiUtil.redAnsi(String.format("Illegal Connect Four game: \"%s\"", moves)));
+				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Illegal Connect Four game: \"%s\"", moves)));
 				if(exitOnError) System.exit(1);
 				return false;
 			}

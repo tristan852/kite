@@ -23,7 +23,7 @@ public final class EvaluateMovesCommand extends Command {
 			boolean disabled = AnsiUtil.areAnsiCodesDisabled();
 			if(disabled) AnsiUtil.enableAnsiCodes();
 			
-			String s1 = AnsiUtil.boldCyanAnsi("-");
+			String s1 = AnsiUtil.boldBrightCyanAnsi("-");
 			String s2 = ", ";
 			
 			COLORED_GAME_OVER_MOVE_EVALUATIONS_STRING = s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1;
@@ -44,7 +44,7 @@ public final class EvaluateMovesCommand extends Command {
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 0) {
 			
-			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
@@ -63,14 +63,14 @@ public final class EvaluateMovesCommand extends Command {
 			int e = moveEvaluations[i];
 			String s;
 			
-			if(e == Integer.MIN_VALUE) s = AnsiUtil.boldCyanAnsi(ILLEGAL_MOVE_EVALUATION_STRING);
+			if(e == Integer.MIN_VALUE) s = AnsiUtil.boldBrightCyanAnsi(ILLEGAL_MOVE_EVALUATION_STRING);
 			else {
 				
 				s = BoardScore.formatScoreCompactly(e);
 				
-				if(e == 0) s = AnsiUtil.boldYellowAnsi(s);
-				else if(e < 0) s = AnsiUtil.boldRedAnsi(s);
-				else s = AnsiUtil.boldGreenAnsi(s);
+				if(e == 0) s = AnsiUtil.boldBrightYellowAnsi(s);
+				else if(e < 0) s = AnsiUtil.boldBrightRedAnsi(s);
+				else s = AnsiUtil.boldBrightGreenAnsi(s);
 			}
 			
 			if(i != 0) System.out.print(MOVE_EVALUATION_SEPARATOR_STRING);

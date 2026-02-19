@@ -28,7 +28,7 @@ public final class PrintCommand extends Command {
 			else if(s.equals("false")) includeAnalysis = false;
 			else {
 				
-				errorStream.println(AnsiUtil.redAnsi(String.format("Unknown boolean value for argument 'include-analysis': \"%s\"", s)));
+				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown boolean value for argument 'include-analysis': \"%s\"", s)));
 				if(exitOnError) System.exit(1);
 				return false;
 			}
@@ -38,7 +38,7 @@ public final class PrintCommand extends Command {
 			
 		} else {
 			
-			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 		}
 		

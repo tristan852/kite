@@ -21,7 +21,7 @@ public final class HelpCommand extends Command {
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 0) {
 			
-			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
@@ -42,12 +42,12 @@ public final class HelpCommand extends Command {
 				int l;
 				if(alias == null) {
 					
-					s = AnsiUtil.yellowAnsi(helpMessage);
+					s = AnsiUtil.brightYellowAnsi(helpMessage);
 					l = helpMessage.length();
 					
 				} else {
 					
-					s = AnsiUtil.yellowAnsi(helpMessage) + AnsiUtil.cyanAnsi(" (alias: ") + AnsiUtil.yellowAnsi(alias) + AnsiUtil.cyanAnsi(")");
+					s = AnsiUtil.brightYellowAnsi(helpMessage) + AnsiUtil.brightCyanAnsi(" (alias: ") + AnsiUtil.brightYellowAnsi(alias) + AnsiUtil.brightCyanAnsi(")");
 					l = helpMessage.length() + alias.length() + 10;
 				}
 				

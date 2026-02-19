@@ -129,7 +129,7 @@ public final class Board {
 			boolean disabled = AnsiUtil.areAnsiCodesDisabled();
 			if(disabled) AnsiUtil.enableAnsiCodes();
 			
-			String s1 = AnsiUtil.boldCyanAnsi("-");
+			String s1 = AnsiUtil.boldBrightCyanAnsi("-");
 			String s2 = ", ";
 			
 			COLORED_TO_STRING_GAME_OVER_MOVE_SCORES_STRING = s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1;
@@ -219,11 +219,11 @@ public final class Board {
 					
 					if(cellPlayerColor == BoardPlayerColor.RED) {
 						
-						s = winCell ? AnsiUtil.boldRedBackgroundAnsi(s) : colored ? AnsiUtil.boldRedAnsi(s) : s;
+						s = winCell ? AnsiUtil.boldBrightRedBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightRedAnsi(s) : s;
 						
 					} else {
 						
-						s = winCell ? AnsiUtil.boldYellowBackgroundAnsi(s) : colored ? AnsiUtil.boldYellowAnsi(s) : s;
+						s = winCell ? AnsiUtil.boldBrightYellowBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightYellowAnsi(s) : s;
 					}
 				}
 				
@@ -291,16 +291,16 @@ public final class Board {
 					
 					if(colored) {
 						
-						if(score == 0) s = AnsiUtil.boldYellowAnsi(s);
-						else if(score < 0) s = AnsiUtil.boldRedAnsi(s);
-						else s = AnsiUtil.boldGreenAnsi(s);
+						if(score == 0) s = AnsiUtil.boldBrightYellowAnsi(s);
+						else if(score < 0) s = AnsiUtil.boldBrightRedAnsi(s);
+						else s = AnsiUtil.boldBrightGreenAnsi(s);
 					}
 					
 					stringBuilder.append(s);
 					
 				} else {
 					
-					String s = colored ? AnsiUtil.boldCyanAnsi(TO_STRING_ILLEGAL_MOVE_STRING) : TO_STRING_ILLEGAL_MOVE_STRING;
+					String s = colored ? AnsiUtil.boldBrightCyanAnsi(TO_STRING_ILLEGAL_MOVE_STRING) : TO_STRING_ILLEGAL_MOVE_STRING;
 					stringBuilder.append(s);
 				}
 			}
@@ -318,10 +318,10 @@ public final class Board {
 		String s = outcome.getName();
 		if(colored) {
 			
-			if(outcome == BoardOutcome.UNDECIDED) s = AnsiUtil.boldCyanAnsi(s);
-			else if(outcome == BoardOutcome.RED_WIN) s = AnsiUtil.boldRedAnsi(s);
-			else if(outcome == BoardOutcome.YELLOW_WIN) s = AnsiUtil.boldYellowAnsi(s);
-			else if(outcome == BoardOutcome.DRAW) s = AnsiUtil.boldCyanAnsi(s);
+			if(outcome == BoardOutcome.UNDECIDED) s = AnsiUtil.boldBrightCyanAnsi(s);
+			else if(outcome == BoardOutcome.RED_WIN) s = AnsiUtil.boldBrightRedAnsi(s);
+			else if(outcome == BoardOutcome.YELLOW_WIN) s = AnsiUtil.boldBrightYellowAnsi(s);
+			else if(outcome == BoardOutcome.DRAW) s = AnsiUtil.boldBrightCyanAnsi(s);
 		}
 		
 		stringBuilder.append(TO_STRING_OUTCOME_PREFIX_STRING);

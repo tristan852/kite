@@ -31,7 +31,7 @@ public final class BenchmarkCommand extends Command {
 			else if(s.equals("false")) printMetrics = false;
 			else {
 				
-				errorStream.println(AnsiUtil.redAnsi(String.format("Unknown boolean value for argument 'print-metrics': \"%s\"", s)));
+				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown boolean value for argument 'print-metrics': \"%s\"", s)));
 				if(exitOnError) System.exit(1);
 				return false;
 			}
@@ -43,7 +43,7 @@ public final class BenchmarkCommand extends Command {
 			
 		} else {
 			
-			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 		}
 		

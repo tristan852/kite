@@ -39,28 +39,28 @@ public final class GameCommand extends Command {
 				
 			} catch(IllegalArgumentException exception) {
 				
-				errorStream.println(AnsiUtil.redAnsi(String.format("Unknown skill level for argument 'skill-level': \"%s\"%nEnter 'skill-levels' for a list of skill levels.", s)));
+				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown skill level for argument 'skill-level': \"%s\"%nEnter 'skill-levels' for a list of skill levels.", s)));
 				if(exitOnError) System.exit(1);
 				return false;
 			}
 			
 		} else {
 			
-			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
 		if(scanner == null) {
 			
-			errorStream.println(AnsiUtil.redAnsi("Command not available in script mode."));
+			errorStream.println(AnsiUtil.brightRedAnsi("Command not available in script mode."));
 			System.exit(1);
 		}
 		
 		AnsiUtil.switchToAlternateScreenBuffer();
 		
-		String s1 = AnsiUtil.magentaAnsi(level.getName());
-		String s2 = AnsiUtil.yellowAnsi("exit");
+		String s1 = AnsiUtil.brightMagentaAnsi(level.getName());
+		String s2 = AnsiUtil.brightYellowAnsi("exit");
 		System.out.printf("Started new game against skill level: %s%n%nPlay moves by entering the column number.%nExit with '%s'.%n%n", s1, s2);
 		
 		AnsiUtil.createCheckpoint();
@@ -115,7 +115,7 @@ public final class GameCommand extends Command {
 			
 			if(!gameSolver.moveLegal(x)) {
 				
-				errorStream.println(AnsiUtil.redAnsi("Illegal move!"));
+				errorStream.println(AnsiUtil.brightRedAnsi("Illegal move!"));
 				continue;
 			}
 			

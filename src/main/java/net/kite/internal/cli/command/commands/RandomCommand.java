@@ -17,7 +17,7 @@ public final class RandomCommand extends Command {
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 0) {
 			
-			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
@@ -25,7 +25,7 @@ public final class RandomCommand extends Command {
 		int move = solver.randomMove();
 		if(move == 0) {
 			
-			errorStream.println(AnsiUtil.redAnsi("The game is over!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("The game is over!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}

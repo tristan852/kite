@@ -51,14 +51,14 @@ public abstract class Command {
 			
 		} catch(NumberFormatException exception) {
 			
-			errorStream.println(AnsiUtil.redAnsi(String.format("Unknown integer value for argument '%s': \"%s\"", argumentName, argument)));
+			errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown integer value for argument '%s': \"%s\"", argumentName, argument)));
 			if(exitOnError) System.exit(1);
 			return Integer.MIN_VALUE;
 		}
 		
 		if(i < min || i > max) {
 			
-			errorStream.println(AnsiUtil.redAnsi(String.format("Integer value for argument '%s' is out of bounds: \"%s\"", argumentName, argument)));
+			errorStream.println(AnsiUtil.brightRedAnsi(String.format("Integer value for argument '%s' is out of bounds: \"%s\"", argumentName, argument)));
 			if(exitOnError) System.exit(1);
 			return Integer.MIN_VALUE;
 		}

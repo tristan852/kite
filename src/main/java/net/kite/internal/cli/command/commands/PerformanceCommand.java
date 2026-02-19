@@ -34,7 +34,7 @@ public final class PerformanceCommand extends Command {
 		
 		if(arguments.length != 1) {
 			
-			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
@@ -46,7 +46,7 @@ public final class PerformanceCommand extends Command {
 		else if(s.equals("yellow")) color = BoardPlayerColor.YELLOW;
 		else {
 			
-			errorStream.println(AnsiUtil.redAnsi(String.format("Unknown color value for argument 'color': \"%s\"", s)));
+			errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown color value for argument 'color': \"%s\"", s)));
 			if(exitOnError) System.exit(1);
 			return false;
 		}

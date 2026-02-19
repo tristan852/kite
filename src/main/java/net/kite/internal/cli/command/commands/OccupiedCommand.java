@@ -17,7 +17,7 @@ public final class OccupiedCommand extends Command {
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 2) {
 			
-			errorStream.println(AnsiUtil.redAnsi("Incorrect number of arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Incorrect number of arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}

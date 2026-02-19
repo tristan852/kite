@@ -10,6 +10,26 @@ import java.util.Scanner;
 
 public final class SkillLevelsCommand extends Command {
 	
+	private static final SkillLevel[][] CATEGORIZED_SKILL_LEVELS = new SkillLevel[][] {
+			{
+					SkillLevel.RANDOM,
+					SkillLevel.PERFECT,
+					SkillLevel.ADAPTIVE
+			},
+			{
+					SkillLevel.BEGINNER,
+					SkillLevel.NOVICE,
+					SkillLevel.AMATEUR,
+					SkillLevel.INTERMEDIATE,
+					SkillLevel.SKILLED,
+					SkillLevel.ADVANCED,
+					SkillLevel.EXPERT,
+					SkillLevel.MASTER,
+					SkillLevel.GRANDMASTER,
+					SkillLevel.SUPER_GRANDMASTER
+			}
+	};
+	
 	public SkillLevelsCommand() {
 		super("skill-levels", "Show all available skill levels", "skill-levels");
 	}
@@ -18,19 +38,24 @@ public final class SkillLevelsCommand extends Command {
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 0) {
 			
-			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
-		System.out.println("Available skill levels:\n");
+		System.out.println("Available skill levels:");
 		
-		for(SkillLevel level : SkillLevel.values()) {
+		for(SkillLevel[] levels : CATEGORIZED_SKILL_LEVELS) {
 			
-			String name = level.getName();
-			name = AnsiUtil.magentaAnsi(name);
+			System.out.println();
 			
-			System.out.printf("  - %s%n", name);
+			for(SkillLevel level : levels) {
+				
+				String name = level.getName();
+				name = AnsiUtil.brightMagentaAnsi(name);
+				
+				System.out.printf("  - %s%n", name);
+			}
 		}
 		
 		System.out.println();

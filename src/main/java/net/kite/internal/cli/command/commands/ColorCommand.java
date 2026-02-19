@@ -24,7 +24,7 @@ public final class ColorCommand extends Command {
 		
 		if(arguments.length != 2) {
 			
-			errorStream.println(AnsiUtil.redAnsi("Incorrect number of arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Incorrect number of arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
