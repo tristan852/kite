@@ -68,28 +68,20 @@ jobs:
           fi
 
           # Run CLI and capture output
-          if [[ "$OS" == "windows-latest" ]]; then
-            # Create temporary PowerShell script
-            echo "& '$EXECUTABLE' --script '$SCRIPT_FILE' --quiet --no-color 2>&1 | ForEach-Object { \$_ -replace '\r','' } | [System.IO.File]::WriteAllText('test_script_output.txt', \$o, [System.Text.Encoding]::ASCII)" > cli.ps1
-            echo "exit \$LASTEXITCODE" >> cli.ps1
-
-            # Run it
-            powershell.exe -NoProfile -ExecutionPolicy Bypass -File cli.ps1
-            EXIT_CODE=$?   # Capture exit code of PowerShell
-
-            # Clean up
-            rm cli.ps1
-          else
-            # On Linux/macOS just run the executable and capture stderr
-            "$EXECUTABLE" --script "$SCRIPT_FILE" --quiet --no-color > test_script_output.txt 2>&1
-            EXIT_CODE=$?
-          fi
+          "$EXECUTABLE" --script "$SCRIPT_FILE" --quiet --no-color > test_script_output.txt 2>&1
+          EXIT_CODE=$?
 
           # Check exit code
           if [ $EXIT_CODE -ne 0 ]; then
             echo "Error: CLI exited with code $EXIT_CODE."
             exit $EXIT_CODE
           fi
+
+          # Normalize line endings (CRLF -> LF)
+          sed -i 's/\r$//' test_script_output.txt
+
+          # Force UTF-8 without BOM
+          iconv -f UTF-8 -t UTF-8 -c test_script_output.txt -o test_script_output.txt
 
           # Compare exact contents
           diff -u assets/cli/test/expected_test_script_output.txt test_script_output.txt
