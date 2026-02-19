@@ -15,9 +15,9 @@ import net.kite.api.skill.level.SkillLevel;
  */
 public interface KiteAPI {
 	
-	String boardAnalysisString();
+	String boardAnalysisString(boolean ansiColored);
 	String boardMovesString();
-	String boardString();
+	String boardString(boolean ansiColored);
 	
 	int cellColumnHeight(int cellColumnIndex);
 	boolean cellOccupied(int cellX, int cellY);

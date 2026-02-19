@@ -8,6 +8,7 @@ import net.kite.api.skill.level.SkillLevel;
 import net.kite.internal.board.Board;
 import net.kite.internal.board.score.BoardScore;
 import net.kite.internal.board.score.cache.opening.OpeningBoardScoreCaches;
+import net.kite.internal.util.ansi.AnsiUtil;
 import net.kite.internal.util.random.Random;
 import net.kite.internal.util.time.TimeUtil;
 
@@ -30,6 +31,20 @@ public class Kite implements KiteAPI {
 	private static final int MOVE_COLUMN_INDEX_SMALLEST_CHARACTER = 49;
 	
 	private static final double METRICS_THROUGHPUT_CONVERSION_FACTOR = 1000.0;
+	private static final String METRICS_STRING_PATTERN;
+	
+	static {
+		METRICS_STRING_PATTERN =
+				AnsiUtil.cyanAnsi("positions evaluated: ") +
+				AnsiUtil.yellowAnsi("%d") +
+				AnsiUtil.cyanAnsi(", average evaluation time: ") +
+				AnsiUtil.yellowAnsi("%s") +
+				AnsiUtil.cyanAnsi(", average node evaluations: ") +
+				AnsiUtil.yellowAnsi("%.2f") +
+				AnsiUtil.cyanAnsi(", node throughput: ") +
+				AnsiUtil.yellowAnsi("%.2f") +
+				AnsiUtil.cyanAnsi(" Mn/s");
+	}
 	
 	private final Board board;
 	private final Random random;
@@ -51,8 +66,8 @@ public class Kite implements KiteAPI {
 	}
 	
 	@Override
-	public String boardAnalysisString() {
-		return board.toString(false);
+	public String boardAnalysisString(boolean ansiColored) {
+		return board.toString(false, ansiColored);
 	}
 	
 	@Override
@@ -61,8 +76,8 @@ public class Kite implements KiteAPI {
 	}
 	
 	@Override
-	public String boardString() {
-		return board.toString(true);
+	public String boardString(boolean ansiColored) {
+		return board.toString(true, ansiColored);
 	}
 	
 	@Override
@@ -153,7 +168,7 @@ public class Kite implements KiteAPI {
 		
 		String s = TimeUtil.formatDuration(averageTime);
 		
-		String message = String.format(Locale.ROOT, "positions evaluated: %d, average evaluation time: %s, average node evaluations: %.2f, node throughput: %.2f Mn/s", metricsEvaluationAmount, s, averageAmount, throughput);
+		String message = String.format(Locale.ROOT, METRICS_STRING_PATTERN, metricsEvaluationAmount, s, averageAmount, throughput);
 		System.out.println(message);
 		
 		metricsEvaluationAmount = 0;

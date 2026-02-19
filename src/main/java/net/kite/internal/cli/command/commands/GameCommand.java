@@ -4,6 +4,7 @@ import net.kite.api.Kite;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.skill.level.SkillLevel;
 import net.kite.internal.cli.command.Command;
+import net.kite.internal.util.ansi.AnsiUtil;
 
 import java.io.PrintStream;
 import java.util.Locale;
@@ -36,32 +37,32 @@ public class GameCommand extends Command {
 				
 			} catch(IllegalArgumentException exception) {
 				
-				errorStream.printf("Unknown skill level for argument 'skill-level': \"%s\"%n", s);
+				errorStream.println(AnsiUtil.redAnsi(String.format("Unknown skill level for argument 'skill-level': \"%s\"", s)));
 				if(exitOnError) System.exit(1);
 				return false;
 			}
 			
 		} else {
 			
-			errorStream.println("Too many arguments!");
+			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
 		if(scanner == null) {
 			
-			errorStream.println("Command not available in script mode.");
+			errorStream.println(AnsiUtil.redAnsi("Command not available in script mode."));
 			System.exit(1);
 		}
 		
-		System.out.printf("Started new game against skill level: %s%n%nPlay moves by entering the column number.%nExit with 'exit'.%n%n", level);
+		System.out.printf("Started new game against skill level: %s%n%nPlay moves by entering the column number.%nExit with 'exit'.%n%n", level.getName());
 		
 		solver = Kite.createInstance();
 		
 		Random random = ThreadLocalRandom.current();
 		if(random.nextBoolean()) solver.playMove(solver.skilledMove(level));
 		
-		System.out.println(solver.boardString());
+		System.out.println(solver.boardString(true));
 		
 		while(true) {
 			
@@ -93,7 +94,7 @@ public class GameCommand extends Command {
 			
 			if(!solver.moveLegal(x)) {
 				
-				errorStream.println("Illegal move!");
+				errorStream.println(AnsiUtil.redAnsi("Illegal move!"));
 				continue;
 			}
 			
@@ -101,13 +102,13 @@ public class GameCommand extends Command {
 			
 			if(solver.gameOver()) {
 				
-				System.out.println(solver.boardString());
+				System.out.println(solver.boardString(true));
 				System.out.println(solver.gameOutcome() == BoardOutcome.DRAW ? "You drew." : "You won!");
 				return false;
 			}
 			
 			solver.playMove(solver.skilledMove(level));
-			System.out.println(solver.boardString());
+			System.out.println(solver.boardString(true));
 			
 			if(solver.gameOver()) {
 				

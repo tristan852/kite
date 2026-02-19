@@ -1,13 +1,14 @@
 package net.kite.internal.board;
 
-import net.kite.internal.board.bit.Bitboard;
-import net.kite.internal.board.bit.Bitboards;
 import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.board.player.color.BoardPlayerColor;
+import net.kite.internal.board.bit.Bitboard;
+import net.kite.internal.board.bit.Bitboards;
 import net.kite.internal.board.score.BoardScore;
 import net.kite.internal.board.score.cache.BoardScoreCache;
 import net.kite.internal.board.score.cache.opening.OpeningBoardScoreCaches;
+import net.kite.internal.util.ansi.AnsiUtil;
 
 public class Board {
 	
@@ -112,15 +113,21 @@ public class Board {
 	private static final int MOVES_LENGTH = 294;
 	
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
-	private static final char TO_STRING_EMPTY_CELL_CHARACTER = '.';
+	private static final String TO_STRING_EMPTY_CELL_String = ".";
 	private static final String TO_STRING_MOVES_PREFIX_STRING = "moves: ";
 	private static final String TO_STRING_MOVE_SCORES_PREFIX_STRING = "\nmove scores: ";
 	private static final String TO_STRING_MOVE_SCORE_SEPARATOR_STRING = ", ";
-	private static final String TO_STRING_GAME_OVER_MOVE_SCORES_STRING = "-, -, -, -, -, -, -";
+	private static final String TO_STRING_REMAINING_MOVE_AMOUNT_STRING = "\nmoves left (optimal play): ";
+	private static final String TO_STRING_GAME_OVER_MOVE_SCORES_STRING;
 	private static final String TO_STRING_OUTCOME_PREFIX_STRING = "\noutcome: ";
 	private static final String TO_STRING_ILLEGAL_MOVE_STRING = "-";
 	
-	private static final String WINNING_MOVE_FORMAT_PREFIX = "+";
+	static {
+		String s1 = AnsiUtil.boldCyanAnsi("-");
+		String s2 = ", ";
+		
+		TO_STRING_GAME_OVER_MOVE_SCORES_STRING = s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1;
+	}
 	
 	private int filledCellAmount;
 	private int evenParityCellColumnAmount = WIDTH;
@@ -145,6 +152,8 @@ public class Board {
 	
 	private final BoardLine[] lines = new BoardLine[MAXIMAL_LINE_AMOUNT];
 	
+	private final boolean[][] winCells = new boolean[WIDTH][HEIGHT];
+	
 	public Board() {
 		this.scoreCache = new BoardScoreCache();
 		
@@ -154,19 +163,75 @@ public class Board {
 		this.undoneMoves = new int[FULL_CELL_AMOUNT];
 	}
 	
-	public String toString(boolean boardOnly) {
+	public String toString(boolean boardOnly, boolean colored) {
+		boolean anyWinCells = false;
+		if(colored) {
+			
+			BoardLine[] lines = winningPlayerLines();
+			if(lines != null) {
+				
+				anyWinCells = true;
+				
+				for(BoardLine line : lines) {
+					
+					int n = line.getLength();
+					int x = line.getStartCellX();
+					int y = line.getStartCellY();
+					int dx = line.getDirectionX();
+					int dy = line.getDirectionY();
+					
+					for(int i = 0; i < n; i++) {
+						
+						winCells[x][y] = true;
+						
+						x += dx;
+						y += dy;
+					}
+				}
+			}
+		}
+		
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		for(int y = HEIGHT - 1; y >= 0; y--) {
 			for(int x = 0; x < WIDTH; x++) {
 				
 				BoardPlayerColor cellPlayerColor = cellPlayerColor(x, y);
-				char cellCharacter = cellPlayerColor == null ? TO_STRING_EMPTY_CELL_CHARACTER : cellPlayerColor.getCharacter();
+				String s;
 				
-				stringBuilder.append(cellCharacter);
+				if(cellPlayerColor == null) {
+					
+					s = colored ? AnsiUtil.cyanAnsi(TO_STRING_EMPTY_CELL_String) : TO_STRING_EMPTY_CELL_String;
+					
+				} else {
+					
+					s = String.valueOf(cellPlayerColor.getCharacter());
+					boolean winCell = anyWinCells && winCells[x][y];
+					
+					if(cellPlayerColor == BoardPlayerColor.RED) {
+						
+						s = winCell ? AnsiUtil.boldRedBackgroundAnsi(s) : colored ? AnsiUtil.boldRedAnsi(s) : s;
+						
+					} else {
+						
+						s = winCell ? AnsiUtil.boldYellowBackgroundAnsi(s) : colored ? AnsiUtil.boldYellowAnsi(s) : s;
+					}
+				}
+				
+				stringBuilder.append(s);
 			}
 			
 			if(y != 0) stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
+		}
+		
+		if(anyWinCells) {
+			
+			for(int x = 0; x < WIDTH; x++) {
+				for(int y = 0; y < HEIGHT; y++) {
+					
+					winCells[x][y] = false;
+				}
+			}
 		}
 		
 		if(boardOnly) return stringBuilder.toString();
@@ -188,12 +253,23 @@ public class Board {
 		BoardOutcome outcome = outcome();
 		boolean gameNotOver = outcome == BoardOutcome.UNDECIDED;
 		
+		int remainingMoves;
+		
 		if(gameNotOver) {
 			
+			int boardScore = Integer.MIN_VALUE;
 			for(int x : ORDERED_MOVE_COLUMN_INDICES) {
 				
-				if(moveLegalWhileGameNotOver(x)) moveScores[x] = evaluateMove(x);
+				if(moveLegalWhileGameNotOver(x)) {
+					
+					int moveScore = evaluateMove(x);
+					if(moveScore > boardScore) boardScore = moveScore;
+					
+					moveScores[x] = moveScore;
+				}
 			}
+			
+			remainingMoves = net.kite.api.board.score.BoardScore.gameOverInTotalMoves(boardScore, filledCellAmount);
 			
 			for(int x = 0; x < WIDTH; x++) {
 				
@@ -202,20 +278,44 @@ public class Board {
 				if(moveLegalWhileGameNotOver(x)) {
 					
 					int score = moveScores[x];
-					String s = formatMoveScore(score);
+					String s = net.kite.api.board.score.BoardScore.formatScoreCompactly(score);
+					
+					if(colored) {
+						
+						if(score == 0) s = AnsiUtil.boldYellowAnsi(s);
+						else if(score < 0) s = AnsiUtil.boldRedAnsi(s);
+						else s = AnsiUtil.boldGreenAnsi(s);
+					}
 					
 					stringBuilder.append(s);
 					
-				} else stringBuilder.append(TO_STRING_ILLEGAL_MOVE_STRING);
+				} else {
+					
+					String s = colored ? AnsiUtil.boldCyanAnsi(TO_STRING_ILLEGAL_MOVE_STRING) : TO_STRING_ILLEGAL_MOVE_STRING;
+					stringBuilder.append(s);
+				}
 			}
 			
 		} else {
 			
+			remainingMoves = 0;
 			stringBuilder.append(TO_STRING_GAME_OVER_MOVE_SCORES_STRING);
 		}
 		
+		stringBuilder.append(TO_STRING_REMAINING_MOVE_AMOUNT_STRING);
+		stringBuilder.append(remainingMoves);
+		
+		String s = outcome.getName();
+		if(colored) {
+			
+			if(outcome == BoardOutcome.UNDECIDED) s = AnsiUtil.boldCyanAnsi(s);
+			else if(outcome == BoardOutcome.RED_WIN) s = AnsiUtil.boldRedAnsi(s);
+			else if(outcome == BoardOutcome.YELLOW_WIN) s = AnsiUtil.boldYellowAnsi(s);
+			else if(outcome == BoardOutcome.DRAW) s = AnsiUtil.boldCyanAnsi(s);
+		}
+		
 		stringBuilder.append(TO_STRING_OUTCOME_PREFIX_STRING);
-		stringBuilder.append(outcome);
+		stringBuilder.append(s);
 		
 		return stringBuilder.toString();
 	}
@@ -1185,12 +1285,6 @@ public class Board {
 		averageScoreLoss *= ELO_APPROXIMATION_THIRD_COEFFICIENT;
 		
 		return Math.min(averageScoreLoss, PERFECT_ELO_APPROXIMATION);
-	}
-	
-	private static String formatMoveScore(int moveScore) {
-		if(moveScore > 0) return WINNING_MOVE_FORMAT_PREFIX + moveScore;
-		
-		return String.valueOf(moveScore);
 	}
 	
 }

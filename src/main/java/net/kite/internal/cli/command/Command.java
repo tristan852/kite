@@ -1,6 +1,7 @@
 package net.kite.internal.cli.command;
 
 import net.kite.api.Kite;
+import net.kite.internal.util.ansi.AnsiUtil;
 
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -50,14 +51,14 @@ public abstract class Command {
 			
 		} catch(NumberFormatException exception) {
 			
-			errorStream.printf("Unknown integer value for argument '%s': \"%s\"%n", argumentName, argument);
+			errorStream.println(AnsiUtil.redAnsi(String.format("Unknown integer value for argument '%s': \"%s\"", argumentName, argument)));
 			if(exitOnError) System.exit(1);
 			return Integer.MIN_VALUE;
 		}
 		
 		if(i < min || i > max) {
 			
-			errorStream.printf("Integer value for argument '%s' is out of bounds: \"%s\"%n", argumentName, argument);
+			errorStream.println(AnsiUtil.redAnsi(String.format("Integer value for argument '%s' is out of bounds: \"%s\"", argumentName, argument)));
 			if(exitOnError) System.exit(1);
 			return Integer.MIN_VALUE;
 		}

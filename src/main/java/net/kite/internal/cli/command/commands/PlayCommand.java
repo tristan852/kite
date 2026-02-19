@@ -2,6 +2,7 @@ package net.kite.internal.cli.command.commands;
 
 import net.kite.api.Kite;
 import net.kite.internal.cli.command.Command;
+import net.kite.internal.util.ansi.AnsiUtil;
 
 import java.io.PrintStream;
 import java.util.Scanner;
@@ -18,7 +19,7 @@ public class PlayCommand extends Command {
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 1) {
 			
-			errorStream.println("Incorrect number of arguments!");
+			errorStream.println(AnsiUtil.redAnsi("Incorrect number of arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
@@ -26,14 +27,14 @@ public class PlayCommand extends Command {
 		String moves = arguments[0];
 		if(moves.isBlank()) {
 			
-			errorStream.println("String value for argument 'moves' is empty!");
+			errorStream.println(AnsiUtil.redAnsi("String value for argument 'moves' is empty!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
 		if(!moves.matches("[1-7]+")) {
 			
-			errorStream.printf("Invalid move found in moves argument: \"%s\"%n", moves);
+			errorStream.println(AnsiUtil.redAnsi(String.format("Invalid move found in moves argument: \"%s\"", moves)));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
@@ -48,7 +49,7 @@ public class PlayCommand extends Command {
 				
 			} else {
 				
-				errorStream.printf("Illegal move '%s' found in moves argument: \"%s\"%n", x, moves);
+				errorStream.println(AnsiUtil.redAnsi(String.format("Illegal move '%s' found in moves argument: \"%s\"", x, moves)));
 				if(exitOnError) System.exit(1);
 				return false;
 			}

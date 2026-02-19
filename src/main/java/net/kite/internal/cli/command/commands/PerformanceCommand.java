@@ -3,6 +3,7 @@ package net.kite.internal.cli.command.commands;
 import net.kite.api.Kite;
 import net.kite.api.board.player.color.BoardPlayerColor;
 import net.kite.internal.cli.command.Command;
+import net.kite.internal.util.ansi.AnsiUtil;
 
 import java.io.PrintStream;
 import java.util.Locale;
@@ -33,7 +34,7 @@ public class PerformanceCommand extends Command {
 		
 		if(arguments.length != 1) {
 			
-			errorStream.println("Too many arguments!");
+			errorStream.println(AnsiUtil.redAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
@@ -45,7 +46,7 @@ public class PerformanceCommand extends Command {
 		else if(s.equals("yellow")) color = BoardPlayerColor.YELLOW;
 		else {
 			
-			errorStream.printf("Unknown color value for argument 'color': \"%s\"%n", s);
+			errorStream.println(AnsiUtil.redAnsi(String.format("Unknown color value for argument 'color': \"%s\"", s)));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
