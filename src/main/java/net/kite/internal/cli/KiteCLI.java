@@ -23,10 +23,10 @@ public final class KiteCLI {
 	private static final String SCRIPT_PROGRAM_ARGUMENT = "--script";
 	
 	public void onStart(String[] programArguments) {
-		boolean ansiConsole = System.console() != null;
-		
-		boolean quiet = !ansiConsole;
+		boolean quiet = System.console() == null;
 		boolean verbose = false;
+		
+		if(quiet) AnsiUtil.disableAnsiCodes();
 		
 		PrintStream errorStream = quiet ? System.err : System.out;
 		String scriptFile = null;
