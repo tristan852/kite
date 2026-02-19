@@ -126,15 +126,15 @@ public final class Board {
 	static {
 		synchronized(AnsiUtil.class) {
 			
-			boolean disabled = AnsiUtil.areAnsiColorsDisabled();
-			if(disabled) AnsiUtil.enableAnsiColors();
+			boolean disabled = AnsiUtil.areAnsiCodesDisabled();
+			if(disabled) AnsiUtil.enableAnsiCodes();
 			
 			String s1 = AnsiUtil.boldCyanAnsi("-");
 			String s2 = ", ";
 			
 			COLORED_TO_STRING_GAME_OVER_MOVE_SCORES_STRING = s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1;
 			
-			if(disabled) AnsiUtil.disableAnsiColors();
+			if(disabled) AnsiUtil.disableAnsiCodes();
 		}
 	}
 	

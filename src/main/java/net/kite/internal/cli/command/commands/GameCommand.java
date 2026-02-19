@@ -55,7 +55,11 @@ public final class GameCommand extends Command {
 			System.exit(1);
 		}
 		
-		System.out.printf("Started new game against skill level: %s%n%nPlay moves by entering the column number.%nExit with 'exit'.%n%n", level.getName());
+		AnsiUtil.switchToAlternateScreenBuffer();
+		
+		String s1 = AnsiUtil.magentaAnsi(level.getName());
+		String s2 = AnsiUtil.yellowAnsi("exit");
+		System.out.printf("Started new game against skill level: %s%n%nPlay moves by entering the column number.%nExit with '%s'.%n%n", s1, s2);
 		
 		solver = Kite.createInstance();
 		
@@ -64,6 +68,7 @@ public final class GameCommand extends Command {
 		
 		System.out.println(solver.boardString(true));
 		
+		boolean gameOver = false;
 		while(true) {
 			
 			if(!quiet) {
@@ -80,6 +85,7 @@ public final class GameCommand extends Command {
 				
 			} catch(NoSuchElementException exception) {
 				
+				AnsiUtil.switchToNormalScreenBuffer();
 				return true;
 			}
 			
@@ -87,7 +93,17 @@ public final class GameCommand extends Command {
 			if(message.isBlank()) continue;
 			
 			message = message.toLowerCase(Locale.ROOT);
-			if(message.equals("exit")) return false;
+			if(message.equals("exit")) {
+				
+				AnsiUtil.switchToNormalScreenBuffer();
+				return false;
+			}
+			
+			if(gameOver) {
+				
+				System.out.printf("The game is over! Please exit the game using '%s'.%n", s2);
+				continue;
+			}
 			
 			int x = parseCoordinateArgument(message, "move", 1, 7, errorStream, exitOnError);
 			if(x < 0) continue;
@@ -104,7 +120,9 @@ public final class GameCommand extends Command {
 				
 				System.out.println(solver.boardString(true));
 				System.out.println(solver.gameOutcome() == BoardOutcome.DRAW ? "You drew." : "You won!");
-				return false;
+				
+				gameOver = true;
+				continue;
 			}
 			
 			solver.playMove(solver.skilledMove(level));
@@ -113,7 +131,9 @@ public final class GameCommand extends Command {
 			if(solver.gameOver()) {
 				
 				System.out.println(solver.gameOutcome() == BoardOutcome.DRAW ? "You drew." : "You lost!");
-				return false;
+				
+				gameOver = true;
+				continue;
 			}
 		}
 	}

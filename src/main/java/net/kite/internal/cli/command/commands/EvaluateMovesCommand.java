@@ -20,15 +20,15 @@ public final class EvaluateMovesCommand extends Command {
 	static {
 		synchronized(AnsiUtil.class) {
 			
-			boolean disabled = AnsiUtil.areAnsiColorsDisabled();
-			if(disabled) AnsiUtil.enableAnsiColors();
+			boolean disabled = AnsiUtil.areAnsiCodesDisabled();
+			if(disabled) AnsiUtil.enableAnsiCodes();
 			
 			String s1 = AnsiUtil.boldCyanAnsi("-");
 			String s2 = ", ";
 			
 			COLORED_GAME_OVER_MOVE_EVALUATIONS_STRING = s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1;
 			
-			if(disabled) AnsiUtil.disableAnsiColors();
+			if(disabled) AnsiUtil.disableAnsiCodes();
 		}
 	}
 	
@@ -51,7 +51,7 @@ public final class EvaluateMovesCommand extends Command {
 		
 		if(solver.gameOver()) {
 			
-			String s = AnsiUtil.areAnsiColorsDisabled() ? GAME_OVER_MOVE_EVALUATIONS_STRING : COLORED_GAME_OVER_MOVE_EVALUATIONS_STRING;
+			String s = AnsiUtil.areAnsiCodesDisabled() ? GAME_OVER_MOVE_EVALUATIONS_STRING : COLORED_GAME_OVER_MOVE_EVALUATIONS_STRING;
 			System.out.println(s);
 			return false;
 		}
