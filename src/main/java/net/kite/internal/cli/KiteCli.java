@@ -15,12 +15,16 @@ public final class KiteCli {
 	private static final char COMMAND_ARGUMENT_SEPARATOR_CHARACTER = ' ';
 	private static final String COMMAND_ARGUMENT_SEPARATOR_REGEX = "\\s+";
 	
+	private static final char FLAG_PROGRAM_ARGUMENT_PREFIX = '-';
+	
 	private static final String HELP_PROGRAM_ARGUMENT = "--help";
+	private static final String SKILL_LEVELS_PROGRAM_ARGUMENT = "--skill-levels";
 	private static final String VERSION_PROGRAM_ARGUMENT = "--version";
 	private static final String QUIET_PROGRAM_ARGUMENT = "--quiet";
 	private static final String VERBOSE_PROGRAM_ARGUMENT = "--verbose";
 	private static final String PLAIN_PROGRAM_ARGUMENT = "--plain";
 	private static final String SCRIPT_PROGRAM_ARGUMENT = "--script";
+	private static final String GAME_PROGRAM_ARGUMENT = "--game";
 	
 	public void onStart(String[] programArguments) {
 		boolean quiet = System.console() == null;
@@ -30,6 +34,8 @@ public final class KiteCli {
 		
 		PrintStream errorStream = quiet ? System.err : System.out;
 		String scriptFile = null;
+		
+		String[] gameCommandArguments = null;
 		
 		int n = programArguments.length;
 		for(int i = 0; i < n; i++) {
@@ -45,21 +51,34 @@ public final class KiteCli {
 						  kite [arguments]
 						
 						Arguments:
-						  --help           Display this help message
-						  --version        Display the program version
-						  --quiet          Suppress prompts and interactive messages
-						                   (enabled automatically if CLI is not connected to a terminal
-						                   or when running a script file)
-						  --verbose        Override quiet mode and show prompts and interactive messages
-						  --plain          Disable all ANSI escape codes and Unicode characters
-						                   (colors, screen clearing, Unicode characters, etc.)
-						  --script <file>  Run the specified script file instead of starting interactive mode
+						  --help               Display this help message
+						  --skill-levels       List all available skill levels
+						  --version            Display the program version
+						  --quiet              Suppress prompts and interactive messages
+						                       (enabled automatically if CLI is not connected to a
+						                       terminal or when running a script file)
+						  --verbose            Override quiet mode and show prompts and interactive
+						                       messages
+						  --plain              Disable all ANSI escape codes and Unicode characters
+						                       (colors, screen clearing, Unicode characters, etc.)
+						  --script <file>      Run the specified script file instead of starting
+						                       interactive mode
+						  --game [skill-level] Start a game immediately, optionally specifying a
+						                       skill level
 						
 						""";
 					
 					String name = Kite.getName();
 					String version = Kite.getVersion();
 					System.out.printf(messagePattern, name, version);
+					
+					return;
+				}
+				
+				case SKILL_LEVELS_PROGRAM_ARGUMENT -> {
+					
+					AnsiUtil.disableAnsiCodes();
+					Commands.SKILL_LEVELS.execute(new String[] {}, null, errorStream, true, true, null);
 					
 					return;
 				}
@@ -90,19 +109,44 @@ public final class KiteCli {
 				case SCRIPT_PROGRAM_ARGUMENT -> {
 					
 					i++;
-					if (i == n) {
+					if(i == n) {
 						
 						errorStream.println(AnsiUtil.brightRedAnsi("Please provide a script file using '--script <script-file>'!"));
 						System.exit(2);
 					}
 					
 					scriptFile = programArguments[i];
+					if(!scriptFile.isEmpty() && scriptFile.charAt(0) == FLAG_PROGRAM_ARGUMENT_PREFIX) {
+						
+						errorStream.println(AnsiUtil.brightRedAnsi("Please provide a script file using '--script <script-file>'!"));
+						System.exit(2);
+					}
+					
 					quiet = true;
+				}
+				
+				case GAME_PROGRAM_ARGUMENT -> {
+					
+					i++;
+					if(i != n) {
+						
+						String levelString = programArguments[i];
+						if(!levelString.isEmpty() && levelString.charAt(0) == FLAG_PROGRAM_ARGUMENT_PREFIX) {
+							
+							i--;
+							
+						} else {
+							
+							gameCommandArguments = new String[] { levelString };
+						}
+					}
+					
+					if(gameCommandArguments == null) gameCommandArguments = new String[] {};
 				}
 				
 				default -> {
 					
-					errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown program argument: %s", argument)));
+					errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown argument: %s", argument)));
 					System.exit(2);
 				}
 			}
@@ -140,6 +184,11 @@ public final class KiteCli {
 		}
 		
 		if(scriptFile != null) {
+			if(gameCommandArguments != null) {
+				
+				errorStream.println(AnsiUtil.brightRedAnsi("Argument '--game' cannot be used with '--script'."));
+				System.exit(2);
+			}
 			
 			try(
 					Reader reader = new FileReader(scriptFile);
@@ -165,6 +214,12 @@ public final class KiteCli {
 		}
 		
 		Scanner scanner = new Scanner(System.in);
+		
+		if(gameCommandArguments != null) {
+			
+			boolean exit = Commands.GAME.execute(gameCommandArguments, solver, errorStream, false, quiet, scanner);
+			if(exit) return;
+		}
 		
 		while(true) {
 			

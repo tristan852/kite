@@ -4,6 +4,7 @@ import net.kite.api.Kite;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.skill.level.SkillLevel;
 import net.kite.internal.cli.command.Command;
+import net.kite.internal.cli.command.Commands;
 import net.kite.internal.util.ansi.AnsiUtil;
 
 import java.io.PrintStream;
@@ -23,13 +24,9 @@ public final class GameCommand extends Command {
 	
 	@Override
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
-		SkillLevel level;
+		SkillLevel level = null;
 		
-		if(arguments.length == 0) {
-			
-			level = SkillLevel.PERFECT;
-			
-		} else if(arguments.length == 1) {
+		if(arguments.length == 1) {
 			
 			String s = arguments[0];
 			
@@ -44,7 +41,7 @@ public final class GameCommand extends Command {
 				return false;
 			}
 			
-		} else {
+		} else if(arguments.length > 1) {
 			
 			errorStream.println(AnsiUtil.brightRedAnsi("Too many arguments!"));
 			if(exitOnError) System.exit(1);
@@ -57,11 +54,76 @@ public final class GameCommand extends Command {
 			System.exit(1);
 		}
 		
-		AnsiUtil.switchToAlternateScreenBuffer();
+		if(AnsiUtil.areAnsiCodesDisabled()) System.out.println();
+		else AnsiUtil.switchToAlternateScreenBuffer();
+		String s2 = null;
 		
-		String s1 = AnsiUtil.brightMagentaAnsi(level.getDisplayName());
-		String s2 = AnsiUtil.brightYellowAnsi("exit");
-		System.out.printf("You are playing against the AI at skill level %s.%n%nPlay moves by entering the column number.%nExit with '%s'.%n", s1, s2);
+		if(level == null) {
+			
+			if(!quiet) {
+				
+				String s1 = AnsiUtil.brightYellowAnsi("skill-levels");
+				s2 = AnsiUtil.brightYellowAnsi("exit");
+				System.out.printf("Please enter a skill level.%nEnter '%s' to list available levels or '%s' to cancel.%n%n", s1, s2);
+			}
+			
+			while(true) {
+				
+				if(!quiet) {
+					
+					System.out.print("> ");
+					System.out.flush();
+				}
+				
+				String message;
+				
+				try {
+					
+					message = scanner.nextLine();
+					
+				} catch(NoSuchElementException exception) {
+					
+					AnsiUtil.switchToNormalScreenBuffer();
+					return true;
+				}
+				
+				message = message.trim();
+				if(message.isBlank()) continue;
+				
+				message = message.toLowerCase(Locale.ROOT);
+				if(message.equals("exit")) {
+					
+					AnsiUtil.switchToNormalScreenBuffer();
+					return false;
+				}
+				
+				if(message.equals("skill-levels")) {
+					
+					Commands.SKILL_LEVELS.execute(new String[] {}, null, errorStream, false, quiet, null);
+					continue;
+				}
+				
+				try {
+					
+					level = SkillLevel.level(message);
+					break;
+					
+				} catch(IllegalArgumentException exception) {
+					
+					errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown skill level for argument 'skill-level': \"%s\"%nEnter 'skill-levels' for a list of skill levels.", message)));
+				}
+			}
+			
+			if(AnsiUtil.areAnsiCodesDisabled()) System.out.println();
+			else AnsiUtil.clearScreen();
+		}
+		
+		if(!quiet) {
+			
+			String s1 = AnsiUtil.brightMagentaAnsi(level.getDisplayName());
+			if(s2 == null) s2 = AnsiUtil.brightYellowAnsi("exit");
+			System.out.printf("You are playing against the AI at skill level %s.%n%nPlay moves by entering the column number.%nExit with '%s'.%n", s1, s2);
+		}
 		
 		AnsiUtil.createCheckpoint();
 		
@@ -111,7 +173,7 @@ public final class GameCommand extends Command {
 			
 			if(gameOver) {
 				
-				System.out.printf("The game is over! Please exit the game using '%s'.%n", s2);
+				if(!quiet) System.out.printf("The game is over! Please exit the game using '%s'.%n", s2);
 				continue;
 			}
 			
@@ -136,7 +198,7 @@ public final class GameCommand extends Command {
 				System.out.println(s);
 				System.out.flush();
 				System.out.println();
-				System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You win!");
+				if(!quiet) System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You win!");
 				
 				gameOver = true;
 				continue;
@@ -156,7 +218,7 @@ public final class GameCommand extends Command {
 			
 			if(gameSolver.gameOver()) {
 				
-				System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You lose.");
+				if(!quiet) System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You lose.");
 				
 				gameOver = true;
 			}
