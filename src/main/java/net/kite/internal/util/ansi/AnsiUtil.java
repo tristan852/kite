@@ -61,7 +61,7 @@ public final class AnsiUtil {
 	public static String boldBrightRedBackgroundAnsi(String string) {
 		if(ansiCodesDisabled) return string;
 		
-		return Ansi.ansi().bgBrightRed().a(DARK_GRAY_ANSI).bold().a(string).reset().toString();
+		return Ansi.ansi().bgBrightRed().fgBlack().bold().a(string).reset().toString();
 	}
 	
 	public static String brightYellowAnsi(String string) {
@@ -79,7 +79,7 @@ public final class AnsiUtil {
 	public static String boldBrightYellowBackgroundAnsi(String string) {
 		if(ansiCodesDisabled) return string;
 		
-		return Ansi.ansi().bgBrightYellow().a(DARK_GRAY_ANSI).bold().a(string).reset().toString();
+		return Ansi.ansi().bgBrightYellow().fgBlack().bold().a(string).reset().toString();
 	}
 	
 	public static String brightGreenAnsi(String string) {

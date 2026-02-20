@@ -117,10 +117,9 @@ public final class Board {
 	private static final String TO_STRING_MOVES_PREFIX_STRING = "moves: ";
 	private static final String TO_STRING_MOVE_SCORE_SEPARATOR_STRING = ", ";
 	private static final String TO_STRING_REMAINING_MOVE_AMOUNT_STRING = "\nmoves left (optimal play): ";
-	private static final String TO_STRING_GAME_OVER_MOVE_SCORES_STRING = "-, -, -, -, -, -, -";
-	private static final String COLORED_TO_STRING_GAME_OVER_MOVE_SCORES_STRING;
+	private static final String TO_STRING_GAME_OVER_MOVE_SCORES_STRING = "";
 	private static final String TO_STRING_OUTCOME_PREFIX_STRING = "\noutcome: ";
-	private static final String TO_STRING_ILLEGAL_MOVE_STRING = "-";
+	private static final String TO_STRING_ILLEGAL_MOVE_STRING = " ";
 	
 	private static final String[] TO_STRING_MOVE_STRING_PATTERNS = {
 			   null,
@@ -130,6 +129,9 @@ public final class Board {
 	};
 	
 	private static final String TO_STRING_COMPACT_MOVE_SCORES_PREFIX_STRING = "\nmove scores: ";
+	private static final String TO_STRING_COMPACT_GAME_OVER_MOVE_SCORES_STRING = "-, -, -, -, -, -, -";
+	private static final String COLORED_TO_STRING_COMPACT_GAME_OVER_MOVE_SCORES_STRING;
+	private static final String TO_STRING_COMPACT_ILLEGAL_MOVE_STRING = "-";
 	
 	private static final String TO_STRING_BOARD_PREFIX_STRING = "+---+---+---+---+---+---+---+\n";
 	private static final String TO_STRING_BOARD_SUFFIX_STRING = "\n+---+---+---+---+---+---+---+\n| 1 | 2 | 3 | 4 | 5 | 6 | 7 |\n+---+---+---+---+---+---+---+";
@@ -155,7 +157,7 @@ public final class Board {
 			String s1 = AnsiUtil.boldBrightCyanAnsi("-");
 			String s2 = ", ";
 			
-			COLORED_TO_STRING_GAME_OVER_MOVE_SCORES_STRING = s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1;
+			COLORED_TO_STRING_COMPACT_GAME_OVER_MOVE_SCORES_STRING = s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1 + s2 + s1;
 			
 			if(disabled) AnsiUtil.disableAnsiCodes();
 		}
@@ -378,7 +380,7 @@ public final class Board {
 					
 				} else {
 					
-					String s = colored ? AnsiUtil.boldBrightCyanAnsi(TO_STRING_ILLEGAL_MOVE_STRING) : TO_STRING_ILLEGAL_MOVE_STRING;
+					String s = spaciousBoard ? TO_STRING_ILLEGAL_MOVE_STRING : colored ? AnsiUtil.boldBrightCyanAnsi(TO_STRING_COMPACT_ILLEGAL_MOVE_STRING) : TO_STRING_COMPACT_ILLEGAL_MOVE_STRING;
 					stringBuilder.append(s);
 				}
 			}
@@ -386,7 +388,7 @@ public final class Board {
 		} else {
 			
 			remainingMoves = 0;
-			String s = colored ? COLORED_TO_STRING_GAME_OVER_MOVE_SCORES_STRING : TO_STRING_GAME_OVER_MOVE_SCORES_STRING;
+			String s = spaciousBoard ? TO_STRING_GAME_OVER_MOVE_SCORES_STRING : colored ? COLORED_TO_STRING_COMPACT_GAME_OVER_MOVE_SCORES_STRING : TO_STRING_COMPACT_GAME_OVER_MOVE_SCORES_STRING;
 			stringBuilder.append(s);
 		}
 		
