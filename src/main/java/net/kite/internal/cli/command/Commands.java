@@ -7,76 +7,108 @@ import java.util.Map;
 
 public final class Commands {
 	
+	public static final Command HELP = new HelpCommand();
+	public static final Command SKILL_LEVELS = new SkillLevelsCommand();
+	public static final Command EXIT = new ExitCommand();
+	public static final Command SEED = new SeedCommand();
+	public static final Command GAME = new GameCommand();
+	
+	public static final Command PLAY = new PlayCommand();
+	public static final Command UNDO = new UndoCommand();
+	public static final Command SETUP = new SetupCommand();
+	public static final Command CLEAR = new ClearCommand();
+	
+	public static final Command EVALUATE = new EvaluateCommand();
+	public static final Command EVALUATE_MOVES = new EvaluateMovesCommand();
+	public static final Command OPTIMAL = new OptimalCommand();
+	public static final Command RANDOM = new RandomCommand();
+	public static final Command SKILLED = new SkilledCommand();
+	public static final Command PERFORMANCE = new PerformanceCommand();
+	public static final Command BENCHMARK = new BenchmarkCommand();
+	
+	public static final Command PRINT = new PrintCommand();
+	public static final Command PRINT_MOVES = new PrintMovesCommand();
+	public static final Command CAN_PLAY = new CanPlayCommand();
+	public static final Command CAN_UNDO = new CanUndoCommand();
+	public static final Command OVER = new OverCommand();
+	public static final Command OUTCOME = new OutcomeCommand();
+	public static final Command MOVE_COUNT = new MoveCountCommand();
+	public static final Command OCCUPIED = new OccupiedCommand();
+	public static final Command COLOR = new ColorCommand();
+	public static final Command HEIGHT = new HeightCommand();
+	public static final Command LEGAL = new LegalCommand();
+	public static final Command LINES = new LinesCommand();
+	
 	public static final Command[] COMMANDS = new Command[] {
-			new HelpCommand(),
-			new SkillLevelsCommand(),
-			new ExitCommand(),
-			new SeedCommand(),
-			new GameCommand(),
+			HELP,
+			SKILL_LEVELS,
+			EXIT,
+			SEED,
+			GAME,
 			
-			new PlayCommand(),
-			new UndoCommand(),
-			new SetupCommand(),
-			new ClearCommand(),
+			PLAY,
+			UNDO,
+			SETUP,
+			CLEAR,
 			
-			new EvaluateCommand(),
-			new EvaluateMovesCommand(),
-			new OptimalCommand(),
-			new RandomCommand(),
-			new SkilledCommand(),
-			new PerformanceCommand(),
-			new BenchmarkCommand(),
+			EVALUATE,
+			EVALUATE_MOVES,
+			OPTIMAL,
+			RANDOM,
+			SKILLED,
+			PERFORMANCE,
+			BENCHMARK,
 			
-			new PrintCommand(),
-			new PrintMovesCommand(),
-			new CanPlayCommand(),
-			new CanUndoCommand(),
-			new OverCommand(),
-			new OutcomeCommand(),
-			new MoveCountCommand(),
-			new OccupiedCommand(),
-			new ColorCommand(),
-			new HeightCommand(),
-			new LegalCommand(),
-			new LinesCommand()
+			PRINT,
+			PRINT_MOVES,
+			CAN_PLAY,
+			CAN_UNDO,
+			OVER,
+			OUTCOME,
+			MOVE_COUNT,
+			OCCUPIED,
+			COLOR,
+			HEIGHT,
+			LEGAL,
+			LINES
 	};
 	
 	public static final Command[][] CATEGORIZED_COMMANDS = new Command[][] {
 			{
-					new HelpCommand(),
-					new SkillLevelsCommand(),
-					new ExitCommand(),
-					new SeedCommand(),
-					new GameCommand()
+					HELP,
+					SKILL_LEVELS,
+					EXIT,
+					SEED,
+					GAME
 			},
 			{
-					new PlayCommand(),
-					new UndoCommand(),
-					new SetupCommand(),
-					new ClearCommand()
+					PLAY,
+					UNDO,
+					SETUP,
+					CLEAR
 			},
 			{
-					new EvaluateCommand(),
-					new EvaluateMovesCommand(),
-					new OptimalCommand(),
-					new RandomCommand(),
-					new SkilledCommand(),
-					new PerformanceCommand(),
-					new BenchmarkCommand()
+					EVALUATE,
+					EVALUATE_MOVES,
+					OPTIMAL,
+					RANDOM,
+					SKILLED,
+					PERFORMANCE,
+					BENCHMARK
 			},
 			{
-					new PrintCommand(),
-					new PrintMovesCommand(),
-					new CanPlayCommand(),
-					new CanUndoCommand(),
-					new OverCommand(),
-					new OutcomeCommand(),
-					new MoveCountCommand(),
-					new OccupiedCommand(),
-					new ColorCommand(),
-					new HeightCommand(),
-					new LegalCommand(),
-					new LinesCommand()
+					PRINT,
+					PRINT_MOVES,
+					CAN_PLAY,
+					CAN_UNDO,
+					OVER,
+					OUTCOME,
+					MOVE_COUNT,
+					OCCUPIED,
+					COLOR,
+					HEIGHT,
+					LEGAL,
+					LINES
 			}
 	};
 	
