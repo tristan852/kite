@@ -83,7 +83,7 @@ public final class GameCommand extends Command {
 				
 				if(!quiet) {
 					
-					System.out.print("> ");
+					System.out.print("skill-level> ");
 					System.out.flush();
 				}
 				
@@ -168,7 +168,7 @@ public final class GameCommand extends Command {
 			
 			if(!quiet) {
 				
-				System.out.print("> ");
+				System.out.print("play> ");
 				System.out.flush();
 			}
 			
