@@ -72,7 +72,8 @@ public final class GameCommand extends Command {
 		if(random.nextBoolean()) gameSolver.playMove(gameSolver.skilledMove(level));
 		
 		boolean ansiDisabled = AnsiUtil.areAnsiCodesDisabled();
-		System.out.println(ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true));
+		if(quiet) System.out.println(solver.compactBoardString(!ansiDisabled));
+		else System.out.println(ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true));
 		System.out.flush();
 		System.out.println();
 		
@@ -125,7 +126,9 @@ public final class GameCommand extends Command {
 			gameSolver.playMove(x);
 			if(gameSolver.gameOver()) {
 				
-				String s = ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true);
+				String s;
+				if(quiet) s = solver.compactBoardString(!ansiDisabled);
+				else s = ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true);
 				
 				AnsiUtil.restoreCheckpoint();
 				System.out.println(s);
@@ -138,7 +141,10 @@ public final class GameCommand extends Command {
 			}
 			
 			gameSolver.playMove(gameSolver.skilledMove(level));
-			String s = ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true);
+			
+			String s;
+			if(quiet) s = solver.compactBoardString(!ansiDisabled);
+			else s = ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true);
 			
 			AnsiUtil.restoreCheckpoint();
 			System.out.println(s);

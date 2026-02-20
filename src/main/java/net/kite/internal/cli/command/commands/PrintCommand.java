@@ -18,7 +18,8 @@ public final class PrintCommand extends Command {
 		if(arguments.length == 0) {
 			
 			boolean ansiDisabled = AnsiUtil.areAnsiCodesDisabled();
-			System.out.println(ansiDisabled ? solver.boardAnalysisString(false) : solver.fancyBoardAnalysisString(true));
+			if(quiet) System.out.println(solver.compactBoardAnalysisString(!ansiDisabled));
+			else System.out.println(ansiDisabled ? solver.boardAnalysisString(false) : solver.fancyBoardAnalysisString(true));
 			
 		} else if(arguments.length == 1) {
 			
@@ -35,8 +36,16 @@ public final class PrintCommand extends Command {
 			}
 			
 			boolean ansiDisabled = AnsiUtil.areAnsiCodesDisabled();
-			if(includeAnalysis) System.out.println(ansiDisabled ? solver.boardAnalysisString(false) : solver.fancyBoardAnalysisString(true));
-			else System.out.println(ansiDisabled ? solver.boardString(false) : solver.fancyBoardString(true));
+			if(includeAnalysis) {
+				
+				if(quiet) System.out.println(solver.compactBoardAnalysisString(!ansiDisabled));
+				else System.out.println(ansiDisabled ? solver.boardAnalysisString(false) : solver.fancyBoardAnalysisString(true));
+				
+			} else {
+				
+				if(quiet) System.out.println(solver.compactBoardAnalysisString(!ansiDisabled));
+				else System.out.println(ansiDisabled ? solver.boardString(false) : solver.fancyBoardString(true));
+			}
 			
 		} else {
 			

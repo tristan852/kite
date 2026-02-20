@@ -57,7 +57,7 @@ public final class Kite implements KiteApi {
 		synchronized(this) {
 			
 			boolean fancyConsole = System.console() != null;
-			return fancyConsole ? internalSolver.fancyBoardAnalysisString(true) : internalSolver.boardAnalysisString(false);
+			return fancyConsole ? internalSolver.fancyBoardAnalysisString(true) : internalSolver.compactBoardAnalysisString(false);
 		}
 	}
 	
