@@ -219,7 +219,7 @@ public final class GameCommand extends Command {
 				System.out.println(s);
 				System.out.flush();
 				System.out.println();
-				if(!quiet) System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You win!");
+				if(!quiet) System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!\n" : "You win!\n");
 				
 				AnsiUtil.clearScreenFromCursorPosition();
 				AnsiUtil.saveCursorPosition();
@@ -253,7 +253,7 @@ public final class GameCommand extends Command {
 			
 			if(gameSolver.gameOver()) {
 				
-				if(!quiet) System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You lose.");
+				if(!quiet) System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!\n" : "You lose.\n");
 				
 				gameOver = true;
 			}
