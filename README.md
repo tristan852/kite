@@ -71,7 +71,20 @@ brew install kite
 choco install kite-c4
 ```
 
-Use `kite` to start the Kite CLI tool, or `kite --version` to check its version.
+Use `kite` to start the interactive CLI tool.
+
+The following arguments can be passed to `kite`:
+
+| Argument                 | Description                                                                                                                                             |
+|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `--help`                 | Display a help message                                                                                                                                  |
+| `--skill-levels`         | List all available skill levels                                                                                                                         |
+| `--version`              | Display the solver version                                                                                                                              |
+| `--quiet`                | Suppress prompts and interactive messages. Quiet mode is automatically enabled if the CLI is not connected to a terminal or when running a script file. |
+| `--verbose`              | Override quiet mode and show prompts and interactive messages even when quiet mode would normally be active                                             |
+| `--plain`                | Disable all ANSI escape codes and Unicode characters, including colors, cursor movements, screen clearing, and box-drawing characters                   |
+| `--script <script-file>` | Run the specified script file instead of starting interactive mode                                                                                      |
+| `--game [skill-level]`   | Start a game immediately, optionally specifying a skill level                                                                                           |
 
 ---
 
@@ -329,18 +342,29 @@ System.out.println(solver.evaluateMove(6)); // = 1
 
 // print a string representation
 // of the current game state
+// as well as analysis information
 
-// .......
-// .......
-// .......
-// .......
-// .......
-// ...XXO.
+// +---+---+---+---+---+---+---+
+// |   |   |   |   |   |   |   |
+// +---+---+---+---+---+---+---+
+// |   |   |   |   |   |   |   |
+// +---+---+---+---+---+---+---+
+// |   |   |   |   |   |   |   |
+// +---+---+---+---+---+---+---+
+// |   |   |   |   |   |   |   |
+// +---+---+---+---+---+---+---+
+// |   |   |   |   |   |   |   |
+// +---+---+---+---+---+---+---+
+// |   |   |   | X | X | O |   |
+// +---+---+---+---+---+---+---+
+// | 0 | 1 | 2 | 3 | 4 | 5 | 6 |
+// +---+---+---+---+---+---+---+
+//  -3   0  -2  +2   0  +1  -2 
 // 
 // moves: 465
-// move scores: -3, 0, -2, +2, 0, +1, -2
-// outcome: UNDECIDED
-System.out.println(solver.boardString());
+// moves left (optimal play): 37
+// outcome: undecided
+System.out.println(solver.boardAnalysisString());
 
 // clear the board (i.e. go back to
 // the starting game state)
@@ -351,7 +375,7 @@ Please keep in mind that Java classes are being loaded lazily.
 
 ```java
 // a class that is not used during program startup
-public class A {
+class A {
 	
 	private static final Kite SOLVER = Kite.createInstance();
 	
@@ -363,7 +387,7 @@ In the above setup, if class `A` is not loaded at program startup, but rather at
 In the following class, the method `onProgramStartup` is assumed to be called when your program is booting up. The method obtains a reference to a new solver instance, which ensures that the solver is already initialized and ready to go after your program has started.
 
 ```java
-public class B {
+class B {
 	
 	private static Kite solver;
 	
@@ -421,7 +445,7 @@ public class Main {
 			if(solver.gameOver()) {
 				
 				System.out.println(solver.boardString());
-				System.out.println(solver.gameOutcome() == BoardOutcome.DRAW ? "You drew." : "You won!");
+				System.out.println(solver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You win!");
 				return;
 			}
 			
@@ -430,7 +454,7 @@ public class Main {
 			
 			if(solver.gameOver()) {
 				
-				System.out.println(solver.gameOutcome() == BoardOutcome.DRAW ? "You drew." : "You lost!");
+				System.out.println(solver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You lose.");
 				return;
 			}
 		}

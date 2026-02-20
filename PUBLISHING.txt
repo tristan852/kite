@@ -19,7 +19,7 @@ Publishing steps of a new Kite release
     - download the binaries built by GitHub actions on the latest commit: https://github.com/tristan852/kite/actions/workflows/graalvm-native.yml
     - unpack the archives if they have been zipped
     - compute SHA256 for all archives (e.g. Windows PowerShell: "Get-FileHash .\kite-1.0.0-windows-x64.zip -Algorithm SHA256")
-    - update Formula/kite.rb with new SHA256 hash for Linux and macOS
+    - update Formula/kite.rb (in https://github.com/tristan852/homebrew-kite) with new SHA256 hash for Linux and macOS
     - update chocolatey/chocolateyInstall.ps1 with new SHA256 hash for Windows
     - inside chocolatey folder: "choco pack" then "choco push kite-c4.1.0.0.nupkg --source https://push.chocolatey.org/"
 
