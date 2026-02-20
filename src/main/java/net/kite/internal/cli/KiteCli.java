@@ -22,10 +22,7 @@ public final class KiteCli {
 	private static final String PLAIN_PROGRAM_ARGUMENT = "--plain";
 	private static final String SCRIPT_PROGRAM_ARGUMENT = "--script";
 	
-	// what to do with the old boards tring representation?
 	public void onStart(String[] programArguments) {
-		System.out.println(Kite.createInstance().playMoves(4, 6, 5));
-		
 		boolean quiet = System.console() == null;
 		boolean verbose = false;
 		
