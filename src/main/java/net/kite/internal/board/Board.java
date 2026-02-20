@@ -119,7 +119,7 @@ public final class Board {
 	private static final String TO_STRING_REMAINING_MOVE_AMOUNT_STRING = "\nmoves left (optimal play): ";
 	private static final String TO_STRING_GAME_OVER_MOVE_SCORES_STRING = "";
 	private static final String TO_STRING_OUTCOME_PREFIX_STRING = "\noutcome: ";
-	private static final String TO_STRING_ILLEGAL_MOVE_STRING = " ";
+	private static final String TO_STRING_ILLEGAL_MOVE_STRING = "    ";
 	
 	private static final String[] TO_STRING_MOVE_STRING_PATTERNS = {
 			   null,
