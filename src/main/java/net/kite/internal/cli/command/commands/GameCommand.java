@@ -54,10 +54,15 @@ public final class GameCommand extends Command {
 			System.exit(1);
 		}
 		
-		// TODO remove
-		System.out.println(AnsiUtil.areAnsiCodesDisabled());
-		if(AnsiUtil.areAnsiCodesDisabled()) if(!quiet) System.out.println();
-		else AnsiUtil.switchToAlternateScreenBuffer();
+		if(AnsiUtil.areAnsiCodesDisabled()) {
+			
+			if(!quiet) System.out.println();
+			
+		} else {
+			
+			AnsiUtil.switchToAlternateScreenBuffer();
+		}
+		
 		String s2 = null;
 		
 		if(level == null) {
@@ -123,8 +128,14 @@ public final class GameCommand extends Command {
 				}
 			}
 			
-			if(AnsiUtil.areAnsiCodesDisabled()) if(!quiet) System.out.println();
-			else AnsiUtil.clearScreen();
+			if(AnsiUtil.areAnsiCodesDisabled()) {
+				
+				if(!quiet) System.out.println();
+				
+			} else {
+				
+				AnsiUtil.clearScreen();
+			}
 		}
 		
 		if(!quiet) {
