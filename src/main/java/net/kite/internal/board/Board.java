@@ -140,7 +140,7 @@ public final class Board {
 	private static final String TO_STRING_BOARD_EMPTY_CELL_STRING = " ";
 	
 	private static final String TO_STRING_FANCY_BOARD_PREFIX_STRING = "┌───┬───┬───┬───┬───┬───┬───┐\n";
-	private static final String TO_STRING_FANCY_BOARD_SUFFIX_STRING = "\n├───┼───┼───┼───┼───┼───┼───┤\n│ 0 │ 1 │ 2 │ 3 │ 4 │ 5 │ 6 │\n└───┴───┴───┴───┴───┴───┴───┘";
+	private static final String TO_STRING_FANCY_BOARD_SUFFIX_STRING = "\n├───┼───┼───┼───┼───┼───┼───┤\n│ 1 │ 2 │ 3 │ 4 │ 5 │ 6 │ 7 │\n└───┴───┴───┴───┴───┴───┴───┘";
 	private static final String TO_STRING_FANCY_BOARD_ROW_SEPARATOR_STRING = "\n├───┼───┼───┼───┼───┼───┼───┤\n";
 	private static final String TO_STRING_FANCY_BOARD_ROW_PREFIX_STRING = "│ ";
 	private static final String TO_STRING_FANCY_BOARD_ROW_SUFFIX_STRING = " │";
@@ -197,6 +197,11 @@ public final class Board {
 	
 	@SuppressWarnings("DataFlowIssue")
 	public String toString(boolean boardOnly, boolean spaciousBoard, boolean fancyBoard, boolean colored) {
+		// TODO frame color?
+//		spaciousBoard = true;
+//		colored = true;
+//		AnsiUtil.enableAnsiCodes();
+		
 		boolean anyWinCells = false;
 		if(colored) {
 			
@@ -250,11 +255,11 @@ public final class Board {
 					
 					if(cellPlayerColor == BoardPlayerColor.RED) {
 						
-						s = winCell ? AnsiUtil.boldBrightRedBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightRedAnsi(s) : s;
+						s = winCell ? AnsiUtil.boldRedBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightRedAnsi(s) : s;
 						
 					} else {
 						
-						s = winCell ? AnsiUtil.boldBrightYellowBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightYellowAnsi(s) : s;
+						s = winCell ? AnsiUtil.boldYellowBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightYellowAnsi(s) : s;
 					}
 				}
 				
