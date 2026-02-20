@@ -40,14 +40,22 @@ public final class PlayCommand extends Command {
 		}
 		
 		int n = moves.length();
+		int playedMoves = 0;
 		for(int i = 0; i < n; i++) {
 			
 			int x = moves.charAt(i) - MOVE_CHARACTER_OFFSET;
 			if(solver.moveLegal(x)) {
 				
 				solver.playMove(x);
+				playedMoves++;
 				
 			} else {
+				
+				while(playedMoves > 0) {
+					
+					solver.undoMove();
+					playedMoves--;
+				}
 				
 				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Illegal move '%s' found in moves argument: \"%s\"", x, moves)));
 				if(exitOnError) System.exit(1);

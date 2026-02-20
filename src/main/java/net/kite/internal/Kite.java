@@ -157,6 +157,11 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
+	public int playedMove(int moveIndex) {
+		return board.playedMove(moveIndex);
+	}
+	
+	@Override
 	public int playedMoveAmount() {
 		return board.playedMoveAmount();
 	}
@@ -520,10 +525,11 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
-	public KiteApi undoMove() {
+	public int undoMove() {
 		board.undoMove();
 		
-		return null;
+		int n = board.playedMoveAmount();
+		return board.playedMove(n);
 	}
 	
 	@Override

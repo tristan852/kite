@@ -10,6 +10,9 @@ import java.util.Scanner;
 public final class SetupCommand extends Command {
 	
 	private static final int MOVE_CHARACTER_OFFSET = 48;
+	private static final int MAXIMAL_PLAYED_MOVE_AMOUNT = 42;
+	
+	private final int[] undoneMoves = new int[MAXIMAL_PLAYED_MOVE_AMOUNT];
 	
 	public SetupCommand() {
 		super("setup", "Set up the game from a sequence of moves", "setup [moves]");
@@ -45,7 +48,15 @@ public final class SetupCommand extends Command {
 			return false;
 		}
 		
-		solver.clearBoard();
+		int playedMoves = solver.playedMoveAmount();
+		int savedMoves = playedMoves;
+		while(playedMoves > 0) {
+			
+			int move = solver.undoMove();
+			
+			playedMoves--;
+			undoneMoves[playedMoves] = move;
+		}
 		
 		int n = moves.length();
 		for(int i = 0; i < n; i++) {
@@ -56,6 +67,14 @@ public final class SetupCommand extends Command {
 				solver.playMove(x);
 				
 			} else {
+				
+				solver.clearBoard();
+				
+				for(int index = 0; index < savedMoves; index++) {
+					
+					int move = undoneMoves[index];
+					solver.playMove(move);
+				}
 				
 				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Illegal Connect Four game: \"%s\"", moves)));
 				if(exitOnError) System.exit(1);

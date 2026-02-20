@@ -39,6 +39,7 @@ public interface KiteApi {
 	BoardOutcome gameOutcome();
 	boolean gameOver();
 	
+	int playedMove(int moveIndex);
 	int playedMoveAmount();
 	
 	KiteApi startRecordingPerformanceMetrics();
@@ -69,7 +70,7 @@ public interface KiteApi {
 	KiteApi playMove(int moveColumnIndex);
 	
 	KiteApi undoMoves(int moveAmount);
-	KiteApi undoMove();
+	int undoMove();
 	
 	KiteApi setupBoard(String moveColumnIndicesString);
 	KiteApi setupBoard(int... moveColumnIndices);

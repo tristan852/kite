@@ -273,7 +273,7 @@ public final class Kite implements KiteApi {
 	 * This height of a column is equal to the
 	 * number of stones played into it.
 	 *
-	 * @param cellColumnIndex the index of the column (one indexed from left to right)
+	 * @param cellColumnIndex the index of the column (1-indexed from left to right)
 	 * @return height of the column
 	 */
 	@Override
@@ -286,8 +286,8 @@ public final class Kite implements KiteApi {
 	 * occupied by a stone of either
 	 * player color.
 	 *
-	 * @param cellX x coordinate of the cell (zero indexed from left to right)
-	 * @param cellY y coordinate of the cell (zero indexed from bottom to top)
+	 * @param cellX x coordinate of the cell (0-indexed from left to right)
+	 * @param cellY y coordinate of the cell (0-indexed from bottom to top)
 	 * @return whether cell is occupied
 	 */
 	@Override
@@ -300,8 +300,8 @@ public final class Kite implements KiteApi {
 	 * given cell if the cell is not empty or
 	 * {@code null} if the cell is empty.
 	 *
-	 * @param cellX x coordinate of the cell (zero indexed from left to right)
-	 * @param cellY y coordinate of the cell (zero indexed from bottom to top)
+	 * @param cellX x coordinate of the cell (0-indexed from left to right)
+	 * @param cellY y coordinate of the cell (0-indexed from bottom to top)
 	 * @return player color of the stone or {@code null} if no stone
 	 */
 	@Override
@@ -409,6 +409,19 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
+	 * Returns the move at the specified
+	 * index among all moves that have been
+	 * played so far by both sides.
+	 *
+	 * @param moveIndex the index of the move to retrieve (0-indexed)
+	 * @return the move at the given index
+	 */
+	@Override
+	public synchronized int playedMove(int moveIndex) {
+		return internalSolver.playedMove(moveIndex);
+	}
+	
+	/**
 	 * Returns the number of total moves that
 	 * have been played so far by both sides
 	 * combined.
@@ -479,7 +492,7 @@ public final class Kite implements KiteApi {
 	 * stronger skill levels.
 	 *
 	 * @param skillLevel the skill level that the move should be based on
-	 * @return a skill based one-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
+	 * @return a skill based 1-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
 	 */
 	@Override
 	public synchronized int skilledMove(SkillLevel skillLevel) {
@@ -496,7 +509,7 @@ public final class Kite implements KiteApi {
 	 * is chosen uniformly at random and
 	 * will be returned.
 	 *
-	 * @return an optimal one-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
+	 * @return an optimal 1-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
 	 */
 	@Override
 	public synchronized int optimalMove() {
@@ -507,7 +520,7 @@ public final class Kite implements KiteApi {
 	 * Returns one of the available legal moves
 	 * chosen uniformly at random.
 	 *
-	 * @return a random one-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
+	 * @return a random 1-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
 	 */
 	@Override
 	public synchronized int randomMove() {
@@ -665,7 +678,7 @@ public final class Kite implements KiteApi {
 	 * of the active player will win with their
 	 * {@code -n}-th to last stone.
 	 *
-	 * @param moveColumnIndex the one-indexed column number (from left to right)
+	 * @param moveColumnIndex the 1-indexed column number (from left to right)
 	 * @return move evaluation
 	 */
 	@Override
@@ -742,7 +755,7 @@ public final class Kite implements KiteApi {
 	 * (implying the board is also not entirely full)
 	 * and when the column of the move is not full yet.
 	 *
-	 * @param moveColumnIndex the one-indexed column number (from left to right)
+	 * @param moveColumnIndex the 1-indexed column number (from left to right)
 	 * @return whether the move is legal
 	 */
 	@Override
@@ -757,7 +770,7 @@ public final class Kite implements KiteApi {
 	 * The internal game state will be updated
 	 * unless no move is provided.
 	 *
-	 * @param moveColumnIndices the one-indexed column numbers (columns indexed from left to right) as a string
+	 * @param moveColumnIndices the 1-indexed column numbers (columns indexed from left to right) as a string
 	 * @return this solver instance
 	 */
 	@Override
@@ -774,7 +787,7 @@ public final class Kite implements KiteApi {
 	 * The internal game state will be updated
 	 * unless no move is provided.
 	 *
-	 * @param moveColumnIndices the one-indexed column numbers (columns indexed from left to right)
+	 * @param moveColumnIndices the 1-indexed column numbers (columns indexed from left to right)
 	 * @return this solver instance
 	 */
 	@Override
@@ -791,7 +804,7 @@ public final class Kite implements KiteApi {
 	 * The internal game state will be updated.
 	 *
 	 * @return this solver instance
-	 * @param moveColumnIndex the one-indexed column number (from left to right)
+	 * @param moveColumnIndex the 1-indexed column number (from left to right)
 	 */
 	@Override
 	public synchronized Kite playMove(int moveColumnIndex) {
@@ -818,13 +831,11 @@ public final class Kite implements KiteApi {
 	 * Updates the internal game state by undoing
 	 * the last move.
 	 *
-	 * @return this solver instance
+	 * @return the move that was undone
 	 */
 	@Override
-	public synchronized Kite undoMove() {
-		internalSolver.undoMove();
-		
-		return this;
+	public synchronized int undoMove() {
+		return internalSolver.undoMove();
 	}
 	
 	/**
@@ -832,7 +843,7 @@ public final class Kite implements KiteApi {
 	 * moves and playing moves on behalf of the two players.
 	 *
 	 * @return this solver instance
-	 * @param moveColumnIndicesString the one-indexed move column numbers (columns indexed from left to right) as a string
+	 * @param moveColumnIndicesString the 1-indexed move column numbers (columns indexed from left to right) as a string
 	 */
 	@Override
 	public synchronized Kite setupBoard(String moveColumnIndicesString) {
@@ -846,7 +857,7 @@ public final class Kite implements KiteApi {
 	 * moves and playing moves on behalf of the two players.
 	 *
 	 * @return this solver instance
-	 * @param moveColumnIndices the one-indexed move column numbers (columns indexed from left to right)
+	 * @param moveColumnIndices the 1-indexed move column numbers (columns indexed from left to right)
 	 */
 	@Override
 	public synchronized Kite setupBoard(int... moveColumnIndices) {
