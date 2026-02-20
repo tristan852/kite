@@ -71,7 +71,9 @@ public final class GameCommand extends Command {
 		Random random = ThreadLocalRandom.current();
 		if(random.nextBoolean()) gameSolver.playMove(gameSolver.skilledMove(level));
 		
-		System.out.println(gameSolver.boardString(true));
+		boolean ansiDisabled = AnsiUtil.areAnsiCodesDisabled();
+		System.out.println(ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true));
+		System.out.flush();
 		System.out.println();
 		
 		boolean gameOver = false;
@@ -123,10 +125,11 @@ public final class GameCommand extends Command {
 			gameSolver.playMove(x);
 			if(gameSolver.gameOver()) {
 				
-				String s = gameSolver.boardString(true);
+				String s = ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true);
 				
 				AnsiUtil.restoreCheckpoint();
 				System.out.println(s);
+				System.out.flush();
 				System.out.println();
 				System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You win!");
 				
@@ -135,10 +138,11 @@ public final class GameCommand extends Command {
 			}
 			
 			gameSolver.playMove(gameSolver.skilledMove(level));
-			String s = gameSolver.boardString(true);
+			String s = ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true);
 			
 			AnsiUtil.restoreCheckpoint();
 			System.out.println(s);
+			System.out.flush();
 			System.out.println();
 			
 			if(gameSolver.gameOver()) {

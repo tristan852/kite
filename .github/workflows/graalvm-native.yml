@@ -68,7 +68,7 @@ jobs:
           fi
 
           # Run CLI and capture output
-          "$EXECUTABLE" --script "$SCRIPT_FILE" --quiet --no-ansi > test_script_output.txt 2>&1
+          "$EXECUTABLE" --script "$SCRIPT_FILE" --quiet --plain > test_script_output.txt 2>&1
           EXIT_CODE=$?
 
           # Check exit code

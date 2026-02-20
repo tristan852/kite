@@ -16,7 +16,7 @@ import java.io.*;
  * that can be updated using {@link Kite#playMove(int)},
  * {@link Kite#undoMove()} and {@link Kite#clearBoard()}.
  */
-public final class Kite implements KiteAPI {
+public final class Kite implements KiteApi {
 	
 	private static final String NAME = "Kite";
 	private static final String VERSION = "1.16.3";
@@ -33,7 +33,7 @@ public final class Kite implements KiteAPI {
 	
 	private static final char BENCHMARK_ENTRY_SEPARATOR_CHARACTER = ' ';
 	
-	private final KiteAPI internalSolver;
+	private final KiteApi internalSolver;
 	
 	private Kite() {
 		this.internalSolver = new net.kite.internal.Kite();
@@ -56,9 +56,65 @@ public final class Kite implements KiteAPI {
 	public String toString() {
 		synchronized(this) {
 			
-			boolean ansiColored = System.console() != null;
-			return internalSolver.boardAnalysisString(ansiColored);
+			boolean fancyConsole = System.console() != null;
+			return fancyConsole ? internalSolver.fancyBoardAnalysisString(true) : internalSolver.boardAnalysisString(false);
 		}
+	}
+	
+	/**
+	 * Returns a compact string representation
+	 * of the internal game state
+	 * (as provided by {@link Kite#boardString()})
+	 * along with additional analysis
+	 * information from the solver.
+	 *
+	 * @return game state analysis
+	 */
+	public synchronized String compactBoardAnalysisString() {
+		return internalSolver.compactBoardAnalysisString(false);
+	}
+	
+	/**
+	 * Returns a compact string representation
+	 * of the internal game state
+	 * (as provided by {@link Kite#boardString()})
+	 * along with additional analysis
+	 * information from the solver.
+	 *
+	 * @param ansiColored whether to apply Ansi colors to the string representation
+	 * @return game state analysis
+	 */
+	@Override
+	public synchronized String compactBoardAnalysisString(boolean ansiColored) {
+		return internalSolver.compactBoardAnalysisString(ansiColored);
+	}
+	
+	/**
+	 * Returns a fancy string representation
+	 * of the internal game state
+	 * (as provided by {@link Kite#boardString()})
+	 * along with additional analysis
+	 * information from the solver.
+	 *
+	 * @return game state analysis
+	 */
+	public synchronized String fancyBoardAnalysisString() {
+		return internalSolver.fancyBoardAnalysisString(false);
+	}
+	
+	/**
+	 * Returns a fancy string representation
+	 * of the internal game state
+	 * (as provided by {@link Kite#boardString()})
+	 * along with additional analysis
+	 * information from the solver.
+	 *
+	 * @param ansiColored whether to apply Ansi colors to the string representation
+	 * @return game state analysis
+	 */
+	@Override
+	public synchronized String fancyBoardAnalysisString(boolean ansiColored) {
+		return internalSolver.fancyBoardAnalysisString(ansiColored);
 	}
 	
 	/**
@@ -102,6 +158,78 @@ public final class Kite implements KiteAPI {
 	@Override
 	public synchronized String boardMovesString() {
 		return internalSolver.boardMovesString();
+	}
+	
+	/**
+	 * Returns a compact string representation
+	 * of the internal game state.
+	 * The string representation consists of
+	 * a list of played moves as well as a board
+	 * showing the stones of the players.
+	 * The stones of the player with color {@link BoardPlayerColor#RED}
+	 * are shown as 'X' whereas the stones of
+	 * the player with color {@link BoardPlayerColor#YELLOW}
+	 * are shown as 'O'.
+	 *
+	 * @return game state string representation
+	 */
+	public synchronized String compactBoardString() {
+		return internalSolver.compactBoardString(false);
+	}
+	
+	/**
+	 * Returns a compact string representation
+	 * of the internal game state.
+	 * The string representation consists of
+	 * a list of played moves as well as a board
+	 * showing the stones of the players.
+	 * The stones of the player with color {@link BoardPlayerColor#RED}
+	 * are shown as 'X' whereas the stones of
+	 * the player with color {@link BoardPlayerColor#YELLOW}
+	 * are shown as 'O'.
+	 *
+	 * @param ansiColored whether to apply Ansi colors to the string representation
+	 * @return game state string representation
+	 */
+	@Override
+	public synchronized String compactBoardString(boolean ansiColored) {
+		return internalSolver.compactBoardString(ansiColored);
+	}
+	
+	/**
+	 * Returns a fancy string representation
+	 * of the internal game state.
+	 * The string representation consists of
+	 * a list of played moves as well as a board
+	 * showing the stones of the players.
+	 * The stones of the player with color {@link BoardPlayerColor#RED}
+	 * are shown as 'X' whereas the stones of
+	 * the player with color {@link BoardPlayerColor#YELLOW}
+	 * are shown as 'O'.
+	 *
+	 * @return game state string representation
+	 */
+	public synchronized String fancyBoardString() {
+		return internalSolver.fancyBoardString(false);
+	}
+	
+	/**
+	 * Returns a fancy string representation
+	 * of the internal game state.
+	 * The string representation consists of
+	 * a list of played moves as well as a board
+	 * showing the stones of the players.
+	 * The stones of the player with color {@link BoardPlayerColor#RED}
+	 * are shown as 'X' whereas the stones of
+	 * the player with color {@link BoardPlayerColor#YELLOW}
+	 * are shown as 'O'.
+	 *
+	 * @param ansiColored whether to apply Ansi colors to the string representation
+	 * @return game state string representation
+	 */
+	@Override
+	public synchronized String fancyBoardString(boolean ansiColored) {
+		return internalSolver.fancyBoardString(ansiColored);
 	}
 	
 	/**
@@ -303,10 +431,14 @@ public final class Kite implements KiteAPI {
 	 * to stop the recording and use this method again
 	 * to continue recording the nodes visited and
 	 * the time elapsed.
+	 *
+	 * @return this solver instance
 	 */
 	@Override
-	public synchronized void startRecordingPerformanceMetrics() {
+	public synchronized Kite startRecordingPerformanceMetrics() {
 		internalSolver.startRecordingPerformanceMetrics();
+		
+		return this;
 	}
 	
 	/**
@@ -314,8 +446,10 @@ public final class Kite implements KiteAPI {
 	 * by {@link Kite#startRecordingPerformanceMetrics()}.
 	 */
 	@Override
-	public synchronized void stopRecordingPerformanceMetrics() {
+	public synchronized Kite stopRecordingPerformanceMetrics() {
 		internalSolver.stopRecordingPerformanceMetrics();
+		
+		return this;
 	}
 	
 	/**
@@ -324,10 +458,14 @@ public final class Kite implements KiteAPI {
 	 * this method can be used to show the
 	 * recorded metrics as well as resetting
 	 * them.
+	 *
+	 * @return this solver instance
 	 */
 	@Override
-	public synchronized void printAndResetPerformanceMetrics() {
+	public synchronized Kite printAndResetPerformanceMetrics() {
 		internalSolver.printAndResetPerformanceMetrics();
+		
+		return this;
 	}
 	
 	/**
@@ -568,10 +706,14 @@ public final class Kite implements KiteAPI {
 	 * using {@link Kite#seedRandomness(long seed)}, calling
 	 * this method will revert it back to non-deterministic
 	 * behavior.
+	 *
+	 * @return this solver instance
 	 */
 	@Override
-	public synchronized void seedRandomness() {
+	public synchronized Kite seedRandomness() {
 		internalSolver.seedRandomness();
+		
+		return this;
 	}
 	
 	/**
@@ -585,10 +727,13 @@ public final class Kite implements KiteAPI {
 	 * when generated games need to be reproducible.
 	 *
 	 * @param seed the initial state of the random number generator
+	 * @return this solver instance
 	 */
 	@Override
-	public synchronized void seedRandomness(long seed) {
+	public synchronized Kite seedRandomness(long seed) {
 		internalSolver.seedRandomness(seed);
+		
+		return this;
 	}
 	
 	/**
@@ -613,10 +758,13 @@ public final class Kite implements KiteAPI {
 	 * unless no move is provided.
 	 *
 	 * @param moveColumnIndices the one-indexed column numbers (columns indexed from left to right) as a string
+	 * @return this solver instance
 	 */
 	@Override
-	public synchronized void playMoves(String moveColumnIndices) {
+	public synchronized Kite playMoves(String moveColumnIndices) {
 		internalSolver.playMoves(moveColumnIndices);
+		
+		return this;
 	}
 	
 	/**
@@ -627,10 +775,13 @@ public final class Kite implements KiteAPI {
 	 * unless no move is provided.
 	 *
 	 * @param moveColumnIndices the one-indexed column numbers (columns indexed from left to right)
+	 * @return this solver instance
 	 */
 	@Override
-	public synchronized void playMoves(int... moveColumnIndices) {
+	public synchronized Kite playMoves(int... moveColumnIndices) {
 		internalSolver.playMoves(moveColumnIndices);
+		
+		return this;
 	}
 	
 	/**
@@ -639,53 +790,69 @@ public final class Kite implements KiteAPI {
 	 * of their stones into the given column.
 	 * The internal game state will be updated.
 	 *
+	 * @return this solver instance
 	 * @param moveColumnIndex the one-indexed column number (from left to right)
 	 */
 	@Override
-	public synchronized void playMove(int moveColumnIndex) {
+	public synchronized Kite playMove(int moveColumnIndex) {
 		internalSolver.playMove(moveColumnIndex);
+		
+		return this;
 	}
 	
 	/**
 	 * Updates the internal game state by undoing
 	 * the last {@code moveAmount} moves.
 	 *
+	 * @return this solver instance
 	 * @param moveAmount number of moves to undo
 	 */
 	@Override
-	public synchronized void undoMoves(int moveAmount) {
+	public synchronized Kite undoMoves(int moveAmount) {
 		internalSolver.undoMoves(moveAmount);
+		
+		return this;
 	}
 	
 	/**
 	 * Updates the internal game state by undoing
 	 * the last move.
+	 *
+	 * @return this solver instance
 	 */
 	@Override
-	public synchronized void undoMove() {
+	public synchronized Kite undoMove() {
 		internalSolver.undoMove();
+		
+		return this;
 	}
 	
 	/**
 	 * Sets up a new position by undoing all already played
 	 * moves and playing moves on behalf of the two players.
 	 *
+	 * @return this solver instance
 	 * @param moveColumnIndicesString the one-indexed move column numbers (columns indexed from left to right) as a string
 	 */
 	@Override
-	public synchronized void setupBoard(String moveColumnIndicesString) {
+	public synchronized Kite setupBoard(String moveColumnIndicesString) {
 		internalSolver.setupBoard(moveColumnIndicesString);
+		
+		return this;
 	}
 	
 	/**
 	 * Sets up a new position by undoing all already played
 	 * moves and playing moves on behalf of the two players.
 	 *
+	 * @return this solver instance
 	 * @param moveColumnIndices the one-indexed move column numbers (columns indexed from left to right)
 	 */
 	@Override
-	public synchronized void setupBoard(int... moveColumnIndices) {
+	public synchronized Kite setupBoard(int... moveColumnIndices) {
 		internalSolver.setupBoard(moveColumnIndices);
+		
+		return this;
 	}
 	
 	/**
@@ -693,10 +860,14 @@ public final class Kite implements KiteAPI {
 	 * After this method has been called the
 	 * game state will be a completely
 	 * empty board.
+	 *
+	 * @return this solver instance
 	 */
 	@Override
-	public synchronized void clearBoard() {
+	public synchronized Kite clearBoard() {
 		internalSolver.clearBoard();
+		
+		return this;
 	}
 	
 	/**

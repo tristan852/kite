@@ -115,13 +115,36 @@ public final class Board {
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
 	private static final String TO_STRING_EMPTY_CELL_String = ".";
 	private static final String TO_STRING_MOVES_PREFIX_STRING = "moves: ";
-	private static final String TO_STRING_MOVE_SCORES_PREFIX_STRING = "\nmove scores: ";
 	private static final String TO_STRING_MOVE_SCORE_SEPARATOR_STRING = ", ";
 	private static final String TO_STRING_REMAINING_MOVE_AMOUNT_STRING = "\nmoves left (optimal play): ";
 	private static final String TO_STRING_GAME_OVER_MOVE_SCORES_STRING = "-, -, -, -, -, -, -";
 	private static final String COLORED_TO_STRING_GAME_OVER_MOVE_SCORES_STRING;
 	private static final String TO_STRING_OUTCOME_PREFIX_STRING = "\noutcome: ";
 	private static final String TO_STRING_ILLEGAL_MOVE_STRING = "-";
+	
+	private static final String[] TO_STRING_MOVE_STRING_PATTERNS = {
+			   null,
+			"  %s ",
+			 " %s ",
+			  " %s"
+	};
+	
+	private static final String TO_STRING_COMPACT_MOVE_SCORES_PREFIX_STRING = "\nmove scores: ";
+	
+	private static final String TO_STRING_BOARD_PREFIX_STRING = "+---+---+---+---+---+---+---+\n";
+	private static final String TO_STRING_BOARD_SUFFIX_STRING = "\n+---+---+---+---+---+---+---+\n| 0 | 1 | 2 | 3 | 4 | 5 | 6 |\n+---+---+---+---+---+---+---+";
+	private static final String TO_STRING_BOARD_ROW_SEPARATOR_STRING = "\n+---+---+---+---+---+---+---+\n";
+	private static final String TO_STRING_BOARD_ROW_PREFIX_STRING = "| ";
+	private static final String TO_STRING_BOARD_ROW_SUFFIX_STRING = " |";
+	private static final String TO_STRING_BOARD_COLUMN_SEPARATOR_STRING = " | ";
+	private static final String TO_STRING_BOARD_EMPTY_CELL_STRING = " ";
+	
+	private static final String TO_STRING_FANCY_BOARD_PREFIX_STRING = "┌───┬───┬───┬───┬───┬───┬───┐\n";
+	private static final String TO_STRING_FANCY_BOARD_SUFFIX_STRING = "\n├───┼───┼───┼───┼───┼───┼───┤\n│ 0 │ 1 │ 2 │ 3 │ 4 │ 5 │ 6 │\n└───┴───┴───┴───┴───┴───┴───┘";
+	private static final String TO_STRING_FANCY_BOARD_ROW_SEPARATOR_STRING = "\n├───┼───┼───┼───┼───┼───┼───┤\n";
+	private static final String TO_STRING_FANCY_BOARD_ROW_PREFIX_STRING = "│ ";
+	private static final String TO_STRING_FANCY_BOARD_ROW_SUFFIX_STRING = " │";
+	private static final String TO_STRING_FANCY_BOARD_COLUMN_SEPARATOR_STRING = " │ ";
 	
 	static {
 		synchronized(AnsiUtil.class) {
@@ -172,7 +195,8 @@ public final class Board {
 		this.undoneMoves = new int[FULL_CELL_AMOUNT];
 	}
 	
-	public String toString(boolean boardOnly, boolean colored) {
+	@SuppressWarnings("DataFlowIssue")
+	public String toString(boolean boardOnly, boolean spaciousBoard, boolean fancyBoard, boolean colored) {
 		boolean anyWinCells = false;
 		if(colored) {
 			
@@ -201,16 +225,23 @@ public final class Board {
 		}
 		
 		StringBuilder stringBuilder = new StringBuilder();
+		if(spaciousBoard) stringBuilder.append(fancyBoard ? TO_STRING_FANCY_BOARD_PREFIX_STRING : TO_STRING_BOARD_PREFIX_STRING);
 		
 		for(int y = HEIGHT - 1; y >= 0; y--) {
+			
+			if(spaciousBoard) stringBuilder.append(fancyBoard ? TO_STRING_FANCY_BOARD_ROW_PREFIX_STRING : TO_STRING_BOARD_ROW_PREFIX_STRING);
+			
 			for(int x = 0; x < WIDTH; x++) {
+				
+				if(spaciousBoard && x != 0) stringBuilder.append(fancyBoard ? TO_STRING_FANCY_BOARD_COLUMN_SEPARATOR_STRING : TO_STRING_BOARD_COLUMN_SEPARATOR_STRING);
 				
 				BoardPlayerColor cellPlayerColor = cellPlayerColor(x, y);
 				String s;
 				
 				if(cellPlayerColor == null) {
 					
-					s = colored ? AnsiUtil.darkGrayAnsi(TO_STRING_EMPTY_CELL_String) : TO_STRING_EMPTY_CELL_String;
+					if(spaciousBoard) s = TO_STRING_BOARD_EMPTY_CELL_STRING;
+					else s = colored ? AnsiUtil.darkGrayAnsi(TO_STRING_EMPTY_CELL_String) : TO_STRING_EMPTY_CELL_String;
 					
 				} else {
 					
@@ -230,8 +261,18 @@ public final class Board {
 				stringBuilder.append(s);
 			}
 			
-			if(y != 0) stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
+			if(spaciousBoard) {
+				
+				stringBuilder.append(fancyBoard ? TO_STRING_FANCY_BOARD_ROW_SUFFIX_STRING : TO_STRING_BOARD_ROW_SUFFIX_STRING);
+				if(y != 0) stringBuilder.append(fancyBoard ? TO_STRING_FANCY_BOARD_ROW_SEPARATOR_STRING : TO_STRING_BOARD_ROW_SEPARATOR_STRING);
+				
+			} else {
+				
+				if(y != 0) stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
+			}
 		}
+		
+		if(spaciousBoard) stringBuilder.append(fancyBoard ? TO_STRING_FANCY_BOARD_SUFFIX_STRING : TO_STRING_BOARD_SUFFIX_STRING);
 		
 		if(anyWinCells) {
 			
@@ -245,19 +286,22 @@ public final class Board {
 		
 		if(boardOnly) return stringBuilder.toString();
 		
-		stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
-		stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
-		stringBuilder.append(TO_STRING_MOVES_PREFIX_STRING);
-		
-		for(int i = 0; i < filledCellAmount; i++) {
+		if(!spaciousBoard) {
 			
-			int move = playedMoves[i];
-			char moveCharacter = (char) (SMALLEST_MOVE_CHARACTER + move);
+			stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
+			stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
+			stringBuilder.append(TO_STRING_MOVES_PREFIX_STRING);
 			
-			stringBuilder.append(moveCharacter);
+			for(int i = 0; i < filledCellAmount; i++) {
+				
+				int move = playedMoves[i];
+				char moveCharacter = (char) (SMALLEST_MOVE_CHARACTER + move);
+				
+				stringBuilder.append(moveCharacter);
+			}
 		}
 		
-		stringBuilder.append(TO_STRING_MOVE_SCORES_PREFIX_STRING);
+		stringBuilder.append(spaciousBoard ? TO_STRING_CELL_ROW_SEPARATOR_STRING : TO_STRING_COMPACT_MOVE_SCORES_PREFIX_STRING);
 		
 		BoardOutcome outcome = outcome();
 		boolean gameNotOver = outcome == BoardOutcome.UNDECIDED;
@@ -282,12 +326,18 @@ public final class Board {
 			
 			for(int x = 0; x < WIDTH; x++) {
 				
-				if(x != 0) stringBuilder.append(TO_STRING_MOVE_SCORE_SEPARATOR_STRING);
+				if(!spaciousBoard && x != 0) stringBuilder.append(TO_STRING_MOVE_SCORE_SEPARATOR_STRING);
 				
 				if(moveLegalWhileGameNotOver(x)) {
 					
 					int score = moveScores[x];
 					String s = net.kite.api.board.score.BoardScore.formatScoreCompactly(score);
+					
+					if(spaciousBoard) {
+						
+						int l = s.length();
+						s = TO_STRING_MOVE_STRING_PATTERNS[l].formatted(s);
+					}
 					
 					if(colored) {
 						
@@ -310,6 +360,21 @@ public final class Board {
 			remainingMoves = 0;
 			String s = colored ? COLORED_TO_STRING_GAME_OVER_MOVE_SCORES_STRING : TO_STRING_GAME_OVER_MOVE_SCORES_STRING;
 			stringBuilder.append(s);
+		}
+		
+		if(spaciousBoard) {
+			
+			stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
+			stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
+			stringBuilder.append(TO_STRING_MOVES_PREFIX_STRING);
+			
+			for(int i = 0; i < filledCellAmount; i++) {
+				
+				int move = playedMoves[i];
+				char moveCharacter = (char) (SMALLEST_MOVE_CHARACTER + move);
+				
+				stringBuilder.append(moveCharacter);
+			}
 		}
 		
 		stringBuilder.append(TO_STRING_REMAINING_MOVE_AMOUNT_STRING);

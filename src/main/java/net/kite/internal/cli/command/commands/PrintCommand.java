@@ -17,7 +17,8 @@ public final class PrintCommand extends Command {
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length == 0) {
 			
-			System.out.println(solver.boardAnalysisString(true));
+			boolean ansiDisabled = AnsiUtil.areAnsiCodesDisabled();
+			System.out.println(ansiDisabled ? solver.boardAnalysisString(false) : solver.fancyBoardAnalysisString(true));
 			
 		} else if(arguments.length == 1) {
 			
@@ -33,8 +34,9 @@ public final class PrintCommand extends Command {
 				return false;
 			}
 			
-			if(includeAnalysis) System.out.println(solver.boardAnalysisString(true));
-			else System.out.println(solver.boardString(true));
+			boolean ansiDisabled = AnsiUtil.areAnsiCodesDisabled();
+			if(includeAnalysis) System.out.println(ansiDisabled ? solver.boardAnalysisString(false) : solver.fancyBoardAnalysisString(true));
+			else System.out.println(ansiDisabled ? solver.boardString(false) : solver.fancyBoardString(true));
 			
 		} else {
 			

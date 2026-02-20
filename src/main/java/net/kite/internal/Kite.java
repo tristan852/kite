@@ -1,6 +1,6 @@
 package net.kite.internal;
 
-import net.kite.api.KiteAPI;
+import net.kite.api.KiteApi;
 import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.board.player.color.BoardPlayerColor;
@@ -15,7 +15,7 @@ import net.kite.internal.util.time.TimeUtil;
 import java.util.Arrays;
 import java.util.Locale;
 
-public final class Kite implements KiteAPI {
+public final class Kite implements KiteApi {
 	
 	private static final int BOARD_WIDTH = 7;
 	private static final int GAME_PLAYER_AMOUNT = 2;
@@ -75,8 +75,18 @@ public final class Kite implements KiteAPI {
 	}
 	
 	@Override
+	public String compactBoardAnalysisString(boolean ansiColored) {
+		return board.toString(false, false, false, ansiColored);
+	}
+	
+	@Override
+	public String fancyBoardAnalysisString(boolean ansiColored) {
+		return board.toString(false, true, true, ansiColored);
+	}
+	
+	@Override
 	public String boardAnalysisString(boolean ansiColored) {
-		return board.toString(false, ansiColored);
+		return board.toString(false, true, false, ansiColored);
 	}
 	
 	@Override
@@ -85,8 +95,18 @@ public final class Kite implements KiteAPI {
 	}
 	
 	@Override
+	public String compactBoardString(boolean ansiColored) {
+		return board.toString(true, false, false, ansiColored);
+	}
+	
+	@Override
+	public String fancyBoardString(boolean ansiColored) {
+		return board.toString(true, true, true, ansiColored);
+	}
+	
+	@Override
 	public String boardString(boolean ansiColored) {
-		return board.toString(true, ansiColored);
+		return board.toString(true, true, false, ansiColored);
 	}
 	
 	@Override
@@ -142,23 +162,27 @@ public final class Kite implements KiteAPI {
 	}
 	
 	@Override
-	public void startRecordingPerformanceMetrics() {
+	public KiteApi startRecordingPerformanceMetrics() {
 		board.resetEvaluationMetrics();
 		
 		metricsRecordingStartTime = System.nanoTime();
+		
+		return null;
 	}
 	
 	@Override
-	public void stopRecordingPerformanceMetrics() {
+	public KiteApi stopRecordingPerformanceMetrics() {
 		long endTime = System.nanoTime();
 		
 		metricsEvaluationAmount += board.getEvaluationAmount();
 		metricsNodeEvaluationAmount += board.getNodeEvaluationAmount();
 		metricsEvaluationTime += endTime - metricsRecordingStartTime;
+		
+		return null;
 	}
 	
 	@Override
-	public void printAndResetPerformanceMetrics() {
+	public KiteApi printAndResetPerformanceMetrics() {
 		double averageTime = 0;
 		double averageAmount = 0;
 		double throughput = 0;
@@ -186,6 +210,8 @@ public final class Kite implements KiteAPI {
 		metricsEvaluationAmount = 0;
 		metricsNodeEvaluationAmount = 0;
 		metricsEvaluationTime = 0;
+		
+		return null;
 	}
 	
 	@Override
@@ -429,13 +455,17 @@ public final class Kite implements KiteAPI {
 	}
 	
 	@Override
-	public void seedRandomness() {
+	public KiteApi seedRandomness() {
 		random.setRandomSeed();
+		
+		return null;
 	}
 	
 	@Override
-	public void seedRandomness(long seed) {
+	public KiteApi seedRandomness(long seed) {
 		random.setSeed(seed);
+		
+		return null;
 	}
 	
 	@Override
@@ -446,7 +476,7 @@ public final class Kite implements KiteAPI {
 	}
 	
 	@Override
-	public void playMoves(String moveColumnIndices) {
+	public KiteApi playMoves(String moveColumnIndices) {
 		int n = moveColumnIndices.length();
 		for(int i = 0; i < n; i++) {
 			
@@ -454,40 +484,50 @@ public final class Kite implements KiteAPI {
 			
 			board.playMove(moveColumnIndex);
 		}
+		
+		return null;
 	}
 	
 	@Override
-	public void playMoves(int... moveColumnIndices) {
+	public KiteApi playMoves(int... moveColumnIndices) {
 		for(int moveColumnIndex : moveColumnIndices) {
 			
 			moveColumnIndex--;
 			
 			board.playMove(moveColumnIndex);
 		}
+		
+		return null;
 	}
 	
 	@Override
-	public void playMove(int moveColumnIndex) {
+	public KiteApi playMove(int moveColumnIndex) {
 		moveColumnIndex--;
 		
 		board.playMove(moveColumnIndex);
+		
+		return null;
 	}
 	
 	@Override
-	public void undoMoves(int moveAmount) {
+	public KiteApi undoMoves(int moveAmount) {
 		for(int i = 0; i < moveAmount; i++) {
 			
 			board.undoMove();
 		}
+		
+		return null;
 	}
 	
 	@Override
-	public void undoMove() {
+	public KiteApi undoMove() {
 		board.undoMove();
+		
+		return null;
 	}
 	
 	@Override
-	public void setupBoard(String moveColumnIndicesString) {
+	public KiteApi setupBoard(String moveColumnIndicesString) {
 		int n = board.playedMoveAmount();
 		int l = moveColumnIndicesString.length();
 		
@@ -524,10 +564,12 @@ public final class Kite implements KiteAPI {
 			board.undoMove();
 			n--;
 		}
+		
+		return null;
 	}
 	
 	@Override
-	public void setupBoard(int... moveColumnIndices) {
+	public KiteApi setupBoard(int... moveColumnIndices) {
 		int n = board.playedMoveAmount();
 		int l = moveColumnIndices.length;
 		
@@ -564,10 +606,12 @@ public final class Kite implements KiteAPI {
 			board.undoMove();
 			n--;
 		}
+		
+		return null;
 	}
 	
 	@Override
-	public void clearBoard() {
+	public KiteApi clearBoard() {
 		int n = board.playedMoveAmount();
 		
 		while(n != 0) {
@@ -575,6 +619,8 @@ public final class Kite implements KiteAPI {
 			board.undoMove();
 			n--;
 		}
+		
+		return null;
 	}
 	
 }

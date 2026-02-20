@@ -10,7 +10,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
-public final class KiteCLI {
+public final class KiteCli {
 	
 	private static final char COMMAND_ARGUMENT_SEPARATOR_CHARACTER = ' ';
 	private static final String COMMAND_ARGUMENT_SEPARATOR_REGEX = "\\s+";
@@ -19,10 +19,13 @@ public final class KiteCLI {
 	private static final String VERSION_PROGRAM_ARGUMENT = "--version";
 	private static final String QUIET_PROGRAM_ARGUMENT = "--quiet";
 	private static final String VERBOSE_PROGRAM_ARGUMENT = "--verbose";
-	private static final String NO_ANSI_PROGRAM_ARGUMENT = "--no-ansi";
+	private static final String PLAIN_PROGRAM_ARGUMENT = "--plain";
 	private static final String SCRIPT_PROGRAM_ARGUMENT = "--script";
 	
+	// what to do with the old boards tring representation?
 	public void onStart(String[] programArguments) {
+		System.out.println(Kite.createInstance().playMoves(4, 6, 5));
+		
 		boolean quiet = System.console() == null;
 		boolean verbose = false;
 		
@@ -51,8 +54,8 @@ public final class KiteCLI {
 						                   (enabled automatically if CLI is not connected to a terminal
 						                   or when running a script file)
 						  --verbose        Override quiet mode and show prompts and interactive messages
-						  --no-ansi        Disable all ANSI escape codes
-						                   (colors, cursor movements, screen clearing, etc.)
+						  --plain          Disable all ANSI escape codes and Unicode characters
+						                   (colors, screen clearing, Unicode characters, etc.)
 						  --script <file>  Run the specified script file instead of starting interactive mode
 						
 						""";
@@ -82,7 +85,7 @@ public final class KiteCLI {
 					verbose = true;
 				}
 				
-				case NO_ANSI_PROGRAM_ARGUMENT -> {
+				case PLAIN_PROGRAM_ARGUMENT -> {
 					
 					AnsiUtil.disableAnsiCodes();
 				}

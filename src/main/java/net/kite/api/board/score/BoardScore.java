@@ -26,14 +26,12 @@ import net.kite.api.Kite;
  */
 public final class BoardScore {
 	
-	private static final String COMPACT_FORMATTED_WIN_SCORE_PATTERN = "W(+%s)";
 	private static final String FORMATTED_WIN_SCORE_PATTERN = "Win (+%s)";
-	
-	private static final String COMPACT_FORMATTED_LOSS_SCORE_PATTERN = "L(%s)";
 	private static final String FORMATTED_LOSS_SCORE_PATTERN = "Loss (%s)";
-	
-	private static final String COMPACT_FORMATTED_DRAW_SCORE = "D(0)";
 	private static final String FORMATTED_DRAW_SCORE = "Draw (0)";
+	
+	private static final String COMPACT_FORMATTED_WIN_SCORE_PREFIX = "+";
+	private static final String COMPACT_FORMATTED_DRAW_SCORE = "0";
 	
 	private static final int FULL_BOARD_PLAYED_MOVE_AMOUNT = 42;
 	
@@ -171,18 +169,18 @@ public final class BoardScore {
 	 * Returns a compact formatted representation
 	 * of the score.
 	 * <p>
-	 * Wins are formatted as {@code W(+s)}.
-	 * Losses are formatted as {@code L(s)}.
-	 * Draws are formatted as {@code D(0)}.
+	 * Wins are formatted as {@code +s}.
+	 * Losses are formatted as {@code s}.
+	 * Draws are formatted as {@code 0}.
 	 *
 	 * @param score the board evaluation score
 	 * @return compact formatted score string
 	 */
 	public static String formatScoreCompactly(int score) {
 		if(score == 0) return COMPACT_FORMATTED_DRAW_SCORE;
-		if(score < 0) return COMPACT_FORMATTED_LOSS_SCORE_PATTERN.formatted(score);
+		if(score > 0) return COMPACT_FORMATTED_WIN_SCORE_PREFIX + score;
 		
-		return COMPACT_FORMATTED_WIN_SCORE_PATTERN.formatted(score);
+		return String.valueOf(score);
 	}
 	
 	/**

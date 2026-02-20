@@ -13,7 +13,13 @@ import net.kite.api.skill.level.SkillLevel;
  * for direct use by users of this
  * library.
  */
-public interface KiteAPI {
+public interface KiteApi {
+	
+	String compactBoardAnalysisString(boolean ansiColored);
+	String compactBoardString(boolean ansiColored);
+	
+	String fancyBoardAnalysisString(boolean ansiColored);
+	String fancyBoardString(boolean ansiColored);
 	
 	String boardAnalysisString(boolean ansiColored);
 	String boardMovesString();
@@ -35,9 +41,9 @@ public interface KiteAPI {
 	
 	int playedMoveAmount();
 	
-	void startRecordingPerformanceMetrics();
-	void stopRecordingPerformanceMetrics();
-	void printAndResetPerformanceMetrics();
+	KiteApi startRecordingPerformanceMetrics();
+	KiteApi stopRecordingPerformanceMetrics();
+	KiteApi printAndResetPerformanceMetrics();
 	
 	int skilledMove(SkillLevel skillLevel);
 	int optimalMove();
@@ -53,21 +59,21 @@ public interface KiteAPI {
 	int evaluateMove(int moveColumnIndex);
 	int evaluateBoard();
 	
-	void seedRandomness();
-	void seedRandomness(long seed);
+	KiteApi seedRandomness();
+	KiteApi seedRandomness(long seed);
 	
 	boolean moveLegal(int moveColumnIndex);
 	
-	void playMoves(String moveColumnIndices);
-	void playMoves(int... moveColumnIndices);
-	void playMove(int moveColumnIndex);
+	KiteApi playMoves(String moveColumnIndices);
+	KiteApi playMoves(int... moveColumnIndices);
+	KiteApi playMove(int moveColumnIndex);
 	
-	void undoMoves(int moveAmount);
-	void undoMove();
+	KiteApi undoMoves(int moveAmount);
+	KiteApi undoMove();
 	
-	void setupBoard(String moveColumnIndicesString);
-	void setupBoard(int... moveColumnIndices);
+	KiteApi setupBoard(String moveColumnIndicesString);
+	KiteApi setupBoard(int... moveColumnIndices);
 	
-	void clearBoard();
+	KiteApi clearBoard();
 	
 }
