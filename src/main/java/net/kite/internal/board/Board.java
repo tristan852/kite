@@ -132,7 +132,7 @@ public final class Board {
 	private static final String TO_STRING_COMPACT_MOVE_SCORES_PREFIX_STRING = "\nmove scores: ";
 	
 	private static final String TO_STRING_BOARD_PREFIX_STRING = "+---+---+---+---+---+---+---+\n";
-	private static final String TO_STRING_BOARD_SUFFIX_STRING = "\n+---+---+---+---+---+---+---+\n| 0 | 1 | 2 | 3 | 4 | 5 | 6 |\n+---+---+---+---+---+---+---+";
+	private static final String TO_STRING_BOARD_SUFFIX_STRING = "\n+---+---+---+---+---+---+---+\n| 1 | 2 | 3 | 4 | 5 | 6 | 7 |\n+---+---+---+---+---+---+---+";
 	private static final String TO_STRING_BOARD_ROW_SEPARATOR_STRING = "\n+---+---+---+---+---+---+---+\n";
 	private static final String TO_STRING_BOARD_ROW_PREFIX_STRING = "| ";
 	private static final String TO_STRING_BOARD_ROW_SUFFIX_STRING = " |";
