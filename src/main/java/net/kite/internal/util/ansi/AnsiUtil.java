@@ -13,20 +13,6 @@ public final class AnsiUtil {
 	
 	private static boolean ansiCodesDisabled;
 	
-	public static void restoreCheckpoint() {
-		if(ansiCodesDisabled) return;
-		
-		System.out.print(Ansi.ansi().restoreCursorPosition().eraseScreen(Ansi.Erase.FORWARD));
-		System.out.flush();
-	}
-	
-	public static void createCheckpoint() {
-		if(ansiCodesDisabled) return;
-		
-		System.out.print(Ansi.ansi().saveCursorPosition());
-		System.out.flush();
-	}
-	
 	public static void switchToAlternateScreenBuffer() {
 		if(ansiCodesDisabled) return;
 		
@@ -38,6 +24,41 @@ public final class AnsiUtil {
 		if(ansiCodesDisabled) return;
 		
 		System.out.print(Ansi.ansi().a(SWITCH_TO_NORMAL_SCREEN_BUFFER_ANSI).restoreCursorPosition());
+		System.out.flush();
+	}
+	
+	public static void restoreCursorPosition() {
+		if(ansiCodesDisabled) return;
+		
+		System.out.print(Ansi.ansi().restoreCursorPosition());
+		System.out.flush();
+	}
+	
+	public static void saveCursorPosition() {
+		if(ansiCodesDisabled) return;
+		
+		System.out.print(Ansi.ansi().saveCursorPosition());
+		System.out.flush();
+	}
+	
+	public static void moveCursorToTopLeft() {
+		if(ansiCodesDisabled) return;
+		
+		System.out.print(Ansi.ansi().cursor(0, 0));
+		System.out.flush();
+	}
+	
+	public static void clearScreenCursorLine() {
+		if(ansiCodesDisabled) return;
+		
+		System.out.print(Ansi.ansi().eraseLine());
+		System.out.flush();
+	}
+	
+	public static void clearScreenFromCursorPosition() {
+		if(ansiCodesDisabled) return;
+		
+		System.out.print(Ansi.ansi().eraseScreen(Ansi.Erase.FORWARD));
 		System.out.flush();
 	}
 	
