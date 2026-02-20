@@ -197,11 +197,6 @@ public final class Board {
 	
 	@SuppressWarnings("DataFlowIssue")
 	public String toString(boolean boardOnly, boolean spaciousBoard, boolean fancyBoard, boolean colored) {
-		// TODO frame color?
-//		spaciousBoard = true;
-//		colored = true;
-//		AnsiUtil.enableAnsiCodes();
-		
 		boolean anyWinCells = false;
 		if(colored) {
 			
@@ -230,15 +225,30 @@ public final class Board {
 		}
 		
 		StringBuilder stringBuilder = new StringBuilder();
-		if(spaciousBoard) stringBuilder.append(fancyBoard ? TO_STRING_FANCY_BOARD_PREFIX_STRING : TO_STRING_BOARD_PREFIX_STRING);
+		if(spaciousBoard) {
+			
+			String s = fancyBoard ? TO_STRING_FANCY_BOARD_PREFIX_STRING : TO_STRING_BOARD_PREFIX_STRING;
+			if(colored) s = AnsiUtil.darkGrayAnsi(s);
+			stringBuilder.append(s);
+		}
 		
 		for(int y = HEIGHT - 1; y >= 0; y--) {
 			
-			if(spaciousBoard) stringBuilder.append(fancyBoard ? TO_STRING_FANCY_BOARD_ROW_PREFIX_STRING : TO_STRING_BOARD_ROW_PREFIX_STRING);
+			if(spaciousBoard) {
+				
+				String s = fancyBoard ? TO_STRING_FANCY_BOARD_ROW_PREFIX_STRING : TO_STRING_BOARD_ROW_PREFIX_STRING;
+				if(colored) s = AnsiUtil.darkGrayAnsi(s);
+				stringBuilder.append(s);
+			}
 			
 			for(int x = 0; x < WIDTH; x++) {
 				
-				if(spaciousBoard && x != 0) stringBuilder.append(fancyBoard ? TO_STRING_FANCY_BOARD_COLUMN_SEPARATOR_STRING : TO_STRING_BOARD_COLUMN_SEPARATOR_STRING);
+				if(spaciousBoard && x != 0) {
+					
+					String s = fancyBoard ? TO_STRING_FANCY_BOARD_COLUMN_SEPARATOR_STRING : TO_STRING_BOARD_COLUMN_SEPARATOR_STRING;
+					if(colored) s = AnsiUtil.darkGrayAnsi(s);
+					stringBuilder.append(s);
+				}
 				
 				BoardPlayerColor cellPlayerColor = cellPlayerColor(x, y);
 				String s;
@@ -268,8 +278,16 @@ public final class Board {
 			
 			if(spaciousBoard) {
 				
-				stringBuilder.append(fancyBoard ? TO_STRING_FANCY_BOARD_ROW_SUFFIX_STRING : TO_STRING_BOARD_ROW_SUFFIX_STRING);
-				if(y != 0) stringBuilder.append(fancyBoard ? TO_STRING_FANCY_BOARD_ROW_SEPARATOR_STRING : TO_STRING_BOARD_ROW_SEPARATOR_STRING);
+				String s = fancyBoard ? TO_STRING_FANCY_BOARD_ROW_SUFFIX_STRING : TO_STRING_BOARD_ROW_SUFFIX_STRING;
+				if(colored) s = AnsiUtil.darkGrayAnsi(s);
+				stringBuilder.append(s);
+				
+				if(y != 0) {
+					
+					s = fancyBoard ? TO_STRING_FANCY_BOARD_ROW_SEPARATOR_STRING : TO_STRING_BOARD_ROW_SEPARATOR_STRING;
+					if(colored) s = AnsiUtil.darkGrayAnsi(s);
+					stringBuilder.append(s);
+				}
 				
 			} else {
 				
@@ -277,7 +295,12 @@ public final class Board {
 			}
 		}
 		
-		if(spaciousBoard) stringBuilder.append(fancyBoard ? TO_STRING_FANCY_BOARD_SUFFIX_STRING : TO_STRING_BOARD_SUFFIX_STRING);
+		if(spaciousBoard) {
+			
+			String s = fancyBoard ? TO_STRING_FANCY_BOARD_SUFFIX_STRING : TO_STRING_BOARD_SUFFIX_STRING;
+			if(colored) s = AnsiUtil.darkGrayAnsi(s);
+			stringBuilder.append(s);
+		}
 		
 		if(anyWinCells) {
 			
