@@ -59,9 +59,9 @@ public final class GameCommand extends Command {
 		
 		AnsiUtil.switchToAlternateScreenBuffer();
 		
-		String s1 = AnsiUtil.brightMagentaAnsi(level.getName());
+		String s1 = AnsiUtil.brightMagentaAnsi(level.getDisplayName());
 		String s2 = AnsiUtil.brightYellowAnsi("exit");
-		System.out.printf("Started new game against skill level: %s%n%nPlay moves by entering the column number.%nExit with '%s'.%n%n", s1, s2);
+		System.out.printf("You are playing against the AI at skill level %s.%n%nPlay moves by entering the column number.%nExit with '%s'.%n", s1, s2);
 		
 		AnsiUtil.createCheckpoint();
 		
@@ -71,6 +71,7 @@ public final class GameCommand extends Command {
 		Random random = ThreadLocalRandom.current();
 		if(random.nextBoolean()) gameSolver.playMove(gameSolver.skilledMove(level));
 		
+		System.out.println();
 		boolean ansiDisabled = AnsiUtil.areAnsiCodesDisabled();
 		if(quiet) System.out.println(solver.compactBoardString(!ansiDisabled));
 		else System.out.println(ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true));
@@ -131,6 +132,7 @@ public final class GameCommand extends Command {
 				else s = ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true);
 				
 				AnsiUtil.restoreCheckpoint();
+				System.out.println();
 				System.out.println(s);
 				System.out.flush();
 				System.out.println();
@@ -147,6 +149,7 @@ public final class GameCommand extends Command {
 			else s = ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true);
 			
 			AnsiUtil.restoreCheckpoint();
+			System.out.println();
 			System.out.println(s);
 			System.out.flush();
 			System.out.println();

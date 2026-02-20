@@ -219,7 +219,7 @@ public final class KiteCli {
 		Command command = Commands.command(commandName);
 		if(command == null) {
 			
-			errorStream.println(AnsiUtil.brightRedAnsi(String.format("Command not found: %s", commandName)));
+			errorStream.println(AnsiUtil.brightRedAnsi(String.format("Command not found: \"%s\"", commandName)));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
