@@ -265,11 +265,11 @@ public final class Board {
 					
 					if(cellPlayerColor == BoardPlayerColor.RED) {
 						
-						s = winCell ? AnsiUtil.boldRedBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightRedAnsi(s) : s;
+						s = winCell ? AnsiUtil.boldBrightRedBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightRedAnsi(s) : s;
 						
 					} else {
 						
-						s = winCell ? AnsiUtil.boldYellowBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightYellowAnsi(s) : s;
+						s = winCell ? AnsiUtil.boldBrightYellowBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightYellowAnsi(s) : s;
 					}
 				}
 				

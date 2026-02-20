@@ -58,10 +58,10 @@ public final class AnsiUtil {
 		return Ansi.ansi().fgBrightRed().bold().a(string).reset().toString();
 	}
 	
-	public static String boldRedBackgroundAnsi(String string) {
+	public static String boldBrightRedBackgroundAnsi(String string) {
 		if(ansiCodesDisabled) return string;
 		
-		return Ansi.ansi().bgRed().a(DARK_GRAY_ANSI).bold().a(string).reset().toString();
+		return Ansi.ansi().bgBrightRed().a(DARK_GRAY_ANSI).bold().a(string).reset().toString();
 	}
 	
 	public static String brightYellowAnsi(String string) {
@@ -76,10 +76,10 @@ public final class AnsiUtil {
 		return Ansi.ansi().fgBrightYellow().bold().a(string).reset().toString();
 	}
 	
-	public static String boldYellowBackgroundAnsi(String string) {
+	public static String boldBrightYellowBackgroundAnsi(String string) {
 		if(ansiCodesDisabled) return string;
 		
-		return Ansi.ansi().bgYellow().a(DARK_GRAY_ANSI).bold().a(string).reset().toString();
+		return Ansi.ansi().bgBrightYellow().a(DARK_GRAY_ANSI).bold().a(string).reset().toString();
 	}
 	
 	public static String brightGreenAnsi(String string) {
