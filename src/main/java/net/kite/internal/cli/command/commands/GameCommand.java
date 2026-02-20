@@ -22,8 +22,6 @@ public final class GameCommand extends Command {
 		super("game", "g", "Start a new interactive game", "game [skill-level]");
 	}
 	
-	// TODO also check non ansi mode
-	// TODO and in quiet and non quiet
 	@Override
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		SkillLevel level = null;
@@ -94,10 +92,10 @@ public final class GameCommand extends Command {
 					return true;
 				}
 				
-				AnsiUtil.clearScreenFromCursorPosition();
-				
 				message = message.trim();
 				if(message.isBlank()) continue;
+				
+				AnsiUtil.clearScreenFromCursorPosition();
 				
 				message = message.toLowerCase(Locale.ROOT);
 				if(message.equals("exit")) {
@@ -142,7 +140,7 @@ public final class GameCommand extends Command {
 		
 		System.out.println();
 		boolean ansiDisabled = AnsiUtil.areAnsiCodesDisabled();
-		if(quiet) System.out.println(solver.compactBoardString(!ansiDisabled));
+		if(quiet) System.out.println(gameSolver.compactBoardString(!ansiDisabled));
 		else System.out.println(ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true));
 		System.out.flush();
 		System.out.println();
@@ -173,10 +171,10 @@ public final class GameCommand extends Command {
 				return true;
 			}
 			
-			AnsiUtil.clearScreenFromCursorPosition();
-			
 			message = message.trim();
 			if(message.isBlank()) continue;
+			
+			AnsiUtil.clearScreenFromCursorPosition();
 			
 			message = message.toLowerCase(Locale.ROOT);
 			if(message.equals("exit")) {
@@ -204,15 +202,17 @@ public final class GameCommand extends Command {
 			if(gameSolver.gameOver()) {
 				
 				String s;
-				if(quiet) s = solver.compactBoardString(!ansiDisabled);
+				if(quiet) s = gameSolver.compactBoardString(!ansiDisabled);
 				else s = ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true);
 				
-				AnsiUtil.moveCursorToTopLeft();
-				
-				if(!quiet) {
+				if(!AnsiUtil.areAnsiCodesDisabled()) {
+					AnsiUtil.moveCursorToTopLeft();
 					
-					String s1 = AnsiUtil.brightMagentaAnsi(level.getDisplayName());
-					System.out.printf("You are playing against the AI at skill level %s.%n%nPlay moves by entering the column number.%nExit with '%s'.%n", s1, s2);
+					if(!quiet) {
+						
+						String s1 = AnsiUtil.brightMagentaAnsi(level.getDisplayName());
+						System.out.printf("You are playing against the AI at skill level %s.%n%nPlay moves by entering the column number.%nExit with '%s'.%n", s1, s2);
+					}
 				}
 				
 				System.out.println();
@@ -231,15 +231,19 @@ public final class GameCommand extends Command {
 			gameSolver.playMove(gameSolver.skilledMove(level));
 			
 			String s;
-			if(quiet) s = solver.compactBoardString(!ansiDisabled);
+			if(quiet) s = gameSolver.compactBoardString(!ansiDisabled);
 			else s = ansiDisabled ? gameSolver.boardString(false) : gameSolver.fancyBoardString(true);
 			
 			AnsiUtil.moveCursorToTopLeft();
 			
-			if(!quiet) {
+			if(!AnsiUtil.areAnsiCodesDisabled()) {
+				AnsiUtil.moveCursorToTopLeft();
 				
-				String s1 = AnsiUtil.brightMagentaAnsi(level.getDisplayName());
-				System.out.printf("You are playing against the AI at skill level %s.%n%nPlay moves by entering the column number.%nExit with '%s'.%n", s1, s2);
+				if(!quiet) {
+					
+					String s1 = AnsiUtil.brightMagentaAnsi(level.getDisplayName());
+					System.out.printf("You are playing against the AI at skill level %s.%n%nPlay moves by entering the column number.%nExit with '%s'.%n", s1, s2);
+				}
 			}
 			
 			System.out.println();
