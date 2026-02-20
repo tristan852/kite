@@ -54,6 +54,8 @@ public final class GameCommand extends Command {
 			System.exit(1);
 		}
 		
+		// TODO remove
+		System.out.println(AnsiUtil.areAnsiCodesDisabled());
 		if(AnsiUtil.areAnsiCodesDisabled()) if(!quiet) System.out.println();
 		else AnsiUtil.switchToAlternateScreenBuffer();
 		String s2 = null;
