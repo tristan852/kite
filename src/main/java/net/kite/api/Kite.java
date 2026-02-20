@@ -13,7 +13,7 @@ import java.io.*;
  * to a newly created solver.
  * Use the public methods of this class to interact with
  * the solver. Each solver is driven by a single game state
- * that can be updated using {@link Kite#playMove(int)},
+ * that can be updated using {@link Kite#playMove(int moveColumnIndex)},
  * {@link Kite#undoMove()} and {@link Kite#clearBoard()}.
  */
 public final class Kite implements KiteApi {
@@ -831,7 +831,7 @@ public final class Kite implements KiteApi {
 	 * Updates the internal game state by undoing
 	 * the last move.
 	 *
-	 * @return the move that was undone
+	 * @return the column index of the move that was undone (1-indexed from left to right)
 	 */
 	@Override
 	public synchronized int undoMove() {

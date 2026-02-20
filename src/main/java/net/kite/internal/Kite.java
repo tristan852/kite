@@ -529,7 +529,7 @@ public final class Kite implements KiteApi {
 		board.undoMove();
 		
 		int n = board.playedMoveAmount();
-		return board.playedMove(n);
+		return board.playedMove(n) + 1;
 	}
 	
 	@Override
