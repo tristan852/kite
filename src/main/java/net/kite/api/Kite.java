@@ -350,6 +350,21 @@ public final class Kite implements KiteApi {
 	
 	/**
 	 * Returns whether there is still a move left
+	 * that has been undone and that can be redone.
+	 * <p>
+	 * All moves undone can be redone unless a
+	 * <i>different</i> move has overwritten
+	 * the move in question or any move before it.
+	 *
+	 * @return whether a move can still be redone
+	 */
+	@Override
+	public synchronized boolean canRedoMove() {
+		return internalSolver.canRedoMove();
+	}
+	
+	/**
+	 * Returns whether there is still a move left
 	 * to undo.
 	 * <p>
 	 * The only case in which there is no move left
@@ -409,12 +424,49 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
+	 * Returns the number of moves that
+	 * have been undone and that can be
+	 * redone by successive calls to
+	 * {@link Kite#redoMove()} or a combined
+	 * call to {@link Kite#redoMoves(int moveAmount)}.
+	 *
+	 * @return number of moves undone
+	 */
+	@Override
+	public synchronized int undoneMoveAmount() {
+		return internalSolver.undoneMoveAmount();
+	}
+	
+	/**
+	 * Returns whether the board is
+	 * empty (i.e. whether no moves
+	 * have been played yet).
+	 *
+	 * @return whether board is completely empty
+	 */
+	@Override
+	public synchronized boolean boardEmpty() {
+		return internalSolver.boardEmpty();
+	}
+	
+	/**
+	 * Returns the move that was
+	 * played last by either side.
+	 *
+	 * @return the column index of the last move played (1-indexed from left to right)
+	 */
+	@Override
+	public synchronized int lastMove() {
+		return internalSolver.lastMove();
+	}
+	
+	/**
 	 * Returns the move at the specified
 	 * index among all moves that have been
 	 * played so far by both sides.
 	 *
 	 * @param moveIndex the index of the move to retrieve (0-indexed)
-	 * @return the move at the given index
+	 * @return the column index (1-indexed from left to right) of the move at the given index
 	 */
 	@Override
 	public synchronized int playedMove(int moveIndex) {
@@ -803,8 +855,8 @@ public final class Kite implements KiteApi {
 	 * of their stones into the given column.
 	 * The internal game state will be updated.
 	 *
-	 * @return this solver instance
 	 * @param moveColumnIndex the 1-indexed column number (from left to right)
+	 * @return this solver instance
 	 */
 	@Override
 	public synchronized Kite playMove(int moveColumnIndex) {
@@ -814,11 +866,37 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
+	 * Updates the internal game state by redoing
+	 * the last {@code moveAmount} moves that were
+	 * undone.
+	 *
+	 * @param moveAmount number of moves to redo
+	 * @return this solver instance
+	 */
+	@Override
+	public synchronized Kite redoMoves(int moveAmount) {
+		internalSolver.redoMoves(moveAmount);
+		
+		return this;
+	}
+	
+	/**
+	 * Updates the internal game state by redoing
+	 * the last move that was undone.
+	 *
+	 * @return the column index of the move that was redone (1-indexed from left to right)
+	 */
+	@Override
+	public synchronized int redoMove() {
+		return internalSolver.redoMove();
+	}
+	
+	/**
 	 * Updates the internal game state by undoing
 	 * the last {@code moveAmount} moves.
 	 *
-	 * @return this solver instance
 	 * @param moveAmount number of moves to undo
+	 * @return this solver instance
 	 */
 	@Override
 	public synchronized Kite undoMoves(int moveAmount) {
@@ -842,8 +920,8 @@ public final class Kite implements KiteApi {
 	 * Sets up a new position by undoing all already played
 	 * moves and playing moves on behalf of the two players.
 	 *
-	 * @return this solver instance
 	 * @param moveColumnIndicesString the 1-indexed move column numbers (columns indexed from left to right) as a string
+	 * @return this solver instance
 	 */
 	@Override
 	public synchronized Kite setupBoard(String moveColumnIndicesString) {
@@ -856,8 +934,8 @@ public final class Kite implements KiteApi {
 	 * Sets up a new position by undoing all already played
 	 * moves and playing moves on behalf of the two players.
 	 *
-	 * @return this solver instance
 	 * @param moveColumnIndices the 1-indexed move column numbers (columns indexed from left to right)
+	 * @return this solver instance
 	 */
 	@Override
 	public synchronized Kite setupBoard(int... moveColumnIndices) {

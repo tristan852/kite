@@ -148,6 +148,8 @@ public final class Board {
 	private static final String TO_STRING_FANCY_BOARD_ROW_SUFFIX_STRING = " │";
 	private static final String TO_STRING_FANCY_BOARD_COLUMN_SEPARATOR_STRING = " │ ";
 	
+	private static final String EMPTY_MOVES_STRING = "";
+	
 	static {
 		synchronized(AnsiUtil.class) {
 			
@@ -234,6 +236,15 @@ public final class Board {
 			stringBuilder.append(s);
 		}
 		
+		int lastMoveX = Integer.MIN_VALUE;
+		int lastMoveY = 0;
+		
+		if(filledCellAmount != 0) {
+			
+			lastMoveX = playedMoves[filledCellAmount - 1];
+			lastMoveY = cellColumnHeight(lastMoveX) - 1;
+		}
+		
 		for(int y = HEIGHT - 1; y >= 0; y--) {
 			
 			if(spaciousBoard) {
@@ -263,15 +274,23 @@ public final class Board {
 				} else {
 					
 					s = String.valueOf(cellPlayerColor.getCharacter());
-					boolean winCell = anyWinCells && winCells[x][y];
-					
-					if(cellPlayerColor == BoardPlayerColor.RED) {
+					boolean highlightCell;
+					if(anyWinCells) {
 						
-						s = winCell ? AnsiUtil.boldBrightRedBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightRedAnsi(s) : s;
+						highlightCell = winCells[x][y];
 						
 					} else {
 						
-						s = winCell ? AnsiUtil.boldBrightYellowBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightYellowAnsi(s) : s;
+						highlightCell = x == lastMoveX && y == lastMoveY;
+					}
+					
+					if(cellPlayerColor == BoardPlayerColor.RED) {
+						
+						s = highlightCell ? AnsiUtil.boldBrightRedBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightRedAnsi(s) : s;
+						
+					} else {
+						
+						s = highlightCell ? AnsiUtil.boldBrightYellowBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightYellowAnsi(s) : s;
 					}
 				}
 				
@@ -574,6 +593,8 @@ public final class Board {
 	}
 	
 	public String movesString() {
+		if(filledCellAmount == 0) return EMPTY_MOVES_STRING;
+		
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		for(int i = 0; i < filledCellAmount; i++) {
@@ -654,7 +675,7 @@ public final class Board {
 			return BoardScore.win(filledCellAmount + 1);
 		}
 		
-		int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
+		int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this, filledCellAmount);
 		if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
 		
 		int minimalScore = BoardScore.minimal(filledCellAmount);
@@ -668,7 +689,7 @@ public final class Board {
 			
 			int lastMove = playedMoves[filledCellAmount];
 			
-			openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
+			openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this, filledCellAmount);
 			if(openingBoardScore != Integer.MIN_VALUE) {
 				
 				int s = -openingBoardScore;
@@ -758,7 +779,7 @@ public final class Board {
 		
 		if(minimalScore >= maximalScore) return minimalScore;
 		
-		int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
+		int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this, filledCellAmount);
 		if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
 		
 		int entryKey = scoreCache.entryKey(mixedHash);
@@ -1075,10 +1096,6 @@ public final class Board {
 		return Long.bitCount(maskBitboard & Bitboards.COLUMNS[cellColumnIndex]);
 	}
 	
-	public int playedMove(int moveIndex) {
-		return playedMoves[moveIndex];
-	}
-	
 	public boolean cellFilled(int cellX, int cellY) {
 		int cellPosition = BITBOARD_HEIGHT * cellX + cellY;
 		long board = 1L << cellPosition;
@@ -1092,23 +1109,8 @@ public final class Board {
 		
 		if((board & maskBitboard) == 0) return null;
 		
-		BoardPlayerColor activePlayerColor = activePlayerColor();
-		
-		return (activeBitboard & board) == 0 ? activePlayerColor.opposite() : activePlayerColor;
-	}
-	
-	public BoardPlayerColor activePlayerColor() {
 		boolean redAtTurn = (filledCellAmount & 1) == 0;
-		
-		return redAtTurn ? BoardPlayerColor.RED : BoardPlayerColor.YELLOW;
-	}
-	
-	public int playedMoveAmount() {
-		return filledCellAmount;
-	}
-	
-	public boolean canUndoMove() {
-		return filledCellAmount > 0;
+		return (activeBitboard & board) == 0 ? (redAtTurn ? BoardPlayerColor.YELLOW : BoardPlayerColor.RED) : (redAtTurn ? BoardPlayerColor.RED : BoardPlayerColor.YELLOW);
 	}
 	
 	public boolean canPlayMove() {

@@ -17,6 +17,7 @@ import java.util.Locale;
 
 public final class Kite implements KiteApi {
 	
+	private static final int BOARD_SIZE = 42;
 	private static final int BOARD_WIDTH = 7;
 	private static final int GAME_PLAYER_AMOUNT = 2;
 	
@@ -58,7 +59,11 @@ public final class Kite implements KiteApi {
 	private final Board board;
 	private final Random random;
 	
+	private final int[] playedMoves = new int[BOARD_SIZE];
 	private final int[] moveScores = new int[BOARD_WIDTH];
+	
+	private int playedMoveAmount;
+	private int undoneMoveAmount;
 	
 	private int metricsEvaluationAmount;
 	private int metricsNodeEvaluationAmount;
@@ -128,7 +133,8 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public BoardPlayerColor activePlayerColor() {
-		return board.activePlayerColor();
+		boolean redAtTurn = (playedMoveAmount & 1) == 0;
+		return redAtTurn ? BoardPlayerColor.RED : BoardPlayerColor.YELLOW;
 	}
 	
 	@Override
@@ -137,8 +143,13 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
+	public boolean canRedoMove() {
+		return undoneMoveAmount != 0;
+	}
+	
+	@Override
 	public boolean canUndoMove() {
-		return board.canUndoMove();
+		return playedMoveAmount != 0;
 	}
 	
 	@Override
@@ -157,13 +168,28 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
+	public int undoneMoveAmount() {
+		return undoneMoveAmount;
+	}
+	
+	@Override
+	public boolean boardEmpty() {
+		return playedMoveAmount == 0;
+	}
+	
+	@Override
+	public int lastMove() {
+		return playedMoves[playedMoveAmount - 1] + 1;
+	}
+	
+	@Override
 	public int playedMove(int moveIndex) {
-		return board.playedMove(moveIndex);
+		return playedMoves[moveIndex] + 1;
 	}
 	
 	@Override
 	public int playedMoveAmount() {
-		return board.playedMoveAmount();
+		return playedMoveAmount;
 	}
 	
 	@Override
@@ -228,10 +254,9 @@ public final class Kite implements KiteApi {
 		if(skillLevel == SkillLevel.ADAPTIVE) return adaptiveMove();
 		
 		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
-		int n = board.playedMoveAmount();
 		
 		int optimalMoveScore = Integer.MIN_VALUE;
-		int theoreticallyWorstScoreLoss = BoardScore.maximalScoreLoss(n);
+		int theoreticallyWorstScoreLoss = BoardScore.maximalScoreLoss(playedMoveAmount);
 		
 		int maximalScoreLoss = skillLevel.getMaximalScoreLoss();
 		maximalScoreLoss = maximalScoreLoss * theoreticallyWorstScoreLoss / MAXIMAL_MOVE_SCORE_LOSS;
@@ -488,6 +513,19 @@ public final class Kite implements KiteApi {
 			int moveColumnIndex = moveColumnIndices.charAt(i) - MOVE_COLUMN_INDEX_SMALLEST_CHARACTER;
 			
 			board.playMove(moveColumnIndex);
+			
+			int storedMove = playedMoves[playedMoveAmount];
+			if(storedMove == moveColumnIndex) {
+				
+				if(undoneMoveAmount != 0) undoneMoveAmount--;
+				
+			} else {
+				
+				playedMoves[playedMoveAmount] = moveColumnIndex;
+				undoneMoveAmount = 0;
+			}
+			
+			playedMoveAmount++;
 		}
 		
 		return null;
@@ -500,6 +538,19 @@ public final class Kite implements KiteApi {
 			moveColumnIndex--;
 			
 			board.playMove(moveColumnIndex);
+			
+			int storedMove = playedMoves[playedMoveAmount];
+			if(storedMove == moveColumnIndex) {
+				
+				if(undoneMoveAmount != 0) undoneMoveAmount--;
+				
+			} else {
+				
+				playedMoves[playedMoveAmount] = moveColumnIndex;
+				undoneMoveAmount = 0;
+			}
+			
+			playedMoveAmount++;
 		}
 		
 		return null;
@@ -511,15 +562,61 @@ public final class Kite implements KiteApi {
 		
 		board.playMove(moveColumnIndex);
 		
+		int storedMove = playedMoves[playedMoveAmount];
+		if(storedMove == moveColumnIndex) {
+			
+			if(undoneMoveAmount != 0) undoneMoveAmount--;
+			
+		} else {
+			
+			playedMoves[playedMoveAmount] = moveColumnIndex;
+			undoneMoveAmount = 0;
+		}
+		
+		playedMoveAmount++;
+		
 		return null;
 	}
 	
 	@Override
+	public KiteApi redoMoves(int moveAmount) {
+		int n = playedMoveAmount + moveAmount;
+		while(playedMoveAmount < n) {
+			
+			int moveColumnIndex = playedMoves[playedMoveAmount];
+			board.playMove(moveColumnIndex);
+			
+			playedMoveAmount++;
+		}
+		
+		undoneMoveAmount -= moveAmount;
+		if(undoneMoveAmount < 0) undoneMoveAmount = 0;
+		
+		return null;
+	}
+	
+	@Override
+	public int redoMove() {
+		int moveColumnIndex = playedMoves[playedMoveAmount];
+		board.playMove(moveColumnIndex);
+		
+		if(undoneMoveAmount != 0) undoneMoveAmount--;
+		playedMoveAmount++;
+		
+		return moveColumnIndex + 1;
+	}
+	
+	@Override
 	public KiteApi undoMoves(int moveAmount) {
-		for(int i = 0; i < moveAmount; i++) {
+		int n = playedMoveAmount - moveAmount;
+		
+		while(playedMoveAmount > n) {
 			
 			board.undoMove();
+			playedMoveAmount--;
 		}
+		
+		undoneMoveAmount += moveAmount;
 		
 		return null;
 	}
@@ -528,47 +625,74 @@ public final class Kite implements KiteApi {
 	public int undoMove() {
 		board.undoMove();
 		
-		int n = board.playedMoveAmount();
-		return board.playedMove(n) + 1;
+		playedMoveAmount--;
+		undoneMoveAmount++;
+		
+		return playedMoves[playedMoveAmount] + 1;
 	}
 	
 	@Override
 	public KiteApi setupBoard(String moveColumnIndicesString) {
-		int n = board.playedMoveAmount();
 		int l = moveColumnIndicesString.length();
-		
 		for(int i = 0; i < l; i++) {
 			
 			int moveColumnIndex = moveColumnIndicesString.charAt(i) - MOVE_COLUMN_INDEX_SMALLEST_CHARACTER;
 			
-			if(i == n) {
+			if(i == playedMoveAmount) {
 				
 				board.playMove(moveColumnIndex);
-				n++;
 				
+				int storedMove = playedMoves[playedMoveAmount];
+				if(storedMove == moveColumnIndex) {
+					
+					if(undoneMoveAmount != 0) undoneMoveAmount--;
+					
+				} else {
+					
+					playedMoves[playedMoveAmount] = moveColumnIndex;
+					undoneMoveAmount = 0;
+				}
+				
+				playedMoveAmount++;
 				continue;
 			}
 			
-			int x = board.playedMove(i);
+			int x = playedMoves[i];
 			if(x == moveColumnIndex) {
 				
 				continue;
 			}
 			
-			while(n > i) {
+			undoneMoveAmount += playedMoveAmount - i;
+			
+			while(playedMoveAmount > i) {
 				
 				board.undoMove();
-				n--;
+				playedMoveAmount--;
 			}
 			
 			board.playMove(moveColumnIndex);
-			n++;
+			
+			int storedMove = playedMoves[playedMoveAmount];
+			if(storedMove == moveColumnIndex) {
+				
+				if(undoneMoveAmount != 0) undoneMoveAmount--;
+				
+			} else {
+				
+				playedMoves[playedMoveAmount] = moveColumnIndex;
+				undoneMoveAmount = 0;
+			}
+			
+			playedMoveAmount++;
 		}
 		
-		while(n > l) {
+		undoneMoveAmount += playedMoveAmount - l;
+		
+		while(playedMoveAmount > l) {
 			
 			board.undoMove();
-			n--;
+			playedMoveAmount--;
 		}
 		
 		return null;
@@ -576,41 +700,66 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public KiteApi setupBoard(int... moveColumnIndices) {
-		int n = board.playedMoveAmount();
 		int l = moveColumnIndices.length;
-		
 		for(int i = 0; i < l; i++) {
 			
 			int moveColumnIndex = moveColumnIndices[i] - 1;
 			
-			if(i == n) {
+			if(i == playedMoveAmount) {
 				
 				board.playMove(moveColumnIndex);
-				n++;
 				
+				int storedMove = playedMoves[playedMoveAmount];
+				if(storedMove == moveColumnIndex) {
+					
+					if(undoneMoveAmount != 0) undoneMoveAmount--;
+					
+				} else {
+					
+					playedMoves[playedMoveAmount] = moveColumnIndex;
+					undoneMoveAmount = 0;
+				}
+				
+				playedMoveAmount++;
 				continue;
 			}
 			
-			int x = board.playedMove(i);
+			int x = playedMoves[i];
 			if(x == moveColumnIndex) {
 				
 				continue;
 			}
 			
-			while(n > i) {
+			undoneMoveAmount += playedMoveAmount - i;
+			
+			while(playedMoveAmount > i) {
 				
 				board.undoMove();
-				n--;
+				playedMoveAmount--;
 			}
 			
 			board.playMove(moveColumnIndex);
-			n++;
+			
+			int storedMove = playedMoves[playedMoveAmount];
+			if(storedMove == moveColumnIndex) {
+				
+				if(undoneMoveAmount != 0) undoneMoveAmount--;
+				
+			} else {
+				
+				playedMoves[playedMoveAmount] = moveColumnIndex;
+				undoneMoveAmount = 0;
+			}
+			
+			playedMoveAmount++;
 		}
 		
-		while(n > l) {
+		undoneMoveAmount += playedMoveAmount - l;
+		
+		while(playedMoveAmount > l) {
 			
 			board.undoMove();
-			n--;
+			playedMoveAmount--;
 		}
 		
 		return null;
@@ -618,12 +767,12 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public KiteApi clearBoard() {
-		int n = board.playedMoveAmount();
+		undoneMoveAmount += playedMoveAmount;
 		
-		while(n != 0) {
+		while(playedMoveAmount != 0) {
 			
 			board.undoMove();
-			n--;
+			playedMoveAmount--;
 		}
 		
 		return null;

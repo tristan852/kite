@@ -33,12 +33,18 @@ public interface KiteApi {
 	
 	BoardLine[] winLines();
 	
+	boolean canRedoMove();
 	boolean canUndoMove();
 	boolean canPlayMove();
 	
 	BoardOutcome gameOutcome();
 	boolean gameOver();
 	
+	int undoneMoveAmount();
+	
+	boolean boardEmpty();
+	
+	int lastMove();
 	int playedMove(int moveIndex);
 	int playedMoveAmount();
 	
@@ -68,6 +74,9 @@ public interface KiteApi {
 	KiteApi playMoves(String moveColumnIndices);
 	KiteApi playMoves(int... moveColumnIndices);
 	KiteApi playMove(int moveColumnIndex);
+	
+	KiteApi redoMoves(int moveAmount);
+	int redoMove();
 	
 	KiteApi undoMoves(int moveAmount);
 	int undoMove();

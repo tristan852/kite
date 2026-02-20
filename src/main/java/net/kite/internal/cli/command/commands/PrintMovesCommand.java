@@ -9,6 +9,8 @@ import java.util.Scanner;
 
 public final class PrintMovesCommand extends Command {
 	
+	private static final String EMPTY_BOARD_MOVES_STRING = "";
+	
 	public PrintMovesCommand() {
 		super("print-moves", "pm", "Show the sequence of played moves", "print-moves");
 	}
@@ -22,7 +24,15 @@ public final class PrintMovesCommand extends Command {
 			return false;
 		}
 		
-		System.out.println(solver.boardMovesString());
+		if(solver.boardEmpty()) {
+			
+			if(quiet) System.out.println(EMPTY_BOARD_MOVES_STRING);
+			else System.out.println("No moves played so far.");
+			
+		} else {
+			
+			System.out.println(solver.boardMovesString());
+		}
 		
 		return false;
 	}

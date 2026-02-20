@@ -7,24 +7,24 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public final class UndoCommand extends Command {
+public final class RedoCommand extends Command {
 	
-	public UndoCommand() {
-		super("undo", "u", "Undo one or more moves", "undo [move-amount]");
+	public RedoCommand() {
+		super("redo", "r", "Redo one or more moves", "redo [move-amount]");
 	}
 	
 	@Override
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length == 0) {
 			
-			if(solver.boardEmpty()) {
+			if(!solver.canRedoMove()) {
 				
-				errorStream.println(AnsiUtil.brightRedAnsi("No moves have been played yet!"));
+				errorStream.println(AnsiUtil.brightRedAnsi("No moves left to redo!"));
 				if(exitOnError) System.exit(1);
 				return false;
 			}
 			
-			solver.undoMove();
+			solver.redoMove();
 			
 		} else if(arguments.length == 1) {
 			
@@ -42,15 +42,15 @@ public final class UndoCommand extends Command {
 				return false;
 			}
 			
-			int playedMoves = solver.playedMoveAmount();
-			if(n > playedMoves) {
+			int undoneMoves = solver.undoneMoveAmount();
+			if(n > undoneMoves) {
 				
-				errorStream.println(AnsiUtil.brightRedAnsi("That many moves have not been played yet!"));
+				errorStream.println(AnsiUtil.brightRedAnsi("That many moves have not been undone!"));
 				if(exitOnError) System.exit(1);
 				return false;
 			}
 			
-			solver.undoMoves(n);
+			solver.redoMoves(n);
 			
 		} else {
 			

@@ -15,6 +15,7 @@ public final class Commands {
 	
 	public static final Command PLAY = new PlayCommand();
 	public static final Command UNDO = new UndoCommand();
+	public static final Command REDO = new RedoCommand();
 	public static final Command SETUP = new SetupCommand();
 	public static final Command CLEAR = new ClearCommand();
 	
@@ -28,11 +29,15 @@ public final class Commands {
 	
 	public static final Command PRINT = new PrintCommand();
 	public static final Command PRINT_MOVES = new PrintMovesCommand();
+	public static final Command EMPTY = new EmptyCommand();
+	public static final Command MOVE = new MoveCommand();
 	public static final Command CAN_PLAY = new CanPlayCommand();
 	public static final Command CAN_UNDO = new CanUndoCommand();
+	public static final Command CAN_REDO = new CanRedoCommand();
 	public static final Command OVER = new OverCommand();
 	public static final Command OUTCOME = new OutcomeCommand();
 	public static final Command MOVE_COUNT = new MoveCountCommand();
+	public static final Command UNDONE_MOVE_COUNT = new UndoneMoveCountCommand();
 	public static final Command OCCUPIED = new OccupiedCommand();
 	public static final Command COLOR = new ColorCommand();
 	public static final Command HEIGHT = new HeightCommand();
@@ -48,6 +53,7 @@ public final class Commands {
 			
 			PLAY,
 			UNDO,
+			REDO,
 			SETUP,
 			CLEAR,
 			
@@ -61,11 +67,15 @@ public final class Commands {
 			
 			PRINT,
 			PRINT_MOVES,
+			EMPTY,
+			MOVE,
 			CAN_PLAY,
 			CAN_UNDO,
+			CAN_REDO,
 			OVER,
 			OUTCOME,
 			MOVE_COUNT,
+			UNDONE_MOVE_COUNT,
 			OCCUPIED,
 			COLOR,
 			HEIGHT,
@@ -84,6 +94,7 @@ public final class Commands {
 			{
 					PLAY,
 					UNDO,
+					REDO,
 					SETUP,
 					CLEAR
 			},
@@ -99,11 +110,15 @@ public final class Commands {
 			{
 					PRINT,
 					PRINT_MOVES,
+					EMPTY,
+					MOVE,
 					CAN_PLAY,
 					CAN_UNDO,
+					CAN_REDO,
 					OVER,
 					OUTCOME,
 					MOVE_COUNT,
+					UNDONE_MOVE_COUNT,
 					OCCUPIED,
 					COLOR,
 					HEIGHT,

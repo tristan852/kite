@@ -7,10 +7,10 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public final class RandomCommand extends Command {
+public final class UndoneMoveCountCommand extends Command {
 	
-	public RandomCommand() {
-		super("random", "ra", "Show a random legal move", "random");
+	public UndoneMoveCountCommand() {
+		super("undone-move-count", "Show the number of undone moves that can be redone", "undone-move-count");
 	}
 	
 	@Override
@@ -22,15 +22,7 @@ public final class RandomCommand extends Command {
 			return false;
 		}
 		
-		int move = solver.randomMove();
-		if(move == 0) {
-			
-			errorStream.println(AnsiUtil.brightRedAnsi("The game is over!"));
-			if(exitOnError) System.exit(1);
-			return false;
-		}
-		
-		System.out.println(move);
+		System.out.println(solver.undoneMoveAmount());
 		
 		return false;
 	}

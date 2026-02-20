@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 public final class HelpCommand extends Command {
 	
+	// TODO is this still valid?
 	private static final int LARGEST_COMMAND_NAME_LENGTH = 36;
 	private static final String PADDING_STRING = " ";
 	

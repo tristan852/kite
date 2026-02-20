@@ -97,9 +97,8 @@ public final class OpeningBoardScoreCache {
 		}
 	}
 	
-	public int boardScore(Board board) {
-		int n = board.playedMoveAmount();
-		if(n > MAXIMAL_DEPTH) return Integer.MIN_VALUE;
+	public int boardScore(Board board, int playedMoveAmount) {
+		if(playedMoveAmount > MAXIMAL_DEPTH) return Integer.MIN_VALUE;
 		
 		long columnHash = board.columnHash();
 		int index = (int) Long.remainderUnsigned(columnHash, CAPACITY);
