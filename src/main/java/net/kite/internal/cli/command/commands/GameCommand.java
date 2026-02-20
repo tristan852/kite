@@ -54,7 +54,7 @@ public final class GameCommand extends Command {
 			System.exit(1);
 		}
 		
-		if(AnsiUtil.areAnsiCodesDisabled()) System.out.println();
+		if(AnsiUtil.areAnsiCodesDisabled()) if(!quiet) System.out.println();
 		else AnsiUtil.switchToAlternateScreenBuffer();
 		String s2 = null;
 		
@@ -121,7 +121,7 @@ public final class GameCommand extends Command {
 				}
 			}
 			
-			if(AnsiUtil.areAnsiCodesDisabled()) System.out.println();
+			if(AnsiUtil.areAnsiCodesDisabled()) if(!quiet) System.out.println();
 			else AnsiUtil.clearScreen();
 		}
 		
