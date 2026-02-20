@@ -4,6 +4,7 @@ import org.fusesource.jansi.Ansi;
 
 public final class AnsiUtil {
 	
+	private static final String BLACK_ANSI = "\033[30m";
 	private static final String DARK_GRAY_ANSI = "\033[90m";
 	
 	private static final String SWITCH_TO_ALTERNATE_SCREEN_BUFFER_ANSI = "\033[?1049h";
@@ -61,7 +62,7 @@ public final class AnsiUtil {
 	public static String boldBrightRedBackgroundAnsi(String string) {
 		if(ansiCodesDisabled) return string;
 		
-		return Ansi.ansi().bgBrightRed().fgBlack().bold().a(string).reset().toString();
+		return Ansi.ansi().bgBrightRed().a(BLACK_ANSI).bold().a(string).reset().toString();
 	}
 	
 	public static String brightYellowAnsi(String string) {
@@ -79,7 +80,7 @@ public final class AnsiUtil {
 	public static String boldBrightYellowBackgroundAnsi(String string) {
 		if(ansiCodesDisabled) return string;
 		
-		return Ansi.ansi().bgBrightYellow().fgBlack().bold().a(string).reset().toString();
+		return Ansi.ansi().bgBrightYellow().a(BLACK_ANSI).bold().a(string).reset().toString();
 	}
 	
 	public static String brightGreenAnsi(String string) {
