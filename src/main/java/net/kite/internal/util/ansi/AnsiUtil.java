@@ -48,6 +48,13 @@ public final class AnsiUtil {
 		System.out.flush();
 	}
 	
+	public static void moveCursorToBottomLeft() {
+		if(ansiCodesDisabled) return;
+		
+		System.out.print(Ansi.ansi().cursor(999, 0));
+		System.out.flush();
+	}
+	
 	public static void moveCursorToTopLeft() {
 		if(ansiCodesDisabled) return;
 		
