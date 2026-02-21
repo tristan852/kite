@@ -130,6 +130,12 @@ public final class AnsiUtil {
 		return Ansi.ansi().fgCyan().a(string).reset().toString();
 	}
 	
+	public static String brightCyanAnsi(String string) {
+		if(ansiCodesDisabled) return string;
+		
+		return Ansi.ansi().fgBrightCyan().a(string).reset().toString();
+	}
+	
 	public static String boldBrightCyanAnsi(String string) {
 		if(ansiCodesDisabled) return string;
 		

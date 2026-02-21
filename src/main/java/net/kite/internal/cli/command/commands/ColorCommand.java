@@ -36,7 +36,7 @@ public final class ColorCommand extends Command {
 		if(y < 0) return false;
 		
 		BoardPlayerColor color = solver.cellPlayerColor(x, y);
-		String s = color == null ? "empty" : color.getName();
+		String s = color == null ? AnsiUtil.brightCyanAnsi("empty") : (color == BoardPlayerColor.RED ? AnsiUtil.brightRedAnsi(color.getName()) : AnsiUtil.brightYellowAnsi(color.getName()));
 		
 		System.out.println(s);
 		
