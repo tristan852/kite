@@ -15,13 +15,12 @@ Publishing steps of a new Kite release
 
 3) push all changes to the GitHub repository
 
-4) publish CLI release to Homebrew and Chocolatey (requires Chocolatey API key)
+4) publish CLI release to Homebrew and Scoop
     - download the binaries built by GitHub actions on the latest commit: https://github.com/tristan852/kite/actions/workflows/graalvm-native.yml
     - unpack the archives if they have been zipped
     - compute SHA256 for all archives (e.g. Windows PowerShell: "Get-FileHash .\kite-1.0.0-windows-x64.zip -Algorithm SHA256")
     - update Formula/kite.rb (in https://github.com/tristan852/homebrew-kite) with new SHA256 hash for Linux and macOS
-    - update chocolatey/chocolateyInstall.ps1 with new SHA256 hash for Windows
-    - inside chocolatey folder: "choco pack" then "choco push kite-c4.1.0.0.nupkg --source https://push.chocolatey.org/"
+    - update bucket/kite.json (in https://github.com/tristan852/scoop-bucket) with new SHA256 hash for Windows
 
 5) push all changes to the GitHub repository again
 
@@ -31,6 +30,7 @@ Publishing steps of a new Kite release
 
 8) create a new GitHub release for the CLI tool
     - download the binaries built by GitHub actions on the latest commit: https://github.com/tristan852/kite/actions/workflows/graalvm-native.yml
+    - unpack the archives if they have been zipped
     - create a new GitHub release with following details:
         - tag: create new tag given the version (e.g. "v1.0.0")
         - title: "Kite vX.X.X CLI tool"
