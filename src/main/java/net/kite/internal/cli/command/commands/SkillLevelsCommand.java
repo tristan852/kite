@@ -30,6 +30,11 @@ public final class SkillLevelsCommand extends Command {
 			}
 	};
 	
+	private static final int LARGEST_SKILL_LEVEL_NAME_LENGTH = 17;
+	private static final String PADDING_STRING = " ";
+	
+	private static final int INVALID_ELO_RATING = -1;
+	
 	public SkillLevelsCommand() {
 		super("skill-levels", "Show all available skill levels", "skill-levels");
 	}
@@ -43,7 +48,7 @@ public final class SkillLevelsCommand extends Command {
 			return false;
 		}
 		
-		System.out.println("Available skill levels:");
+		System.out.println("Available skill levels with Elo ratings:");
 		
 		for(SkillLevel[] levels : CATEGORIZED_SKILL_LEVELS) {
 			
@@ -52,9 +57,14 @@ public final class SkillLevelsCommand extends Command {
 			for(SkillLevel level : levels) {
 				
 				String name = level.getName();
-				name = AnsiUtil.brightMagentaAnsi(name);
+				int l = name.length();
 				
-				System.out.printf("  - %s%n", name);
+				name = AnsiUtil.brightMagentaAnsi(name);
+				name += PADDING_STRING.repeat(LARGEST_SKILL_LEVEL_NAME_LENGTH - l);
+				
+				int elo = level.getApproximateEloRating();
+				String s = elo == INVALID_ELO_RATING ? "N/A" : String.valueOf(elo);
+				System.out.printf("  - %s  %s%n", name, s);
 			}
 		}
 		
