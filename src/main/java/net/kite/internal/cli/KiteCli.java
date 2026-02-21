@@ -155,20 +155,26 @@ public final class KiteCli {
 		if(verbose) quiet = false;
 		
 		Kite solver = Kite.createInstance();
-		if(!quiet) {
+		
+		String name = Kite.getName();
+		String version = Kite.getVersion();
+		String author = Kite.getAuthor();
+		
+		String s = AnsiUtil.boldBrightYellowAnsi(String.format("%s v%s", name, version));
+		
+		AnsiUtil.clearScreen();
+		
+		if(quiet) {
+			
+			System.out.printf("%s by %s%n", s, author);
+			
+		} else {
 			
 			Runtime runtime = Runtime.getRuntime();
 			Thread shutdownThread = new Thread(() -> System.out.println("\nExiting Kite..."));
 			
 			runtime.addShutdownHook(shutdownThread);
 			
-			AnsiUtil.clearScreen();
-			
-			String name = Kite.getName();
-			String version = Kite.getVersion();
-			String author = Kite.getAuthor();
-			
-			String s = AnsiUtil.boldBrightYellowAnsi(String.format("%s v%s", name, version));
 			String message = String.format(
 					" __  __    __    ______   ______   %n/\\ \\/ /   /\\ \\  /\\__  _\\ /\\  ___\\  %n\\ \\  _\"-. \\ \\ \\ \\/_/\\ \\/ \\ \\  __\\  %n \\ \\_\\ \\_\\ \\ \\_\\   \\ \\_\\  \\ \\_____\\%n  \\/_/\\/_/  \\/_/    \\/_/   \\/_____/%n%n%s by %s%n",
 					s,
