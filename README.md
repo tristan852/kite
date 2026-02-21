@@ -68,7 +68,8 @@ brew install kite
 **Windows**
 
 ```powershell
-choco install kite-c4
+scoop bucket add kite https://github.com/tristan852/kite-scoop
+scoop install kite
 ```
 
 > **⚠️ Note:** Ensure your terminal is set to UTF-8, or run the program with `kite --plain` for highly compatible output.
