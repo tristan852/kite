@@ -843,11 +843,6 @@ public final class Kite implements KiteApi {
 			) {
 				
 				String benchmarkDisplayName = bufferedReader.readLine();
-				if(recordMetrics) {
-					
-					System.out.println();
-					System.out.println(benchmarkDisplayName);
-				}
 				
 				while(true) {
 					
@@ -876,7 +871,13 @@ public final class Kite implements KiteApi {
 					}
 				}
 				
-				if(recordMetrics) solver.printAndResetPerformanceMetrics();
+				if(recordMetrics) {
+					
+					System.out.println();
+					System.out.println(benchmarkDisplayName);
+					
+					solver.printAndResetPerformanceMetrics();
+				}
 				
 			} catch(IOException exception) {
 				
