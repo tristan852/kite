@@ -95,7 +95,7 @@ public final class GameCommand extends Command {
 					
 				} catch(NoSuchElementException exception) {
 					
-					if(!quiet) System.out.println("\n\nExiting game...");
+					if(!quiet) System.out.print("\n\nExiting game...");
 					
 					AnsiUtil.switchToNormalScreenBuffer();
 					return true;
@@ -109,7 +109,7 @@ public final class GameCommand extends Command {
 				message = message.toLowerCase(Locale.ROOT);
 				if(message.equals("exit")) {
 					
-					if(!quiet) System.out.println("\nExiting game...");
+					if(!quiet) System.out.println("\nExiting game...\n");
 					
 					AnsiUtil.switchToNormalScreenBuffer();
 					return false;
@@ -184,7 +184,7 @@ public final class GameCommand extends Command {
 				
 			} catch(NoSuchElementException exception) {
 				
-				if(!quiet) System.out.println("\n\nExiting game...");
+				if(!quiet) System.out.print("\n\nExiting game...");
 				
 				AnsiUtil.switchToNormalScreenBuffer();
 				return true;
@@ -198,7 +198,7 @@ public final class GameCommand extends Command {
 			message = message.toLowerCase(Locale.ROOT);
 			if(message.equals("exit")) {
 				
-				if(!quiet) System.out.println("\nExiting game...");
+				if(!quiet) System.out.println("\nExiting game...\n");
 				
 				AnsiUtil.switchToNormalScreenBuffer();
 				return false;
@@ -249,7 +249,7 @@ public final class GameCommand extends Command {
 				
 				if(AnsiUtil.areAnsiCodesDisabled()) {
 					
-					if(!quiet) System.out.println("Exiting game...");
+					if(!quiet) System.out.println("Exiting game...\n");
 					return false;
 				}
 				
@@ -293,7 +293,7 @@ public final class GameCommand extends Command {
 				
 				if(AnsiUtil.areAnsiCodesDisabled()) {
 					
-					if(!quiet) System.out.println("Exiting game...");
+					if(!quiet) System.out.println("Exiting game...\n");
 					return false;
 				}
 				
