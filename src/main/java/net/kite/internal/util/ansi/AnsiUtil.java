@@ -41,6 +41,13 @@ public final class AnsiUtil {
 		System.out.flush();
 	}
 	
+	public static void moveCursorToBeginningOfLine() {
+		if(ansiCodesDisabled) return;
+		
+		System.out.print(Ansi.ansi().cursorToColumn(0));
+		System.out.flush();
+	}
+	
 	public static void moveCursorToTopLeft() {
 		if(ansiCodesDisabled) return;
 		

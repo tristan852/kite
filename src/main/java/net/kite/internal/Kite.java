@@ -232,9 +232,9 @@ public final class Kite implements KiteApi {
 		
 		String s = TimeUtil.formatDuration(averageTime);
 		
-		boolean noAnsiColors = AnsiUtil.areAnsiCodesDisabled() || System.console() == null;
+		boolean noAnsiCodes = AnsiUtil.areAnsiCodesDisabled() || System.console() == null;
 		
-		String pattern = noAnsiColors ? METRICS_STRING_PATTERN : COLORED_METRICS_STRING_PATTERN;
+		String pattern = noAnsiCodes ? METRICS_STRING_PATTERN : COLORED_METRICS_STRING_PATTERN;
 		String message = String.format(Locale.ROOT, pattern, metricsEvaluationAmount, s, averageAmount, throughput);
 		System.out.println(message);
 		

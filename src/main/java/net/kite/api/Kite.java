@@ -4,6 +4,7 @@ import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.board.player.color.BoardPlayerColor;
 import net.kite.api.skill.level.SkillLevel;
+import net.kite.internal.util.ansi.AnsiUtil;
 
 import java.io.*;
 
@@ -1022,13 +1023,23 @@ public final class Kite implements KiteApi {
 	public static boolean runBenchmark(boolean printMetrics) {
 		if(printMetrics) {
 			
+			boolean noAnsiCodes = AnsiUtil.areAnsiCodesDisabled() || System.console() == null;
+			
 			for(int i = 1; i < 3; i++) {
 				
+				if(i == 2) {
+					
+					if(noAnsiCodes) System.out.println();
+					else AnsiUtil.moveCursorToBeginningOfLine();
+				}
+				
 				String message = String.format("Performing warmup... (%s/2)", i);
-				System.out.println(message);
+				System.out.print(message);
 				
 				if(!runAndRecordBenchmark(false)) return false;
 			}
+			
+			System.out.println();
 		}
 		
 		return runAndRecordBenchmark(printMetrics);
