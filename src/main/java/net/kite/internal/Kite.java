@@ -12,6 +12,7 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import net.kite.internal.util.random.Random;
 import net.kite.internal.util.time.TimeUtil;
 
+import java.io.*;
 import java.util.Arrays;
 import java.util.Locale;
 
@@ -34,6 +35,17 @@ public final class Kite implements KiteApi {
 	private static final double METRICS_THROUGHPUT_CONVERSION_FACTOR = 1000.0;
 	private static final String METRICS_STRING_PATTERN = "positions evaluated: %d, average evaluation time: %s, average node evaluations: %.2f, node throughput: %.2f Mn/s";
 	private static final String COLORED_METRICS_STRING_PATTERN;
+	
+	private static final String[] BENCHMARK_RESOURCE_PATHS = new String[] {
+			"/benchmarks/endgame_easy.txt",
+			"/benchmarks/midgame_easy.txt",
+			"/benchmarks/midgame_medium.txt",
+			"/benchmarks/opening_easy.txt",
+			"/benchmarks/opening_medium.txt",
+			"/benchmarks/opening_hard.txt"
+	};
+	
+	private static final char BENCHMARK_ENTRY_SEPARATOR_CHARACTER = ' ';
 	
 	static {
 		synchronized(AnsiUtil.class) {
@@ -776,6 +788,93 @@ public final class Kite implements KiteApi {
 		}
 		
 		return null;
+	}
+	
+	public static boolean runBenchmark(boolean printMetrics) {
+		if(printMetrics) {
+			
+			boolean noAnsiCodes = AnsiUtil.areAnsiCodesDisabled() || System.console() == null;
+			
+			for(int i = 1; i < 3; i++) {
+				
+				if(i == 2) {
+					
+					if(noAnsiCodes) System.out.println();
+					else AnsiUtil.moveCursorToBeginningOfLine();
+				}
+				
+				String message = String.format("Performing warmup... (%s/2)", i);
+				System.out.print(message);
+				
+				if(!runAndRecordBenchmark(false)) return false;
+			}
+			
+			System.out.println();
+		}
+		
+		return runAndRecordBenchmark(printMetrics);
+	}
+	
+	private static boolean runAndRecordBenchmark(boolean recordMetrics) {
+		net.kite.api.Kite solver = net.kite.api.Kite.createInstance();
+		
+		boolean successful = true;
+		for(String resourcePath : BENCHMARK_RESOURCE_PATHS) {
+			
+			if(recordMetrics) System.out.println(resourcePath);
+			
+			InputStream inputStream = Kite.class.getResourceAsStream(resourcePath);
+			if(inputStream == null) {
+				
+				System.err.printf("Benchmark cannot be found in resources: %s%n", resourcePath);
+				return false;
+			}
+			
+			try(
+					inputStream;
+					Reader inputStreamReader = new InputStreamReader(inputStream);
+					BufferedReader bufferedReader = new BufferedReader(inputStreamReader)
+			) {
+				
+				while(true) {
+					
+					String line = bufferedReader.readLine();
+					if(line == null) break;
+					
+					int index = line.indexOf(BENCHMARK_ENTRY_SEPARATOR_CHARACTER);
+					
+					String s1 = line.substring(0, index);
+					String s2 = line.substring(index + 1);
+					
+					int score = Integer.parseInt(s2);
+					
+					solver.setupBoard(s1);
+					if(recordMetrics) solver.startRecordingPerformanceMetrics();
+					int s = solver.evaluateBoard();
+					if(recordMetrics) solver.stopRecordingPerformanceMetrics();
+					
+					if(s != score) {
+						
+						String errorMessage = String.format("Wrong evaluation: position=%s, evaluation=%s (should be %s)", s1, s, score);
+						System.err.println(errorMessage);
+						
+						if(recordMetrics) successful = false;
+						else return false;
+					}
+				}
+				
+				if(recordMetrics) solver.printAndResetPerformanceMetrics();
+				
+			} catch(IOException exception) {
+				
+				String errorMessage = String.format("An exception occurred while loading benchmark from resources: %s", exception);
+				System.err.println(errorMessage);
+				
+				return false;
+			}
+		}
+		
+		return successful;
 	}
 	
 }
