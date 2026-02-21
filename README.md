@@ -71,6 +71,10 @@ brew install kite
 choco install kite-c4
 ```
 
+> **⚠️ Note:** Ensure your terminal is set to UTF-8, or run the program with `kite --plain` for highly compatible output.
+
+**Guide**
+
 Use `kite` to start the interactive CLI tool.
 
 The following arguments can be passed to `kite`:
