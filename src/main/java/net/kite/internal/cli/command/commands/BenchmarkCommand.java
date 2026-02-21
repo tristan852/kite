@@ -10,7 +10,7 @@ import java.util.Scanner;
 public final class BenchmarkCommand extends Command {
 	
 	public BenchmarkCommand() {
-		super("benchmark", "Run benchmarks (metrics printed by default)", "benchmark [print-metrics]");
+		super("benchmark", "bench", "Run benchmarks (metrics printed by default)", "benchmark [print-metrics]");
 	}
 	
 	@Override

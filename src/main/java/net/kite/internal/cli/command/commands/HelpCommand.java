@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public final class HelpCommand extends Command {
 	
-	private static final int LARGEST_COMMAND_NAME_LENGTH = 36;
+	private static final int LARGEST_COMMAND_NAME_LENGTH = 40;
 	private static final String PADDING_STRING = " ";
 	
 	public HelpCommand() {
