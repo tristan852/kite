@@ -27,7 +27,9 @@ public final class PerformanceCommand extends Command {
 			
 			solver.evaluatePlayerPerformances(playerPerformances);
 			
-			System.out.printf(Locale.ROOT, "red player's performance: %.2f%nyellow player's performance: %.2f%n", playerPerformances[0], playerPerformances[1]);
+			String s1 = AnsiUtil.brightRedAnsi("red");
+			String s2 = AnsiUtil.brightYellowAnsi("yellow");
+			System.out.printf(Locale.ROOT, "%s player's performance: %.2f%n%s player's performance: %.2f%n", s1, playerPerformances[0], s2, playerPerformances[1]);
 			
 			return false;
 		}
