@@ -235,7 +235,7 @@ public final class GameCommand extends Command {
 				
 				if(!quiet) {
 					
-					System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You win!");
+					System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!\n" : "You win!\n");
 					System.out.printf("Moves: %s%n%n", gameSolver.boardMovesString());
 				}
 				
@@ -275,7 +275,7 @@ public final class GameCommand extends Command {
 				
 				if(!quiet) {
 					
-					System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You lose.");
+					System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!\n" : "You lose.\n");
 					System.out.printf("Moves: %s%n%n", gameSolver.boardMovesString());
 				}
 				
