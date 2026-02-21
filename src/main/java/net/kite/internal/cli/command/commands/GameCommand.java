@@ -232,7 +232,12 @@ public final class GameCommand extends Command {
 				System.out.println(s);
 				System.out.flush();
 				System.out.println();
-				if(!quiet) System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!\n" : "You win!\n");
+				
+				if(!quiet) {
+					
+					System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You win!");
+					System.out.printf("Moves: %s%n%n", gameSolver.boardMovesString());
+				}
 				
 				if(AnsiUtil.areAnsiCodesDisabled()) return false;
 				
@@ -268,7 +273,11 @@ public final class GameCommand extends Command {
 			
 			if(gameSolver.gameOver()) {
 				
-				if(!quiet) System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!\n" : "You lose.\n");
+				if(!quiet) {
+					
+					System.out.println(gameSolver.gameOutcome() == BoardOutcome.DRAW ? "It's a draw!" : "You lose.");
+					System.out.printf("Moves: %s%n%n", gameSolver.boardMovesString());
+				}
 				
 				if(AnsiUtil.areAnsiCodesDisabled()) return false;
 				
