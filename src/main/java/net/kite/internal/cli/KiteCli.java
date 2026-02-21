@@ -30,8 +30,6 @@ public final class KiteCli {
 		boolean quiet = System.console() == null;
 		boolean verbose = false;
 		
-		if(!quiet) System.out.println(System.out.charset());
-		
 		if(quiet) AnsiUtil.disableAnsiCodes();
 		
 		PrintStream errorStream = quiet ? System.err : System.out;
