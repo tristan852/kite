@@ -33,7 +33,7 @@ public final class Kite implements KiteApi {
 	private static final int MOVE_COLUMN_INDEX_SMALLEST_CHARACTER = 49;
 	
 	private static final double METRICS_THROUGHPUT_CONVERSION_FACTOR = 1000.0;
-	private static final String METRICS_STRING_PATTERN = "positions evaluated: %d, average evaluation time: %s, average node evaluations: %.2f, node throughput: %.2f Mn/s";
+	private static final String METRICS_STRING_PATTERN = "positions evaluated      : %d\naverage evaluation time  : %s\naverage node evaluations : %.2f\nnode throughput          : %.2f Mn/s";
 	private static final String COLORED_METRICS_STRING_PATTERN;
 	
 	private static final String[] BENCHMARK_RESOURCE_PATHS = new String[] {
@@ -54,13 +54,13 @@ public final class Kite implements KiteApi {
 			if(disabled) AnsiUtil.enableAnsiCodes();
 			
 			COLORED_METRICS_STRING_PATTERN =
-					AnsiUtil.cyanAnsi("positions evaluated: ") +
+					AnsiUtil.cyanAnsi("positions evaluated      : ") +
 					AnsiUtil.brightYellowAnsi("%d") +
-					AnsiUtil.cyanAnsi(", average evaluation time: ") +
+					AnsiUtil.cyanAnsi("\naverage evaluation time  : ") +
 					AnsiUtil.brightYellowAnsi("%s") +
-					AnsiUtil.cyanAnsi(", average node evaluations: ") +
+					AnsiUtil.cyanAnsi("\naverage node evaluations : ") +
 					AnsiUtil.brightYellowAnsi("%.2f") +
-					AnsiUtil.cyanAnsi(", node throughput: ") +
+					AnsiUtil.cyanAnsi("\nnode throughput          : ") +
 					AnsiUtil.brightYellowAnsi("%.2f") +
 					AnsiUtil.cyanAnsi(" Mn/s");
 			
@@ -812,7 +812,15 @@ public final class Kite implements KiteApi {
 			System.out.println();
 		}
 		
-		return runAndRecordBenchmark(printMetrics);
+		boolean successful = runAndRecordBenchmark(printMetrics);
+		
+		if(printMetrics) {
+			
+			String message = successful ? "\nBenchmark completed successfully!" : "\nBenchmark was not completed successfully!";
+			System.out.println(message);
+		}
+		
+		return successful;
 	}
 	
 	private static boolean runAndRecordBenchmark(boolean recordMetrics) {
@@ -820,8 +828,6 @@ public final class Kite implements KiteApi {
 		
 		boolean successful = true;
 		for(String resourcePath : BENCHMARK_RESOURCE_PATHS) {
-			
-			if(recordMetrics) System.out.println(resourcePath);
 			
 			InputStream inputStream = Kite.class.getResourceAsStream(resourcePath);
 			if(inputStream == null) {
@@ -835,6 +841,13 @@ public final class Kite implements KiteApi {
 					Reader inputStreamReader = new InputStreamReader(inputStream);
 					BufferedReader bufferedReader = new BufferedReader(inputStreamReader)
 			) {
+				
+				String benchmarkDisplayName = bufferedReader.readLine();
+				if(recordMetrics) {
+					
+					System.out.println();
+					System.out.println(benchmarkDisplayName);
+				}
 				
 				while(true) {
 					

@@ -17,10 +17,7 @@ public final class BenchmarkCommand extends Command {
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length == 0) {
 			
-			boolean successful = Kite.runBenchmark();
-			
-			String message = successful ? "Benchmark completed successfully!" : "Benchmark was not completed successfully!";
-			System.out.println(message);
+			Kite.runBenchmark();
 			
 		} else if(arguments.length == 1) {
 			
@@ -36,10 +33,7 @@ public final class BenchmarkCommand extends Command {
 				return false;
 			}
 			
-			boolean successful = Kite.runBenchmark(printMetrics);
-			
-			String message = successful ? "Benchmark completed successfully!" : "Benchmark was not completed successfully!";
-			System.out.println(message);
+			Kite.runBenchmark(printMetrics);
 			
 		} else {
 			
