@@ -16,7 +16,7 @@ public final class PerformanceCommand extends Command {
 	private final float[] playerPerformances;
 	
 	public PerformanceCommand() {
-		super("performance", "Show Elo performance for a player or both players", "performance <color>");
+		super("performance", "elo", "Show Elo performance for a player or both players", "performance <color>");
 		
 		this.playerPerformances = new float[PLAYER_AMOUNT];
 	}
