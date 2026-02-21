@@ -27,10 +27,10 @@ public final class KiteCli {
 	private static final String GAME_PROGRAM_ARGUMENT = "--game";
 	
 	public void onStart(String[] programArguments) {
-		System.out.println(System.out.charset());
-		
 		boolean quiet = System.console() == null;
 		boolean verbose = false;
+		
+		if(!quiet) System.out.println(System.out.charset());
 		
 		if(quiet) AnsiUtil.disableAnsiCodes();
 		
