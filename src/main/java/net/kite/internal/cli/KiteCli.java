@@ -171,7 +171,7 @@ public final class KiteCli {
 		} else {
 			
 			Runtime runtime = Runtime.getRuntime();
-			Thread shutdownThread = new Thread(() -> System.out.println("\nExiting Kite..."));
+			Thread shutdownThread = new Thread(() -> System.out.println("\n\nExiting Kite..."));
 			
 			runtime.addShutdownHook(shutdownThread);
 			
