@@ -78,10 +78,10 @@ public final class GameCommand extends Command {
 			
 			while(true) {
 				
-				AnsiUtil.restoreCursorPosition();
-				AnsiUtil.clearScreenCursorLine();
-				
-				if(!quiet) {
+				if(!AnsiUtil.areAnsiCodesDisabled()) {
+					
+					AnsiUtil.restoreCursorPosition();
+					AnsiUtil.clearScreenCursorLine();
 					
 					System.out.print("skill-level> ");
 					System.out.flush();
@@ -163,10 +163,10 @@ public final class GameCommand extends Command {
 		boolean gameOver = false;
 		while(true) {
 			
-			AnsiUtil.restoreCursorPosition();
-			AnsiUtil.clearScreenCursorLine();
-			
-			if(!quiet) {
+			if(!AnsiUtil.areAnsiCodesDisabled()) {
+				
+				AnsiUtil.restoreCursorPosition();
+				AnsiUtil.clearScreenCursorLine();
 				
 				System.out.print("play> ");
 				System.out.flush();

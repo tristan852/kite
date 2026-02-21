@@ -54,13 +54,13 @@ public final class KiteCli {
 						  --help               Display this help message
 						  --skill-levels       List all available skill levels
 						  --version            Display the program version
-						  --quiet              Suppress prompts and interactive messages
+						  --quiet              Suppress interactive messages
 						                       (enabled automatically if CLI is not connected to a
 						                       terminal or when running a script file)
-						  --verbose            Override quiet mode and show prompts and interactive
-						                       messages
-						  --plain              Disable all ANSI escape codes and Unicode characters
-						                       (colors, screen clearing, Unicode characters, etc.)
+						  --verbose            Override quiet mode and show interactive messages
+						                       (even when quiet mode would normally be active)
+						  --plain              Disable all prompts, Unicode characters and
+						                       ANSI escape codes (colors, screen clearing, etc.)
 						  --script <file>      Run the specified script file instead of starting
 						                       interactive mode
 						  --game [skill-level] Start a game immediately, optionally specifying a
@@ -206,7 +206,7 @@ public final class KiteCli {
 					String message = bufferedReader.readLine();
 					if(message == null) return;
 					
-					if(!quiet) System.out.printf("> %s%n", message);
+					if(!AnsiUtil.areAnsiCodesDisabled()) System.out.printf("> %s%n", message);
 					
 					boolean exit = processCommandMessage(message, solver, errorStream, true, quiet, null);
 					if(exit) return;
@@ -229,7 +229,7 @@ public final class KiteCli {
 		
 		while(true) {
 			
-			if(!quiet) {
+			if(!AnsiUtil.areAnsiCodesDisabled()) {
 				
 				System.out.print("> ");
 				System.out.flush();

@@ -79,16 +79,16 @@ Use `kite` to start the interactive CLI tool.
 
 The following arguments can be passed to `kite`:
 
-| Argument                 | Description                                                                                                                                             |
-|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `--help`                 | Display a help message                                                                                                                                  |
-| `--skill-levels`         | List all available skill levels                                                                                                                         |
-| `--version`              | Display the solver version                                                                                                                              |
-| `--quiet`                | Suppress prompts and interactive messages. Quiet mode is automatically enabled if the CLI is not connected to a terminal or when running a script file. |
-| `--verbose`              | Override quiet mode and show prompts and interactive messages even when quiet mode would normally be active                                             |
-| `--plain`                | Disable all ANSI escape codes and Unicode characters, including colors, cursor movements, screen clearing, and box-drawing characters                   |
-| `--script <script-file>` | Run the specified script file instead of starting interactive mode                                                                                      |
-| `--game [skill-level]`   | Start a game immediately, optionally specifying a skill level                                                                                           |
+| Argument                 | Description                                                                                                                                 |
+|--------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| `--help`                 | Display a help message                                                                                                                      |
+| `--skill-levels`         | List all available skill levels                                                                                                             |
+| `--version`              | Display the solver version                                                                                                                  |
+| `--quiet`                | Suppress interactive messages. Quiet mode is automatically enabled if the CLI is not connected to a terminal or when running a script file. |
+| `--verbose`              | Override quiet mode and show interactive messages even when quiet mode would normally be active                                             |
+| `--plain`                | Disable all prompts, Unicode characters and ANSI escape codes, including colors and screen clearing.                                        |
+| `--script <script-file>` | Run the specified script file instead of starting interactive mode                                                                          |
+| `--game [skill-level]`   | Start a game immediately, optionally specifying a skill level                                                                               |
 
 ---
 
