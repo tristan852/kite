@@ -22,7 +22,7 @@ Publishing steps of a new Kite release
     - update Formula/kite.rb (in https://github.com/tristan852/homebrew-kite) with new SHA256 hash for Linux and macOS
     - update bucket/kite.json (in https://github.com/tristan852/scoop-bucket) with new SHA256 hash for Windows
 
-5) push all changes to the GitHub repository again
+5) push all changes to the GitHub repository again (all three repos)
 
 6) optional: refresh the javadoc.io page over at https://javadoc.io/doc/io.github.tristan852/kite
 
