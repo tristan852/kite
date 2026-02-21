@@ -17,7 +17,7 @@ import net.kite.api.skill.level.SkillLevel;
 public final class Kite implements KiteApi {
 	
 	private static final String NAME = "Kite";
-	private static final String VERSION = "1.16.3";
+	private static final String VERSION = "1.17.0";
 	private static final String AUTHOR = "tristan852";
 	
 	private final KiteApi internalSolver;
