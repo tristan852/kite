@@ -1,6 +1,7 @@
 package net.kite.internal.cli.command.commands;
 
 import net.kite.api.Kite;
+import net.kite.api.exception.IllegalMoveException;
 import net.kite.internal.cli.command.Command;
 import net.kite.internal.util.ansi.AnsiUtil;
 
@@ -15,11 +16,13 @@ public final class PlayCommand extends Command {
 		super("play", "p", "Play one or more moves", "play [moves]");
 	}
 	
+	// TODO redo history!!
+	// TODO just use playMoves(String) / setupBoard(String) and catch the exceptions and print corresponding error messages
 	@Override
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 1) {
 			
-			errorStream.println(AnsiUtil.brightRedAnsi("Incorrect number of arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Inorrect number of arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
@@ -32,35 +35,23 @@ public final class PlayCommand extends Command {
 			return false;
 		}
 		
-		if(!moves.matches("[1-7]+")) {
+		try {
+			
+			solver.playMoves(moves);
+			
+		} catch(IndexOutOfBoundsException exception) {
 			
 			errorStream.println(AnsiUtil.brightRedAnsi(String.format("Invalid move found in moves argument: \"%s\"", moves)));
 			if(exitOnError) System.exit(1);
 			return false;
-		}
-		
-		int n = moves.length();
-		int playedMoves = 0;
-		for(int i = 0; i < n; i++) {
 			
-			int x = moves.charAt(i) - MOVE_CHARACTER_OFFSET;
-			if(solver.moveLegal(x)) {
-				
-				solver.playMove(x);
-				playedMoves++;
-				
-			} else {
-				
-				while(playedMoves > 0) {
-					
-					solver.undoMove();
-					playedMoves--;
-				}
-				
-				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Illegal move '%s' found in moves argument: \"%s\"", x, moves)));
-				if(exitOnError) System.exit(1);
-				return false;
-			}
+		} catch(IllegalMoveException exception) {
+			
+			int x = exception.getMoveColumnIndex();
+			
+			errorStream.println(AnsiUtil.brightRedAnsi(String.format("Illegal move '%s' found in moves argument: \"%s\"", x, moves)));
+			if(exitOnError) System.exit(1);
+			return false;
 		}
 		
 		return false;

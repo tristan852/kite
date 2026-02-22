@@ -1,6 +1,7 @@
 package net.kite.internal.cli.command.commands;
 
 import net.kite.api.Kite;
+import net.kite.api.exception.IllegalMoveException;
 import net.kite.internal.cli.command.Command;
 import net.kite.internal.util.ansi.AnsiUtil;
 
@@ -41,45 +42,21 @@ public final class SetupCommand extends Command {
 			return false;
 		}
 		
-		if(!moves.matches("[1-7]+")) {
+		try {
+			
+			solver.setupBoard(moves);
+			
+		} catch(IndexOutOfBoundsException exception) {
 			
 			errorStream.println(AnsiUtil.brightRedAnsi(String.format("Invalid move found in moves argument: \"%s\"", moves)));
 			if(exitOnError) System.exit(1);
 			return false;
-		}
-		
-		int playedMoves = solver.playedMoveAmount();
-		int savedMoves = playedMoves;
-		while(playedMoves > 0) {
 			
-			int move = solver.undoMove();
+		} catch(IllegalMoveException exception) {
 			
-			playedMoves--;
-			undoneMoves[playedMoves] = move;
-		}
-		
-		int n = moves.length();
-		for(int i = 0; i < n; i++) {
-			
-			int x = moves.charAt(i) - MOVE_CHARACTER_OFFSET;
-			if(solver.moveLegal(x)) {
-				
-				solver.playMove(x);
-				
-			} else {
-				
-				solver.clearBoard();
-				
-				for(int index = 0; index < savedMoves; index++) {
-					
-					int move = undoneMoves[index];
-					solver.playMove(move);
-				}
-				
-				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Illegal Connect Four game: \"%s\"", moves)));
-				if(exitOnError) System.exit(1);
-				return false;
-			}
+			errorStream.println(AnsiUtil.brightRedAnsi(String.format("Illegal Connect Four game: \"%s\"", moves)));
+			if(exitOnError) System.exit(1);
+			return false;
 		}
 		
 		return false;
