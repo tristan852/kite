@@ -7,7 +7,7 @@ Kite v1.18.0 by tristan852
 .......
 .......
 
-moves: 
+moves: none
 move scores: -2, -1, 0, +1, 0, -1, -2
 moves left (optimal play): 41
 outcome: undecided
