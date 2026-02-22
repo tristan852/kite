@@ -77,6 +77,9 @@ public final class Kite implements KiteApi {
 	private final int[] playedMoves = new int[BOARD_SIZE];
 	private final int[] playedMoveRows = new int[BOARD_SIZE];
 	
+	private final int[] savedPlayedMoves = new int[BOARD_SIZE];
+	private final int[] savedPlayedMoveRows = new int[BOARD_SIZE];
+	
 	private int playedMoveAmount;
 	private int undoneMoveAmount;
 	
@@ -581,7 +584,7 @@ public final class Kite implements KiteApi {
 		if(!board.moveLegal(moveColumnIndex)) {
 			
 			String message = String.format("Cannot evaluate illegal move: %s", moveColumnIndex + 1);
-			throw new IllegalArgumentException(message);
+			throw new IllegalStateException(message);
 		}
 		
 		return board.evaluateMove(moveColumnIndex);
@@ -619,7 +622,6 @@ public final class Kite implements KiteApi {
 		return board.moveLegal(moveColumnIndex);
 	}
 	
-	// TODO play moves and setup
 	@Override
 	public KiteApi playMoves(String moveColumnIndicesString) {
 		int n = moveColumnIndicesString.length();
@@ -633,9 +635,33 @@ public final class Kite implements KiteApi {
 			}
 		}
 		
+		int savedUndoneMoveAmount = undoneMoveAmount;
+		
 		for(int i = 0; i < n; i++) {
 			
 			int moveColumnIndex = moveColumnIndicesString.charAt(i) - MOVE_COLUMN_INDEX_SMALLEST_CHARACTER;
+			
+			if(!board.moveLegal(moveColumnIndex)) {
+				
+				while(i > 0) {
+					
+					board.undoMove();
+					playedMoveAmount--;
+					
+					playedMoves[playedMoveAmount] = savedPlayedMoves[playedMoveAmount];
+					playedMoveRows[playedMoveAmount] = savedPlayedMoveRows[playedMoveAmount];
+					
+					i--;
+				}
+				
+				undoneMoveAmount = savedUndoneMoveAmount;
+				
+				String message = String.format("moveColumnIndicesString contains an illegal move: %d", moveColumnIndex + 1);
+				throw new IllegalStateException(message);
+			}
+			
+			savedPlayedMoves[playedMoveAmount] = playedMoves[playedMoveAmount];
+			savedPlayedMoveRows[playedMoveAmount] = playedMoveRows[playedMoveAmount];
 			
 			board.playMove(moveColumnIndex);
 			
@@ -669,9 +695,34 @@ public final class Kite implements KiteApi {
 			}
 		}
 		
-		for(int moveColumnIndex : moveColumnIndices) {
+		int savedUndoneMoveAmount = undoneMoveAmount;
+		
+		int n = moveColumnIndices.length;
+		for(int i = 0; i < n; i++) {
 			
-			moveColumnIndex--;
+			int moveColumnIndex = moveColumnIndices[i] - 1;
+			
+			if(!board.moveLegal(moveColumnIndex)) {
+				
+				while(i > 0) {
+					
+					board.undoMove();
+					playedMoveAmount--;
+					
+					playedMoves[playedMoveAmount] = savedPlayedMoves[playedMoveAmount];
+					playedMoveRows[playedMoveAmount] = savedPlayedMoveRows[playedMoveAmount];
+					
+					i--;
+				}
+				
+				undoneMoveAmount = savedUndoneMoveAmount;
+				
+				String message = String.format("moveColumnIndices contains an illegal move: %d", moveColumnIndex + 1);
+				throw new IllegalStateException(message);
+			}
+			
+			savedPlayedMoves[playedMoveAmount] = playedMoves[playedMoveAmount];
+			savedPlayedMoveRows[playedMoveAmount] = playedMoveRows[playedMoveAmount];
 			
 			board.playMove(moveColumnIndex);
 			
@@ -707,7 +758,7 @@ public final class Kite implements KiteApi {
 		if(!board.moveLegal(moveColumnIndex)) {
 			
 			String message = String.format("Cannot play illegal move: %s", moveColumnIndex + 1);
-			throw new IllegalArgumentException(message);
+			throw new IllegalStateException(message);
 		}
 		
 		board.playMove(moveColumnIndex);
@@ -828,11 +879,57 @@ public final class Kite implements KiteApi {
 			}
 		}
 		
+		int savedPlayedMoveAmount = playedMoveAmount;
+		int savedUndoneMoveAmount = undoneMoveAmount;
+		
+		int m = savedPlayedMoveAmount + savedUndoneMoveAmount;
+		for(int i = 0; i < m; i++) {
+			
+			savedPlayedMoves[i] = playedMoves[i];
+			savedPlayedMoveRows[i] = playedMoveRows[i];
+		}
+		
+		int reusedMoveAmount = 0;
 		for(int i = 0; i < l; i++) {
 			
 			int moveColumnIndex = moveColumnIndicesString.charAt(i) - MOVE_COLUMN_INDEX_SMALLEST_CHARACTER;
 			
 			if(i == playedMoveAmount) {
+				
+				if(!board.moveLegal(moveColumnIndex)) {
+					
+					while(playedMoveAmount > reusedMoveAmount) {
+						
+						board.undoMove();
+						playedMoveAmount--;
+					}
+					
+					while(playedMoveAmount < savedPlayedMoveAmount) {
+						
+						int x = savedPlayedMoves[playedMoveAmount];
+						int y = savedPlayedMoveRows[playedMoveAmount];
+						
+						playedMoves[playedMoveAmount] = x;
+						playedMoveRows[playedMoveAmount] = y;
+						
+						board.playMove(x);
+						playedMoveAmount++;
+					}
+					
+					int index = playedMoveAmount;
+					while(index < m) {
+						
+						playedMoves[index] = savedPlayedMoves[index];
+						playedMoveRows[index] = savedPlayedMoveRows[index];
+						
+						index++;
+					}
+					
+					undoneMoveAmount = savedUndoneMoveAmount;
+					
+					String message = String.format("moveColumnIndicesString is not a legal Connect Four game: %s", moveColumnIndicesString);
+					throw new IllegalArgumentException(message);
+				}
 				
 				board.playMove(moveColumnIndex);
 				
@@ -853,10 +950,46 @@ public final class Kite implements KiteApi {
 				continue;
 			}
 			
-			int x = playedMoves[i];
-			if(x == moveColumnIndex) {
+			int otherMove = playedMoves[i];
+			if(otherMove == moveColumnIndex) {
 				
+				reusedMoveAmount++;
 				continue;
+			}
+			
+			if(!board.moveLegal(moveColumnIndex)) {
+				
+				while(playedMoveAmount > reusedMoveAmount) {
+					
+					board.undoMove();
+					playedMoveAmount--;
+				}
+				
+				while(playedMoveAmount < savedPlayedMoveAmount) {
+					
+					int x = savedPlayedMoves[playedMoveAmount];
+					int y = savedPlayedMoveRows[playedMoveAmount];
+					
+					playedMoves[playedMoveAmount] = x;
+					playedMoveRows[playedMoveAmount] = y;
+					
+					board.playMove(x);
+					playedMoveAmount++;
+				}
+				
+				int index = playedMoveAmount;
+				while(index < m) {
+					
+					playedMoves[index] = savedPlayedMoves[index];
+					playedMoveRows[index] = savedPlayedMoveRows[index];
+					
+					index++;
+				}
+				
+				undoneMoveAmount = savedUndoneMoveAmount;
+				
+				String message = String.format("moveColumnIndicesString is not a legal Connect Four game: %s", moveColumnIndicesString);
+				throw new IllegalArgumentException(message);
 			}
 			
 			undoneMoveAmount += playedMoveAmount - i;
@@ -907,12 +1040,62 @@ public final class Kite implements KiteApi {
 			}
 		}
 		
+		int savedPlayedMoveAmount = playedMoveAmount;
+		int savedUndoneMoveAmount = undoneMoveAmount;
+		
+		int m = savedPlayedMoveAmount + savedUndoneMoveAmount;
+		for(int i = 0; i < m; i++) {
+			
+			savedPlayedMoves[i] = playedMoves[i];
+			savedPlayedMoveRows[i] = playedMoveRows[i];
+		}
+		
+		int reusedMoveAmount = 0;
+		
 		int l = moveColumnIndices.length;
 		for(int i = 0; i < l; i++) {
 			
 			int moveColumnIndex = moveColumnIndices[i] - 1;
 			
 			if(i == playedMoveAmount) {
+				
+				if(!board.moveLegal(moveColumnIndex)) {
+					
+					while(playedMoveAmount > reusedMoveAmount) {
+						
+						board.undoMove();
+						playedMoveAmount--;
+					}
+					
+					while(playedMoveAmount < savedPlayedMoveAmount) {
+						
+						int x = savedPlayedMoves[playedMoveAmount];
+						int y = savedPlayedMoveRows[playedMoveAmount];
+						
+						playedMoves[playedMoveAmount] = x;
+						playedMoveRows[playedMoveAmount] = y;
+						
+						board.playMove(x);
+						playedMoveAmount++;
+					}
+					
+					int index = playedMoveAmount;
+					while(index < m) {
+						
+						playedMoves[index] = savedPlayedMoves[index];
+						playedMoveRows[index] = savedPlayedMoveRows[index];
+						
+						index++;
+					}
+					
+					undoneMoveAmount = savedUndoneMoveAmount;
+					
+					StringBuilder stringBuilder = new StringBuilder();
+					for(int move : moveColumnIndices) stringBuilder.append((char) ('0' + move));
+					
+					String message = String.format("moveColumnIndices is not a legal Connect Four game: %s", stringBuilder);
+					throw new IllegalArgumentException(message);
+				}
 				
 				board.playMove(moveColumnIndex);
 				
@@ -933,10 +1116,49 @@ public final class Kite implements KiteApi {
 				continue;
 			}
 			
-			int x = playedMoves[i];
-			if(x == moveColumnIndex) {
+			int otherMove = playedMoves[i];
+			if(otherMove == moveColumnIndex) {
 				
+				reusedMoveAmount++;
 				continue;
+			}
+			
+			if(!board.moveLegal(moveColumnIndex)) {
+				
+				while(playedMoveAmount > reusedMoveAmount) {
+					
+					board.undoMove();
+					playedMoveAmount--;
+				}
+				
+				while(playedMoveAmount < savedPlayedMoveAmount) {
+					
+					int x = savedPlayedMoves[playedMoveAmount];
+					int y = savedPlayedMoveRows[playedMoveAmount];
+					
+					playedMoves[playedMoveAmount] = x;
+					playedMoveRows[playedMoveAmount] = y;
+					
+					board.playMove(x);
+					playedMoveAmount++;
+				}
+				
+				int index = playedMoveAmount;
+				while(index < m) {
+					
+					playedMoves[index] = savedPlayedMoves[index];
+					playedMoveRows[index] = savedPlayedMoveRows[index];
+					
+					index++;
+				}
+				
+				undoneMoveAmount = savedUndoneMoveAmount;
+				
+				StringBuilder stringBuilder = new StringBuilder();
+				for(int move : moveColumnIndices) stringBuilder.append((char) ('0' + move));
+				
+				String message = String.format("moveColumnIndices is not a legal Connect Four game: %s", stringBuilder);
+				throw new IllegalArgumentException(message);
 			}
 			
 			undoneMoveAmount += playedMoveAmount - i;
