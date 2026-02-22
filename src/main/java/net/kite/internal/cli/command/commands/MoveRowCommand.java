@@ -7,10 +7,10 @@ import net.kite.internal.util.ansi.AnsiUtil;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-public final class MoveCommand extends Command {
+public final class MoveRowCommand extends Command {
 	
-	public MoveCommand() {
-		super("move", "Shows the last move or the move at the given index (including undone moves)", "move [index]");
+	public MoveRowCommand() {
+		super("move-row", "Shows the row of the last move or the move at the given index (including undone moves)", "move-row [index]");
 	}
 	
 	@Override
@@ -24,7 +24,7 @@ public final class MoveCommand extends Command {
 				return false;
 			}
 			
-			System.out.println(solver.lastMove());
+			System.out.println(solver.lastMoveRow());
 			return false;
 		}
 		
@@ -46,7 +46,7 @@ public final class MoveCommand extends Command {
 		int index = parseCoordinateArgument(arguments[0], "index", 0, n - 1, errorStream, exitOnError);
 		if(index < 0) return false;
 		
-		System.out.println(solver.playedMove(index));
+		System.out.println(solver.playedMoveRow(index));
 		
 		return false;
 	}

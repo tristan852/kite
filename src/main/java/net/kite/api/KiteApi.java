@@ -44,8 +44,12 @@ public interface KiteApi {
 	
 	boolean boardEmpty();
 	
+	int lastMoveRow();
 	int lastMove();
+	
+	int playedMoveRow(int moveIndex);
 	int playedMove(int moveIndex);
+	
 	int playedMoveAmount();
 	
 	KiteApi startRecordingPerformanceMetrics();

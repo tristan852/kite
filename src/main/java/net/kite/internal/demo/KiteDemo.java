@@ -297,12 +297,6 @@ public final class KiteDemo {
 	private boolean aiPlaysRed;
 	private boolean redAtTurn;
 	
-	private final int[] playedMoves = new int[BOARD_SIZE];
-	private final int[] columnPlayedMoveAmounts = new int[BOARD_WIDTH];
-	
-	private int playedMoveAmount;
-	private int undoneMoveAmount;
-	
 	private final int[] movesScores = new int[BOARD_WIDTH];
 	
 	private HTMLElement loadingMessageElement;
@@ -674,7 +668,7 @@ public final class KiteDemo {
 				boolean gameNotOver = !solver.gameOver();
 				if(gameNotOver) {
 					
-					boolean boardEmpty = playedMoveAmount == 0;
+					boolean boardEmpty = solver.boardEmpty();
 					if(boardEmpty) playAIMove();
 					else scheduleAIMove();
 				}
@@ -725,23 +719,18 @@ public final class KiteDemo {
 	}
 	
 	private void setupNewGame() {
+		int playedMoveAmount = solver.playedMoveAmount();
 		if(playedMoveAmount != 0) {
 			
-			solver.clearBoard();
-			
-			for(int i = playedMoveAmount - 1; i >= 0; i--) {
+			for(int i = 0; i < playedMoveAmount; i++) {
 				
-				int moveX = playedMoves[i];
-				
-				columnPlayedMoveAmounts[moveX]--;
-				
-				int moveY = columnPlayedMoveAmounts[moveX];
+				int moveX = solver.playedMove(i) - 1;
+				int moveY = solver.playedMoveRow(i) - 1;
 				
 				setCellElementBackgroundColor(moveX, moveY, EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX, false);
 			}
 			
-			playedMoveAmount = 0;
-			undoneMoveAmount = 0;
+			solver.clearBoard();
 			
 			redAtTurn = true;
 			
@@ -763,31 +752,25 @@ public final class KiteDemo {
 	}
 	
 	private void undoMove() {
-		if(playedMoveAmount == 0) return;
-		
-		playedMoveAmount--;
-		undoneMoveAmount++;
+		if(solver.boardEmpty()) return;
 		
 		redAtTurn = !redAtTurn;
 		
-		int moveX = playedMoves[playedMoveAmount];
-		
-		columnPlayedMoveAmounts[moveX]--;
-		
-		int moveY = columnPlayedMoveAmounts[moveX];
+		int moveX = solver.lastMove() - 1;
+		int moveY = solver.lastMoveRow() - 1;
 		
 		solver.undoMove();
 		
 		setCellElementBackgroundColor(moveX, moveY, EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX, false);
 		
-		if(playedMoveAmount != 0) {
+		if(!solver.boardEmpty()) {
 			
-			int lastMoveX = playedMoves[playedMoveAmount - 1];
-			int lastMoveY = columnPlayedMoveAmounts[lastMoveX] - 1;
+			moveX = solver.lastMove() - 1;
+			moveY = solver.lastMoveRow() - 1;
 			
 			int i = redAtTurn ? YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
 			
-			setCellElementBackgroundColor(lastMoveX, lastMoveY, i, true);
+			setCellElementBackgroundColor(moveX, moveY, i, true);
 		}
 		
 		hideWinLines();
@@ -798,9 +781,10 @@ public final class KiteDemo {
 	}
 	
 	private void redoMove() {
-		if(undoneMoveAmount == 0) return;
+		if(!solver.canRedoMove()) return;
 		
-		int moveX = playedMoves[playedMoveAmount];
+		int playedMoveAmount = solver.playedMoveAmount();
+		int moveX = solver.playedMove(playedMoveAmount) - 1;
 		playMove(moveX, true, false);
 	}
 	
@@ -827,32 +811,24 @@ public final class KiteDemo {
 	private void playMove(int moveX, boolean redo, boolean initial) {
 		if(solver.gameOver()) return;
 		
-		int moveY = columnPlayedMoveAmounts[moveX];
+		int moveY = solver.cellColumnHeight(moveX + 1);
 		if(moveY == BOARD_HEIGHT) return;
 		
 		eventID++;
 		
 		int i = redAtTurn ? RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
 		
-		if(playedMoveAmount != 0) {
+		if(!solver.boardEmpty()) {
 			
-			int lastMoveX = playedMoves[playedMoveAmount - 1];
-			int lastMoveY = columnPlayedMoveAmounts[lastMoveX] - 1;
+			int lastMoveX = solver.lastMove() - 1;
+			int lastMoveY = solver.lastMoveRow() - 1;
 			
 			int j = redAtTurn ? YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
 			
 			setCellElementBackgroundColor(lastMoveX, lastMoveY, j, false);
 		}
 		
-		playedMoves[playedMoveAmount] = moveX;
-		playedMoveAmount++;
-		
 		redAtTurn = !redAtTurn;
-		
-		if(redo) undoneMoveAmount--;
-		else undoneMoveAmount = 0;
-		
-		columnPlayedMoveAmounts[moveX]++;
 		
 		solver.playMove(moveX + 1);
 		setCellElementBackgroundColor(moveX, moveY, i, true);
@@ -930,8 +906,8 @@ public final class KiteDemo {
 			boardLinesElement.appendChild(lineElement);
 		}
 		
-		int moveX = playedMoves[playedMoveAmount - 1];
-		int moveY = columnPlayedMoveAmounts[moveX] - 1;
+		int moveX = solver.lastMove() - 1;
+		int moveY = solver.lastMoveRow() - 1;
 		
 		int i = redAtTurn ? YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
 		
@@ -1007,6 +983,7 @@ public final class KiteDemo {
 		Location location = WINDOW.getLocation();
 		String locationPath = location.getPathName();
 		
+		int playedMoveAmount = solver.playedMoveAmount();
 		boolean movesWerePlayed = playedMoveAmount != 0;
 		boolean aiLevelNotPerfect = aiSkillLevel != SkillLevel.PERFECT;
 		boolean searchNotEmpty = movesWerePlayed || aiModeSelected || aiLevelNotPerfect;
@@ -1026,7 +1003,8 @@ public final class KiteDemo {
 				
 				for(int i = 0; i < playedMoveAmount; i++) {
 					
-					char c = (char) (SMALLEST_LOCATION_SEARCH_MOVE + playedMoves[i]);
+					int playedMove = solver.playedMove(i) - 1;
+					char c = (char) (SMALLEST_LOCATION_SEARCH_MOVE + playedMove);
 					stringBuilder.append(c);
 				}
 			}

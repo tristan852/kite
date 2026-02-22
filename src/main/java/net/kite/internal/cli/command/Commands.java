@@ -31,6 +31,7 @@ public final class Commands {
 	public static final Command PRINT_MOVES = new PrintMovesCommand();
 	public static final Command EMPTY = new EmptyCommand();
 	public static final Command MOVE = new MoveCommand();
+	public static final Command MOVE_ROW = new MoveRowCommand();
 	public static final Command CAN_PLAY = new CanPlayCommand();
 	public static final Command CAN_UNDO = new CanUndoCommand();
 	public static final Command CAN_REDO = new CanRedoCommand();
@@ -69,6 +70,7 @@ public final class Commands {
 			PRINT_MOVES,
 			EMPTY,
 			MOVE,
+			MOVE_ROW,
 			CAN_PLAY,
 			CAN_UNDO,
 			CAN_REDO,
@@ -112,6 +114,7 @@ public final class Commands {
 					PRINT_MOVES,
 					EMPTY,
 					MOVE,
+					MOVE_ROW,
 					CAN_PLAY,
 					CAN_UNDO,
 					CAN_REDO,

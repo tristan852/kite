@@ -72,6 +72,8 @@ public final class Kite implements KiteApi {
 	private final Random random;
 	
 	private final int[] playedMoves = new int[BOARD_SIZE];
+	private final int[] playedMoveRows = new int[BOARD_SIZE];
+	
 	private final int[] moveScores = new int[BOARD_WIDTH];
 	
 	private int playedMoveAmount;
@@ -190,8 +192,18 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
+	public int lastMoveRow() {
+		return playedMoveRows[playedMoveAmount - 1];
+	}
+	
+	@Override
 	public int lastMove() {
 		return playedMoves[playedMoveAmount - 1] + 1;
+	}
+	
+	@Override
+	public int playedMoveRow(int moveIndex) {
+		return playedMoveRows[moveIndex];
 	}
 	
 	@Override
@@ -533,7 +545,10 @@ public final class Kite implements KiteApi {
 				
 			} else {
 				
+				int row = board.cellColumnHeight(moveColumnIndex);
+				
 				playedMoves[playedMoveAmount] = moveColumnIndex;
+				playedMoveRows[playedMoveAmount] = row;
 				undoneMoveAmount = 0;
 			}
 			
@@ -558,7 +573,10 @@ public final class Kite implements KiteApi {
 				
 			} else {
 				
+				int row = board.cellColumnHeight(moveColumnIndex);
+				
 				playedMoves[playedMoveAmount] = moveColumnIndex;
+				playedMoveRows[playedMoveAmount] = row;
 				undoneMoveAmount = 0;
 			}
 			
@@ -581,7 +599,10 @@ public final class Kite implements KiteApi {
 			
 		} else {
 			
+			int row = board.cellColumnHeight(moveColumnIndex);
+			
 			playedMoves[playedMoveAmount] = moveColumnIndex;
+			playedMoveRows[playedMoveAmount] = row;
 			undoneMoveAmount = 0;
 		}
 		
@@ -661,7 +682,10 @@ public final class Kite implements KiteApi {
 					
 				} else {
 					
+					int row = board.cellColumnHeight(moveColumnIndex);
+					
 					playedMoves[playedMoveAmount] = moveColumnIndex;
+					playedMoveRows[playedMoveAmount] = row;
 					undoneMoveAmount = 0;
 				}
 				
@@ -692,7 +716,10 @@ public final class Kite implements KiteApi {
 				
 			} else {
 				
+				int row = board.cellColumnHeight(moveColumnIndex);
+				
 				playedMoves[playedMoveAmount] = moveColumnIndex;
+				playedMoveRows[playedMoveAmount] = row;
 				undoneMoveAmount = 0;
 			}
 			
@@ -728,7 +755,10 @@ public final class Kite implements KiteApi {
 					
 				} else {
 					
+					int row = board.cellColumnHeight(moveColumnIndex);
+					
 					playedMoves[playedMoveAmount] = moveColumnIndex;
+					playedMoveRows[playedMoveAmount] = row;
 					undoneMoveAmount = 0;
 				}
 				
@@ -759,7 +789,10 @@ public final class Kite implements KiteApi {
 				
 			} else {
 				
+				int row = board.cellColumnHeight(moveColumnIndex);
+				
 				playedMoves[playedMoveAmount] = moveColumnIndex;
+				playedMoveRows[playedMoveAmount] = row;
 				undoneMoveAmount = 0;
 			}
 			

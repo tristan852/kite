@@ -437,6 +437,18 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
+	 * Returns the board row played
+	 * in of the move that was
+	 * played last by either side.
+	 *
+	 * @return the row index of the last move played (1-indexed from bottom to top)
+	 */
+	@Override
+	public synchronized int lastMoveRow() {
+		return internalSolver.lastMoveRow();
+	}
+	
+	/**
 	 * Returns the move that was
 	 * played last by either side.
 	 *
@@ -448,9 +460,55 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
+	 * Returns the board row played in
+	 * of the move at the specified
+	 * index among all moves that have been
+	 * played so far by both sides.
+	 * <p>
+	 * Let {@code n} be the number of moves currently played
+	 * and {@code m} be the number of moves that have been undone.
+	 * <p>
+	 * For indices {@code 0 <= i < n},
+	 * {@code playedMoveRow(i)} returns the {@code i}-th played move row.
+	 * <p>
+	 * For indices {@code n <= i < n + m},
+	 * {@code playedMoveRow(i)} returns the {@code (i - n)}-th
+	 * move row that was undone.
+	 * <p>
+	 * In particular:
+	 * <ul>
+	 *   <li>{@code playedMoveRow(n - 1)} returns the last played move row.</li>
+	 *   <li>{@code playedMoveRow(n)} returns the most recently undone move row.</li>
+	 * </ul>
+	 *
+	 * @param moveIndex the index of the move to retrieve (0-indexed)
+	 * @return the row index (1-indexed from bottom to top) of the move at the given index
+	 */
+	@Override
+	public synchronized int playedMoveRow(int moveIndex) {
+		return internalSolver.playedMoveRow(moveIndex);
+	}
+	
+	/**
 	 * Returns the move at the specified
 	 * index among all moves that have been
 	 * played so far by both sides.
+	 * <p>
+	 * Let {@code n} be the number of moves currently played
+	 * and {@code m} be the number of moves that have been undone.
+	 * <p>
+	 * For indices {@code 0 <= i < n},
+	 * {@code playedMove(i)} returns the {@code i}-th played move.
+	 * <p>
+	 * For indices {@code n <= i < n + m},
+	 * {@code playedMove(i)} returns the {@code (i - n)}-th
+	 * move that was undone.
+	 * <p>
+	 * In particular:
+	 * <ul>
+	 *   <li>{@code playedMove(n - 1)} returns the last played move.</li>
+	 *   <li>{@code playedMove(n)} returns the most recently undone move.</li>
+	 * </ul>
 	 *
 	 * @param moveIndex the index of the move to retrieve (0-indexed)
 	 * @return the column index (1-indexed from left to right) of the move at the given index
