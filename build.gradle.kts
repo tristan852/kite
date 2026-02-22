@@ -52,11 +52,12 @@ tasks.register<Copy>("copyDemoAssetFiles") {
     into("build/war-unpacked")
 }
 
-val isLocalPublishEnabled: Boolean = project.hasProperty("enableLocalPublish")
+val isPublishEnabled: Boolean = project.hasProperty("enablePublish")
 
-tasks.withType<PublishToMavenLocal> {
-    onlyIf { isLocalPublishEnabled }
-}
+tasks.matching { it.name.contains("publish") || it.name.contains("sign") }
+    .configureEach {
+        onlyIf { isPublishEnabled }
+    }
 
 signing {
     useGpgCmd()
