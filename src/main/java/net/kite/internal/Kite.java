@@ -26,6 +26,7 @@ public final class Kite implements KiteApi {
 			3, 2, 4, 1, 5, 0, 6
 	};
 	
+	private static final int INVALID_PLAYED_MOVE = -1;
 	private static final int INVALID_MOVE_COLUMN_INDEX = 0;
 	
 	private static final int MAXIMAL_MOVE_SCORE_LOSS = 36;
@@ -87,6 +88,8 @@ public final class Kite implements KiteApi {
 	public Kite() {
 		this.board = new Board();
 		this.random = new Random();
+		
+		Arrays.fill(playedMoves, INVALID_PLAYED_MOVE);
 		
 		OpeningBoardScoreCaches.ensureDefaultIsLoaded(null);
 		

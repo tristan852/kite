@@ -568,7 +568,7 @@ public final class KiteDemo {
 				
 				if(aiModeSelected && aiPlaysRed == redAtTurn) return;
 				
-				playMove(moveX, false, false);
+				playMove(moveX, false);
 			});
 			
 			setElementStyles(cellColumnElement, CELL_COLUMN_ELEMENT_STYLES);
@@ -636,7 +636,7 @@ public final class KiteDemo {
 						for(int i = 0; i < l; i++) {
 							
 							int moveX = itemValue.charAt(i) - SMALLEST_LOCATION_SEARCH_MOVE;
-							playMove(moveX, false, true);
+							playMove(moveX, true);
 						}
 					}
 					case LOCATION_SEARCH_AI_COLOR_KEY -> {
@@ -785,7 +785,7 @@ public final class KiteDemo {
 		
 		int playedMoveAmount = solver.playedMoveAmount();
 		int moveX = solver.playedMove(playedMoveAmount) - 1;
-		playMove(moveX, true, false);
+		playMove(moveX, false);
 	}
 	
 	private void scheduleAIMove() {
@@ -805,10 +805,10 @@ public final class KiteDemo {
 		int moveX = solver.skilledMove(aiSkillLevel);
 		moveX--;
 		
-		playMove(moveX, false, false);
+		playMove(moveX, false);
 	}
 	
-	private void playMove(int moveX, boolean redo, boolean initial) {
+	private void playMove(int moveX, boolean initial) {
 		if(solver.gameOver()) return;
 		
 		int moveY = solver.cellColumnHeight(moveX + 1);
