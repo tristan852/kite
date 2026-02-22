@@ -52,12 +52,11 @@ tasks.register<Copy>("copyDemoAssetFiles") {
     into("build/war-unpacked")
 }
 
-val isPublishEnabled: Boolean = project.hasProperty("enablePublish")
+val isSignedPublishEnabled: Boolean = project.hasProperty("enableSignedPublish")
 
-tasks.matching { it.name.contains("publish") || it.name.contains("sign") }
-    .configureEach {
-        onlyIf { isPublishEnabled }
-    }
+tasks.withType<Sign>().configureEach {
+    onlyIf { isSignedPublishEnabled }
+}
 
 signing {
     useGpgCmd()
