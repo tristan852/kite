@@ -727,7 +727,7 @@ public final class KiteDemo {
 				int moveX = solver.playedMove(i) - 1;
 				int moveY = solver.playedMoveRow(i) - 1;
 				
-				System.out.println(moveX + " , " + moveY);
+				System.out.println("clear: " + moveX + " , " + moveY);
 				
 				setCellElementBackgroundColor(moveX, moveY, EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX, false);
 			}
@@ -820,10 +820,14 @@ public final class KiteDemo {
 		
 		int i = redAtTurn ? RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
 		
+		System.out.println("play: " + moveX + ", " + moveY);
+		
 		if(!solver.boardEmpty()) {
 			
 			int lastMoveX = solver.lastMove() - 1;
 			int lastMoveY = solver.lastMoveRow() - 1;
+			
+			System.out.println("last move: " + lastMoveX + ", " + lastMoveY);
 			
 			int j = redAtTurn ? YELLOW_CELL_ELEMENT_BACKGROUND_COLOR_INDEX : RED_CELL_ELEMENT_BACKGROUND_COLOR_INDEX;
 			
