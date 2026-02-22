@@ -3,6 +3,7 @@ package net.kite.api;
 import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.board.player.color.BoardPlayerColor;
+import net.kite.api.exception.IllegalMoveException;
 import net.kite.api.skill.level.SkillLevel;
 
 /**
@@ -801,7 +802,7 @@ public final class Kite implements KiteApi {
 	 * @return move evaluation
 	 * @throws IndexOutOfBoundsException if {@code moveColumnIndex}
 	 *         is not between 1 and 7 (inclusive)
-	 * @throws IllegalStateException if the specified move is not legal
+	 * @throws IllegalMoveException if the specified move is not legal
 	 *         in the current board state
 	 */
 	@Override
@@ -899,7 +900,7 @@ public final class Kite implements KiteApi {
 	 * @return this solver instance
 	 * @throws IndexOutOfBoundsException if the string contains a character
 	 *         that is not between '1' and '7'
-	 * @throws IllegalStateException if the sequence contains an illegal move
+	 * @throws IllegalMoveException if the sequence contains an illegal move
 	 */
 	@Override
 	public synchronized Kite playMoves(String moveColumnIndicesString) {
@@ -919,7 +920,7 @@ public final class Kite implements KiteApi {
 	 * @return this solver instance
 	 * @throws IndexOutOfBoundsException if any move is not between
 	 *         1 and 7 (inclusive)
-	 * @throws IllegalStateException if the sequence contains an illegal move
+	 * @throws IllegalMoveException if the sequence contains an illegal move
 	 */
 	@Override
 	public synchronized Kite playMoves(int... moveColumnIndices) {
@@ -938,7 +939,7 @@ public final class Kite implements KiteApi {
 	 * @return this solver instance
 	 * @throws IndexOutOfBoundsException if {@code moveColumnIndex}
 	 *         is not between 1 and 7 (inclusive)
-	 * @throws IllegalStateException if the move is not legal
+	 * @throws IllegalMoveException if the move is not legal
 	 *         in the current board state
 	 */
 	@Override
@@ -1015,7 +1016,7 @@ public final class Kite implements KiteApi {
 	 * @return this solver instance
 	 * @throws IndexOutOfBoundsException if the string contains a character
 	 *         that is not between '1' and '7'
-	 * @throws IllegalArgumentException if the sequence does not represent
+	 * @throws IllegalMoveException if the sequence does not represent
 	 *         a legal Connect Four game
 	 */
 	@Override
@@ -1033,7 +1034,7 @@ public final class Kite implements KiteApi {
 	 * @return this solver instance
 	 * @throws IndexOutOfBoundsException if any move is not between
 	 *         1 and 7 (inclusive)
-	 * @throws IllegalArgumentException if the sequence does not represent
+	 * @throws IllegalMoveException if the sequence does not represent
 	 *         a legal Connect Four game
 	 */
 	@Override

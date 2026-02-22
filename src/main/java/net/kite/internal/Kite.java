@@ -4,6 +4,7 @@ import net.kite.api.KiteApi;
 import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.board.player.color.BoardPlayerColor;
+import net.kite.api.exception.IllegalMoveException;
 import net.kite.api.skill.level.SkillLevel;
 import net.kite.internal.board.Board;
 import net.kite.internal.board.score.BoardScore;
@@ -583,8 +584,10 @@ public final class Kite implements KiteApi {
 		
 		if(!board.moveLegal(moveColumnIndex)) {
 			
-			String message = String.format("Cannot evaluate illegal move: %s", moveColumnIndex + 1);
-			throw new IllegalStateException(message);
+			moveColumnIndex++;
+			
+			String message = String.format("Cannot evaluate illegal move: %s", moveColumnIndex);
+			throw new IllegalMoveException(moveColumnIndex, message);
 		}
 		
 		return board.evaluateMove(moveColumnIndex);
@@ -656,8 +659,10 @@ public final class Kite implements KiteApi {
 				
 				undoneMoveAmount = savedUndoneMoveAmount;
 				
-				String message = String.format("moveColumnIndicesString contains an illegal move: %d", moveColumnIndex + 1);
-				throw new IllegalStateException(message);
+				moveColumnIndex++;
+				
+				String message = String.format("moveColumnIndicesString contains an illegal move: %d", moveColumnIndex);
+				throw new IllegalMoveException(moveColumnIndex, message);
 			}
 			
 			savedPlayedMoves[playedMoveAmount] = playedMoves[playedMoveAmount];
@@ -717,8 +722,10 @@ public final class Kite implements KiteApi {
 				
 				undoneMoveAmount = savedUndoneMoveAmount;
 				
-				String message = String.format("moveColumnIndices contains an illegal move: %d", moveColumnIndex + 1);
-				throw new IllegalStateException(message);
+				moveColumnIndex++;
+				
+				String message = String.format("moveColumnIndices contains an illegal move: %d", moveColumnIndex);
+				throw new IllegalMoveException(moveColumnIndex, message);
 			}
 			
 			savedPlayedMoves[playedMoveAmount] = playedMoves[playedMoveAmount];
@@ -757,8 +764,10 @@ public final class Kite implements KiteApi {
 		
 		if(!board.moveLegal(moveColumnIndex)) {
 			
-			String message = String.format("Cannot play illegal move: %s", moveColumnIndex + 1);
-			throw new IllegalStateException(message);
+			moveColumnIndex++;
+			
+			String message = String.format("Cannot play illegal move: %s", moveColumnIndex);
+			throw new IllegalMoveException(moveColumnIndex, message);
 		}
 		
 		board.playMove(moveColumnIndex);
@@ -928,7 +937,7 @@ public final class Kite implements KiteApi {
 					undoneMoveAmount = savedUndoneMoveAmount;
 					
 					String message = String.format("moveColumnIndicesString is not a legal Connect Four game: %s", moveColumnIndicesString);
-					throw new IllegalArgumentException(message);
+					throw new IllegalMoveException(moveColumnIndex + 1, message);
 				}
 				
 				board.playMove(moveColumnIndex);
@@ -989,7 +998,7 @@ public final class Kite implements KiteApi {
 				undoneMoveAmount = savedUndoneMoveAmount;
 				
 				String message = String.format("moveColumnIndicesString is not a legal Connect Four game: %s", moveColumnIndicesString);
-				throw new IllegalArgumentException(message);
+				throw new IllegalMoveException(moveColumnIndex + 1, message);
 			}
 			
 			undoneMoveAmount += playedMoveAmount - i;
@@ -1094,7 +1103,7 @@ public final class Kite implements KiteApi {
 					for(int move : moveColumnIndices) stringBuilder.append((char) ('0' + move));
 					
 					String message = String.format("moveColumnIndices is not a legal Connect Four game: %s", stringBuilder);
-					throw new IllegalArgumentException(message);
+					throw new IllegalMoveException(moveColumnIndex + 1, message);
 				}
 				
 				board.playMove(moveColumnIndex);
@@ -1158,7 +1167,7 @@ public final class Kite implements KiteApi {
 				for(int move : moveColumnIndices) stringBuilder.append((char) ('0' + move));
 				
 				String message = String.format("moveColumnIndices is not a legal Connect Four game: %s", stringBuilder);
-				throw new IllegalArgumentException(message);
+				throw new IllegalMoveException(moveColumnIndex + 1, message);
 			}
 			
 			undoneMoveAmount += playedMoveAmount - i;
