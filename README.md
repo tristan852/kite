@@ -10,7 +10,7 @@
 [![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/tristan852/kite?style=for-the-badge)](https://github.com/tristan852/kite/tree/main/src)
     <br>
 [![Javadoc status](https://img.shields.io/website?url=https://jitpack.io/com/github/tristan852/kite/latest/javadoc/&style=for-the-badge&label=Javadoc&up_message=Online&down_message=Offline)](https://jitpack.io/com/github/tristan852/kite/latest/javadoc/)
-[![Test status](https://img.shields.io/github/actions/workflow/status/tristan852/kite/teavm.yml?style=for-the-badge&label=Tests)](https://github.com/tristan852/kite/actions/workflows/teavm.yml)
+[![Test status](https://img.shields.io/github/actions/workflow/status/tristan852/kite/teavm.yml?style=for-the-badge&label=Tests)](https://github.com/tristan852/kite/actions)
 [![Demo status](https://img.shields.io/website?url=https://tristan852.github.io/kite&style=for-the-badge&label=Demo&up_message=Online&down_message=Offline)](https://tristan852.github.io/kite)
     <br>
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.tristan852/kite?style=for-the-badge&color=orange)](https://central.sonatype.com/artifact/io.github.tristan852/kite)
