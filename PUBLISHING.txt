@@ -26,9 +26,9 @@ Publishing steps of a new Kite release
 
 5) push all changes to the GitHub repository again (all three repos)
 
-6) optional: refresh the javadoc.io page over at https://javadoc.io/doc/io.github.tristan852/kite
+6) optional: rebuild on jitpack over at https://jitpack.io/#tristan852/kite
 
-7) optional: refresh the JavaDoc README-badge using 'curl -w "\n" -s -X PURGE https://camo.githubusercontent.com/...'
+7) optional: refresh any outdated README-badges using 'curl -w "\n" -s -X PURGE https://camo.githubusercontent.com/...'
 
 8) create a new GitHub release for the CLI tool
     - download the binaries built by GitHub actions on the latest commit: https://github.com/tristan852/kite/actions/workflows/graalvm-native.yml
