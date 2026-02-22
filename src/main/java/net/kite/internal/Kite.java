@@ -20,6 +20,8 @@ public final class Kite implements KiteApi {
 	
 	private static final int BOARD_SIZE = 42;
 	private static final int BOARD_WIDTH = 7;
+	private static final int BOARD_HEIGHT = 6;
+	
 	private static final int GAME_PLAYER_AMOUNT = 2;
 	
 	private static final int[] ORDERED_MOVE_COLUMN_INDICES = new int[] {
@@ -31,6 +33,7 @@ public final class Kite implements KiteApi {
 	private static final int MAXIMAL_MOVE_SCORE_LOSS = 36;
 	
 	private static final int MOVE_COLUMN_INDEX_SMALLEST_CHARACTER = 49;
+	private static final int MOVE_COLUMN_INDEX_LARGEST_CHARACTER = 55;
 	
 	private static final double METRICS_THROUGHPUT_CONVERSION_FACTOR = 1000.0;
 	private static final String METRICS_STRING_PATTERN = "positions evaluated      : %d\naverage evaluation time  : %s\naverage node evaluations : %.2f\nnode throughput          : %.2f Mn/s";
@@ -74,10 +77,10 @@ public final class Kite implements KiteApi {
 	private final int[] playedMoves = new int[BOARD_SIZE];
 	private final int[] playedMoveRows = new int[BOARD_SIZE];
 	
-	private final int[] moveScores = new int[BOARD_WIDTH];
-	
 	private int playedMoveAmount;
 	private int undoneMoveAmount;
+	
+	private final int[] moveScores = new int[BOARD_WIDTH];
 	
 	private int metricsEvaluationAmount;
 	private int metricsNodeEvaluationAmount;
@@ -130,6 +133,12 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public int cellColumnHeight(int cellColumnIndex) {
+		if(cellColumnIndex < 1 || cellColumnIndex > BOARD_WIDTH) {
+			
+			String message = String.format("cellColumnIndex must be between 1 and 7 (inclusive) but got: %s", cellColumnIndex);
+			throw new IndexOutOfBoundsException(message);
+		}
+		
 		cellColumnIndex--;
 		
 		return board.cellColumnHeight(cellColumnIndex);
@@ -137,11 +146,35 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public boolean cellOccupied(int cellX, int cellY) {
+		if(cellX < 0 || cellX >= BOARD_WIDTH) {
+			
+			String message = String.format("cellX must be between 0 and 6 (inclusive) but got: %s", cellX);
+			throw new IllegalArgumentException(message);
+		}
+		
+		if(cellY < 0 || cellY >= BOARD_HEIGHT) {
+			
+			String message = String.format("cellY must be between 0 and 5 (inclusive) but got: %s", cellY);
+			throw new IllegalArgumentException(message);
+		}
+		
 		return board.cellFilled(cellX, cellY);
 	}
 	
 	@Override
 	public BoardPlayerColor cellPlayerColor(int cellX, int cellY) {
+		if(cellX < 0 || cellX >= BOARD_WIDTH) {
+			
+			String message = String.format("cellX must be between 0 and 6 (inclusive) but got: %s", cellX);
+			throw new IllegalArgumentException(message);
+		}
+		
+		if(cellY < 0 || cellY >= BOARD_HEIGHT) {
+			
+			String message = String.format("cellY must be between 0 and 5 (inclusive) but got: %s", cellY);
+			throw new IllegalArgumentException(message);
+		}
+		
 		return board.cellPlayerColor(cellX, cellY);
 	}
 	
@@ -193,21 +226,55 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public int lastMoveRow() {
+		if(playedMoveAmount == 0) {
+			
+			throw new IllegalStateException("No move has been played yet!");
+		}
+		
 		return playedMoveRows[playedMoveAmount - 1];
 	}
 	
 	@Override
 	public int lastMove() {
+		if(playedMoveAmount == 0) {
+			
+			throw new IllegalStateException("No move has been played yet!");
+		}
+		
 		return playedMoves[playedMoveAmount - 1] + 1;
 	}
 	
 	@Override
 	public int playedMoveRow(int moveIndex) {
+		int n = playedMoveAmount + undoneMoveAmount;
+		if(n == 0) {
+			
+			throw new IllegalStateException("No move has been played or undone yet!");
+		}
+		
+		if(moveIndex < 0 || moveIndex >= n) {
+			
+			String message = String.format("moveIndex must be between 0 and %s (inclusive) but got: %s", n - 1, moveIndex);
+			throw new IllegalArgumentException(message);
+		}
+		
 		return playedMoveRows[moveIndex];
 	}
 	
 	@Override
 	public int playedMove(int moveIndex) {
+		int n = playedMoveAmount + undoneMoveAmount;
+		if(n == 0) {
+			
+			throw new IllegalStateException("No move has been played or undone yet!");
+		}
+		
+		if(moveIndex < 0 || moveIndex >= n) {
+			
+			String message = String.format("moveIndex must be between 0 and %s (inclusive) but got: %s", n - 1, moveIndex);
+			throw new IllegalArgumentException(message);
+		}
+		
 		return playedMoves[moveIndex] + 1;
 	}
 	
@@ -227,6 +294,11 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public KiteApi stopRecordingPerformanceMetrics() {
+		if(metricsRecordingStartTime == 0) {
+			
+			throw new IllegalStateException("Cannot stop the recording of performance metrics if the recording has not started yet!");
+		}
+		
 		long endTime = System.nanoTime();
 		
 		metricsEvaluationAmount += board.getEvaluationAmount();
@@ -498,7 +570,19 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public int evaluateMove(int moveColumnIndex) {
+		if(moveColumnIndex < 1 || moveColumnIndex > BOARD_WIDTH) {
+			
+			String message = String.format("moveColumnIndex must be between 1 and 7 (inclusive) but got: %s", moveColumnIndex);
+			throw new IndexOutOfBoundsException(message);
+		}
+		
 		moveColumnIndex--;
+		
+		if(!board.moveLegal(moveColumnIndex)) {
+			
+			String message = String.format("Cannot evaluate illegal move: %s", moveColumnIndex + 1);
+			throw new IllegalArgumentException(message);
+		}
 		
 		return board.evaluateMove(moveColumnIndex);
 	}
@@ -524,17 +608,34 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public boolean moveLegal(int moveColumnIndex) {
+		if(moveColumnIndex < 1 || moveColumnIndex > BOARD_WIDTH) {
+			
+			String message = String.format("moveColumnIndex must be between 1 and 7 (inclusive) but got: %s", moveColumnIndex);
+			throw new IndexOutOfBoundsException(message);
+		}
+		
 		moveColumnIndex--;
 		
 		return board.moveLegal(moveColumnIndex);
 	}
 	
+	// TODO play moves and setup
 	@Override
-	public KiteApi playMoves(String moveColumnIndices) {
-		int n = moveColumnIndices.length();
+	public KiteApi playMoves(String moveColumnIndicesString) {
+		int n = moveColumnIndicesString.length();
 		for(int i = 0; i < n; i++) {
 			
-			int moveColumnIndex = moveColumnIndices.charAt(i) - MOVE_COLUMN_INDEX_SMALLEST_CHARACTER;
+			char c = moveColumnIndicesString.charAt(i);
+			if(c < MOVE_COLUMN_INDEX_SMALLEST_CHARACTER || c > MOVE_COLUMN_INDEX_LARGEST_CHARACTER) {
+				
+				String message = String.format("moveColumnIndicesString must contain indices between 1 and 7 (inclusive) but found: %c", c);
+				throw new IndexOutOfBoundsException(message);
+			}
+		}
+		
+		for(int i = 0; i < n; i++) {
+			
+			int moveColumnIndex = moveColumnIndicesString.charAt(i) - MOVE_COLUMN_INDEX_SMALLEST_CHARACTER;
 			
 			board.playMove(moveColumnIndex);
 			
@@ -559,6 +660,15 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public KiteApi playMoves(int... moveColumnIndices) {
+		for(int moveColumnIndex : moveColumnIndices) {
+			
+			if(moveColumnIndex < 1 || moveColumnIndex > BOARD_WIDTH) {
+				
+				String message = String.format("moveColumnIndices must contain indices between 1 and 7 (inclusive) but found: %d", moveColumnIndex);
+				throw new IndexOutOfBoundsException(message);
+			}
+		}
+		
 		for(int moveColumnIndex : moveColumnIndices) {
 			
 			moveColumnIndex--;
@@ -586,7 +696,19 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public KiteApi playMove(int moveColumnIndex) {
+		if(moveColumnIndex < 1 || moveColumnIndex > BOARD_WIDTH) {
+			
+			String message = String.format("moveColumnIndex must be between 1 and 7 (inclusive) but got: %s", moveColumnIndex);
+			throw new IndexOutOfBoundsException(message);
+		}
+		
 		moveColumnIndex--;
+		
+		if(!board.moveLegal(moveColumnIndex)) {
+			
+			String message = String.format("Cannot play illegal move: %s", moveColumnIndex + 1);
+			throw new IllegalArgumentException(message);
+		}
 		
 		board.playMove(moveColumnIndex);
 		
@@ -610,6 +732,17 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public KiteApi redoMoves(int moveAmount) {
+		if(moveAmount <= 0) {
+			
+			String message = String.format("Number of moves to redo has to be positive but got: %s", moveAmount);
+			throw new IllegalArgumentException(message);
+		}
+		
+		if(moveAmount > undoneMoveAmount) {
+			
+			throw new IllegalStateException("That many moves have not been undone yet!");
+		}
+		
 		int n = playedMoveAmount + moveAmount;
 		while(playedMoveAmount < n) {
 			
@@ -627,6 +760,11 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public int redoMove() {
+		if(undoneMoveAmount == 0) {
+			
+			throw new IllegalStateException("No move has been undone yet!");
+		}
+		
 		int moveColumnIndex = playedMoves[playedMoveAmount];
 		board.playMove(moveColumnIndex);
 		
@@ -638,6 +776,17 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public KiteApi undoMoves(int moveAmount) {
+		if(moveAmount <= 0) {
+			
+			String message = String.format("Number of moves to undo has to be positive but got: %s", moveAmount);
+			throw new IllegalArgumentException(message);
+		}
+		
+		if(moveAmount > playedMoveAmount) {
+			
+			throw new IllegalStateException("That many moves have not been played yet!");
+		}
+		
 		int n = playedMoveAmount - moveAmount;
 		
 		while(playedMoveAmount > n) {
@@ -653,6 +802,11 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public int undoMove() {
+		if(playedMoveAmount == 0) {
+			
+			throw new IllegalStateException("No move has been played yet!");
+		}
+		
 		board.undoMove();
 		
 		playedMoveAmount--;
@@ -664,6 +818,16 @@ public final class Kite implements KiteApi {
 	@Override
 	public KiteApi setupBoard(String moveColumnIndicesString) {
 		int l = moveColumnIndicesString.length();
+		for(int i = 0; i < l; i++) {
+			
+			char c = moveColumnIndicesString.charAt(i);
+			if(c < MOVE_COLUMN_INDEX_SMALLEST_CHARACTER || c > MOVE_COLUMN_INDEX_LARGEST_CHARACTER) {
+				
+				String message = String.format("moveColumnIndicesString must contain indices between 1 and 7 (inclusive) but found: %c", c);
+				throw new IndexOutOfBoundsException(message);
+			}
+		}
+		
 		for(int i = 0; i < l; i++) {
 			
 			int moveColumnIndex = moveColumnIndicesString.charAt(i) - MOVE_COLUMN_INDEX_SMALLEST_CHARACTER;
@@ -734,6 +898,15 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public KiteApi setupBoard(int... moveColumnIndices) {
+		for(int moveColumnIndex : moveColumnIndices) {
+			
+			if(moveColumnIndex < 1 || moveColumnIndex > BOARD_WIDTH) {
+				
+				String message = String.format("moveColumnIndices must contain indices between 1 and 7 (inclusive) but found: %d", moveColumnIndex);
+				throw new IndexOutOfBoundsException(message);
+			}
+		}
+		
 		int l = moveColumnIndices.length;
 		for(int i = 0; i < l; i++) {
 			

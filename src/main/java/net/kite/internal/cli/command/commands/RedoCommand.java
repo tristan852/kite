@@ -42,6 +42,13 @@ public final class RedoCommand extends Command {
 				return false;
 			}
 			
+			if(n <= 0) {
+				
+				errorStream.println(AnsiUtil.brightRedAnsi("Integer value for argument 'move-amount' has to be positive!"));
+				if(exitOnError) System.exit(1);
+				return false;
+			}
+			
 			int undoneMoves = solver.undoneMoveAmount();
 			if(n > undoneMoves) {
 				

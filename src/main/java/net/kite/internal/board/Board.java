@@ -115,6 +115,7 @@ public final class Board {
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
 	private static final String TO_STRING_EMPTY_CELL_String = ".";
 	private static final String TO_STRING_MOVES_PREFIX_STRING = "moves: ";
+	private static final String TO_STRING_EMPTY_BOARD_MOVES_STRING = "none";
 	private static final String TO_STRING_MOVE_SCORE_SEPARATOR_STRING = ", ";
 	private static final String TO_STRING_REMAINING_MOVE_AMOUNT_STRING = "\nmoves left (optimal play): ";
 	private static final String TO_STRING_GAME_OVER_MOVE_SCORES_STRING = "";
@@ -201,12 +202,15 @@ public final class Board {
 	
 	@SuppressWarnings("DataFlowIssue")
 	public String toString(boolean boardOnly, boolean spaciousBoard, boolean fancyBoard, boolean colored) {
+		BoardOutcome outcome = null;
+		
 		boolean anyWinCells = false;
 		if(colored) {
 			
-			BoardLine[] lines = winningPlayerLines();
-			if(lines != null) {
+			outcome = outcome();
+			if(outcome.isWin()) {
 				
+				BoardLine[] lines = winningPlayerLines();
 				anyWinCells = true;
 				
 				for(BoardLine line : lines) {
@@ -341,18 +345,25 @@ public final class Board {
 			stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
 			stringBuilder.append(TO_STRING_MOVES_PREFIX_STRING);
 			
-			for(int i = 0; i < filledCellAmount; i++) {
+			if(filledCellAmount == 0) {
 				
-				int move = playedMoves[i];
-				char moveCharacter = (char) (SMALLEST_MOVE_CHARACTER + move);
+				stringBuilder.append(TO_STRING_EMPTY_BOARD_MOVES_STRING);
 				
-				stringBuilder.append(moveCharacter);
+			} else {
+				
+				for(int i = 0; i < filledCellAmount; i++) {
+					
+					int move = playedMoves[i];
+					char moveCharacter = (char) (SMALLEST_MOVE_CHARACTER + move);
+					
+					stringBuilder.append(moveCharacter);
+				}
 			}
 		}
 		
 		stringBuilder.append(spaciousBoard ? TO_STRING_CELL_ROW_SEPARATOR_STRING : TO_STRING_COMPACT_MOVE_SCORES_PREFIX_STRING);
 		
-		BoardOutcome outcome = outcome();
+		if(outcome == null) outcome = outcome();
 		boolean gameNotOver = outcome == BoardOutcome.UNDECIDED;
 		
 		int remainingMoves;
@@ -417,12 +428,19 @@ public final class Board {
 			stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
 			stringBuilder.append(TO_STRING_MOVES_PREFIX_STRING);
 			
-			for(int i = 0; i < filledCellAmount; i++) {
+			if(filledCellAmount == 0) {
 				
-				int move = playedMoves[i];
-				char moveCharacter = (char) (SMALLEST_MOVE_CHARACTER + move);
+				stringBuilder.append(TO_STRING_EMPTY_BOARD_MOVES_STRING);
 				
-				stringBuilder.append(moveCharacter);
+			} else {
+				
+				for(int i = 0; i < filledCellAmount; i++) {
+					
+					int move = playedMoves[i];
+					char moveCharacter = (char) (SMALLEST_MOVE_CHARACTER + move);
+					
+					stringBuilder.append(moveCharacter);
+				}
 			}
 		}
 		
@@ -446,7 +464,10 @@ public final class Board {
 	
 	public BoardLine[] winningPlayerLines() {
 		long board = activeBitboard ^ maskBitboard;
-		if(!bitboardContainsConnection(board)) return null;
+		if(!bitboardContainsConnection(board)) {
+			
+			throw new IllegalStateException("winningPlayerLines should not be called if the game has not ended in a win (yet)!");
+		}
 		
 		int lineAmount = 0;
 		

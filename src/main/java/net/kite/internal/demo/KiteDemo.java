@@ -833,11 +833,12 @@ public final class KiteDemo {
 		solver.playMove(moveX + 1);
 		setCellElementBackgroundColor(moveX, moveY, i, true);
 		
-		showWinLines();
+		BoardOutcome outcome = solver.gameOutcome();
+		if(outcome.isWin()) showWinLines();
 		
 		if(aiModeSelected && !initial) {
 			
-			if(aiPlaysRed == redAtTurn && !solver.gameOver()) {
+			if(aiPlaysRed == redAtTurn && outcome == BoardOutcome.UNDECIDED) {
 				
 				scheduleAIMove();
 				return;
@@ -854,8 +855,6 @@ public final class KiteDemo {
 	
 	private void showWinLines() {
 		BoardLine[] lines = solver.winLines();
-		if(lines == null) return;
-		
 		for(BoardLine line : lines) {
 			
 			int x1 = line.getStartCellX();

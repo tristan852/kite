@@ -2,6 +2,7 @@ package net.kite.internal.cli.command.commands;
 
 import net.kite.api.Kite;
 import net.kite.api.board.line.BoardLine;
+import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.internal.cli.command.Command;
 import net.kite.internal.util.ansi.AnsiUtil;
 
@@ -23,14 +24,15 @@ public final class LinesCommand extends Command {
 			return false;
 		}
 		
-		BoardLine[] lines = solver.winLines();
-		if(lines == null) {
+		BoardOutcome outcome = solver.gameOutcome();
+		if(!outcome.isWin()) {
 			
 			errorStream.println(AnsiUtil.brightRedAnsi("The game has not ended yet or has ended in a draw!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
 		
+		BoardLine[] lines = solver.winLines();
 		for(BoardLine line : lines) System.out.println(line);
 		
 		return false;

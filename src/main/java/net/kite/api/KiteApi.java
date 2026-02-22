@@ -75,7 +75,7 @@ public interface KiteApi {
 	
 	boolean moveLegal(int moveColumnIndex);
 	
-	KiteApi playMoves(String moveColumnIndices);
+	KiteApi playMoves(String moveColumnIndicesString);
 	KiteApi playMoves(int... moveColumnIndices);
 	KiteApi playMove(int moveColumnIndex);
 	

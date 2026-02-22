@@ -867,12 +867,12 @@ public final class Kite implements KiteApi {
 	 * The internal game state will be updated
 	 * unless no move is provided.
 	 *
-	 * @param moveColumnIndices the 1-indexed column numbers (columns indexed from left to right) as a string
+	 * @param moveColumnIndicesString the 1-indexed column numbers (columns indexed from left to right) as a string
 	 * @return this solver instance
 	 */
 	@Override
-	public synchronized Kite playMoves(String moveColumnIndices) {
-		internalSolver.playMoves(moveColumnIndices);
+	public synchronized Kite playMoves(String moveColumnIndicesString) {
+		internalSolver.playMoves(moveColumnIndicesString);
 		
 		return this;
 	}
