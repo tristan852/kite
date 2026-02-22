@@ -262,6 +262,8 @@ public final class Kite implements KiteApi {
 	 *
 	 * @param cellColumnIndex the index of the column (1-indexed from left to right)
 	 * @return height of the column
+	 * @throws IndexOutOfBoundsException if {@code cellColumnIndex}
+	 *         is not between 1 and 7 (inclusive)
 	 */
 	@Override
 	public synchronized int cellColumnHeight(int cellColumnIndex) {
@@ -276,6 +278,9 @@ public final class Kite implements KiteApi {
 	 * @param cellX x coordinate of the cell (0-indexed from left to right)
 	 * @param cellY y coordinate of the cell (0-indexed from bottom to top)
 	 * @return whether cell is occupied
+	 * @throws IllegalArgumentException if {@code cellX} is not between
+	 *         0 and 6 (inclusive), or if {@code cellY} is not between
+	 *         0 and 5 (inclusive)
 	 */
 	@Override
 	public synchronized boolean cellOccupied(int cellX, int cellY) {
@@ -290,6 +295,9 @@ public final class Kite implements KiteApi {
 	 * @param cellX x coordinate of the cell (0-indexed from left to right)
 	 * @param cellY y coordinate of the cell (0-indexed from bottom to top)
 	 * @return player color of the stone or {@code null} if no stone
+	 * @throws IllegalArgumentException if {@code cellX} is not between
+	 *         0 and 6 (inclusive), or if {@code cellY} is not between
+	 *         0 and 5 (inclusive)
 	 */
 	@Override
 	public synchronized BoardPlayerColor cellPlayerColor(int cellX, int cellY) {
@@ -329,6 +337,7 @@ public final class Kite implements KiteApi {
 	 * any line is {@code 20}.
 	 *
 	 * @return all win lines
+	 * @throws IllegalStateException if game has not ended yet or has ended in a draw
 	 */
 	@Override
 	public synchronized BoardLine[] winLines() {
@@ -442,6 +451,7 @@ public final class Kite implements KiteApi {
 	 * played last by either side.
 	 *
 	 * @return the row index of the last move played (1-indexed from bottom to top)
+	 * @throws IllegalStateException if no move has been played yet
 	 */
 	@Override
 	public synchronized int lastMoveRow() {
@@ -453,6 +463,7 @@ public final class Kite implements KiteApi {
 	 * played last by either side.
 	 *
 	 * @return the column index of the last move played (1-indexed from left to right)
+	 * @throws IllegalStateException if no move has been played yet
 	 */
 	@Override
 	public synchronized int lastMove() {
@@ -483,6 +494,10 @@ public final class Kite implements KiteApi {
 	 *
 	 * @param moveIndex the index of the move to retrieve (0-indexed)
 	 * @return the row index (1-indexed from bottom to top) of the move at the given index
+	 * @throws IllegalStateException if no move has been played or undone yet
+	 * @throws IllegalArgumentException if {@code moveIndex} is not between
+	 *         0 and {@code n - 1} (inclusive), where {@code n} is the total
+	 *         number of played and undone moves
 	 */
 	@Override
 	public synchronized int playedMoveRow(int moveIndex) {
@@ -512,6 +527,10 @@ public final class Kite implements KiteApi {
 	 *
 	 * @param moveIndex the index of the move to retrieve (0-indexed)
 	 * @return the column index (1-indexed from left to right) of the move at the given index
+	 * @throws IllegalStateException if no move has been played or undone yet
+	 * @throws IllegalArgumentException if {@code moveIndex} is not between
+	 *         0 and {@code n - 1} (inclusive), where {@code n} is the total
+	 *         number of played and undone moves
 	 */
 	@Override
 	public synchronized int playedMove(int moveIndex) {
@@ -554,6 +573,9 @@ public final class Kite implements KiteApi {
 	/**
 	 * Pauses the recording of metrics started
 	 * by {@link Kite#startRecordingPerformanceMetrics()}.
+	 *
+	 * @throws IllegalStateException if performance recording
+	 *         has not been started
 	 */
 	@Override
 	public synchronized Kite stopRecordingPerformanceMetrics() {
@@ -777,6 +799,10 @@ public final class Kite implements KiteApi {
 	 *
 	 * @param moveColumnIndex the 1-indexed column number (from left to right)
 	 * @return move evaluation
+	 * @throws IndexOutOfBoundsException if {@code moveColumnIndex}
+	 *         is not between 1 and 7 (inclusive)
+	 * @throws IllegalStateException if the specified move is not legal
+	 *         in the current board state
 	 */
 	@Override
 	public synchronized int evaluateMove(int moveColumnIndex) {
@@ -854,6 +880,8 @@ public final class Kite implements KiteApi {
 	 *
 	 * @param moveColumnIndex the 1-indexed column number (from left to right)
 	 * @return whether the move is legal
+	 * @throws IndexOutOfBoundsException if {@code moveColumnIndex}
+	 *         is not between 1 and 7 (inclusive)
 	 */
 	@Override
 	public synchronized boolean moveLegal(int moveColumnIndex) {
@@ -869,6 +897,9 @@ public final class Kite implements KiteApi {
 	 *
 	 * @param moveColumnIndicesString the 1-indexed column numbers (columns indexed from left to right) as a string
 	 * @return this solver instance
+	 * @throws IndexOutOfBoundsException if the string contains a character
+	 *         that is not between '1' and '7'
+	 * @throws IllegalStateException if the sequence contains an illegal move
 	 */
 	@Override
 	public synchronized Kite playMoves(String moveColumnIndicesString) {
@@ -886,6 +917,9 @@ public final class Kite implements KiteApi {
 	 *
 	 * @param moveColumnIndices the 1-indexed column numbers (columns indexed from left to right)
 	 * @return this solver instance
+	 * @throws IndexOutOfBoundsException if any move is not between
+	 *         1 and 7 (inclusive)
+	 * @throws IllegalStateException if the sequence contains an illegal move
 	 */
 	@Override
 	public synchronized Kite playMoves(int... moveColumnIndices) {
@@ -902,6 +936,10 @@ public final class Kite implements KiteApi {
 	 *
 	 * @param moveColumnIndex the 1-indexed column number (from left to right)
 	 * @return this solver instance
+	 * @throws IndexOutOfBoundsException if {@code moveColumnIndex}
+	 *         is not between 1 and 7 (inclusive)
+	 * @throws IllegalStateException if the move is not legal
+	 *         in the current board state
 	 */
 	@Override
 	public synchronized Kite playMove(int moveColumnIndex) {
@@ -917,6 +955,9 @@ public final class Kite implements KiteApi {
 	 *
 	 * @param moveAmount number of moves to redo
 	 * @return this solver instance
+	 * @throws IllegalArgumentException if {@code moveAmount <= 0}
+	 * @throws IllegalStateException if fewer than {@code moveAmount}
+	 *         moves are currently undone
 	 */
 	@Override
 	public synchronized Kite redoMoves(int moveAmount) {
@@ -930,6 +971,7 @@ public final class Kite implements KiteApi {
 	 * the last move that was undone.
 	 *
 	 * @return the column index of the move that was redone (1-indexed from left to right)
+	 * @throws IllegalStateException if no move has been undone yet
 	 */
 	@Override
 	public synchronized int redoMove() {
@@ -942,6 +984,9 @@ public final class Kite implements KiteApi {
 	 *
 	 * @param moveAmount number of moves to undo
 	 * @return this solver instance
+	 * @throws IllegalArgumentException if {@code moveAmount <= 0}
+	 * @throws IllegalStateException if fewer than {@code moveAmount}
+	 *         moves have been played
 	 */
 	@Override
 	public synchronized Kite undoMoves(int moveAmount) {
@@ -955,6 +1000,7 @@ public final class Kite implements KiteApi {
 	 * the last move.
 	 *
 	 * @return the column index of the move that was undone (1-indexed from left to right)
+	 * @throws IllegalStateException if no move has been played yet
 	 */
 	@Override
 	public synchronized int undoMove() {
@@ -967,6 +1013,10 @@ public final class Kite implements KiteApi {
 	 *
 	 * @param moveColumnIndicesString the 1-indexed move column numbers (columns indexed from left to right) as a string
 	 * @return this solver instance
+	 * @throws IndexOutOfBoundsException if the string contains a character
+	 *         that is not between '1' and '7'
+	 * @throws IllegalArgumentException if the sequence does not represent
+	 *         a legal Connect Four game
 	 */
 	@Override
 	public synchronized Kite setupBoard(String moveColumnIndicesString) {
@@ -981,6 +1031,10 @@ public final class Kite implements KiteApi {
 	 *
 	 * @param moveColumnIndices the 1-indexed move column numbers (columns indexed from left to right)
 	 * @return this solver instance
+	 * @throws IndexOutOfBoundsException if any move is not between
+	 *         1 and 7 (inclusive)
+	 * @throws IllegalArgumentException if the sequence does not represent
+	 *         a legal Connect Four game
 	 */
 	@Override
 	public synchronized Kite setupBoard(int... moveColumnIndices) {
