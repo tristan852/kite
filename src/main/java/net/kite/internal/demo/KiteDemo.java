@@ -727,6 +727,8 @@ public final class KiteDemo {
 				int moveX = solver.playedMove(i) - 1;
 				int moveY = solver.playedMoveRow(i) - 1;
 				
+				System.out.println(moveX + " , " + moveY);
+				
 				setCellElementBackgroundColor(moveX, moveY, EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX, false);
 			}
 			
