@@ -586,7 +586,7 @@ public final class Kite implements KiteApi {
 			
 			moveColumnIndex++;
 			
-			String message = String.format("Cannot evaluate illegal move: %s", moveColumnIndex);
+			String message = String.format("Cannot evaluate illegal move: '%d'", moveColumnIndex);
 			throw new IllegalMoveException(moveColumnIndex, message);
 		}
 		
@@ -661,7 +661,7 @@ public final class Kite implements KiteApi {
 				
 				moveColumnIndex++;
 				
-				String message = String.format("moveColumnIndicesString contains an illegal move: %d", moveColumnIndex);
+				String message = String.format("moveColumnIndicesString contains an illegal move: '%d'", moveColumnIndex);
 				throw new IllegalMoveException(moveColumnIndex, message);
 			}
 			
@@ -724,7 +724,7 @@ public final class Kite implements KiteApi {
 				
 				moveColumnIndex++;
 				
-				String message = String.format("moveColumnIndices contains an illegal move: %d", moveColumnIndex);
+				String message = String.format("moveColumnIndices contains an illegal move: '%d'", moveColumnIndex);
 				throw new IllegalMoveException(moveColumnIndex, message);
 			}
 			
@@ -766,7 +766,7 @@ public final class Kite implements KiteApi {
 			
 			moveColumnIndex++;
 			
-			String message = String.format("Cannot play illegal move: %s", moveColumnIndex);
+			String message = String.format("Cannot play illegal move: '%d'", moveColumnIndex);
 			throw new IllegalMoveException(moveColumnIndex, message);
 		}
 		
@@ -936,7 +936,7 @@ public final class Kite implements KiteApi {
 					
 					undoneMoveAmount = savedUndoneMoveAmount;
 					
-					String message = String.format("moveColumnIndicesString is not a legal Connect Four game: %s", moveColumnIndicesString);
+					String message = String.format("moveColumnIndicesString is not a legal Connect Four game: \"%s\"", moveColumnIndicesString);
 					throw new IllegalMoveException(moveColumnIndex + 1, message);
 				}
 				
@@ -964,6 +964,14 @@ public final class Kite implements KiteApi {
 				
 				reusedMoveAmount++;
 				continue;
+			}
+			
+			undoneMoveAmount += playedMoveAmount - i;
+			
+			while(playedMoveAmount > i) {
+				
+				board.undoMove();
+				playedMoveAmount--;
 			}
 			
 			if(!board.moveLegal(moveColumnIndex)) {
@@ -997,16 +1005,8 @@ public final class Kite implements KiteApi {
 				
 				undoneMoveAmount = savedUndoneMoveAmount;
 				
-				String message = String.format("moveColumnIndicesString is not a legal Connect Four game: %s", moveColumnIndicesString);
+				String message = String.format("moveColumnIndicesString is not a legal Connect Four game: \"%s\"", moveColumnIndicesString);
 				throw new IllegalMoveException(moveColumnIndex + 1, message);
-			}
-			
-			undoneMoveAmount += playedMoveAmount - i;
-			
-			while(playedMoveAmount > i) {
-				
-				board.undoMove();
-				playedMoveAmount--;
 			}
 			
 			board.playMove(moveColumnIndex);
@@ -1040,6 +1040,8 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public KiteApi setupBoard(int... moveColumnIndices) {
+		System.out.println("---");
+		
 		for(int moveColumnIndex : moveColumnIndices) {
 			
 			if(moveColumnIndex < 1 || moveColumnIndex > BOARD_WIDTH) {
@@ -1102,7 +1104,7 @@ public final class Kite implements KiteApi {
 					StringBuilder stringBuilder = new StringBuilder();
 					for(int move : moveColumnIndices) stringBuilder.append((char) ('0' + move));
 					
-					String message = String.format("moveColumnIndices is not a legal Connect Four game: %s", stringBuilder);
+					String message = String.format("moveColumnIndices is not a legal Connect Four game: \"%s\"", stringBuilder);
 					throw new IllegalMoveException(moveColumnIndex + 1, message);
 				}
 				
@@ -1130,6 +1132,14 @@ public final class Kite implements KiteApi {
 				
 				reusedMoveAmount++;
 				continue;
+			}
+			
+			undoneMoveAmount += playedMoveAmount - i;
+			
+			while(playedMoveAmount > i) {
+				
+				board.undoMove();
+				playedMoveAmount--;
 			}
 			
 			if(!board.moveLegal(moveColumnIndex)) {
@@ -1166,16 +1176,8 @@ public final class Kite implements KiteApi {
 				StringBuilder stringBuilder = new StringBuilder();
 				for(int move : moveColumnIndices) stringBuilder.append((char) ('0' + move));
 				
-				String message = String.format("moveColumnIndices is not a legal Connect Four game: %s", stringBuilder);
+				String message = String.format("moveColumnIndices is not a legal Connect Four game: \"%s\"", stringBuilder);
 				throw new IllegalMoveException(moveColumnIndex + 1, message);
-			}
-			
-			undoneMoveAmount += playedMoveAmount - i;
-			
-			while(playedMoveAmount > i) {
-				
-				board.undoMove();
-				playedMoveAmount--;
 			}
 			
 			board.playMove(moveColumnIndex);
