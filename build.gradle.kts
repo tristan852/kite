@@ -52,6 +52,12 @@ tasks.register<Copy>("copyDemoAssetFiles") {
     into("build/war-unpacked")
 }
 
+val isLocalPublishEnabled: Boolean = project.hasProperty("enableLocalPublish")
+
+tasks.withType<PublishToMavenLocal> {
+    onlyIf { isLocalPublishEnabled }
+}
+
 signing {
     useGpgCmd()
 }
