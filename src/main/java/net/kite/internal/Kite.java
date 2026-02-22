@@ -541,10 +541,9 @@ public final class Kite implements KiteApi {
 			
 			board.playMove(moveColumnIndex);
 			
-			int storedMove = playedMoves[playedMoveAmount];
-			if(storedMove == moveColumnIndex) {
+			if(undoneMoveAmount != 0 && playedMoves[playedMoveAmount] == moveColumnIndex) {
 				
-				if(undoneMoveAmount != 0) undoneMoveAmount--;
+				undoneMoveAmount--;
 				
 			} else {
 				
@@ -569,10 +568,9 @@ public final class Kite implements KiteApi {
 			
 			board.playMove(moveColumnIndex);
 			
-			int storedMove = playedMoves[playedMoveAmount];
-			if(storedMove == moveColumnIndex) {
+			if(undoneMoveAmount != 0 && playedMoves[playedMoveAmount] == moveColumnIndex) {
 				
-				if(undoneMoveAmount != 0) undoneMoveAmount--;
+				undoneMoveAmount--;
 				
 			} else {
 				
@@ -595,10 +593,9 @@ public final class Kite implements KiteApi {
 		
 		board.playMove(moveColumnIndex);
 		
-		int storedMove = playedMoves[playedMoveAmount];
-		if(storedMove == moveColumnIndex) {
+		if(undoneMoveAmount != 0 && playedMoves[playedMoveAmount] == moveColumnIndex) {
 			
-			if(undoneMoveAmount != 0) undoneMoveAmount--;
+			undoneMoveAmount--;
 			
 		} else {
 			
@@ -678,10 +675,9 @@ public final class Kite implements KiteApi {
 				
 				board.playMove(moveColumnIndex);
 				
-				int storedMove = playedMoves[playedMoveAmount];
-				if(storedMove == moveColumnIndex) {
+				if(undoneMoveAmount != 0 && playedMoves[playedMoveAmount] == moveColumnIndex) {
 					
-					if(undoneMoveAmount != 0) undoneMoveAmount--;
+					undoneMoveAmount--;
 					
 				} else {
 					
@@ -712,10 +708,9 @@ public final class Kite implements KiteApi {
 			
 			board.playMove(moveColumnIndex);
 			
-			int storedMove = playedMoves[playedMoveAmount];
-			if(storedMove == moveColumnIndex) {
+			if(undoneMoveAmount != 0 && playedMoves[playedMoveAmount] == moveColumnIndex) {
 				
-				if(undoneMoveAmount != 0) undoneMoveAmount--;
+				undoneMoveAmount--;
 				
 			} else {
 				
@@ -751,10 +746,9 @@ public final class Kite implements KiteApi {
 				
 				board.playMove(moveColumnIndex);
 				
-				int storedMove = playedMoves[playedMoveAmount];
-				if(storedMove == moveColumnIndex) {
+				if(undoneMoveAmount != 0 && playedMoves[playedMoveAmount] == moveColumnIndex) {
 					
-					if(undoneMoveAmount != 0) undoneMoveAmount--;
+					undoneMoveAmount--;
 					
 				} else {
 					
@@ -785,10 +779,9 @@ public final class Kite implements KiteApi {
 			
 			board.playMove(moveColumnIndex);
 			
-			int storedMove = playedMoves[playedMoveAmount];
-			if(storedMove == moveColumnIndex) {
+			if(undoneMoveAmount != 0 && playedMoves[playedMoveAmount] == moveColumnIndex) {
 				
-				if(undoneMoveAmount != 0) undoneMoveAmount--;
+				undoneMoveAmount--;
 				
 			} else {
 				
