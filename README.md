@@ -1,4 +1,4 @@
-<span align="center">
+<span align="center"> 
     <br>
     
 [![The Kite logo](assets/images/brand/logo.svg)](assets/images/brand/logo.svg)
