@@ -56,12 +56,32 @@ jobs:
           echo "Unzipping $WAR_FILE"
           unzip "$WAR_FILE" -d build/war-unpacked
 
+      - name: Extract relevant WAR contents
+        run: |
+          # Create output folder
+          mkdir -p build/deploy
+
+          cp build/war-unpacked/index.html build/deploy/
+          cp -r build/war-unpacked/wasm-gc build/deploy/
+
+          mkdir -p build/deploy/benchmarks
+          cp -r build/war-unpacked/WEB-INF/classes/benchmarks/* build/deploy/benchmarks/
+
+          mkdir -p build/deploy/board_score_caches
+          cp -r build/war-unpacked/WEB-INF/classes/board_score_caches/* build/deploy/board_score_caches/
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'build/war-unpacked'
+          path: 'build/deploy'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Upload WASM files
+        uses: actions/upload-artifact@v4
+        with:
+          name: kite-wasm
+          path: build/deploy
