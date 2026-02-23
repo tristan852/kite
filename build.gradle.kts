@@ -1,10 +1,12 @@
+import org.teavm.gradle.api.OptimizationLevel
+
 plugins {
     id("java")
     id("com.vanniktech.maven.publish") version "0.34.0"
     id("org.graalvm.buildtools.native") version "0.11.4"
     
     id("war")
-    id("org.teavm") version "0.13.0"
+    id("org.teavm") version "0.13.1"
     
     signing
     `maven-publish`
@@ -69,6 +71,8 @@ teavm {
     
     wasmGC {
         addedToWebApp = true
+        
+        optimization = OptimizationLevel.AGGRESSIVE
     }
 }
 

@@ -76,8 +76,6 @@ scoop bucket add kite https://github.com/tristan852/kite-scoop
 scoop install kite
 ```
 
-> **⚠️ Note:** Ensure your terminal is set to UTF-8, or run the program with `kite --plain` for highly compatible output.
-
 **Guide**
 
 Use `kite` to start the interactive CLI tool.
@@ -94,6 +92,8 @@ The following arguments can be passed to `kite`:
 | `--plain`                | Disable all prompts, Unicode characters and ANSI escape codes, including colors and screen clearing.                                        |
 | `--script <script-file>` | Run the specified script file instead of starting interactive mode                                                                          |
 | `--game [skill-level]`   | Start a game immediately, optionally specifying a skill level                                                                               |
+
+> **⚠️ Note:** Ensure your terminal is set to UTF-8, especially if you are on Windows, or run the program with `kite --plain` for highly compatible output.
 
 ---
 

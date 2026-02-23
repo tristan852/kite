@@ -284,7 +284,7 @@ public final class KiteDemo {
 	
 	private static final String REQUEST_METHOD = "GET";
 	private static final String REQUEST_RESPONSE_TYPE = "arraybuffer";
-	private static final String REQUEST_URL = "WEB-INF/classes/board_score_caches/opening.cfc";
+	private static final String REQUEST_URL = "/board_score_caches/opening.cfc";
 	
 	private static final int SUCCESSFUL_REQUEST_STATUS = 200;
 	

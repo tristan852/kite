@@ -1040,8 +1040,6 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public KiteApi setupBoard(int... moveColumnIndices) {
-		System.out.println("---");
-		
 		for(int moveColumnIndex : moveColumnIndices) {
 			
 			if(moveColumnIndex < 1 || moveColumnIndex > BOARD_WIDTH) {

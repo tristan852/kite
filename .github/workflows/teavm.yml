@@ -64,9 +64,6 @@ jobs:
           cp build/war-unpacked/index.html build/deploy/
           cp -r build/war-unpacked/wasm-gc/* build/deploy/
 
-          mkdir -p build/deploy/kite_resources/benchmarks
-          cp -r build/war-unpacked/WEB-INF/classes/benchmarks/* build/deploy/kite_resources/benchmarks/
-
           mkdir -p build/deploy/kite_resources/board_score_caches
           cp -r build/war-unpacked/WEB-INF/classes/board_score_caches/* build/deploy/kite_resources/board_score_caches/
 
@@ -79,13 +76,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-      - name: Remove index.html
-        run: |
-          rm -f build/deploy/index.html
-
-      - name: Upload WASM files
-        uses: actions/upload-artifact@v4
-        with:
-          name: kite-wasm
-          path: build/deploy
