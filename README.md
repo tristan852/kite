@@ -500,29 +500,29 @@ These skill levels are ordered by increasing playing strength, with each level d
 A special skill level, `SkillLevel.ADAPTIVE`, adjusts move selection to match the opponent's playing strength.
 You can use all available skill levels or choose a subset that fits your project.
 
-The `SkillLevel.SUPER_GRANDMASTER` skill level always plays perfectly and is therefore equivalent to `SkillLevel.PERFECT`.
-`SkillLevel.BEGINNER` plays slightly better than the random bot.
 The Elo ratings of all the different skill levels are given in the table below:
 
 | Skill level       | Elo rating estimate |
 |-------------------|---------------------|
-| Random            | 1120                |
-| Beginner          | 1200                |
-| Novice            | 1400                |
-| Amateur           | 1600                |
-| Intermediate      | 1800                |
-| Skilled           | 2000                |
-| Advanced          | 2200                |
-| Expert            | 2400                |
-| Master            | 2600                |
-| Grandmaster       | 2800                |
-| Super Grandmaster | 3000                |
-| Perfect           | 3000                |
+| Random            | 150                 |
+| Beginner          | 600                 |
+| Novice            | 750                 |
+| Amateur           | 900                 |
+| Intermediate      | 1050                |
+| Skilled           | 1200                |
+| Advanced          | 1350                |
+| Expert            | 1500                |
+| Master            | 1650                |
+| Grandmaster       | 1800                |
+| Super Grandmaster | 1950                |
+| Perfect           | 2000                |
 
-An Elo rating difference of approximately *400* corresponds to a *91%* win rate for the higher-rated player. A difference in Elo of *200* corresponds to a *76%* win probability.
+`SkillLevel.SUPER_GRANDMASTER`, which plays almost perfectly, is slightly weaker than `SkillLevel.PERFECT`.
+`SkillLevel.BEGINNER`, like the random skill level, can theoretically play any legal move but, due to not choosing moves uniformly, is still significantly stronger.
 
-For reference, the Elo ratings have been normalized so that the `SkillLevel.PERFECT` bot has a rating of *3000*.
-Since `SkillLevel.SUPER_GRANDMASTER` and `SkillLevel.PERFECT` represent the same level of play, they share the same rating estimate.
+An Elo rating difference of approximately *400* corresponds to a *91%* win rate for the higher-rated player. A difference in Elo of *150* corresponds to a *70%* win probability.
+
+For reference, the Elo ratings have been normalized so that the `SkillLevel.PERFECT` bot has a rating of *2000*.
 
 If you want to translate these Elo ratings to your own scale, or vice versa, try to identify a reference point by comparing one of these skill levels to a skill level in your system with a known Elo rating.
 
