@@ -437,16 +437,19 @@ public final class Kite implements KiteApi {
 			int moveScore = moveScores[moveColumnIndex];
 			if(moveScore < minimalScore) continue;
 			
-			int weight;
-			if(uniformDistribution) weight = 1;
-			else {
+			if(uniformDistribution) {
 				
-				weight = moveScore - minimalScore + 1;
+				if(weightIndex == 0) return moveColumnIndex + 1;
+				weightIndex--;
+				
+			} else {
+				
+				int weight = moveScore - minimalScore + 1;
 				weight *= weight * weight;
+				
+				if(weightIndex < weight) return moveColumnIndex + 1;
+				weightIndex -= weight;
 			}
-			
-			if(weightIndex < weight) return moveColumnIndex + 1;
-			weightIndex -= weight;
 		}
 		
 		// impossible to reach
