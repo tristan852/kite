@@ -33,8 +33,9 @@ public final class BoardScore {
 		
 		for(int i = 0; i < l; i++) {
 			
-			WINS[i] = ((MAXIMAL_WON_FILLED_CELL_AMOUNT - i) >> 1) + 1;
-			LOSSES[i] = -((MAXIMAL_WON_FILLED_CELL_AMOUNT - i) >> 1) - 1;
+			int s = ((MAXIMAL_WON_FILLED_CELL_AMOUNT - i) >> 1) + 1;
+			WINS[i] = s;
+			LOSSES[i] = -s;
 		}
 		
 		for(int i = 0; i < MAXIMAL_WON_FILLED_CELL_AMOUNT; i++) {
