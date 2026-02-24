@@ -32,6 +32,7 @@ public final class Kite implements KiteApi {
 	private static final int INVALID_MOVE_COLUMN_INDEX = 0;
 	
 	private static final int MAXIMAL_MOVE_SCORE_LOSS = 36;
+	private static final int MINIMAL_NO_LOSS_PLAYED_MOVE_AMOUNT = 41;
 	
 	private static final int MOVE_COLUMN_INDEX_SMALLEST_CHARACTER = 49;
 	private static final int MOVE_COLUMN_INDEX_LARGEST_CHARACTER = 55;
@@ -50,6 +51,8 @@ public final class Kite implements KiteApi {
 	};
 	
 	private static final char BENCHMARK_ENTRY_SEPARATOR_CHARACTER = ' ';
+	
+	private static final int LARGEST_PROBABILITY = 100;
 	
 	static {
 		synchronized(AnsiUtil.class) {
@@ -347,7 +350,7 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public int skilledMove(SkillLevel skillLevel) {
-		boolean perfect = skillLevel == SkillLevel.PERFECT || skillLevel == SkillLevel.SUPER_GRANDMASTER;
+		boolean perfect = skillLevel == SkillLevel.PERFECT;
 		
 		if(perfect) return optimalMove();
 		if(skillLevel == SkillLevel.RANDOM) return randomMove();
@@ -355,10 +358,29 @@ public final class Kite implements KiteApi {
 		
 		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
 		
+		int immediateLossMoveScore;
+		if(playedMoveAmount >= MINIMAL_NO_LOSS_PLAYED_MOVE_AMOUNT) {
+			
+			immediateLossMoveScore = Integer.MIN_VALUE;
+			
+		} else {
+			
+			immediateLossMoveScore = -BoardScore.maximal(playedMoveAmount + 1);
+		}
+		
+		int maximalScoreLoss = skillLevel.getMaximalScoreLoss();
+		
+		int openingKnowledgeDepth = skillLevel.getOpeningKnowledgeDepth();
+		boolean openingKnowledgeApplies = playedMoveAmount < openingKnowledgeDepth;
+		if(openingKnowledgeApplies) {
+			
+			int f = openingKnowledgeDepth - playedMoveAmount + 1;
+			maximalScoreLoss /= f;
+		}
+		
 		int optimalMoveScore = Integer.MIN_VALUE;
 		int theoreticallyWorstScoreLoss = BoardScore.maximalScoreLoss(playedMoveAmount);
 		
-		int maximalScoreLoss = skillLevel.getMaximalScoreLoss();
 		maximalScoreLoss = maximalScoreLoss * theoreticallyWorstScoreLoss / MAXIMAL_MOVE_SCORE_LOSS;
 		
 		int minimalScore = Integer.MIN_VALUE + 2;
@@ -383,10 +405,28 @@ public final class Kite implements KiteApi {
 			int moveScore = moveScores[moveColumnIndex];
 			if(moveScore >= minimalScore) {
 				
+				if(moveScore == immediateLossMoveScore) {
+					
+					int p = skillLevel.getImmediateLossNoticeProbability();
+					if(random.randomInteger(LARGEST_PROBABILITY) < p) continue;
+				}
+				
 				int weight = moveScore - minimalScore + 1;
 				weight *= weight * weight;
 				
 				totalWeight += weight;
+			}
+		}
+		
+		boolean uniformDistribution = false;
+		if(totalWeight == 0) {
+			
+			uniformDistribution = true;
+			
+			for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
+				
+				int moveScore = moveScores[moveColumnIndex];
+				if(moveScore >= minimalScore) totalWeight++;
 			}
 		}
 		
@@ -397,8 +437,13 @@ public final class Kite implements KiteApi {
 			int moveScore = moveScores[moveColumnIndex];
 			if(moveScore < minimalScore) continue;
 			
-			int weight = moveScore - minimalScore + 1;
-			weight *= weight * weight;
+			int weight;
+			if(uniformDistribution) weight = 1;
+			else {
+				
+				weight = moveScore - minimalScore + 1;
+				weight *= weight * weight;
+			}
 			
 			if(weightIndex < weight) return moveColumnIndex + 1;
 			weightIndex -= weight;
