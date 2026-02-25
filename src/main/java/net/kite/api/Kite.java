@@ -670,7 +670,7 @@ public final class Kite implements KiteApi {
 	 * the second element.
 	 * <p>
 	 * If any player color has not played any moves,
-	 * an Elo approximation of {@code 3000} is returned
+	 * an Elo approximation of {@code 2000} is returned
 	 * for that player.
 	 *
 	 * @param playerRatingApproximations the buffer of length {@code 2} to write Elo rankings to
@@ -707,7 +707,7 @@ public final class Kite implements KiteApi {
 	 * evaluations into.
 	 * <p>
 	 * If any player color has not played any moves,
-	 * an Elo approximation of {@code 3000} is returned
+	 * an Elo approximation of {@code 2000} is returned
 	 * for that player.
 	 *
 	 * @return Elo rating approximation of both players
@@ -735,7 +735,7 @@ public final class Kite implements KiteApi {
 	 * (see also {@link SkillLevel#getApproximateEloRating()}).
 	 * <p>
 	 * If the requested player color has not played any moves,
-	 * an Elo approximation of {@code 3000} is returned.
+	 * an Elo approximation of {@code 2000} is returned.
 	 *
 	 * @param playerColor the color of the player whose performance is to be evaluated
 	 * @return Elo rating approximation
