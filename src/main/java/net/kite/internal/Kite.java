@@ -34,6 +34,8 @@ public final class Kite implements KiteApi {
 	private static final int MAXIMAL_MOVE_SCORE_LOSS = 36;
 	private static final int MINIMAL_NO_LOSS_PLAYED_MOVE_AMOUNT = 41;
 	
+	private static final int NOTICED_WINNING_MOVE_WEIGHT = 1000000;
+	
 	private static final int MOVE_COLUMN_INDEX_SMALLEST_CHARACTER = 49;
 	private static final int MOVE_COLUMN_INDEX_LARGEST_CHARACTER = 55;
 	
@@ -88,6 +90,7 @@ public final class Kite implements KiteApi {
 	private int undoneMoveAmount;
 	
 	private final int[] moveScores = new int[BOARD_WIDTH];
+	private final int[] moveWeights = new int[BOARD_WIDTH];
 	
 	private int metricsEvaluationAmount;
 	private int metricsNodeEvaluationAmount;
@@ -358,13 +361,17 @@ public final class Kite implements KiteApi {
 		
 		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
 		
+		int immediateWinMoveScore;
 		int immediateLossMoveScore;
+		
 		if(playedMoveAmount >= MINIMAL_NO_LOSS_PLAYED_MOVE_AMOUNT) {
 			
+			immediateWinMoveScore = Integer.MIN_VALUE;
 			immediateLossMoveScore = Integer.MIN_VALUE;
 			
 		} else {
 			
+			immediateWinMoveScore = BoardScore.win(playedMoveAmount + 1);
 			immediateLossMoveScore = -BoardScore.maximal(playedMoveAmount + 1);
 		}
 		
@@ -400,10 +407,24 @@ public final class Kite implements KiteApi {
 		
 		int totalWeight = 0;
 		
+		Arrays.fill(moveWeights, 0);
+		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
 			int moveScore = moveScores[moveColumnIndex];
 			if(moveScore >= minimalScore) {
+				
+				if(moveScore == immediateWinMoveScore) {
+					
+					int p = skillLevel.getImmediateWinNoticeProbability();
+					if(random.randomInteger(LARGEST_PROBABILITY) < p) {
+						
+						moveWeights[moveColumnIndex] = NOTICED_WINNING_MOVE_WEIGHT;
+						totalWeight += NOTICED_WINNING_MOVE_WEIGHT;
+						
+						continue;
+					}
+				}
 				
 				if(moveScore == immediateLossMoveScore) {
 					
@@ -414,6 +435,7 @@ public final class Kite implements KiteApi {
 				int weight = moveScore - minimalScore + 1;
 				weight *= weight * weight;
 				
+				moveWeights[moveColumnIndex] = weight;
 				totalWeight += weight;
 			}
 		}
@@ -444,8 +466,7 @@ public final class Kite implements KiteApi {
 				
 			} else {
 				
-				int weight = moveScore - minimalScore + 1;
-				weight *= weight * weight;
+				int weight = moveWeights[moveColumnIndex];
 				
 				if(weightIndex < weight) return moveColumnIndex + 1;
 				weightIndex -= weight;
