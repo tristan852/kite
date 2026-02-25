@@ -55,6 +55,6 @@ moves left (optimal play): 1
 outcome: undecided
 
 6
-3
+6
 red_win
 undecided
