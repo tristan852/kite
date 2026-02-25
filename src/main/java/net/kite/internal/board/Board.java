@@ -101,19 +101,24 @@ public final class Board {
 	private static final int BITBOARD_HEIGHT = 8;
 	
 	private static final float[] FIRST_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
-			-1.201268f,  7.593250f
+			-1.480893f,  7.600903f
 	};
 	
 	private static final float[] SECOND_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
-			-0.918798f,  7.535299f
+			-1.201268f,  7.593250f
 	};
 	
 	private static final float[] THIRD_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
+			-0.918798f,  7.535299f
+	};
+	
+	private static final float[] FOURTH_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
 			-0.429759f,  7.335698f
 	};
 	
-	private static final float ELO_APPROXIMATION_FIRST_SPLIT  = 0.205158f;
-	private static final float ELO_APPROXIMATION_SECOND_SPLIT = 0.408149f;
+	private static final float ELO_APPROXIMATION_FIRST_SPLIT  = 0.0273690f;
+	private static final float ELO_APPROXIMATION_SECOND_SPLIT = 0.2051580f;
+	private static final float ELO_APPROXIMATION_THIRD_SPLIT  = 0.4081490f;
 	
 	private static final float PERFECT_ELO_APPROXIMATION = 2000.0f;
 	
@@ -1420,7 +1425,11 @@ public final class Board {
 	}
 	
 	private static float approximateElo(float averageScoreLoss) {
-		float[] coefficients = averageScoreLoss <= ELO_APPROXIMATION_FIRST_SPLIT ? FIRST_ELO_APPROXIMATION_COEFFICIENTS : averageScoreLoss < ELO_APPROXIMATION_SECOND_SPLIT ? SECOND_ELO_APPROXIMATION_COEFFICIENTS : THIRD_ELO_APPROXIMATION_COEFFICIENTS;
+		float[] coefficients =
+				averageScoreLoss < ELO_APPROXIMATION_FIRST_SPLIT ? FIRST_ELO_APPROXIMATION_COEFFICIENTS :
+				averageScoreLoss <= ELO_APPROXIMATION_SECOND_SPLIT ? SECOND_ELO_APPROXIMATION_COEFFICIENTS :
+				averageScoreLoss < ELO_APPROXIMATION_THIRD_SPLIT ? THIRD_ELO_APPROXIMATION_COEFFICIENTS :
+				FOURTH_ELO_APPROXIMATION_COEFFICIENTS;
 		
 		averageScoreLoss *= coefficients[0];
 		averageScoreLoss += coefficients[1];
