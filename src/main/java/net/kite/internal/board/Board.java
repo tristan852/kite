@@ -100,10 +100,22 @@ public final class Board {
 	
 	private static final int BITBOARD_HEIGHT = 8;
 	
-	private static final float ELO_APPROXIMATION_FIRST_COEFFICIENT = 53.167f;
-	private static final float ELO_APPROXIMATION_SECOND_COEFFICIENT = 0.000661f;
-	private static final float ELO_APPROXIMATION_THIRD_COEFFICIENT = -414.261f;
-	private static final float PERFECT_ELO_APPROXIMATION = 3000.0f;
+	private static final float[] FIRST_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
+			-1.201268f,  7.593250f
+	};
+	
+	private static final float[] SECOND_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
+			-0.918798f,  7.535299f
+	};
+	
+	private static final float[] THIRD_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
+			-0.429759f,  7.335698f
+	};
+	
+	private static final float ELO_APPROXIMATION_FIRST_SPLIT  = 0.205158f;
+	private static final float ELO_APPROXIMATION_SECOND_SPLIT = 0.408149f;
+	
+	private static final float PERFECT_ELO_APPROXIMATION = 2000.0f;
 	
 	private static final int ELO_APPROXIMATION_RED_MIN_MOVE_AMOUNT = 1;
 	private static final int ELO_APPROXIMATION_YELLOW_MIN_MOVE_AMOUNT = 2;
@@ -243,7 +255,7 @@ public final class Board {
 		int lastMoveX = Integer.MIN_VALUE;
 		int lastMoveY = 0;
 		
-		if(filledCellAmount != 0) {
+		if(colored && filledCellAmount != 0) {
 			
 			lastMoveX = playedMoves[filledCellAmount - 1];
 			lastMoveY = cellColumnHeight(lastMoveX) - 1;
@@ -278,23 +290,26 @@ public final class Board {
 				} else {
 					
 					s = String.valueOf(cellPlayerColor.getCharacter());
-					boolean highlightCell;
-					if(anyWinCells) {
+					if(colored) {
 						
-						highlightCell = winCells[x][y];
+						boolean highlightCell;
+						if(anyWinCells) {
+							
+							highlightCell = winCells[x][y];
+							
+						} else {
+							
+							highlightCell = x == lastMoveX && y == lastMoveY;
+						}
 						
-					} else {
-						
-						highlightCell = x == lastMoveX && y == lastMoveY;
-					}
-					
-					if(cellPlayerColor == BoardPlayerColor.RED) {
-						
-						s = highlightCell ? AnsiUtil.boldBrightRedBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightRedAnsi(s) : s;
-						
-					} else {
-						
-						s = highlightCell ? AnsiUtil.boldBrightYellowBackgroundAnsi(s) : colored ? AnsiUtil.boldBrightYellowAnsi(s) : s;
+						if(cellPlayerColor == BoardPlayerColor.RED) {
+							
+							s = highlightCell ? AnsiUtil.boldBrightRedBackgroundAnsi(s) : AnsiUtil.boldBrightRedAnsi(s);
+							
+						} else {
+							
+							s = highlightCell ? AnsiUtil.boldBrightYellowBackgroundAnsi(s) : AnsiUtil.boldBrightYellowAnsi(s);
+						}
 					}
 				}
 				
@@ -1405,12 +1420,12 @@ public final class Board {
 	}
 	
 	private static float approximateElo(float averageScoreLoss) {
-		averageScoreLoss /= ELO_APPROXIMATION_FIRST_COEFFICIENT;
-		averageScoreLoss += ELO_APPROXIMATION_SECOND_COEFFICIENT;
+		float[] coefficients = averageScoreLoss <= ELO_APPROXIMATION_FIRST_SPLIT ? FIRST_ELO_APPROXIMATION_COEFFICIENTS : averageScoreLoss < ELO_APPROXIMATION_SECOND_SPLIT ? SECOND_ELO_APPROXIMATION_COEFFICIENTS : THIRD_ELO_APPROXIMATION_COEFFICIENTS;
 		
-		averageScoreLoss = (float) Math.log(averageScoreLoss);
+		averageScoreLoss *= coefficients[0];
+		averageScoreLoss += coefficients[1];
 		
-		averageScoreLoss *= ELO_APPROXIMATION_THIRD_COEFFICIENT;
+		averageScoreLoss = (float) Math.exp(averageScoreLoss);
 		
 		return Math.min(averageScoreLoss, PERFECT_ELO_APPROXIMATION);
 	}
