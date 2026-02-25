@@ -26,9 +26,16 @@ public enum SkillLevel {
 	 * that always plays uniformly sampled
 	 * random moves.
 	 * <p>
-	 * Elo rating: {@code 1120}
+	 * Elo rating: {@code 0}
 	 */
-	RANDOM("Random", Integer.MAX_VALUE, 1120),
+	RANDOM(
+			"Random",
+			0,
+			36,
+			0,
+			0,
+			0
+	),
 	
 	/**
 	 * Level one (the weakest level above random;
@@ -36,79 +43,156 @@ public enum SkillLevel {
 	 * {@link SkillLevel#RANDOM} the distribution is
 	 * not uniform)
 	 * <p>
-	 * Elo rating: {@code 1200}
+	 * Elo rating: {@code 600}
 	 */
-	BEGINNER("Beginner", 222, 1200),
+	BEGINNER(
+			"Beginner",
+			600,
+			58,
+			6,
+			70,
+			95
+	),
 	
 	/**
 	 * Level two
 	 * <p>
-	 * Elo rating: {@code 1400}
+	 * Elo rating: {@code 750}
 	 */
-	NOVICE("Novice", 69, 1400),
+	NOVICE(
+			"Novice",
+			750,
+			39,
+			6,
+			70,
+			95
+	),
 	
 	/**
 	 * Level three
 	 * <p>
-	 * Elo rating: {@code 1600}
+	 * Elo rating: {@code 900}
 	 */
-	AMATEUR("Amateur", 32, 1600),
+	AMATEUR(
+			"Amateur",
+			900,
+			30,
+			6,
+			70,
+			95
+	),
 	
 	/**
 	 * Level four
 	 * <p>
-	 * Elo rating: {@code 1800}
+	 * Elo rating: {@code 1050}
 	 */
-	INTERMEDIATE("Intermediate", 21, 1800),
+	INTERMEDIATE(
+			"Intermediate",
+			1050,
+			21,
+			6,
+			80,
+			96
+	),
 	
 	/**
 	 * Level five
 	 * <p>
-	 * Elo rating: {@code 2000}
+	 * Elo rating: {@code 1200}
 	 */
-	SKILLED("Skilled", 13, 2000),
+	SKILLED(
+			"Skilled",
+			1200,
+			15,
+			7,
+			80,
+			96
+	),
 	
 	/**
 	 * Level six
 	 * <p>
-	 * Elo rating: {@code 2200}
+	 * Elo rating: {@code 1350}
 	 */
-	ADVANCED("Advanced", 8, 2200),
+	ADVANCED(
+			"Advanced",
+			1350,
+			11,
+			7,
+			80,
+			96
+	),
 	
 	/**
 	 * Level seven
 	 * <p>
-	 * Elo rating: {@code 2400}
+	 * Elo rating: {@code 1500}
 	 */
-	EXPERT("Expert", 5, 2400),
+	EXPERT(
+			"Expert",
+			1500,
+			7,
+			7,
+			95,
+			99
+	),
 	
 	/**
 	 * Level eight
 	 * <p>
-	 * Elo rating: {@code 2600}
+	 * Elo rating: {@code 1650}
 	 */
-	MASTER("Master", 3, 2600),
+	MASTER(
+			"Master",
+			1650,
+			5,
+			8,
+			95,
+			99
+	),
 	
 	/**
 	 * Level nine
 	 * <p>
-	 * Elo rating: {@code 2800}
+	 * Elo rating: {@code 1800}
 	 */
-	GRANDMASTER("Grandmaster", 2, 2800),
+	GRANDMASTER(
+			"Grandmaster",
+			1800,
+			3,
+			8,
+			95,
+			99
+	),
 	
 	/**
-	 * Level ten (the strongest level; equivalent to {@link SkillLevel#PERFECT})
+	 * Level ten (the strongest level below perfect)
 	 * <p>
-	 * Elo rating: {@code 3000}
+	 * Elo rating: {@code 1950}
 	 */
-	SUPER_GRANDMASTER("Super Grandmaster", 0, 3000),
+	SUPER_GRANDMASTER(
+			"Super Grandmaster",
+			1950,
+			2,
+			9,
+			95,
+			99
+	),
 	
 	/**
 	 * The level of a perfect Connect Four player
 	 * <p>
-	 * Elo rating: {@code 3000}
+	 * Elo rating: {@code 2000}
 	 */
-	PERFECT("Perfect", 0, 3000),
+	PERFECT(
+			"Perfect",
+			2000,
+			0,
+			42,
+			100,
+			100
+	),
 	
 	/**
 	 * This skill level always tries to match
@@ -116,7 +200,14 @@ public enum SkillLevel {
 	 * opponent by attempting to equalize the
 	 * position.
 	 */
-	ADAPTIVE("Adaptive", Integer.MAX_VALUE, -1);
+	ADAPTIVE(
+			"Adaptive",
+			-1,
+			36,
+			42,
+			-1,
+			-1
+	);
 	
 	private static final SkillLevel[] ORDERED_LEVELS = new SkillLevel[] {
 			BEGINNER, NOVICE, AMATEUR, INTERMEDIATE, SKILLED, ADVANCED, EXPERT, MASTER, GRANDMASTER, SUPER_GRANDMASTER
@@ -125,15 +216,22 @@ public enum SkillLevel {
 	private final String name;
 	private final String displayName;
 	
-	private final int maximalScoreLoss;
-	
 	private final int approximateEloRating;
 	
-	SkillLevel(String displayName, int maximalScoreLoss, int approximateEloRating) {
+	private final int maximalScoreLoss;
+	private final int openingKnowledgeDepth;
+	
+	private final int immediateWinNoticeProbability;
+	private final int immediateLossNoticeProbability;
+	
+	SkillLevel(String displayName, int approximateEloRating, int maximalScoreLoss, int openingKnowledgeDepth, int immediateWinNoticeProbability, int immediateLossNoticeProbability) {
 		this.name = name().toLowerCase(Locale.ROOT);
 		this.displayName = displayName;
-		this.maximalScoreLoss = maximalScoreLoss;
 		this.approximateEloRating = approximateEloRating;
+		this.maximalScoreLoss = maximalScoreLoss;
+		this.openingKnowledgeDepth = openingKnowledgeDepth;
+		this.immediateWinNoticeProbability = immediateWinNoticeProbability;
+		this.immediateLossNoticeProbability = immediateLossNoticeProbability;
 	}
 	
 	/**
@@ -160,17 +258,6 @@ public enum SkillLevel {
 	}
 	
 	/**
-	 * Returns the maximum amount of score that
-	 * a player of this skill level is allowed
-	 * to lose for each move.
-	 *
-	 * @return maximal amount of score to lose
-	 */
-	public int getMaximalScoreLoss() {
-		return maximalScoreLoss;
-	}
-	
-	/**
 	 * Returns the approximate ELO rating
 	 * of players of this skill level.
 	 * For the adaptive skill level
@@ -186,8 +273,57 @@ public enum SkillLevel {
 	}
 	
 	/**
-	 * Returns a skill level from {@link SkillLevel#BEGINNER}
-	 * to {@link SkillLevel#SUPER_GRANDMASTER} given the requested
+	 * Returns the maximum amount of score that
+	 * a player of this skill level is allowed
+	 * to lose for each move.
+	 *
+	 * @return maximal amount of score to lose
+	 */
+	public int getMaximalScoreLoss() {
+		return maximalScoreLoss;
+	}
+	
+	/**
+	 * Returns the maximal depth to which this
+	 * skill level will play much more strongly
+	 * due to simulated opening knowledge.
+	 *
+	 * @return maximal depth where opening knowledge applies
+	 */
+	public int getOpeningKnowledgeDepth() {
+		return openingKnowledgeDepth;
+	}
+	
+	/**
+	 * Returns the probability bias of this skill
+	 * level noticing that a certain move would
+	 * immediately win the game.
+	 * <p>
+	 * The probability {@code p} is encoded as {@code 100 * p}.
+	 *
+	 * @return probability bias of noticing immediately winning moves
+	 */
+	public int getImmediateWinNoticeProbability() {
+		return immediateWinNoticeProbability;
+	}
+	
+	/**
+	 * Returns the probability bias of this skill
+	 * level noticing that a certain move would
+	 * immediately lose the game on the very next move
+	 * by the opponent.
+	 * <p>
+	 * The probability {@code p} is encoded as {@code 100 * p}.
+	 *
+	 * @return probability bias of noticing immediately losing moves
+	 */
+	public int getImmediateLossNoticeProbability() {
+		return immediateLossNoticeProbability;
+	}
+	
+	/**
+	 * Returns a skill level from {@link SkillLevel#RANDOM}
+	 * to {@link SkillLevel#ADAPTIVE} given the requested
 	 * level name.
 	 * {@code level("beginner")} returns {@link SkillLevel#BEGINNER},
 	 * {@code level("BEGINNER")} returns {@link SkillLevel#BEGINNER},
