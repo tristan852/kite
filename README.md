@@ -504,7 +504,7 @@ The Elo ratings of all the different skill levels are given in the table below:
 
 | Skill level       | Elo rating estimate |
 |-------------------|---------------------|
-| Random            | 150                 |
+| Random            | 0                   |
 | Beginner          | 600                 |
 | Novice            | 750                 |
 | Amateur           | 900                 |
@@ -523,6 +523,7 @@ The Elo ratings of all the different skill levels are given in the table below:
 An Elo rating difference of approximately *400* corresponds to a *91%* win rate for the higher-rated player. A difference in Elo of *150* corresponds to a *70%* win probability.
 
 For reference, the Elo ratings have been normalized so that the `SkillLevel.PERFECT` bot has a rating of *2000*.
+It just so happens that this results in random play being almost exactly zero Elo.
 
 If you want to translate these Elo ratings to your own scale, or vice versa, try to identify a reference point by comparing one of these skill levels to a skill level in your system with a known Elo rating.
 
