@@ -585,7 +585,7 @@ public final class Board {
 			}
 		}
 		
-		MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(scoreBefore, scoreAfter, previousMoveScore, previousMoveCouldHaveBeenWin);
+		MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(scoreBefore, scoreAfter, previousMoveScore, previousMoveCouldHaveBeenWin, filledCellAmount + 1);
 		return new MoveAnalysis(moveColumnIndex + 1, scoreAfter, moveQuality);
 	}
 	
@@ -631,7 +631,7 @@ public final class Board {
 				
 				redTotalScoreLoss += previousBoardScore + boardScore;
 				
-				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(previousBoardScore, -boardScore, previousPreviousMoveScore, previousMoveCouldHaveBeenWin);
+				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(previousBoardScore, -boardScore, previousPreviousMoveScore, previousMoveCouldHaveBeenWin, i + 1);
 				
 				redMoveAnalyses[i1] = new MoveAnalysis(move + 1, -boardScore, moveQuality);
 				i1++;
@@ -640,7 +640,7 @@ public final class Board {
 				
 				yellowTotalScoreLoss += previousBoardScore + boardScore;
 				
-				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(previousBoardScore, -boardScore, previousPreviousMoveScore, previousMoveCouldHaveBeenWin);
+				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(previousBoardScore, -boardScore, previousPreviousMoveScore, previousMoveCouldHaveBeenWin, i + 1);
 				
 				yellowMoveAnalyses[i2] = new MoveAnalysis(move + 1, -boardScore, moveQuality);
 				i2++;
@@ -720,7 +720,7 @@ public final class Board {
 				
 				totalScoreLoss += previousBoardScore + boardScore;
 				
-				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(previousBoardScore, -boardScore, previousMoveScore, previousMoveCouldHaveBeenWin);
+				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(previousBoardScore, -boardScore, previousMoveScore, previousMoveCouldHaveBeenWin, i + 1);
 				
 				moveAnalyses[moveIndex] = new MoveAnalysis(move + 1, -boardScore, moveQuality);
 				moveIndex++;
@@ -1538,7 +1538,7 @@ public final class Board {
 		return HEIGHT;
 	}
 	
-	private static MoveAnalysis.MoveQuality moveQuality(int scoreBefore, int scoreAfter, int previousOwnMoveScore, boolean previousMoveCouldHaveBeenWin) {
+	private static MoveAnalysis.MoveQuality moveQuality(int scoreBefore, int scoreAfter, int previousOwnMoveScore, boolean previousMoveCouldHaveBeenWin, int movesDoneAfterMove) {
 		if(scoreAfter == scoreBefore) return MoveAnalysis.MoveQuality.BEST;
 		
 		boolean outcomeStayedTheSame = scoreBefore > 0 ? scoreAfter > 0 : scoreBefore != 0;
@@ -1547,8 +1547,13 @@ public final class Board {
 		boolean scoreDroppedALot = scoreLoss > 3;
 		
 		if(outcomeStayedTheSame) {
+			if(scoreDroppedALot) {
+				
+				return scoreAfter < 0 ? MoveAnalysis.MoveQuality.MISTAKE : MoveAnalysis.MoveQuality.INACCURACY;
+			}
 			
-			return scoreDroppedALot ? MoveAnalysis.MoveQuality.INACCURACY : MoveAnalysis.MoveQuality.GOOD;
+			int movesLeft = BoardEvaluation.gameOverInTotalMoves(-scoreAfter, movesDoneAfterMove);
+			return movesLeft > 3 ? MoveAnalysis.MoveQuality.GOOD : MoveAnalysis.MoveQuality.INACCURACY;
 		}
 		
 		boolean outcomeWasWin = scoreBefore > 0;
