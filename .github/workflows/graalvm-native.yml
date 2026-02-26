@@ -99,7 +99,7 @@ jobs:
       - name: Package binaries
         shell: bash
         run: |
-          VERSION=1.18.2
+          VERSION=1.19.0
           OS=${{ matrix.os }}
           BIN_DIR=build/native/nativeCompile
 
