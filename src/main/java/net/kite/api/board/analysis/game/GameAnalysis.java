@@ -2,7 +2,6 @@ package net.kite.api.board.analysis.game;
 
 import net.kite.api.Kite;
 import net.kite.api.board.analysis.move.MoveAnalysis;
-import net.kite.internal.util.ansi.AnsiUtil;
 
 import java.util.Locale;
 
@@ -169,37 +168,37 @@ public class GameAnalysis {
 		stringBuilder.append(TO_STRING_BEST_MOVES_PREFIX);
 		s = String.valueOf(bestMoveAmount);
 		if(bestMoveAmount < 10) stringBuilder.append(" ");
-		stringBuilder.append(ansiColored && bestMoveAmount != 0 ? AnsiUtil.greenAnsi(s) : s);
+		stringBuilder.append(ansiColored && bestMoveAmount != 0 ? net.kite.internal.util.ansi.AnsiUtil.greenAnsi(s) : s);
 		
 		stringBuilder.append(TO_STRING_GOOD_MOVES_PREFIX);
 		s = String.valueOf(goodMoveAmount);
 		if(goodMoveAmount < 10) stringBuilder.append(" ");
-		stringBuilder.append(ansiColored && goodMoveAmount != 0 ? AnsiUtil.brightGreenAnsi(s) : s);
+		stringBuilder.append(ansiColored && goodMoveAmount != 0 ? net.kite.internal.util.ansi.AnsiUtil.brightGreenAnsi(s) : s);
 		
 		stringBuilder.append(TO_STRING_INACCURATE_MOVES_PREFIX);
 		s = String.valueOf(inaccurateMoveAmount);
 		if(inaccurateMoveAmount < 10) stringBuilder.append(" ");
-		stringBuilder.append(ansiColored && inaccurateMoveAmount != 0 ? AnsiUtil.brightYellowAnsi(s) : s);
+		stringBuilder.append(ansiColored && inaccurateMoveAmount != 0 ? net.kite.internal.util.ansi.AnsiUtil.brightYellowAnsi(s) : s);
 		
 		stringBuilder.append(TO_STRING_MISTAKES_PREFIX);
 		s = String.valueOf(mistakeAmount);
 		if(mistakeAmount < 10) stringBuilder.append(" ");
-		stringBuilder.append(ansiColored && mistakeAmount != 0 ? AnsiUtil.brightRedAnsi(s) : s);
+		stringBuilder.append(ansiColored && mistakeAmount != 0 ? net.kite.internal.util.ansi.AnsiUtil.brightRedAnsi(s) : s);
 		
 		stringBuilder.append(TO_STRING_BLUNDERS_PREFIX);
 		s = String.valueOf(blunderAmount);
 		if(blunderAmount < 10) stringBuilder.append(" ");
-		stringBuilder.append(ansiColored && blunderAmount != 0 ? AnsiUtil.redAnsi(s) : s);
+		stringBuilder.append(ansiColored && blunderAmount != 0 ? net.kite.internal.util.ansi.AnsiUtil.redAnsi(s) : s);
 		
 		stringBuilder.append(TO_STRING_MISSED_WINS_PREFIX);
 		s = String.valueOf(missedWinAmount);
 		if(missedWinAmount < 10) stringBuilder.append(" ");
-		stringBuilder.append(ansiColored && missedWinAmount != 0 ? AnsiUtil.yellowAnsi(s) : s);
+		stringBuilder.append(ansiColored && missedWinAmount != 0 ? net.kite.internal.util.ansi.AnsiUtil.yellowAnsi(s) : s);
 		
 		stringBuilder.append(TO_STRING_FORCED_MOVES_PREFIX);
 		s = String.valueOf(forcedMoveAmount);
 		if(forcedMoveAmount < 10) stringBuilder.append(" ");
-		stringBuilder.append(ansiColored && forcedMoveAmount != 0 ? AnsiUtil.brightCyanAnsi(s) : s);
+		stringBuilder.append(ansiColored && forcedMoveAmount != 0 ? net.kite.internal.util.ansi.AnsiUtil.brightCyanAnsi(s) : s);
 		
 		if(!includeMoveAnalyses) return stringBuilder.toString();
 		if(moveAnalyses.length == 0) {

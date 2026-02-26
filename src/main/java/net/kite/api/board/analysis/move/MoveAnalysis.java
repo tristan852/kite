@@ -2,7 +2,6 @@ package net.kite.api.board.analysis.move;
 
 import net.kite.api.Kite;
 import net.kite.api.board.evaluation.BoardEvaluation;
-import net.kite.internal.util.ansi.AnsiUtil;
 
 /**
  * Represents the analysis result of
@@ -90,13 +89,13 @@ public class MoveAnalysis {
 		
 		return switch(moveQuality) {
 			
-			case BEST -> AnsiUtil.greenAnsi(s);
-			case GOOD -> AnsiUtil.brightGreenAnsi(s);
-			case INACCURACY -> AnsiUtil.brightYellowAnsi(s);
-			case MISTAKE -> AnsiUtil.brightRedAnsi(s);
-			case BLUNDER -> AnsiUtil.redAnsi(s);
-			case MISSED_WIN -> AnsiUtil.yellowAnsi(s);
-			case FORCED -> AnsiUtil.brightCyanAnsi(s);
+			case BEST -> net.kite.internal.util.ansi.AnsiUtil.greenAnsi(s);
+			case GOOD -> net.kite.internal.util.ansi.AnsiUtil.brightGreenAnsi(s);
+			case INACCURACY -> net.kite.internal.util.ansi.AnsiUtil.brightYellowAnsi(s);
+			case MISTAKE -> net.kite.internal.util.ansi.AnsiUtil.brightRedAnsi(s);
+			case BLUNDER -> net.kite.internal.util.ansi.AnsiUtil.redAnsi(s);
+			case MISSED_WIN -> net.kite.internal.util.ansi.AnsiUtil.yellowAnsi(s);
+			case FORCED -> net.kite.internal.util.ansi.AnsiUtil.brightCyanAnsi(s);
 		};
 	}
 	
