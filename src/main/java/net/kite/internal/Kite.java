@@ -1,6 +1,8 @@
 package net.kite.internal;
 
 import net.kite.api.KiteApi;
+import net.kite.api.board.analysis.game.GameAnalysis;
+import net.kite.api.board.analysis.move.MoveAnalysis;
 import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.board.player.color.BoardPlayerColor;
@@ -225,11 +227,6 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
-	public int undoneMoveAmount() {
-		return undoneMoveAmount;
-	}
-	
-	@Override
 	public boolean boardEmpty() {
 		return playedMoveAmount == 0;
 	}
@@ -286,6 +283,16 @@ public final class Kite implements KiteApi {
 		}
 		
 		return playedMoves[moveIndex] + 1;
+	}
+	
+	@Override
+	public int legalMoveAmount() {
+		return board.legalMoveAmount();
+	}
+	
+	@Override
+	public int undoneMoveAmount() {
+		return undoneMoveAmount;
 	}
 	
 	@Override
@@ -375,7 +382,7 @@ public final class Kite implements KiteApi {
 			immediateLossMoveScore = -BoardScore.maximal(playedMoveAmount + 1);
 		}
 		
-		int maximalScoreLoss = skillLevel.getMaximalScoreLoss();
+		int maximalScoreLoss = skillLevel.getMaximalEvaluationLoss();
 		
 		int openingKnowledgeDepth = skillLevel.getOpeningKnowledgeDepth();
 		boolean openingKnowledgeApplies = playedMoveAmount < openingKnowledgeDepth;
@@ -585,24 +592,45 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
-	public float[] evaluatePlayerPerformances(float[] playerRatingApproximations) {
-		board.approximateEloRatingOfBothPlayer(playerRatingApproximations);
+	public MoveAnalysis analyseMove(int moveColumnIndex) {
+		if(moveColumnIndex < 1 || moveColumnIndex > BOARD_WIDTH) {
+			
+			String message = String.format("moveColumnIndex must be between 1 and 7 (inclusive) but got: %s", moveColumnIndex);
+			throw new IndexOutOfBoundsException(message);
+		}
 		
-		return playerRatingApproximations;
+		moveColumnIndex--;
+		
+		if(!board.moveLegal(moveColumnIndex)) {
+			
+			moveColumnIndex++;
+			
+			String message = String.format("Cannot evaluate illegal move: '%d'", moveColumnIndex);
+			throw new IllegalMoveException(moveColumnIndex, message);
+		}
+		
+		return board.analyseMove(moveColumnIndex);
 	}
 	
 	@Override
-	public float[] evaluatePlayerPerformances() {
-		float[] eloBuffer = new float[GAME_PLAYER_AMOUNT];
+	public GameAnalysis[] analyseGame(GameAnalysis[] playerGameAnalyses) {
+		board.evaluateGamePerformanceOfBothPlayers(playerGameAnalyses);
 		
-		board.approximateEloRatingOfBothPlayer(eloBuffer);
-		
-		return eloBuffer;
+		return playerGameAnalyses;
 	}
 	
 	@Override
-	public float evaluatePlayerPerformance(BoardPlayerColor playerColor) {
-		return board.approximateEloRatingOfPlayer(playerColor);
+	public GameAnalysis[] analyseGame() {
+		GameAnalysis[] gameAnalyses = new GameAnalysis[GAME_PLAYER_AMOUNT];
+		
+		board.evaluateGamePerformanceOfBothPlayers(gameAnalyses);
+		
+		return gameAnalyses;
+	}
+	
+	@Override
+	public GameAnalysis analyseGame(BoardPlayerColor playerColor) {
+		return board.evaluateGamePerformanceOfPlayer(playerColor);
 	}
 	
 	@Override

@@ -1,7 +1,8 @@
 package net.kite.internal.cli.command.commands;
 
 import net.kite.api.Kite;
-import net.kite.api.board.score.BoardScore;
+import net.kite.api.board.analysis.move.MoveAnalysis;
+import net.kite.api.board.evaluation.BoardEvaluation;
 import net.kite.internal.cli.command.Command;
 import net.kite.internal.util.ansi.AnsiUtil;
 
@@ -33,8 +34,12 @@ public final class EvaluateCommand extends Command {
 				return false;
 			}
 			
-			int score = solver.evaluateMove(x);
-			System.out.println(formatScore(score));
+			MoveAnalysis analysis = solver.analyseMove(x);
+			
+			boolean ansiDisabled = AnsiUtil.areAnsiCodesDisabled();
+			String s = analysis.toString(!ansiDisabled);
+			
+			System.out.println(s);
 			
 		} else {
 			
@@ -46,7 +51,7 @@ public final class EvaluateCommand extends Command {
 	}
 	
 	private static String formatScore(int score) {
-		String s = BoardScore.formatScore(score);
+		String s = BoardEvaluation.formatEvaluation(score);
 		
 		if(score == 0) return AnsiUtil.boldBrightYellowAnsi(s);
 		if(score < 0) return AnsiUtil.boldBrightRedAnsi(s);

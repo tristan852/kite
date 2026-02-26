@@ -10,14 +10,22 @@ public abstract class Command {
 	
 	private final String name;
 	private final String alias;
-	private final String description;
+	private final String[] description;
 	private final String helpMessage;
 	
 	public Command(String name, String description, String helpMessage) {
 		this(name, null, description, helpMessage);
 	}
 	
+	public Command(String name, String[] description, String helpMessage) {
+		this(name, null, description, helpMessage);
+	}
+	
 	public Command(String name, String alias, String description, String helpMessage) {
+		this(name, alias, new String[] { description }, helpMessage);
+	}
+	
+	public Command(String name, String alias, String[] description, String helpMessage) {
 		this.name = name;
 		this.alias = alias;
 		this.description = description;
@@ -34,7 +42,7 @@ public abstract class Command {
 		return alias;
 	}
 	
-	public String getDescription() {
+	public String[] getDescription() {
 		return description;
 	}
 	

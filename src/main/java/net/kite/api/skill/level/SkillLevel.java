@@ -218,17 +218,17 @@ public enum SkillLevel {
 	
 	private final int approximateEloRating;
 	
-	private final int maximalScoreLoss;
+	private final int maximalEvaluationLoss;
 	private final int openingKnowledgeDepth;
 	
 	private final int immediateWinNoticeProbability;
 	private final int immediateLossNoticeProbability;
 	
-	SkillLevel(String displayName, int approximateEloRating, int maximalScoreLoss, int openingKnowledgeDepth, int immediateWinNoticeProbability, int immediateLossNoticeProbability) {
+	SkillLevel(String displayName, int approximateEloRating, int maximalEvaluationLoss, int openingKnowledgeDepth, int immediateWinNoticeProbability, int immediateLossNoticeProbability) {
 		this.name = name().toLowerCase(Locale.ROOT);
 		this.displayName = displayName;
 		this.approximateEloRating = approximateEloRating;
-		this.maximalScoreLoss = maximalScoreLoss;
+		this.maximalEvaluationLoss = maximalEvaluationLoss;
 		this.openingKnowledgeDepth = openingKnowledgeDepth;
 		this.immediateWinNoticeProbability = immediateWinNoticeProbability;
 		this.immediateLossNoticeProbability = immediateLossNoticeProbability;
@@ -273,14 +273,14 @@ public enum SkillLevel {
 	}
 	
 	/**
-	 * Returns the maximum amount of score that
-	 * a player of this skill level is allowed
-	 * to lose for each move.
+	 * Returns the maximum amount of evaluation
+	 * score that a player of this skill level
+	 * is allowed to lose for each move.
 	 *
-	 * @return maximal amount of score to lose
+	 * @return maximal amount of evaluation score to lose
 	 */
-	public int getMaximalScoreLoss() {
-		return maximalScoreLoss;
+	public int getMaximalEvaluationLoss() {
+		return maximalEvaluationLoss;
 	}
 	
 	/**

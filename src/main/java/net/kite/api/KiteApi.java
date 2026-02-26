@@ -1,5 +1,7 @@
 package net.kite.api;
 
+import net.kite.api.board.analysis.game.GameAnalysis;
+import net.kite.api.board.analysis.move.MoveAnalysis;
 import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.board.player.color.BoardPlayerColor;
@@ -40,8 +42,6 @@ public interface KiteApi {
 	BoardOutcome gameOutcome();
 	boolean gameOver();
 	
-	int undoneMoveAmount();
-	
 	boolean boardEmpty();
 	
 	int lastMoveRow();
@@ -50,6 +50,8 @@ public interface KiteApi {
 	int playedMoveRow(int moveIndex);
 	int playedMove(int moveIndex);
 	
+	int legalMoveAmount();
+	int undoneMoveAmount();
 	int playedMoveAmount();
 	
 	KiteApi startRecordingPerformanceMetrics();
@@ -60,9 +62,11 @@ public interface KiteApi {
 	int optimalMove();
 	int randomMove();
 	
-	float[] evaluatePlayerPerformances(float[] playerRatingApproximations);
-	float[] evaluatePlayerPerformances();
-	float evaluatePlayerPerformance(BoardPlayerColor playerColor);
+	MoveAnalysis analyseMove(int moveColumnIndex);
+	
+	GameAnalysis[] analyseGame(GameAnalysis[] playerGameAnalyses);
+	GameAnalysis[] analyseGame();
+	GameAnalysis analyseGame(BoardPlayerColor playerColor);
 	
 	int[] evaluateAllMoves(int[] moveScores);
 	int[] evaluateAllMoves();

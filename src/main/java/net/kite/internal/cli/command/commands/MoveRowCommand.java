@@ -10,7 +10,7 @@ import java.util.Scanner;
 public final class MoveRowCommand extends Command {
 	
 	public MoveRowCommand() {
-		super("move-row", "Shows the row of the last move or the move at the given index (including undone moves)", "move-row [index]");
+		super("move-row", new String[] { "Shows the row of the last move or the move at the", "given index (including undone moves)" }, "move-row [index]");
 	}
 	
 	@Override

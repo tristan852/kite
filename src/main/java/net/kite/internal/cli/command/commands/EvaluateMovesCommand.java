@@ -1,7 +1,7 @@
 package net.kite.internal.cli.command.commands;
 
 import net.kite.api.Kite;
-import net.kite.api.board.score.BoardScore;
+import net.kite.api.board.evaluation.BoardEvaluation;
 import net.kite.internal.cli.command.Command;
 import net.kite.internal.util.ansi.AnsiUtil;
 
@@ -66,7 +66,7 @@ public final class EvaluateMovesCommand extends Command {
 			if(e == Integer.MIN_VALUE) s = AnsiUtil.boldBrightCyanAnsi(ILLEGAL_MOVE_EVALUATION_STRING);
 			else {
 				
-				s = BoardScore.formatScoreCompactly(e);
+				s = BoardEvaluation.formatEvaluationCompactly(e);
 				
 				if(e == 0) s = AnsiUtil.boldBrightYellowAnsi(s);
 				else if(e < 0) s = AnsiUtil.boldBrightRedAnsi(s);

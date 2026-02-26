@@ -10,11 +10,6 @@ import java.util.Scanner;
 
 public final class SetupCommand extends Command {
 	
-	private static final int MOVE_CHARACTER_OFFSET = 48;
-	private static final int MAXIMAL_PLAYED_MOVE_AMOUNT = 42;
-	
-	private final int[] undoneMoves = new int[MAXIMAL_PLAYED_MOVE_AMOUNT];
-	
 	public SetupCommand() {
 		super("setup", "Set up the game from a sequence of moves", "setup [moves]");
 	}

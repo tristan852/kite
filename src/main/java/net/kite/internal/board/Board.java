@@ -1,8 +1,11 @@
 package net.kite.internal.board;
 
+import net.kite.api.board.analysis.move.MoveAnalysis;
+import net.kite.api.board.analysis.game.GameAnalysis;
 import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.board.player.color.BoardPlayerColor;
+import net.kite.api.board.evaluation.BoardEvaluation;
 import net.kite.internal.board.bit.Bitboard;
 import net.kite.internal.board.bit.Bitboards;
 import net.kite.internal.board.score.BoardScore;
@@ -11,6 +14,8 @@ import net.kite.internal.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.internal.util.ansi.AnsiUtil;
 
 public final class Board {
+	
+	private static final int PLAYER_AMOUNT = 2;
 	
 	private static final int WIDTH = 7;
 	private static final int HEIGHT = 6;
@@ -122,9 +127,6 @@ public final class Board {
 	
 	private static final float PERFECT_ELO_APPROXIMATION = 2000.0f;
 	
-	private static final int ELO_APPROXIMATION_RED_MIN_MOVE_AMOUNT = 1;
-	private static final int ELO_APPROXIMATION_YELLOW_MIN_MOVE_AMOUNT = 2;
-	
 	private static final int MAXIMAL_LINE_AMOUNT = 4;
 	
 	private static final int MOVES_LENGTH = 294;
@@ -146,7 +148,7 @@ public final class Board {
 			  " %s"
 	};
 	
-	private static final String TO_STRING_COMPACT_MOVE_SCORES_PREFIX_STRING = "\nmove scores: ";
+	private static final String TO_STRING_COMPACT_MOVE_SCORES_PREFIX_STRING = "\nmove evaluations: ";
 	private static final String TO_STRING_COMPACT_GAME_OVER_MOVE_SCORES_STRING = "-, -, -, -, -, -, -";
 	private static final String COLORED_TO_STRING_COMPACT_GAME_OVER_MOVE_SCORES_STRING;
 	private static final String TO_STRING_COMPACT_ILLEGAL_MOVE_STRING = "-";
@@ -207,6 +209,8 @@ public final class Board {
 	private final BoardLine[] lines = new BoardLine[MAXIMAL_LINE_AMOUNT];
 	
 	private final boolean[][] winCells = new boolean[WIDTH][HEIGHT];
+	
+	private final GameAnalysis[] playerGameEvaluations = new GameAnalysis[PLAYER_AMOUNT];
 	
 	public Board() {
 		this.scoreCache = new BoardScoreCache();
@@ -402,7 +406,7 @@ public final class Board {
 				}
 			}
 			
-			remainingMoves = net.kite.api.board.score.BoardScore.gameOverInTotalMoves(boardScore, filledCellAmount);
+			remainingMoves = BoardEvaluation.gameOverInTotalMoves(boardScore, filledCellAmount);
 			
 			for(int x = 0; x < WIDTH; x++) {
 				
@@ -411,7 +415,7 @@ public final class Board {
 				if(moveLegalWhileGameNotOver(x)) {
 					
 					int score = moveScores[x];
-					String s = net.kite.api.board.score.BoardScore.formatScoreCompactly(score);
+					String s = BoardEvaluation.formatEvaluationCompactly(score);
 					
 					if(spaciousBoard) {
 						
@@ -527,7 +531,65 @@ public final class Board {
 		return winningLines;
 	}
 	
-	public void approximateEloRatingOfBothPlayer(float[] eloBuffer) {
+	public MoveAnalysis analyseMove(int moveColumnIndex) {
+		boolean moveIsForced = legalMoveAmount() == 1;
+		
+		int scoreBefore = moveIsForced ? 0 : evaluate();
+		
+		playMove(moveColumnIndex);
+		
+		int scoreAfter = -evaluate();
+		
+		undoMove();
+		
+		int previousMoveScore = 0;
+		boolean previousMoveCouldHaveBeenWin = false;
+		
+		if(!moveIsForced && filledCellAmount != 0 && scoreBefore > 0 && scoreAfter <= 0) {
+			
+			if(filledCellAmount == 1) {
+				
+				previousMoveScore = -1;
+				boolean droppedALot = previousMoveScore - scoreAfter > 3;
+				if(!droppedALot) {
+					
+					undoMove();
+					int lastMove = playedMoves[filledCellAmount];
+					
+					int scoreBefore2 = evaluate();
+					previousMoveCouldHaveBeenWin = scoreBefore2 > 0;
+					
+					playMove(lastMove);
+				}
+				
+			} else {
+				
+				undoMove();
+				int lastMove = playedMoves[filledCellAmount];
+				
+				undoMove();
+				int lastMove2 = playedMoves[filledCellAmount];
+				
+				previousMoveScore = -evaluate();
+				
+				playMove(lastMove2);
+				
+				boolean droppedALot = previousMoveScore - scoreAfter > 3;
+				if(!droppedALot) {
+					
+					int scoreBefore2 = evaluate();
+					previousMoveCouldHaveBeenWin = scoreBefore2 > 0;
+				}
+				
+				playMove(lastMove);
+			}
+		}
+		
+		MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(scoreBefore, scoreAfter, previousMoveScore, previousMoveCouldHaveBeenWin);
+		return new MoveAnalysis(moveColumnIndex + 1, scoreAfter, moveQuality);
+	}
+	
+	public void evaluateGamePerformanceOfBothPlayers(GameAnalysis[] gameAnalyses) {
 		int n = filledCellAmount;
 		while(filledCellAmount != 0) {
 			
@@ -536,19 +598,31 @@ public final class Board {
 			undoneMoves[filledCellAmount] = playedMoves[filledCellAmount];
 		}
 		
+		int yellowPlayerMoveAmount = n >> 1;
+		int redPlayerMoveAmount = n - yellowPlayerMoveAmount;
+		
+		MoveAnalysis[] redMoveAnalyses = new MoveAnalysis[redPlayerMoveAmount];
+		MoveAnalysis[] yellowMoveAnalyses = new MoveAnalysis[yellowPlayerMoveAmount];
+		
 		int redTotalScoreLoss = 0;
 		int yellowTotalScoreLoss = 0;
-		
-		int m1 = 0;
-		int m2 = 0;
 		
 		int previousBoardScore = evaluate();
 		
 		boolean redAtTurn = true;
+		boolean previousMoveCouldHaveBeenWin = false;
+		
+		int previousMoveScore = -1;
+		int previousPreviousMoveScore = 0;
+		
+		int i1 = 0;
+		int i2 = 0;
 		
 		for(int i = 0; i < n; i++) {
 			
 			int move = undoneMoves[i];
+			
+			boolean moveIsForced = legalMoveAmount() == 1;
 			
 			playMove(move);
 			
@@ -556,13 +630,26 @@ public final class Board {
 			if(redAtTurn) {
 				
 				redTotalScoreLoss += previousBoardScore + boardScore;
-				m1++;
+				
+				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(previousBoardScore, -boardScore, previousPreviousMoveScore, previousMoveCouldHaveBeenWin);
+				
+				redMoveAnalyses[i1] = new MoveAnalysis(move + 1, -boardScore, moveQuality);
+				i1++;
 				
 			} else {
 				
 				yellowTotalScoreLoss += previousBoardScore + boardScore;
-				m2++;
+				
+				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(previousBoardScore, -boardScore, previousPreviousMoveScore, previousMoveCouldHaveBeenWin);
+				
+				yellowMoveAnalyses[i2] = new MoveAnalysis(move + 1, -boardScore, moveQuality);
+				i2++;
 			}
+			
+			previousPreviousMoveScore = previousMoveScore;
+			previousMoveScore = -boardScore;
+			
+			previousMoveCouldHaveBeenWin = previousBoardScore > 0;
 			
 			redAtTurn = !redAtTurn;
 			previousBoardScore = boardScore;
@@ -571,31 +658,35 @@ public final class Board {
 		float f1;
 		float f2;
 		
-		if(m1 == 0) f1 = PERFECT_ELO_APPROXIMATION;
+		if(redPlayerMoveAmount == 0) f1 = PERFECT_ELO_APPROXIMATION;
 		else {
 			
-			float averageScoreLoss = (float) redTotalScoreLoss / m1;
+			float averageScoreLoss = (float) redTotalScoreLoss / redPlayerMoveAmount;
 			f1 = approximateElo(averageScoreLoss);
 		}
 		
-		if(m2 == 0) f2 = PERFECT_ELO_APPROXIMATION;
+		if(yellowPlayerMoveAmount == 0) f2 = PERFECT_ELO_APPROXIMATION;
 		else {
 			
-			float averageScoreLoss = (float) yellowTotalScoreLoss / m2;
+			float averageScoreLoss = (float) yellowTotalScoreLoss / yellowPlayerMoveAmount;
 			f2 = approximateElo(averageScoreLoss);
 		}
 		
-		eloBuffer[0] = f1;
-		eloBuffer[1] = f2;
+		gameAnalyses[0] = new GameAnalysis(f1, redMoveAnalyses);
+		gameAnalyses[1] = new GameAnalysis(f2, yellowMoveAnalyses);
 	}
 	
-	public float approximateEloRatingOfPlayer(BoardPlayerColor playerColor) {
+	public GameAnalysis evaluateGamePerformanceOfPlayer(BoardPlayerColor playerColor) {
 		int n = filledCellAmount;
-		int minMoveAmount = playerColor == BoardPlayerColor.RED ? ELO_APPROXIMATION_RED_MIN_MOVE_AMOUNT : ELO_APPROXIMATION_YELLOW_MIN_MOVE_AMOUNT;
 		
-		if(n < minMoveAmount) {
+		int playerMoveAmount = n >> 1;
+		if(playerColor == BoardPlayerColor.RED) playerMoveAmount = n - playerMoveAmount;
+		
+		MoveAnalysis[] moveAnalyses = new MoveAnalysis[playerMoveAmount];
+		
+		if(playerMoveAmount == 0) {
 			
-			return PERFECT_ELO_APPROXIMATION;
+			return new GameAnalysis(PERFECT_ELO_APPROXIMATION, moveAnalyses);
 		}
 		
 		while(filledCellAmount != 0) {
@@ -606,15 +697,21 @@ public final class Board {
 		}
 		
 		int totalScoreLoss = 0;
-		int m = 0;
 		
 		int previousBoardScore = evaluate();
 		
 		boolean playerAtTurn = playerColor == BoardPlayerColor.RED;
+		boolean previousMoveCouldHaveBeenWin = false;
+		
+		int previousMoveScore = -1;
+		
+		int moveIndex = 0;
 		
 		for(int i = 0; i < n; i++) {
 			
 			int move = undoneMoves[i];
+			
+			boolean moveIsForced = playerAtTurn && legalMoveAmount() == 1;
 			
 			playMove(move);
 			
@@ -622,15 +719,25 @@ public final class Board {
 			if(playerAtTurn) {
 				
 				totalScoreLoss += previousBoardScore + boardScore;
-				m++;
+				
+				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(previousBoardScore, -boardScore, previousMoveScore, previousMoveCouldHaveBeenWin);
+				
+				moveAnalyses[moveIndex] = new MoveAnalysis(move + 1, -boardScore, moveQuality);
+				moveIndex++;
+				
+				previousMoveScore = -boardScore;
 			}
+			
+			previousMoveCouldHaveBeenWin = previousBoardScore > 0;
 			
 			playerAtTurn = !playerAtTurn;
 			previousBoardScore = boardScore;
 		}
 		
-		float averageScoreLoss = (float) totalScoreLoss / m;
-		return approximateElo(averageScoreLoss);
+		float averageScoreLoss = (float) totalScoreLoss / playerMoveAmount;
+		float f = approximateElo(averageScoreLoss);
+		
+		return new GameAnalysis(f, moveAnalyses);
 	}
 	
 	public String movesString() {
@@ -1076,6 +1183,13 @@ public final class Board {
 		return (b & Bitboards.FULL_BOARD) != 0;
 	}
 	
+	public int legalMoveAmount() {
+		long board = activeBitboard ^ maskBitboard;
+		if(bitboardContainsConnection(board)) return 0;
+		
+		return Long.bitCount(ceilingBitboard & Bitboards.FULL_BOARD);
+	}
+	
 	public boolean moveLegal(int moveCellX) {
 		long board = activeBitboard ^ maskBitboard;
 		if(bitboardContainsConnection(board)) return false;
@@ -1422,6 +1536,29 @@ public final class Board {
 	
 	public static int getHeight() {
 		return HEIGHT;
+	}
+	
+	private static MoveAnalysis.MoveQuality moveQuality(int scoreBefore, int scoreAfter, int previousOwnMoveScore, boolean previousMoveCouldHaveBeenWin) {
+		if(scoreAfter == scoreBefore) return MoveAnalysis.MoveQuality.BEST;
+		
+		boolean outcomeStayedTheSame = scoreBefore > 0 ? scoreAfter > 0 : scoreBefore != 0;
+		
+		int scoreLoss = scoreBefore - scoreAfter;
+		boolean scoreDroppedALot = scoreLoss > 3;
+		
+		if(outcomeStayedTheSame) {
+			
+			return scoreDroppedALot ? MoveAnalysis.MoveQuality.INACCURACY : MoveAnalysis.MoveQuality.GOOD;
+		}
+		
+		boolean outcomeWasWin = scoreBefore > 0;
+		if(outcomeWasWin) {
+			
+			boolean droppedALot = previousOwnMoveScore - scoreAfter > 3;
+			if(!droppedALot && previousMoveCouldHaveBeenWin) return MoveAnalysis.MoveQuality.MISSED_WIN;
+		}
+		
+		return scoreDroppedALot ? MoveAnalysis.MoveQuality.BLUNDER : MoveAnalysis.MoveQuality.MISTAKE;
 	}
 	
 	private static float approximateElo(float averageScoreLoss) {

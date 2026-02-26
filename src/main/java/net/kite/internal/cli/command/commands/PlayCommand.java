@@ -10,14 +10,10 @@ import java.util.Scanner;
 
 public final class PlayCommand extends Command {
 	
-	private static final int MOVE_CHARACTER_OFFSET = 48;
-	
 	public PlayCommand() {
 		super("play", "p", "Play one or more moves", "play [moves]");
 	}
 	
-	// TODO redo history!!
-	// TODO just use playMoves(String) / setupBoard(String) and catch the exceptions and print corresponding error messages
 	@Override
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 1) {

@@ -10,7 +10,7 @@ import java.util.Scanner;
 public final class MoveCommand extends Command {
 	
 	public MoveCommand() {
-		super("move", "Shows the last move or the move at the given index (including undone moves)", "move [index]");
+		super("move", new String[] { "Shows the last move or the move at the given index", "(including undone moves)" }, "move [index]");
 	}
 	
 	@Override

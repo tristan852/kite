@@ -1,5 +1,7 @@
 package net.kite.api;
 
+import net.kite.api.board.analysis.game.GameAnalysis;
+import net.kite.api.board.analysis.move.MoveAnalysis;
 import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.board.player.color.BoardPlayerColor;
@@ -421,20 +423,6 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
-	 * Returns the number of moves that
-	 * have been undone and that can be
-	 * redone by successive calls to
-	 * {@link Kite#redoMove()} or a combined
-	 * call to {@link Kite#redoMoves(int moveAmount)}.
-	 *
-	 * @return number of moves undone
-	 */
-	@Override
-	public synchronized int undoneMoveAmount() {
-		return internalSolver.undoneMoveAmount();
-	}
-	
-	/**
 	 * Returns whether the board is
 	 * empty (i.e. whether no moves
 	 * have been played yet).
@@ -536,6 +524,34 @@ public final class Kite implements KiteApi {
 	@Override
 	public synchronized int playedMove(int moveIndex) {
 		return internalSolver.playedMove(moveIndex);
+	}
+	
+	/**
+	 * Returns the number of moves that
+	 * can legally be played using
+	 * {@link Kite#playMove(int moveColumnIndex)}
+	 * and that would return {@code true} when
+	 * passed into {@link Kite#moveLegal(int moveColumnIndex)}.
+	 *
+	 * @return number of legal moves
+	 */
+	@Override
+	public synchronized int legalMoveAmount() {
+		return internalSolver.legalMoveAmount();
+	}
+	
+	/**
+	 * Returns the number of moves that
+	 * have been undone and that can be
+	 * redone by successive calls to
+	 * {@link Kite#redoMove()} or a combined
+	 * call to {@link Kite#redoMoves(int moveAmount)}.
+	 *
+	 * @return number of moves undone
+	 */
+	@Override
+	public synchronized int undoneMoveAmount() {
+		return internalSolver.undoneMoveAmount();
 	}
 	
 	/**
@@ -648,101 +664,143 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
-	 * Uses all the moves played so far onto
-	 * this solver instance to evaluate the
-	 * performance of both players.
-	 * If the game that is currently
-	 * loaded is already over (see {@link Kite#gameOver()})
-	 * then the entire match will be used
-	 * to give an Elo approximation.
-	 * <p>
-	 * Note that Elo rating approximation based
-	 * on a few moves are even an entire game
-	 * can still be inaccurate.
-	 * The returned Elo rating approximation
-	 * is based upon the approximate Elo
-	 * ratings of the different {@link SkillLevel}s
-	 * (see also {@link SkillLevel#getApproximateEloRating()}).
-	 * <p>
-	 * The Elo rating approximation of the red player will
-	 * be the first element of the returned array and the
-	 * rating approximation of the yellow player will be
-	 * the second element.
-	 * <p>
-	 * If any player color has not played any moves,
-	 * an Elo approximation of {@code 2000} is returned
-	 * for that player.
+	 * Analyses the specified move in the
+	 * current position.
 	 *
-	 * @param playerRatingApproximations the buffer of length {@code 2} to write Elo rankings to
-	 * @return Elo rating approximation of both players
+	 * @param moveColumnIndex one-based
+	 * column index of the move to analyse
+	 * @return move analysis of the
+	 * specified move
 	 */
 	@Override
-	public synchronized float[] evaluatePlayerPerformances(float[] playerRatingApproximations) {
-		return internalSolver.evaluatePlayerPerformances(playerRatingApproximations);
+	public MoveAnalysis analyseMove(int moveColumnIndex) {
+		return internalSolver.analyseMove(moveColumnIndex);
 	}
 	
 	/**
-	 * Uses all the moves played so far onto
-	 * this solver instance to evaluate the
-	 * performance of both players.
-	 * If the game that is currently
-	 * loaded is already over (see {@link Kite#gameOver()})
-	 * then the entire match will be used
-	 * to give an Elo approximation.
+	 * Uses all moves played so far on
+	 * this solver instance to evaluate
+	 * the performance of both players.
 	 * <p>
-	 * Note that Elo rating approximation based
-	 * on a few moves are even an entire game
-	 * can still be inaccurate.
-	 * The returned Elo rating approximation
-	 * is based upon the approximate Elo
-	 * ratings of the different {@link SkillLevel}s
-	 * (see also {@link SkillLevel#getApproximateEloRating()}).
+	 * If the currently loaded game is
+	 * already over (see {@link Kite#gameOver()})
+	 * the entire match will be used to
+	 * compute the performance analysis.
 	 * <p>
-	 * The Elo rating approximation of the red player will
-	 * be the first element of the returned array and the
-	 * rating approximation of the yellow player will be
-	 * the second element.
-	 * Use {@link Kite#evaluatePlayerPerformances(float[] playerRatingApproximations)}
-	 * if you already have a buffer to write the player
-	 * evaluations into.
+	 * The returned analyses contain an
+	 * approximate ELO performance based
+	 * on the approximate ELO ratings of
+	 * the different {@link SkillLevel}s
+	 * (see also
+	 * {@link SkillLevel#getApproximateEloRating()}).
 	 * <p>
-	 * If any player color has not played any moves,
-	 * an Elo approximation of {@code 2000} is returned
-	 * for that player.
+	 * The analysis of the red player is
+	 * stored at index {@code 0} and the
+	 * analysis of the yellow player at
+	 * index {@code 1}.
+	 * <p>
+	 * If a player has not played any
+	 * moves, an approximate ELO of
+	 * {@code 2000} is returned for
+	 * that player.
+	 * <p>
+	 * Note that an ELO approximation
+	 * based on only a few moves or
+	 * even a single game may still
+	 * be inaccurate.
 	 *
-	 * @return Elo rating approximation of both players
+	 * @param playerGameAnalyses buffer
+	 * of length {@code 2} into which
+	 * the player analyses will be written
+	 * @return array containing the game
+	 * analyses of both players
 	 */
 	@Override
-	public synchronized float[] evaluatePlayerPerformances() {
-		return internalSolver.evaluatePlayerPerformances();
+	public synchronized GameAnalysis[] analyseGame(GameAnalysis[] playerGameAnalyses) {
+		return internalSolver.analyseGame(playerGameAnalyses);
 	}
 	
 	/**
-	 * Uses all the moves played so far onto
-	 * this solver instance to evaluate the
-	 * performance of a given player.
-	 * If the game that is currently
-	 * loaded is already over (see {@link Kite#gameOver()})
-	 * then the entire match will be used
-	 * to give an Elo approximation.
+	 * Uses all moves played so far on
+	 * this solver instance to evaluate
+	 * the performance of both players.
 	 * <p>
-	 * Note that Elo rating approximation based
-	 * on a few moves are even an entire game
-	 * can still be inaccurate.
-	 * The returned Elo rating approximation
-	 * is based upon the approximate Elo
-	 * ratings of the different {@link SkillLevel}s
-	 * (see also {@link SkillLevel#getApproximateEloRating()}).
+	 * If the currently loaded game is
+	 * already over (see {@link Kite#gameOver()})
+	 * the entire match will be used to
+	 * compute the performance analysis.
 	 * <p>
-	 * If the requested player color has not played any moves,
-	 * an Elo approximation of {@code 2000} is returned.
+	 * The returned analyses contain an
+	 * approximate ELO performance based
+	 * on the approximate ELO ratings of
+	 * the different {@link SkillLevel}s
+	 * (see also
+	 * {@link SkillLevel#getApproximateEloRating()}).
+	 * <p>
+	 * The analysis of the red player is
+	 * stored at index {@code 0} and the
+	 * analysis of the yellow player at
+	 * index {@code 1}.
+	 * <p>
+	 * Use
+	 * {@link Kite#analyseGame(GameAnalysis[] playerGameAnalyses)}
+	 * if you already have a buffer to
+	 * write the results into.
+	 * <p>
+	 * If a player has not played any
+	 * moves, an approximate ELO of
+	 * {@code 2000} is returned for
+	 * that player.
+	 * <p>
+	 * Note that an ELO approximation
+	 * based on only a few moves or
+	 * even a single game may still
+	 * be inaccurate.
 	 *
-	 * @param playerColor the color of the player whose performance is to be evaluated
-	 * @return Elo rating approximation
+	 * @return array containing the game
+	 * analyses of both players
 	 */
 	@Override
-	public synchronized float evaluatePlayerPerformance(BoardPlayerColor playerColor) {
-		return internalSolver.evaluatePlayerPerformance(playerColor);
+	public synchronized GameAnalysis[] analyseGame() {
+		return internalSolver.analyseGame();
+	}
+	
+	/**
+	 * Uses all moves played so far on
+	 * this solver instance to evaluate
+	 * the performance of the specified
+	 * player.
+	 * <p>
+	 * If the currently loaded game is
+	 * already over (see {@link Kite#gameOver()})
+	 * the entire match will be used to
+	 * compute the performance analysis.
+	 * <p>
+	 * The returned analysis contains an
+	 * approximate ELO performance based
+	 * on the approximate ELO ratings of
+	 * the different {@link SkillLevel}s
+	 * (see also
+	 * {@link SkillLevel#getApproximateEloRating()}).
+	 * <p>
+	 * If the specified player has not
+	 * played any moves, an approximate
+	 * ELO of {@code 2000} is returned.
+	 * <p>
+	 * Note that an ELO approximation
+	 * based on only a few moves or
+	 * even a single game may still
+	 * be inaccurate.
+	 *
+	 * @param playerColor color of the
+	 * player whose performance should
+	 * be evaluated
+	 * @return game analysis of the
+	 * specified player
+	 */
+	@Override
+	public synchronized GameAnalysis analyseGame(BoardPlayerColor playerColor) {
+		return internalSolver.analyseGame(playerColor);
 	}
 	
 	/**

@@ -24,7 +24,7 @@ public final class Commands {
 	public static final Command OPTIMAL = new OptimalCommand();
 	public static final Command RANDOM = new RandomCommand();
 	public static final Command SKILLED = new SkilledCommand();
-	public static final Command PERFORMANCE = new PerformanceCommand();
+	public static final Command ANALYSIS = new AnalysisCommand();
 	public static final Command BENCHMARK = new BenchmarkCommand();
 	
 	public static final Command PRINT = new PrintCommand();
@@ -39,6 +39,7 @@ public final class Commands {
 	public static final Command OUTCOME = new OutcomeCommand();
 	public static final Command MOVE_COUNT = new MoveCountCommand();
 	public static final Command UNDONE_MOVE_COUNT = new UndoneMoveCountCommand();
+	public static final Command LEGAL_MOVE_COUNT = new LegalMoveCountCommand();
 	public static final Command OCCUPIED = new OccupiedCommand();
 	public static final Command COLOR = new ColorCommand();
 	public static final Command HEIGHT = new HeightCommand();
@@ -63,7 +64,7 @@ public final class Commands {
 			OPTIMAL,
 			RANDOM,
 			SKILLED,
-			PERFORMANCE,
+			ANALYSIS,
 			BENCHMARK,
 			
 			PRINT,
@@ -78,6 +79,7 @@ public final class Commands {
 			OUTCOME,
 			MOVE_COUNT,
 			UNDONE_MOVE_COUNT,
+			LEGAL_MOVE_COUNT,
 			OCCUPIED,
 			COLOR,
 			HEIGHT,
@@ -106,7 +108,7 @@ public final class Commands {
 					OPTIMAL,
 					RANDOM,
 					SKILLED,
-					PERFORMANCE,
+					ANALYSIS,
 					BENCHMARK
 			},
 			{
@@ -122,6 +124,7 @@ public final class Commands {
 					OUTCOME,
 					MOVE_COUNT,
 					UNDONE_MOVE_COUNT,
+					LEGAL_MOVE_COUNT,
 					OCCUPIED,
 					COLOR,
 					HEIGHT,

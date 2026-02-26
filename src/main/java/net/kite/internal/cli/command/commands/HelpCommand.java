@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public final class HelpCommand extends Command {
 	
-	private static final int LARGEST_COMMAND_NAME_LENGTH = 40;
+	private static final int LARGEST_COMMAND_NAME_LENGTH = 43;
 	private static final String PADDING_STRING = " ";
 	
 	public HelpCommand() {
@@ -36,7 +36,7 @@ public final class HelpCommand extends Command {
 				
 				String alias = command.getAlias();
 				String helpMessage = command.getHelpMessage();
-				String description = command.getDescription();
+				String[] description = command.getDescription();
 				
 				String s;
 				int l;
@@ -53,7 +53,12 @@ public final class HelpCommand extends Command {
 				
 				s += PADDING_STRING.repeat(LARGEST_COMMAND_NAME_LENGTH - l);
 				
-				System.out.printf("  %s  %s%n", s, description);
+				System.out.printf("  %s  %s%n", s, description[0]);
+				
+				for(int i = 1; i < description.length; i++) {
+					
+					System.out.printf("                                               %s%n", description[i]);
+				}
 			}
 		}
 		
