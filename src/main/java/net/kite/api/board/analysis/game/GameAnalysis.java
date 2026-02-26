@@ -22,8 +22,9 @@ public class GameAnalysis {
 	private static final String TO_STRING_ELO_PREFIX = "approximate elo  ";
 	private static final String TO_STRING_MOVES_PREFIX = "\n\nmoves";
 	private static final String TO_STRING_NO_MOVES_PREFIX = "\n\nmoves               none";
-	private static final String TO_STRING_MOVE_PREFIX = "\n  - ";
-	private static final String TO_STRING_MOVE_INFIX = "  ";
+	private static final String TO_STRING_MOVE_PREFIX = "\n  ";
+	private static final String TO_STRING_MOVE_FIRST_INFIX = ". ";
+	private static final String TO_STRING_MOVE_SECOND_INFIX = "  ";
 	
 	private static final String TO_STRING_BEST_MOVES_PREFIX       = "\n\nbest                  ";
 	private static final String TO_STRING_GOOD_MOVES_PREFIX       = "\ngood                  ";
@@ -201,7 +202,9 @@ public class GameAnalysis {
 		stringBuilder.append(ansiColored && forcedMoveAmount != 0 ? net.kite.internal.util.ansi.AnsiUtil.brightCyanAnsi(s) : s);
 		
 		if(!includeMoveAnalyses) return stringBuilder.toString();
-		if(moveAnalyses.length == 0) {
+		
+		int n = moveAnalyses.length;
+		if(n == 0) {
 			
 			stringBuilder.append(TO_STRING_NO_MOVES_PREFIX);
 			return stringBuilder.toString();
@@ -209,16 +212,24 @@ public class GameAnalysis {
 		
 		stringBuilder.append(TO_STRING_MOVES_PREFIX);
 		
-		for(MoveAnalysis moveAnalysis : moveAnalyses) {
+		for(int i = 0; i < n; i++) {
+			
+			MoveAnalysis moveAnalysis = moveAnalyses[i];
 			
 			int x = moveAnalysis.getMoveColumnIndex();
 			
 			stringBuilder.append(TO_STRING_MOVE_PREFIX);
+			
+			int j = i + 1;
+			if(j < 10) stringBuilder.append(" ");
+			stringBuilder.append(j);
+			
+			stringBuilder.append(TO_STRING_MOVE_FIRST_INFIX);
 			stringBuilder.append(x);
 			
 			s = moveAnalysis.toString(ansiColored);
 			
-			stringBuilder.append(TO_STRING_MOVE_INFIX);
+			stringBuilder.append(TO_STRING_MOVE_SECOND_INFIX);
 			stringBuilder.append(s);
 		}
 		
