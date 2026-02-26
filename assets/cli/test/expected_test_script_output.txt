@@ -8,7 +8,7 @@ Kite v1.19.0 by tristan852
 .......
 
 moves: none
-move scores: -2, -1, 0, +1, 0, -1, -2
+move evaluations: -2, -1, 0, +1, 0, -1, -2
 moves left (optimal play): 41
 outcome: undecided
 
@@ -22,7 +22,7 @@ outcome: undecided
 ...XX..
 
 moves: 4455
-move scores: -4, -3, +18, +2, +2, +18, -3
+move evaluations: -4, -3, +18, +2, +2, +18, -3
 moves left (optimal play): 3
 outcome: undecided
 
@@ -36,7 +36,7 @@ outcome: undecided
 ..XXX..
 
 moves: 44553
-move scores: -18, -18, -18, -18, -18, -18, -18
+move evaluations: -18, -18, -18, -18, -18, -18, -18
 moves left (optimal play): 2
 outcome: undecided
 
@@ -50,7 +50,7 @@ outcome: undecided
 .OXXX..
 
 moves: 445532
-move scores: -5, -4, +2, +2, -2, +18, -6
+move evaluations: -5, -4, +2, +2, -2, +18, -6
 moves left (optimal play): 1
 outcome: undecided
 
