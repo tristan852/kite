@@ -86,6 +86,14 @@ graalvmNative {
                 languageVersion.set(JavaLanguageVersion.of(25))
             })
             
+            if(project.hasProperty("marchNative") && project.property("marchNative") == "true") {
+                buildArgs.add("-march=native")
+                
+	            println("[native-image-plugin] Using -march=native: binary will be CPU-specific")
+            }
+            
+            buildArgs.add("--future-defaults=all")
+            
             buildArgs.add("--no-fallback")
             buildArgs.add("--no-server")
             buildArgs.add("-H:+ReportExceptionStackTraces")

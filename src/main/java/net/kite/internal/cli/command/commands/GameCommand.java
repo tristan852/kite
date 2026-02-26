@@ -107,7 +107,7 @@ public final class GameCommand extends Command {
 				AnsiUtil.clearScreenFromCursorPosition();
 				
 				message = message.toLowerCase(Locale.ROOT);
-				if(message.equals("exit")) {
+				if(message.equals("exit") || message.equals("quit")) {
 					
 					if(!quiet) System.out.println("\nExiting game...\n");
 					
@@ -196,7 +196,7 @@ public final class GameCommand extends Command {
 			AnsiUtil.clearScreenFromCursorPosition();
 			
 			message = message.toLowerCase(Locale.ROOT);
-			if(message.equals("exit")) {
+			if(message.equals("exit") || message.equals("quit")) {
 				
 				if(!quiet) System.out.println("\nExiting game...\n");
 				
