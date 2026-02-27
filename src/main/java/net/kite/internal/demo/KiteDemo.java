@@ -561,10 +561,13 @@ public final class KiteDemo {
 						System.out.println(i);
 						System.out.println(n);
 						
-						if(i + 1 < n) {
+						i++;
+						if(i < n) {
 							
-							System.out.println(i + " -> " + (i+1));
-							aiSkillLevelSelectElement.setSelectedIndex(i + 1);
+							System.out.println((i - 1) + " -> " + (i));
+							
+							aiSkillLevelSelectElement.setSelectedIndex(i);
+							changeAISkillLevel(i);
 						}
 					}
 					
@@ -577,7 +580,13 @@ public final class KiteDemo {
 						System.out.println("down");
 						int i = aiSkillLevelSelectElement.getSelectedIndex();
 						System.out.println(i);
-						if(i > 0) aiSkillLevelSelectElement.setSelectedIndex(i - 1);
+						if(i > 0) {
+							
+							i--;
+							
+							aiSkillLevelSelectElement.setSelectedIndex(i);
+							changeAISkillLevel(i);
+						}
 					}
 					
 					keyboardEvent.preventDefault();
