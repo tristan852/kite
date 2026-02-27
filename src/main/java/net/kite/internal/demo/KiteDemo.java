@@ -12,6 +12,7 @@ import org.teavm.jso.browser.TimerHandler;
 import org.teavm.jso.browser.Window;
 import org.teavm.jso.dom.css.CSSStyleDeclaration;
 import org.teavm.jso.dom.css.ElementCSSInlineStyle;
+import org.teavm.jso.dom.events.KeyboardEvent;
 import org.teavm.jso.dom.html.*;
 import org.teavm.jso.dom.svg.SVGElement;
 import org.teavm.jso.dom.xml.Element;
@@ -70,7 +71,15 @@ public final class KiteDemo {
 	
 	private static final String SVG_ELEMENT_NAMESPACE = "http://www.w3.org/2000/svg";
 	
+	private static final String KEY_DOWN_EVENT_TYPE = "keydown";
 	private static final String ELEMENT_CHANGE_EVENT_TYPE = "change";
+	
+	private static final String ENTER_KEY_NAME = "Enter";
+	private static final String BACKSPACE_KEY_NAME = "Backspace";
+	private static final String ARROW_UP_KEY_NAME = "ArrowUp";
+	private static final String ARROW_DOWN_KEY_NAME = "ArrowDown";
+	private static final String ARROW_LEFT_KEY_NAME = "ArrowLeft";
+	private static final String ARROW_RIGHT_KEY_NAME = "ArrowRight";
 	
 	private static final String ELEMENT_HEIGHT_STYLE_KEY = "height";
 	private static final String ELEMENT_HEIGHT_STYLE_VALUE_FORMAT = "%spx";
@@ -477,6 +486,16 @@ public final class KiteDemo {
 		
 		newGameButtonElement.setTextContent(NEW_GAME_BUTTON_ELEMENT_TEXT);
 		
+		for(SkillLevel skillLevel : ORDERED_AI_SKILL_LEVELS) {
+			
+			String skillLevelDisplayName = skillLevel.getDisplayName();
+			
+			HTMLOptionElement optionElement = createOptionElement(skillLevelDisplayName);
+			aiSkillLevelSelectElement.appendChild(optionElement);
+		}
+		
+		setElementStyles(aiSkillLevelSelectElement, AI_SKILL_LEVEL_SELECT_ELEMENT_STYLES);
+		
 		modeButtonElement.onClick((mouseEvent) -> {
 			
 			eventID++;
@@ -511,15 +530,61 @@ public final class KiteDemo {
 			changeAISkillLevel(i);
 		});
 		
-		for(SkillLevel skillLevel : ORDERED_AI_SKILL_LEVELS) {
+		WINDOW.addEventListener(KEY_DOWN_EVENT_TYPE, (event) -> {
 			
-			String skillLevelDisplayName = skillLevel.getDisplayName();
+			KeyboardEvent keyboardEvent = (KeyboardEvent) event;
+			if(keyboardEvent.isRepeat()) return;
+			if(keyboardEvent.isCtrlKey()) return;
+			if(keyboardEvent.isShiftKey()) return;
+			if(keyboardEvent.isAltKey()) return;
+			if(keyboardEvent.isMetaKey()) return;
+			if(keyboardEvent.isComposing()) return;
 			
-			HTMLOptionElement optionElement = createOptionElement(skillLevelDisplayName);
-			aiSkillLevelSelectElement.appendChild(optionElement);
-		}
-		
-		setElementStyles(aiSkillLevelSelectElement, AI_SKILL_LEVEL_SELECT_ELEMENT_STYLES);
+			switch(keyboardEvent.getKey()) {
+				case ENTER_KEY_NAME -> {
+					
+					if(!modeButtonElement.isDisabled()) modeButtonElement.click();
+					keyboardEvent.preventDefault();
+				}
+				case BACKSPACE_KEY_NAME -> {
+					
+					if(!newGameButtonElement.isDisabled()) newGameButtonElement.click();
+					keyboardEvent.preventDefault();
+				}
+				case ARROW_UP_KEY_NAME -> {
+					
+					if(!aiSkillLevelSelectElement.isDisabled()) {
+						
+						int i = aiSkillLevelSelectElement.getSelectedIndex();
+						int n = aiSkillLevelSelectElement.getSize();
+						
+						if(i + 1 < n) aiSkillLevelSelectElement.setSelectedIndex(i + 1);
+					}
+					
+					keyboardEvent.preventDefault();
+				}
+				case ARROW_DOWN_KEY_NAME -> {
+					
+					if(!aiSkillLevelSelectElement.isDisabled()) {
+						
+						int i = aiSkillLevelSelectElement.getSelectedIndex();
+						if(i > 0) aiSkillLevelSelectElement.setSelectedIndex(i - 1);
+					}
+					
+					keyboardEvent.preventDefault();
+				}
+				case ARROW_LEFT_KEY_NAME -> {
+					
+					if(!undoButtonElement.isDisabled()) undoButtonElement.click();
+					keyboardEvent.preventDefault();
+				}
+				case ARROW_RIGHT_KEY_NAME -> {
+					
+					if(!redoButtonElement.isDisabled()) redoButtonElement.click();
+					keyboardEvent.preventDefault();
+				}
+			}
+		});
 		
 		controlsElement.appendChild(modeButtonElement);
 		controlsElement.appendChild(aiSkillLevelSelectElement);
