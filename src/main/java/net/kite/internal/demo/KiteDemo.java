@@ -533,7 +533,6 @@ public final class KiteDemo {
 		WINDOW.addEventListener(KEY_DOWN_EVENT_TYPE, (event) -> {
 			
 			KeyboardEvent keyboardEvent = (KeyboardEvent) event;
-			if(keyboardEvent.isRepeat()) return;
 			if(keyboardEvent.isCtrlKey()) return;
 			if(keyboardEvent.isShiftKey()) return;
 			if(keyboardEvent.isAltKey()) return;
@@ -543,10 +542,14 @@ public final class KiteDemo {
 			switch(keyboardEvent.getKey()) {
 				case ENTER_KEY_NAME -> {
 					
+					if(keyboardEvent.isRepeat()) return;
+					
 					if(!modeButtonElement.isDisabled()) modeButtonElement.click();
 					keyboardEvent.preventDefault();
 				}
 				case BACKSPACE_KEY_NAME -> {
+					
+					if(keyboardEvent.isRepeat()) return;
 					
 					if(!newGameButtonElement.isDisabled()) newGameButtonElement.click();
 					keyboardEvent.preventDefault();
