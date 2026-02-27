@@ -76,10 +76,27 @@ public final class KiteDemo {
 	
 	private static final String ENTER_KEY_NAME = "Enter";
 	private static final String BACKSPACE_KEY_NAME = "Backspace";
+	
 	private static final String ARROW_UP_KEY_NAME = "ArrowUp";
 	private static final String ARROW_DOWN_KEY_NAME = "ArrowDown";
 	private static final String ARROW_LEFT_KEY_NAME = "ArrowLeft";
 	private static final String ARROW_RIGHT_KEY_NAME = "ArrowRight";
+	
+	private static final String ONE_KEY_NAME = "1";
+	private static final String TWO_KEY_NAME = "2";
+	private static final String THREE_KEY_NAME = "3";
+	private static final String FOUR_KEY_NAME = "4";
+	private static final String FIVE_KEY_NAME = "5";
+	private static final String SIX_KEY_NAME = "6";
+	private static final String SEVEN_KEY_NAME = "7";
+	
+	private static final String NUMPAD_ONE_KEY_NAME = "Numpad1";
+	private static final String NUMPAD_TWO_KEY_NAME = "Numpad2";
+	private static final String NUMPAD_THREE_KEY_NAME = "Numpad3";
+	private static final String NUMPAD_FOUR_KEY_NAME = "Numpad4";
+	private static final String NUMPAD_FIVE_KEY_NAME = "Numpad5";
+	private static final String NUMPAD_SIX_KEY_NAME = "Numpad6";
+	private static final String NUMPAD_SEVEN_KEY_NAME = "Numpad7";
 	
 	private static final String ELEMENT_HEIGHT_STYLE_KEY = "height";
 	private static final String ELEMENT_HEIGHT_STYLE_VALUE_FORMAT = "%spx";
@@ -320,6 +337,7 @@ public final class KiteDemo {
 	
 	private final HTMLElement[][] cellElements = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
 	private final HTMLElement[][] cellMarkerElements = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
+	private final HTMLElement[] cellColumnElements = new HTMLElement[BOARD_WIDTH];
 	
 	private final HTMLElement[] cellLabelElements = new HTMLElement[BOARD_WIDTH];
 	
@@ -597,6 +615,41 @@ public final class KiteDemo {
 					if(!redoButtonElement.isDisabled()) redoButtonElement.click();
 					keyboardEvent.preventDefault();
 				}
+				case ONE_KEY_NAME, NUMPAD_ONE_KEY_NAME -> {
+					
+					cellColumnElements[0].click();
+					keyboardEvent.preventDefault();
+				}
+				case TWO_KEY_NAME, NUMPAD_TWO_KEY_NAME -> {
+					
+					cellColumnElements[1].click();
+					keyboardEvent.preventDefault();
+				}
+				case THREE_KEY_NAME, NUMPAD_THREE_KEY_NAME -> {
+					
+					cellColumnElements[2].click();
+					keyboardEvent.preventDefault();
+				}
+				case FOUR_KEY_NAME, NUMPAD_FOUR_KEY_NAME -> {
+					
+					cellColumnElements[3].click();
+					keyboardEvent.preventDefault();
+				}
+				case FIVE_KEY_NAME, NUMPAD_FIVE_KEY_NAME -> {
+					
+					cellColumnElements[4].click();
+					keyboardEvent.preventDefault();
+				}
+				case SIX_KEY_NAME, NUMPAD_SIX_KEY_NAME -> {
+					
+					cellColumnElements[5].click();
+					keyboardEvent.preventDefault();
+				}
+				case SEVEN_KEY_NAME, NUMPAD_SEVEN_KEY_NAME -> {
+					
+					cellColumnElements[6].click();
+					keyboardEvent.preventDefault();
+				}
 			}
 		});
 		
@@ -623,6 +676,7 @@ public final class KiteDemo {
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
 			HTMLElement cellColumnElement = createColumnFlexboxElement();
+			cellColumnElements[x] = cellColumnElement;
 			
 			int maxY = BOARD_HEIGHT - 1;
 			for(int y = maxY; y >= 0; y--) {
