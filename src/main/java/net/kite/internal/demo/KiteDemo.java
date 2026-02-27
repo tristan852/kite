@@ -553,11 +553,11 @@ public final class KiteDemo {
 				}
 				case ARROW_UP_KEY_NAME -> {
 					
-					System.out.println("pressed");
 					if(!aiSkillLevelSelectElement.isDisabled()) {
 						
 						int i = aiSkillLevelSelectElement.getSelectedIndex();
-						int n = aiSkillLevelSelectElement.getSize();
+						int n = ORDERED_AI_SKILL_LEVELS.length;
+						System.out.println("up");
 						System.out.println(i);
 						System.out.println(n);
 						
@@ -574,7 +574,9 @@ public final class KiteDemo {
 					
 					if(!aiSkillLevelSelectElement.isDisabled()) {
 						
+						System.out.println("down");
 						int i = aiSkillLevelSelectElement.getSelectedIndex();
+						System.out.println(i);
 						if(i > 0) aiSkillLevelSelectElement.setSelectedIndex(i - 1);
 					}
 					
