@@ -558,7 +558,11 @@ public final class KiteDemo {
 						int i = aiSkillLevelSelectElement.getSelectedIndex();
 						int n = aiSkillLevelSelectElement.getSize();
 						
-						if(i + 1 < n) aiSkillLevelSelectElement.setSelectedIndex(i + 1);
+						if(i + 1 < n) {
+							
+							System.out.println(i + " -> " + (i+1));
+							aiSkillLevelSelectElement.setSelectedIndex(i + 1);
+						}
 					}
 					
 					keyboardEvent.preventDefault();
