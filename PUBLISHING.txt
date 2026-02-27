@@ -26,11 +26,7 @@ Publishing steps of a new Kite release
 
 5) push all changes to the GitHub repository again (all three repos)
 
-6) optional: rebuild on jitpack over at https://jitpack.io/#tristan852/kite
-
-7) optional: refresh any outdated README-badges using 'curl -w "\n" -s -X PURGE https://camo.githubusercontent.com/...'
-
-8) create a new GitHub release for the CLI tool
+6) create a new GitHub release for the CLI tool
     - download the binaries built by GitHub actions on the latest commit: https://github.com/tristan852/kite/actions/workflows/graalvm-native.yml
     - unpack the archives if they have been zipped
     - create a new GitHub release with following details:
@@ -38,3 +34,7 @@ Publishing steps of a new Kite release
         - title: "Kite vX.X.X CLI tool"
         - description: "This release provides the prebuilt binaries for the Kite CLI tool. Performance and throughput may be lower when using the solver through the CLI compared to using it as a library."
         - attached binaries: every archived (!) binary produced by the latest workflow run (downloading from the workflow run might compress the archives again -> unpack them)
+
+7) optional: rebuild on jitpack over at https://jitpack.io/#tristan852/kite
+
+8) optional: refresh any outdated README-badges using 'curl -w "\n" -s -X PURGE https://camo.githubusercontent.com/...'
