@@ -555,16 +555,12 @@ public final class KiteDemo {
 					
 					if(!aiSkillLevelSelectElement.isDisabled()) {
 						
+						System.out.println("down");
 						int i = aiSkillLevelSelectElement.getSelectedIndex();
-						int n = ORDERED_AI_SKILL_LEVELS.length;
-						System.out.println("up");
 						System.out.println(i);
-						System.out.println(n);
-						
-						i++;
-						if(i < n) {
+						if(i > 0) {
 							
-							System.out.println((i - 1) + " -> " + (i));
+							i--;
 							
 							aiSkillLevelSelectElement.setSelectedIndex(i);
 							changeAISkillLevel(i);
@@ -577,12 +573,16 @@ public final class KiteDemo {
 					
 					if(!aiSkillLevelSelectElement.isDisabled()) {
 						
-						System.out.println("down");
 						int i = aiSkillLevelSelectElement.getSelectedIndex();
+						int n = ORDERED_AI_SKILL_LEVELS.length;
+						System.out.println("up");
 						System.out.println(i);
-						if(i > 0) {
+						System.out.println(n);
+						
+						i++;
+						if(i < n) {
 							
-							i--;
+							System.out.println((i - 1) + " -> " + (i));
 							
 							aiSkillLevelSelectElement.setSelectedIndex(i);
 							changeAISkillLevel(i);
