@@ -1212,7 +1212,16 @@ public final class KiteDemo {
 		cellAnalysisX = cellX;
 		cellAnalysisY = cellY;
 		
-		showElement(cellEvaluationElements[cellX][cellY]);
+		String color = "#F54A00";
+		String text = "??";
+		
+		// switch
+		
+		HTMLElement e = cellEvaluationElements[cellX][cellY];
+		
+		setElementStyles(e, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, color);
+		
+		showElement(e);
 		showElement(cellEvaluationBackgroundElements[cellX][cellY]);
 	}
 	
