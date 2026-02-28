@@ -192,7 +192,18 @@ public final class KiteDemo {
 	};
 	
 	private static final String[] CELL_HIGHLIGHT_ELEMENT_STYLES = new String[] {
-			"width", "16%",
+			"width", "100%",
+			"aspect-ratio", "1",
+			"position", "absolute",
+			"top", "50%",
+			"left", "50%",
+			"transform", "translate(-50%, -50%)",
+			"background-color", "#7CCF00",
+			"border-radius", "50%"
+	};
+	
+	private static final String[] CELL_HIGHLIGHT_FOREGROUND_ELEMENT_STYLES = new String[] {
+			"width", "68%",
 			"aspect-ratio", "1",
 			"position", "absolute",
 			"top", "50%",
@@ -354,6 +365,7 @@ public final class KiteDemo {
 	private final HTMLElement[][] cellElements = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
 	private final HTMLElement[][] cellMarkerElements = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
 	private final HTMLElement[][] cellHighlightElements = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
+	private final HTMLElement[][] cellHighlightForegroundElements = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
 	private final HTMLElement[] cellColumnElements = new HTMLElement[BOARD_WIDTH];
 	
 	private final HTMLElement[] cellLabelElements = new HTMLElement[BOARD_WIDTH];
@@ -707,11 +719,17 @@ public final class KiteDemo {
 				HTMLElement cellHighlightElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
 				setElementStyles(cellHighlightElement, CELL_HIGHLIGHT_ELEMENT_STYLES);
 				
+				HTMLElement cellHighlightForegroundElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
+				setElementStyles(cellHighlightForegroundElement, CELL_HIGHLIGHT_FOREGROUND_ELEMENT_STYLES);
+				
 				cellElement.appendChild(cellMarkerElement);
+				cellElement.appendChild(cellHighlightElement);
+				cellElement.appendChild(cellHighlightForegroundElement);
 				
 				cellElements[x][y] = cellElement;
 				cellMarkerElements[x][y] = cellMarkerElement;
 				cellHighlightElements[x][y] = cellHighlightElement;
+				cellHighlightForegroundElements[x][y] = cellHighlightForegroundElement;
 				
 				cellColumnElement.appendChild(cellElement);
 			}
