@@ -210,7 +210,7 @@ public final class KiteDemo {
 	};
 	
 	private static final String[] CELL_HIGHLIGHT_FOREGROUND_ELEMENT_STYLES = new String[] {
-			"width", "76%",
+			"width", "82%",
 			"aspect-ratio", "1",
 			"position", "absolute",
 			"top", "50%",
@@ -1351,7 +1351,12 @@ public final class KiteDemo {
 		removeCellHighlights();
 		if(bestMoveScore == Integer.MIN_VALUE) return;
 		
-		int worstScore = BoardScore.minimal(solver.playedMoveAmount());
+		// TODO maybe even if loss in two?
+		// TODO what about highlight color and thickness?
+		int n = solver.playedMoveAmount();
+		
+		int worstScore = BoardScore.minimal(n);
+		// int badScore = BoardScore.loss();
 		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
