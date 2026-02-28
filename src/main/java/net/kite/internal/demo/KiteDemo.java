@@ -384,8 +384,10 @@ public final class KiteDemo {
 	
 	private int eventID;
 	
-	private int highlightedCellX = Integer.MIN_VALUE;
-	private int highlightedCellY;
+	private int[] highlightedCellXs = new int[BOARD_WIDTH];
+	private int[] highlightedCellYs = new int[BOARD_WIDTH];
+	
+	private int highlightedCellAmount;
 	
 	public KiteDemo() {
 		this.redAtTurn = true;
@@ -1099,22 +1101,26 @@ public final class KiteDemo {
 	}
 	
 	private void highlightCell(int cellX, int cellY) {
-		removeCellHighlights();
+		highlightedCellXs[highlightedCellAmount] = cellX;
+		highlightedCellYs[highlightedCellAmount] = cellY;
 		
-		highlightedCellX = cellX;
-		highlightedCellY = cellY;
+		highlightedCellAmount++;
 		
 		showElement(cellHighlightElements[cellX][cellY]);
 		showElement(cellHighlightForegroundElements[cellX][cellY]);
 	}
 	
 	private void removeCellHighlights() {
-		if(highlightedCellX == Integer.MIN_VALUE) return;
+		for(int i = 0; i < highlightedCellAmount; i++) {
+			
+			int x = highlightedCellXs[i];
+			int y = highlightedCellYs[i];
+			
+			hideElement(cellHighlightElements[x][y]);
+			hideElement(cellHighlightForegroundElements[x][y]);
+		}
 		
-		hideElement(cellHighlightElements[highlightedCellX][highlightedCellY]);
-		hideElement(cellHighlightForegroundElements[highlightedCellX][highlightedCellY]);
-		
-		highlightedCellX = Integer.MIN_VALUE;
+		highlightedCellAmount = 0;
 	}
 	
 	private void setCellElementBackgroundColor(int cellElementX, int cellElementY, int cellElementBackgroundColorIndex, boolean marked) {
@@ -1146,50 +1152,29 @@ public final class KiteDemo {
 		solver.evaluateAllMoves(movesScores);
 		
 		int bestMoveScore = Integer.MIN_VALUE;
-		int bestMoveAmount = 0;
 		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
 			int moveScore = movesScores[x];
 			String moveScoreString = formatMoveScore(moveScore);
 			
-			if(moveScore > bestMoveScore) {
-				
-				bestMoveScore = moveScore;
-				bestMoveAmount = 1;
-				
-			} else if(moveScore == bestMoveScore) {
-				
-				bestMoveAmount++;
-			}
+			if(moveScore > bestMoveScore) bestMoveScore = moveScore;
 			
 			HTMLElement cellLabelElement = cellLabelElements[x];
 			cellLabelElement.setTextContent(moveScoreString);
 		}
 		
-		if(bestMoveScore == Integer.MIN_VALUE) {
-			
-			removeCellHighlights();
-			return;
-		}
-		
-		Random random = ThreadLocalRandom.current();
-		int i = random.nextInt(bestMoveAmount);
+		removeCellHighlights();
+		if(bestMoveScore == Integer.MIN_VALUE) return;
 		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
 			int moveScore = movesScores[x];
-			if(moveScore != bestMoveScore) continue;
-			
-			if(i == 0) {
+			if(moveScore == bestMoveScore) {
 				
 				int y = solver.cellColumnHeight(x + 1);
-				
 				highlightCell(x, y);
-				return;
 			}
-			
-			i--;
 		}
 	}
 	
