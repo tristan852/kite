@@ -368,7 +368,7 @@ public final class KiteDemo {
 	private static final String RED_STROKE_ATTRIBUTE_VALUE = "#C10007";
 	private static final String YELLOW_STROKE_ATTRIBUTE_VALUE = "#A65F00";
 	private static final String DEFAULT_STROKE_WIDTH_ATTRIBUTE_VALUE = "30";
-	private static final String DEFAULT_STROKE_LINE_CAPE_ATTRIBUTE_VALUE = "rounded";
+	private static final String DEFAULT_STROKE_LINE_CAPE_ATTRIBUTE_VALUE = "round";
 	
 	private static final String XMLNS_ATTRIBUTE_NAME = "xmlns";
 	private static final String VIEW_BOX_ATTRIBUTE_NAME = "viewBox";
@@ -754,6 +754,11 @@ public final class KiteDemo {
 		
 		HTMLElement boardElement = createFlexboxElement(FLEXBOX_ELEMENT_ROW_DIRECTION, 0);
 		
+		boardLinesElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
+		setElementStyles(boardLinesElement, BOARD_LINES_ELEMENT_STYLES);
+		
+		boardElement.appendChild(boardLinesElement);
+		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
 			HTMLElement cellColumnElement = createColumnFlexboxElement();
@@ -813,11 +818,6 @@ public final class KiteDemo {
 			
 			boardElement.appendChild(cellColumnElement);
 		}
-		
-		boardLinesElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
-		setElementStyles(boardLinesElement, BOARD_LINES_ELEMENT_STYLES);
-		
-		boardElement.appendChild(boardLinesElement);
 		
 		setElementStyles(boardElement, BOARD_ELEMENT_STYLES);
 		
