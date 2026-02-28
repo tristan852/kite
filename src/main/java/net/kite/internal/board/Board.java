@@ -1546,7 +1546,7 @@ public final class Board {
 		if(outcomeStayedTheSame) {
 			
 			int scoreLoss = scoreBefore - scoreAfter;
-			if(scoreLoss > 6) return MoveAnalysis.MoveQuality.BLUNDER;
+			if(scoreLoss > 6) return scoreAfter < 0 ? MoveAnalysis.MoveQuality.BLUNDER : MoveAnalysis.MoveQuality.MISTAKE;
 			
 			boolean scoreDroppedALot = scoreLoss > 3;
 			if(scoreDroppedALot) {
