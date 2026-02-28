@@ -1543,10 +1543,12 @@ public final class Board {
 		
 		boolean outcomeStayedTheSame = scoreBefore > 0 ? scoreAfter > 0 : scoreBefore != 0;
 		
-		int scoreLoss = scoreBefore - scoreAfter;
-		boolean scoreDroppedALot = scoreLoss > 3;
-		
 		if(outcomeStayedTheSame) {
+			
+			int scoreLoss = scoreBefore - scoreAfter;
+			if(scoreLoss > 6) return MoveAnalysis.MoveQuality.BLUNDER;
+			
+			boolean scoreDroppedALot = scoreLoss > 3;
 			if(scoreDroppedALot) {
 				
 				return scoreAfter < 0 ? MoveAnalysis.MoveQuality.MISTAKE : MoveAnalysis.MoveQuality.INACCURACY;
@@ -1562,6 +1564,9 @@ public final class Board {
 			boolean droppedALot = previousOwnMoveScore - scoreAfter > 3;
 			if(!droppedALot && previousMoveCouldHaveBeenWin) return MoveAnalysis.MoveQuality.MISSED_WIN;
 		}
+		
+		int scoreLoss = scoreBefore - scoreAfter;
+		boolean scoreDroppedALot = scoreLoss > 3;
 		
 		return scoreDroppedALot ? MoveAnalysis.MoveQuality.BLUNDER : MoveAnalysis.MoveQuality.MISTAKE;
 	}
