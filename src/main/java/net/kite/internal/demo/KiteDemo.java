@@ -1228,32 +1228,32 @@ public final class KiteDemo {
 			case GOOD -> {
 				
 				color = "#7CCF00";
-				text = "";
+				text = "✓";
 			}
 			case INACCURACY -> {
 				
 				color = "#F0B100";
-				text = "";
+				text = "?!";
 			}
 			case MISTAKE -> {
 				
 				color = "#FF6900";
-				text = "";
+				text = "?";
 			}
 			case BLUNDER -> {
 				
 				color = "#FB2C36";
-				text = "";
+				text = "??";
 			}
 			case MISSED_WIN -> {
 				
 				color = "#FE9A00";
-				text = "";
+				text = "━";
 			}
 			case FORCED -> {
 				
 				color = "#00B8DB";
-				text = "";
+				text = "➔";
 			}
 			default -> {
 				
@@ -1264,6 +1264,7 @@ public final class KiteDemo {
 		
 		HTMLElement e = cellEvaluationElements[cellX][cellY];
 		
+		e.setTextContent(text);
 		setElementStyles(e, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, color);
 		
 		showElement(e);
