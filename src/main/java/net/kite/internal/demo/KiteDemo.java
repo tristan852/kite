@@ -1194,6 +1194,8 @@ public final class KiteDemo {
 	}
 	
 	private void removeCellHighlights() {
+		System.out.println("removing cell highlights: " + highlightedCellAmount);
+		
 		for(int i = 0; i < highlightedCellAmount; i++) {
 			
 			int x = highlightedCellXs[i];
