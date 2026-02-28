@@ -240,7 +240,7 @@ public final class KiteDemo {
 			"position", "absolute",
 			"top", "0%",
 			"right", "0%",
-			"transform", "translate(20%, -20%) scale(1.1)",
+			"transform", "translate(20%, -20%) scale(1.25)",
 			"display", "none",
 			"background-color", "#27272A",
 			"border-radius", "50%"
@@ -766,7 +766,7 @@ public final class KiteDemo {
 				HTMLElement cellHighlightForegroundElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
 				setElementStyles(cellHighlightForegroundElement, CELL_HIGHLIGHT_FOREGROUND_ELEMENT_STYLES);
 				
-				HTMLElement cellEvaluationElement = createColumnFlexboxElement();
+				HTMLElement cellEvaluationElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
 				setElementStyles(cellEvaluationElement, CELL_EVALUATION_ELEMENT_STYLES);
 				
 				HTMLElement cellEvaluationBackgroundElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
@@ -1216,10 +1216,32 @@ public final class KiteDemo {
 		cellAnalysisX = cellX;
 		cellAnalysisY = cellY;
 		
-		String color = "#F54A00";
-		String text = "??";
+		String color;
+		String text;
 		
-		// switch
+		switch(moveAnalysis.getMoveQuality()) {
+			case BEST -> {
+				
+			}
+			case GOOD -> {
+				
+			}
+			case INACCURACY -> {
+				
+			}
+			case MISTAKE -> {
+				
+			}
+			case BLUNDER -> {
+				
+			}
+			case MISSED_WIN -> {
+				
+			}
+			case FORCED -> {
+				
+			}
+		}
 		
 		HTMLElement e = cellEvaluationElements[cellX][cellY];
 		
@@ -1273,10 +1295,8 @@ public final class KiteDemo {
 			
 		} else {
 			
-			System.out.println(lastMoveAnalysis);
 			int x = solver.lastMove() - 1;
 			int y = solver.lastMoveRow() - 1;
-			System.out.println("db");
 			
 			addCellAnalysis(x, y, lastMoveAnalysis);
 		}
