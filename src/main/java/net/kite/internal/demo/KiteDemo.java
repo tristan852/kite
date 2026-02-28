@@ -365,7 +365,8 @@ public final class KiteDemo {
 	
 	private static final String RED_STROKE_ATTRIBUTE_VALUE = "#C10007";
 	private static final String YELLOW_STROKE_ATTRIBUTE_VALUE = "#A65F00";
-	private static final String DEFAULT_STROKE_WIDTH_ATTRIBUTE_VALUE = "30";
+	private static final String STRAIGHT_STROKE_WIDTH_ATTRIBUTE_VALUE = "30";
+	private static final String DIAGONAL_STROKE_WIDTH_ATTRIBUTE_VALUE = "21";
 	private static final String DEFAULT_STROKE_LINE_CAPE_ATTRIBUTE_VALUE = "round";
 	
 	private static final String XMLNS_ATTRIBUTE_NAME = "xmlns";
@@ -1145,6 +1146,11 @@ public final class KiteDemo {
 			int x2 = line.getEndCellX();
 			int y2 = line.getEndCellY();
 			
+			int dx = line.getDirectionX();
+			int dy = line.getDirectionY();
+			
+			boolean diagonal = (Math.abs(dx) + Math.abs(dy)) != 1;
+			
 			y1 = MAXIMAL_BOARD_Y - y1;
 			y2 = MAXIMAL_BOARD_Y - y2;
 			
@@ -1179,7 +1185,7 @@ public final class KiteDemo {
 			lineElementLine.setAttribute(Y2_ATTRIBUTE_NAME, s4);
 			
 			lineElementLine.setAttribute(STROKE_ATTRIBUTE_NAME, strokeAttributeValue);
-			lineElementLine.setAttribute(STROKE_WIDTH_ATTRIBUTE_NAME, DEFAULT_STROKE_WIDTH_ATTRIBUTE_VALUE);
+			lineElementLine.setAttribute(STROKE_WIDTH_ATTRIBUTE_NAME, diagonal ? DIAGONAL_STROKE_WIDTH_ATTRIBUTE_VALUE : STRAIGHT_STROKE_WIDTH_ATTRIBUTE_VALUE);
 			lineElementLine.setAttribute(STROKE_LINE_CAPE_ATTRIBUTE_NAME, DEFAULT_STROKE_LINE_CAPE_ATTRIBUTE_VALUE);
 			
 			lineElement.appendChild(lineElementLine);
