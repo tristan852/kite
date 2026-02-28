@@ -3,8 +3,8 @@ package net.kite.internal.demo;
 import net.kite.api.Kite;
 import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
-import net.kite.internal.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.api.skill.level.SkillLevel;
+import net.kite.internal.board.score.cache.opening.OpeningBoardScoreCaches;
 import org.teavm.jso.ajax.XMLHttpRequest;
 import org.teavm.jso.browser.History;
 import org.teavm.jso.browser.Location;
@@ -20,6 +20,7 @@ import org.teavm.jso.dom.xml.Node;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Int8Array;
 
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class KiteDemo {
@@ -28,7 +29,6 @@ public final class KiteDemo {
 	
 	private static final int BOARD_WIDTH = 7;
 	private static final int BOARD_HEIGHT = 6;
-	private static final int BOARD_SIZE = 42;
 	
 	private static final int MAXIMAL_BOARD_Y = 5;
 	
@@ -102,6 +102,10 @@ public final class KiteDemo {
 	private static final String ELEMENT_HEIGHT_STYLE_VALUE_FORMAT = "%spx";
 	private static final String ELEMENT_COLOR_STYLE_KEY = "color";
 	private static final String ELEMENT_BACKGROUND_COLOR_STYLE_KEY = "background-color";
+	private static final String ELEMENT_DISPLAY_STYLE_KEY = "display";
+	
+	private static final String VISIBLE_ELEMENT_DISPLAY_STYLE_VALUE = "block";
+	private static final String INVISIBLE_ELEMENT_DISPLAY_STYLE_VALUE = "none";
 	
 	private static final String[] FLEXBOX_ELEMENT_STYLES = new String[] {
 			"display", "flex",
@@ -198,6 +202,7 @@ public final class KiteDemo {
 			"top", "50%",
 			"left", "50%",
 			"transform", "translate(-50%, -50%)",
+			"display", "none",
 			"background-color", "#7CCF00",
 			"border-radius", "50%"
 	};
@@ -209,6 +214,7 @@ public final class KiteDemo {
 			"top", "50%",
 			"left", "50%",
 			"transform", "translate(-50%, -50%)",
+			"display", "none",
 			"background-color", "#09090B",
 			"border-radius", "50%"
 	};
@@ -377,6 +383,9 @@ public final class KiteDemo {
 	private Kite solver;
 	
 	private int eventID;
+	
+	private int highlightedCellX = Integer.MIN_VALUE;
+	private int highlightedCellY;
 	
 	public KiteDemo() {
 		this.redAtTurn = true;
@@ -913,7 +922,7 @@ public final class KiteDemo {
 		
 		if(aiModeSelected) {
 			
-			ThreadLocalRandom random = ThreadLocalRandom.current();
+			Random random = ThreadLocalRandom.current();
 			
 			aiPlaysRed = random.nextBoolean();
 			if(aiPlaysRed) playAIMove();
@@ -1089,6 +1098,25 @@ public final class KiteDemo {
 		boardLinesElement.clear();
 	}
 	
+	private void highlightCell(int cellX, int cellY) {
+		removeCellHighlights();
+		
+		highlightedCellX = cellX;
+		highlightedCellY = cellY;
+		
+		showElement(cellHighlightElements[cellX][cellY]);
+		showElement(cellHighlightForegroundElements[cellX][cellY]);
+	}
+	
+	private void removeCellHighlights() {
+		if(highlightedCellX == Integer.MIN_VALUE) return;
+		
+		hideElement(cellHighlightElements[highlightedCellX][highlightedCellY]);
+		hideElement(cellHighlightForegroundElements[highlightedCellX][highlightedCellY]);
+		
+		highlightedCellX = Integer.MIN_VALUE;
+	}
+	
 	private void setCellElementBackgroundColor(int cellElementX, int cellElementY, int cellElementBackgroundColorIndex, boolean marked) {
 		String s = CELL_ELEMENT_BACKGROUND_COLORS[cellElementBackgroundColorIndex];
 		
@@ -1110,18 +1138,58 @@ public final class KiteDemo {
 				cellLabelElement.setTextContent(EMPTY_CELL_LABEL_ELEMENT_TEXT);
 			}
 			
+			removeCellHighlights();
+			
 			return;
 		}
 		
 		solver.evaluateAllMoves(movesScores);
+		
+		int bestMoveScore = Integer.MIN_VALUE;
+		int bestMoveAmount = 0;
 		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
 			int moveScore = movesScores[x];
 			String moveScoreString = formatMoveScore(moveScore);
 			
+			if(moveScore > bestMoveScore) {
+				
+				bestMoveScore = moveScore;
+				bestMoveAmount = 1;
+				
+			} else if(moveScore == bestMoveScore) {
+				
+				bestMoveAmount++;
+			}
+			
 			HTMLElement cellLabelElement = cellLabelElements[x];
 			cellLabelElement.setTextContent(moveScoreString);
+		}
+		
+		if(bestMoveScore == Integer.MIN_VALUE) {
+			
+			removeCellHighlights();
+			return;
+		}
+		
+		Random random = ThreadLocalRandom.current();
+		int i = random.nextInt(bestMoveAmount);
+		
+		for(int x = 0; x < BOARD_WIDTH; x++) {
+			
+			int moveScore = movesScores[x];
+			if(moveScore != bestMoveScore) continue;
+			
+			if(i == 0) {
+				
+				int y = solver.cellColumnHeight(x + 1);
+				
+				highlightCell(x, y);
+				return;
+			}
+			
+			i--;
 		}
 	}
 	
@@ -1313,6 +1381,16 @@ public final class KiteDemo {
 		setElementStyles(flexboxElement, FLEXBOX_ELEMENT_DIRECTION_STYLE_KEY, flexboxDirection, FLEXBOX_ELEMENT_GAP_STYLE_KEY, s);
 		
 		return flexboxElement;
+	}
+	
+	private static void hideElement(ElementCSSInlineStyle element) {
+		CSSStyleDeclaration elementStyle = element.getStyle();
+		elementStyle.setProperty(ELEMENT_DISPLAY_STYLE_KEY, INVISIBLE_ELEMENT_DISPLAY_STYLE_VALUE);
+	}
+	
+	private static void showElement(ElementCSSInlineStyle element) {
+		CSSStyleDeclaration elementStyle = element.getStyle();
+		elementStyle.setProperty(ELEMENT_DISPLAY_STYLE_KEY, VISIBLE_ELEMENT_DISPLAY_STYLE_VALUE);
 	}
 	
 	private static void setElementStyles(ElementCSSInlineStyle element, String... styles) {
