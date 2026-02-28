@@ -229,6 +229,7 @@ public final class KiteDemo {
 			"transform", "translate(20%, -20%)",
 			"display", "none",
 			"border-radius", "50%",
+			"color", "#FFFFFF",
 			"font-weight", "bold"
 	};
 	
