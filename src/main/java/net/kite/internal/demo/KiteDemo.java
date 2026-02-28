@@ -228,9 +228,7 @@ public final class KiteDemo {
 			"right", "0%",
 			"transform", "translate(20%, -20%)",
 			"display", "none",
-			"background-color", "#7CCF00",
 			"border-radius", "50%",
-			"text-align", "center",
 			"font-weight", "bold"
 	};
 	
@@ -766,11 +764,14 @@ public final class KiteDemo {
 				HTMLElement cellHighlightForegroundElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
 				setElementStyles(cellHighlightForegroundElement, CELL_HIGHLIGHT_FOREGROUND_ELEMENT_STYLES);
 				
-				HTMLElement cellEvaluationElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
+				HTMLElement cellEvaluationElement = createColumnFlexboxElement();
 				setElementStyles(cellEvaluationElement, CELL_EVALUATION_ELEMENT_STYLES);
 				
 				HTMLElement cellEvaluationBackgroundElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
 				setElementStyles(cellEvaluationBackgroundElement, CELL_EVALUATION_BACKGROUND_ELEMENT_STYLES);
+				
+				HTMLElement cellEvaluationTextElement = createSpanElement(0);
+				cellEvaluationElement.appendChild(cellEvaluationTextElement);
 				
 				cellElement.appendChild(cellMarkerElement);
 				cellElement.appendChild(cellHighlightElement);
@@ -1264,7 +1265,7 @@ public final class KiteDemo {
 		
 		HTMLElement e = cellEvaluationElements[cellX][cellY];
 		
-		e.setTextContent(text);
+		e.getFirstChild().setTextContent(text);
 		setElementStyles(e, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, color);
 		
 		showElement(e);
