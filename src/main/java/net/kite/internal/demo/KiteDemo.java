@@ -5,6 +5,7 @@ import net.kite.api.board.analysis.move.MoveAnalysis;
 import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.skill.level.SkillLevel;
+import net.kite.internal.board.score.BoardScore;
 import net.kite.internal.board.score.cache.opening.OpeningBoardScoreCaches;
 import org.teavm.jso.ajax.XMLHttpRequest;
 import org.teavm.jso.browser.History;
@@ -205,12 +206,11 @@ public final class KiteDemo {
 			"left", "50%",
 			"transform", "translate(-50%, -50%)",
 			"display", "none",
-			"background-color", "#00C951",
 			"border-radius", "50%"
 	};
 	
 	private static final String[] CELL_HIGHLIGHT_FOREGROUND_ELEMENT_STYLES = new String[] {
-			"width", "68%",
+			"width", "76%",
 			"aspect-ratio", "1",
 			"position", "absolute",
 			"top", "50%",
@@ -330,6 +330,9 @@ public final class KiteDemo {
 	private static final String RED_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR = "#FB2C36";
 	private static final String YELLOW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR = "#F0B100";
 	private static final String DRAW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR = "#71717B";
+	
+	private static final String GOOD_CELL_HIGHLIGHT_COLOR = "#7CCF00";
+	private static final String BAD_CELL_HIGHLIGHT_COLOR = "#FB2C36";
 	
 	private static final String[] CELL_ELEMENT_BACKGROUND_COLORS = new String[] {
 			"#FB2C36",
@@ -1195,13 +1198,16 @@ public final class KiteDemo {
 		boardLinesElement.clear();
 	}
 	
-	private void highlightCell(int cellX, int cellY) {
+	private void highlightCell(int cellX, int cellY, boolean bad) {
 		highlightedCellXs[highlightedCellAmount] = cellX;
 		highlightedCellYs[highlightedCellAmount] = cellY;
 		
 		highlightedCellAmount++;
 		
-		showElement(cellHighlightElements[cellX][cellY]);
+		HTMLElement e = cellHighlightElements[cellX][cellY];
+		setElementStyles(e, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, bad ? BAD_CELL_HIGHLIGHT_COLOR : GOOD_CELL_HIGHLIGHT_COLOR);
+		
+		showElement(e);
 		showElement(cellHighlightForegroundElements[cellX][cellY]);
 	}
 	
@@ -1345,13 +1351,20 @@ public final class KiteDemo {
 		removeCellHighlights();
 		if(bestMoveScore == Integer.MIN_VALUE) return;
 		
+		int worstScore = BoardScore.minimal(solver.playedMoveAmount());
+		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
 			int moveScore = movesScores[x];
 			if(moveScore == bestMoveScore) {
 				
 				int y = solver.cellColumnHeight(x + 1);
-				highlightCell(x, y);
+				highlightCell(x, y, false);
+				
+			} else if(moveScore == worstScore) {
+				
+				int y = solver.cellColumnHeight(x + 1);
+				highlightCell(x, y, true);
 			}
 		}
 	}
