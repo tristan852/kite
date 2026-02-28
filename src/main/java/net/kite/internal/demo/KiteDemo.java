@@ -1198,8 +1198,6 @@ public final class KiteDemo {
 	}
 	
 	private void removeCellHighlights() {
-		System.out.println("removing cell highlights: " + highlightedCellAmount);
-		
 		for(int i = 0; i < highlightedCellAmount; i++) {
 			
 			int x = highlightedCellXs[i];
@@ -1271,14 +1269,16 @@ public final class KiteDemo {
 		
 		if(lastMoveAnalysis == null) {
 			
-			int x = solver.lastMove() - 1;
-			int y = solver.lastMoveRow() - 1;
-			
-			addCellAnalysis(x, y, lastMoveAnalysis);
+			removeCellAnalyses();
 			
 		} else {
 			
-			removeCellAnalyses();
+			System.out.println(lastMoveAnalysis);
+			int x = solver.lastMove() - 1;
+			int y = solver.lastMoveRow() - 1;
+			System.out.println("db");
+			
+			addCellAnalysis(x, y, lastMoveAnalysis);
 		}
 		
 		int bestMoveScore = Integer.MIN_VALUE;
