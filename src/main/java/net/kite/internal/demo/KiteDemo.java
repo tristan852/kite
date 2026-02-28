@@ -419,6 +419,9 @@ public final class KiteDemo {
 	
 	private int highlightedCellAmount;
 	
+	private int cellAnalysisX = Integer.MIN_VALUE;
+	private int cellAnalysisY;
+	
 	public KiteDemo() {
 		this.redAtTurn = true;
 	}
@@ -1203,6 +1206,25 @@ public final class KiteDemo {
 		highlightedCellAmount = 0;
 	}
 	
+	private void addCellAnalysis(int cellX, int cellY, MoveAnalysis moveAnalysis) {
+		removeCellAnalyses();
+		
+		cellAnalysisX = cellX;
+		cellAnalysisY = cellY;
+		
+		showElement(cellEvaluationElements[cellX][cellY]);
+		showElement(cellEvaluationBackgroundElements[cellX][cellY]);
+	}
+	
+	private void removeCellAnalyses() {
+		if(cellAnalysisX == Integer.MIN_VALUE) return;
+		
+		hideElement(cellEvaluationElements[cellAnalysisX][cellAnalysisY]);
+		hideElement(cellEvaluationBackgroundElements[cellAnalysisX][cellAnalysisY]);
+		
+		cellAnalysisX = Integer.MIN_VALUE;
+	}
+	
 	private void setCellElementBackgroundColor(int cellElementX, int cellElementY, int cellElementBackgroundColorIndex, boolean marked) {
 		String s = CELL_ELEMENT_BACKGROUND_COLORS[cellElementBackgroundColorIndex];
 		
@@ -1225,13 +1247,24 @@ public final class KiteDemo {
 			}
 			
 			removeCellHighlights();
+			removeCellAnalyses();
 			
 			return;
 		}
 		
 		solver.evaluateAllMoves(movesScores);
 		
-		System.out.println(lastMoveAnalysis);
+		if(lastMoveAnalysis == null) {
+			
+			int x = solver.lastMove() - 1;
+			int y = solver.lastMoveRow() - 1;
+			
+			addCellAnalysis(x, y, lastMoveAnalysis);
+			
+		} else {
+			
+			removeCellAnalyses();
+		}
 		
 		int bestMoveScore = Integer.MIN_VALUE;
 		
