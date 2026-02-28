@@ -1255,6 +1255,11 @@ public final class KiteDemo {
 				color = "#00B8DB";
 				text = "";
 			}
+			default -> {
+				
+				color = null;
+				text = null;
+			}
 		}
 		
 		HTMLElement e = cellEvaluationElements[cellX][cellY];
