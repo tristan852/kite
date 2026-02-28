@@ -5,7 +5,6 @@ import net.kite.api.board.analysis.move.MoveAnalysis;
 import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.skill.level.SkillLevel;
-import net.kite.internal.board.score.BoardScore;
 import net.kite.internal.board.score.cache.opening.OpeningBoardScoreCaches;
 import org.teavm.jso.ajax.XMLHttpRequest;
 import org.teavm.jso.browser.History;
@@ -331,8 +330,7 @@ public final class KiteDemo {
 	private static final String YELLOW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR = "#F0B100";
 	private static final String DRAW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR = "#71717B";
 	
-	private static final String GOOD_CELL_HIGHLIGHT_COLOR = "#7CCF00";
-	private static final String BAD_CELL_HIGHLIGHT_COLOR = "#FF6900";
+	private static final String CELL_HIGHLIGHT_BACKGROUND_COLOR = "#7CCF00";
 	
 	private static final String[] CELL_ELEMENT_BACKGROUND_COLORS = new String[] {
 			"#FB2C36",
@@ -1201,14 +1199,14 @@ public final class KiteDemo {
 		boardLinesElement.clear();
 	}
 	
-	private void highlightCell(int cellX, int cellY, boolean bad) {
+	private void highlightCell(int cellX, int cellY) {
 		highlightedCellXs[highlightedCellAmount] = cellX;
 		highlightedCellYs[highlightedCellAmount] = cellY;
 		
 		highlightedCellAmount++;
 		
 		HTMLElement e = cellHighlightElements[cellX][cellY];
-		setElementStyles(e, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, bad ? BAD_CELL_HIGHLIGHT_COLOR : GOOD_CELL_HIGHLIGHT_COLOR);
+		setElementStyles(e, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, CELL_HIGHLIGHT_BACKGROUND_COLOR);
 		
 		showElement(e);
 		showElement(cellHighlightForegroundElements[cellX][cellY]);
@@ -1354,25 +1352,13 @@ public final class KiteDemo {
 		removeCellHighlights();
 		if(bestMoveScore == Integer.MIN_VALUE) return;
 		
-		// TODO maybe even if loss in two?
-		// TODO and thickness?
-		int n = solver.playedMoveAmount();
-		
-		int worstScore = BoardScore.minimal(n);
-		// int badScore = BoardScore.loss();
-		
 		for(int x = 0; x < BOARD_WIDTH; x++) {
 			
 			int moveScore = movesScores[x];
 			if(moveScore == bestMoveScore) {
 				
 				int y = solver.cellColumnHeight(x + 1);
-				highlightCell(x, y, false);
-				
-			} else if(moveScore == worstScore) {
-				
-				int y = solver.cellColumnHeight(x + 1);
-				highlightCell(x, y, true);
+				highlightCell(x, y);
 			}
 		}
 	}
