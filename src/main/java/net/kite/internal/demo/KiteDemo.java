@@ -107,6 +107,7 @@ public final class KiteDemo {
 	
 	private static final String VISIBLE_ELEMENT_DISPLAY_STYLE_VALUE = "block";
 	private static final String INVISIBLE_ELEMENT_DISPLAY_STYLE_VALUE = "none";
+	private static final String FLEXBOX_ELEMENT_DISPLAY_STYLE_VALUE = "flex";
 	
 	private static final String[] FLEXBOX_ELEMENT_STYLES = new String[] {
 			"display", "flex",
@@ -1269,7 +1270,7 @@ public final class KiteDemo {
 		e.getFirstChild().setTextContent(text);
 		setElementStyles(e, ELEMENT_BACKGROUND_COLOR_STYLE_KEY, color);
 		
-		showElement(e);
+		showFlexboxElement(e);
 		showElement(cellEvaluationBackgroundElements[cellX][cellY]);
 	}
 	
@@ -1543,6 +1544,11 @@ public final class KiteDemo {
 	private static void hideElement(ElementCSSInlineStyle element) {
 		CSSStyleDeclaration elementStyle = element.getStyle();
 		elementStyle.setProperty(ELEMENT_DISPLAY_STYLE_KEY, INVISIBLE_ELEMENT_DISPLAY_STYLE_VALUE);
+	}
+	
+	private static void showFlexboxElement(ElementCSSInlineStyle element) {
+		CSSStyleDeclaration elementStyle = element.getStyle();
+		elementStyle.setProperty(ELEMENT_DISPLAY_STYLE_KEY, FLEXBOX_ELEMENT_DISPLAY_STYLE_VALUE);
 	}
 	
 	private static void showElement(ElementCSSInlineStyle element) {
