@@ -229,7 +229,11 @@ public final class KiteDemo {
 			"right", "0%",
 			"transform", "translate(20%, -20%)",
 			"display", "none",
-			"border-radius", "50%",
+			"border-radius", "50%"
+	};
+	
+	private static final String[] CELL_EVALUATION_TEXT_ELEMENT_STYLES = new String[] {
+			"line-height", "0",
 			"color", "#FFFFFF",
 			"font-weight", "bold"
 	};
@@ -773,6 +777,7 @@ public final class KiteDemo {
 				setElementStyles(cellEvaluationBackgroundElement, CELL_EVALUATION_BACKGROUND_ELEMENT_STYLES);
 				
 				HTMLElement cellEvaluationTextElement = createSpanElement(0);
+				setElementStyles(cellEvaluationTextElement, CELL_EVALUATION_TEXT_ELEMENT_STYLES);
 				cellEvaluationElement.appendChild(cellEvaluationTextElement);
 				
 				cellElement.appendChild(cellMarkerElement);
