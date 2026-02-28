@@ -1,6 +1,7 @@
 package net.kite.internal.demo;
 
 import net.kite.api.Kite;
+import net.kite.api.board.analysis.move.MoveAnalysis;
 import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.skill.level.SkillLevel;
@@ -383,6 +384,7 @@ public final class KiteDemo {
 	private boolean redAtTurn;
 	
 	private final int[] movesScores = new int[BOARD_WIDTH];
+	private MoveAnalysis lastMoveAnalysis;
 	
 	private HTMLElement loadingMessageElement;
 	
@@ -897,6 +899,15 @@ public final class KiteDemo {
 			
 		} else {
 			
+			if(solver.canUndoMove()) {
+				
+				int x = solver.lastMove();
+				
+				solver.undoMove();
+				lastMoveAnalysis = solver.analyseMove(x);
+				solver.redoMove();
+			}
+			
 			disableSelectElement(aiSkillLevelSelectElement);
 			updateCellLabelElements();
 		}
@@ -933,6 +944,15 @@ public final class KiteDemo {
 			enableButtonElement(undoButtonElement);
 			enableButtonElement(redoButtonElement);
 			disableSelectElement(aiSkillLevelSelectElement);
+			
+			if(solver.canUndoMove()) {
+				
+				int x = solver.lastMove();
+				
+				solver.undoMove();
+				lastMoveAnalysis = solver.analyseMove(x);
+				solver.redoMove();
+			}
 		}
 		
 		updateCellLabelElements();
@@ -952,6 +972,7 @@ public final class KiteDemo {
 			}
 			
 			solver.clearBoard();
+			lastMoveAnalysis = null;
 			
 			redAtTurn = true;
 			
@@ -981,6 +1002,22 @@ public final class KiteDemo {
 		int moveY = solver.lastMoveRow() - 1;
 		
 		solver.undoMove();
+		
+		if(!aiModeSelected) {
+			
+			if(solver.canUndoMove()) {
+				
+				int x = solver.lastMove();
+				
+				solver.undoMove();
+				lastMoveAnalysis = solver.analyseMove(x);
+				solver.redoMove();
+				
+			} else {
+				
+				lastMoveAnalysis = null;
+			}
+		}
 		
 		setCellElementBackgroundColor(moveX, moveY, EMPTY_CELL_ELEMENT_BACKGROUND_COLOR_INDEX, false);
 		
@@ -1050,6 +1087,11 @@ public final class KiteDemo {
 		}
 		
 		redAtTurn = !redAtTurn;
+		
+		if(!aiModeSelected) {
+			
+			lastMoveAnalysis = solver.analyseMove(moveX + 1);
+		}
 		
 		solver.playMove(moveX + 1);
 		setCellElementBackgroundColor(moveX, moveY, i, true);
@@ -1188,6 +1230,8 @@ public final class KiteDemo {
 		}
 		
 		solver.evaluateAllMoves(movesScores);
+		
+		System.out.println(lastMoveAnalysis);
 		
 		int bestMoveScore = Integer.MIN_VALUE;
 		
