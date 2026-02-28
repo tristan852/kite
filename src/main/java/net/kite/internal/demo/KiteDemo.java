@@ -314,7 +314,7 @@ public final class KiteDemo {
 	private static final String GITHUB_LOGO_ELEMENT_TARGET_PATH = "https://github.com/tristan852/kite";
 	
 	private static final String VERSION_ELEMENT_TEXT_FORMAT = "v%s";
-	private static final String FIRST_MODE_BUTTON_ELEMENT_TEXT = "Mode: Analyze";
+	private static final String FIRST_MODE_BUTTON_ELEMENT_TEXT = "Mode: Analyse";
 	private static final String SECOND_MODE_BUTTON_ELEMENT_TEXT = "Mode: Play vs. AI";
 	private static final String NEW_GAME_BUTTON_ELEMENT_TEXT = "New Game";
 	private static final String UNDO_BUTTON_ELEMENT_TEXT = "Undo Move";
@@ -332,7 +332,7 @@ public final class KiteDemo {
 	private static final String DRAW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR = "#71717B";
 	
 	private static final String GOOD_CELL_HIGHLIGHT_COLOR = "#7CCF00";
-	private static final String BAD_CELL_HIGHLIGHT_COLOR = "#FB2C36";
+	private static final String BAD_CELL_HIGHLIGHT_COLOR = "#FF6900";
 	
 	private static final String[] CELL_ELEMENT_BACKGROUND_COLORS = new String[] {
 			"#FB2C36",
@@ -365,9 +365,10 @@ public final class KiteDemo {
 	private static final String STROKE_WIDTH_ATTRIBUTE_NAME = "stroke-width";
 	private static final String STROKE_LINE_CAPE_ATTRIBUTE_NAME = "stroke-linecap";
 	
-	private static final String DEFAULT_STROKE_ATTRIBUTE_VALUE = "#F4F4F5";
-	private static final String DEFAULT_STROKE_WIDTH_ATTRIBUTE_VALUE = "8";
-	private static final String DEFAULT_STROKE_LINE_CAPE_ATTRIBUTE_VALUE = "square";
+	private static final String RED_STROKE_ATTRIBUTE_VALUE = "#C10007";
+	private static final String YELLOW_STROKE_ATTRIBUTE_VALUE = "#A65F00";
+	private static final String DEFAULT_STROKE_WIDTH_ATTRIBUTE_VALUE = "30";
+	private static final String DEFAULT_STROKE_LINE_CAPE_ATTRIBUTE_VALUE = "rounded";
 	
 	private static final String XMLNS_ATTRIBUTE_NAME = "xmlns";
 	private static final String VIEW_BOX_ATTRIBUTE_NAME = "viewBox";
@@ -1135,6 +1136,8 @@ public final class KiteDemo {
 	}
 	
 	private void showWinLines() {
+		String strokeAttributeValue = redAtTurn ? YELLOW_STROKE_ATTRIBUTE_VALUE : RED_STROKE_ATTRIBUTE_VALUE;
+		
 		BoardLine[] lines = solver.winLines();
 		for(BoardLine line : lines) {
 			
@@ -1177,7 +1180,7 @@ public final class KiteDemo {
 			lineElementLine.setAttribute(X2_ATTRIBUTE_NAME, s3);
 			lineElementLine.setAttribute(Y2_ATTRIBUTE_NAME, s4);
 			
-			lineElementLine.setAttribute(STROKE_ATTRIBUTE_NAME, DEFAULT_STROKE_ATTRIBUTE_VALUE);
+			lineElementLine.setAttribute(STROKE_ATTRIBUTE_NAME, strokeAttributeValue);
 			lineElementLine.setAttribute(STROKE_WIDTH_ATTRIBUTE_NAME, DEFAULT_STROKE_WIDTH_ATTRIBUTE_VALUE);
 			lineElementLine.setAttribute(STROKE_LINE_CAPE_ATTRIBUTE_NAME, DEFAULT_STROKE_LINE_CAPE_ATTRIBUTE_VALUE);
 			
@@ -1352,7 +1355,7 @@ public final class KiteDemo {
 		if(bestMoveScore == Integer.MIN_VALUE) return;
 		
 		// TODO maybe even if loss in two?
-		// TODO what about highlight color and thickness?
+		// TODO and thickness?
 		int n = solver.playedMoveAmount();
 		
 		int worstScore = BoardScore.minimal(n);
