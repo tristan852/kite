@@ -955,6 +955,10 @@ public final class KiteDemo {
 				solver.undoMove();
 				lastMoveAnalysis = solver.analyseMove(x);
 				solver.redoMove();
+				
+			} else {
+				
+				lastMoveAnalysis = null;
 			}
 		}
 		
@@ -1091,7 +1095,7 @@ public final class KiteDemo {
 		
 		redAtTurn = !redAtTurn;
 		
-		if(!aiModeSelected) {
+		if(!aiModeSelected && !initial) {
 			
 			lastMoveAnalysis = solver.analyseMove(moveX + 1);
 		}
