@@ -205,7 +205,7 @@ public final class KiteDemo {
 			"left", "50%",
 			"transform", "translate(-50%, -50%)",
 			"display", "none",
-			"background-color", "#7CCF00",
+			"background-color", "#00C951",
 			"border-radius", "50%"
 	};
 	
