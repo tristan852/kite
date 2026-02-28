@@ -1222,24 +1222,38 @@ public final class KiteDemo {
 		switch(moveAnalysis.getMoveQuality()) {
 			case BEST -> {
 				
+				color = "#00C951";
+				text = "★";
 			}
 			case GOOD -> {
 				
+				color = "#7CCF00";
+				text = "";
 			}
 			case INACCURACY -> {
 				
+				color = "#F0B100";
+				text = "";
 			}
 			case MISTAKE -> {
 				
+				color = "#FF6900";
+				text = "";
 			}
 			case BLUNDER -> {
 				
+				color = "#FB2C36";
+				text = "";
 			}
 			case MISSED_WIN -> {
 				
+				color = "#FE9A00";
+				text = "";
 			}
 			case FORCED -> {
 				
+				color = "#00B8DB";
+				text = "";
 			}
 		}
 		
