@@ -219,6 +219,18 @@ public final class KiteDemo {
 			"border-radius", "50%"
 	};
 	
+	private static final String[] CELL_EVALUATION_ELEMENT_STYLES = new String[] {
+			"width", "48%",
+			"aspect-ratio", "1",
+			"position", "absolute",
+			"top", "0%",
+			"right", "0%",
+			"transform", "translate(-20%, -20%)",
+			"display", "none",
+			"background-color", "#7CCF00",
+			"border-radius", "50%"
+	};
+	
 	private static final String[] CELL_COLUMN_ELEMENT_STYLES = new String[] {
 			"width", "calc(min(80dvw / 436 * 50, 50px))",
 			"padding-left", "calc(min(80dvw / 436 * 3, 3px))",
@@ -372,6 +384,7 @@ public final class KiteDemo {
 	private final HTMLElement[][] cellMarkerElements = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
 	private final HTMLElement[][] cellHighlightElements = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
 	private final HTMLElement[][] cellHighlightForegroundElements = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
+	private final HTMLElement[][] cellEvaluationElements = new HTMLElement[BOARD_WIDTH][BOARD_HEIGHT];
 	private final HTMLElement[] cellColumnElements = new HTMLElement[BOARD_WIDTH];
 	
 	private final HTMLElement[] cellLabelElements = new HTMLElement[BOARD_WIDTH];
@@ -384,8 +397,8 @@ public final class KiteDemo {
 	
 	private int eventID;
 	
-	private int[] highlightedCellXs = new int[BOARD_WIDTH];
-	private int[] highlightedCellYs = new int[BOARD_WIDTH];
+	private final int[] highlightedCellXs = new int[BOARD_WIDTH];
+	private final int[] highlightedCellYs = new int[BOARD_WIDTH];
 	
 	private int highlightedCellAmount;
 	
@@ -733,14 +746,19 @@ public final class KiteDemo {
 				HTMLElement cellHighlightForegroundElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
 				setElementStyles(cellHighlightForegroundElement, CELL_HIGHLIGHT_FOREGROUND_ELEMENT_STYLES);
 				
+				HTMLElement cellEvaluationElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
+				setElementStyles(cellEvaluationElement, CELL_EVALUATION_ELEMENT_STYLES);
+				
 				cellElement.appendChild(cellMarkerElement);
 				cellElement.appendChild(cellHighlightElement);
 				cellElement.appendChild(cellHighlightForegroundElement);
+				cellElement.appendChild(cellEvaluationElement);
 				
 				cellElements[x][y] = cellElement;
 				cellMarkerElements[x][y] = cellMarkerElement;
 				cellHighlightElements[x][y] = cellHighlightElement;
 				cellHighlightForegroundElements[x][y] = cellHighlightForegroundElement;
+				cellEvaluationElements[x][y] = cellEvaluationElement;
 				
 				cellColumnElement.appendChild(cellElement);
 			}
