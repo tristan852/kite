@@ -746,7 +746,7 @@ public final class KiteDemo {
 				HTMLElement cellHighlightForegroundElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
 				setElementStyles(cellHighlightForegroundElement, CELL_HIGHLIGHT_FOREGROUND_ELEMENT_STYLES);
 				
-				HTMLElement cellEvaluationElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
+				HTMLElement cellEvaluationElement = createColumnFlexboxElement();
 				setElementStyles(cellEvaluationElement, CELL_EVALUATION_ELEMENT_STYLES);
 				
 				cellElement.appendChild(cellMarkerElement);
