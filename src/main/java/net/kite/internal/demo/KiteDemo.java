@@ -225,7 +225,7 @@ public final class KiteDemo {
 			"position", "absolute",
 			"top", "0%",
 			"right", "0%",
-			"transform", "translate(-20%, -20%)",
+			"transform", "translate(20%, -20%)",
 			"display", "none",
 			"background-color", "#7CCF00",
 			"border-radius", "50%",
@@ -239,7 +239,7 @@ public final class KiteDemo {
 			"position", "absolute",
 			"top", "0%",
 			"right", "0%",
-			"transform", "translate(-20%, -20%) scale(1.1)",
+			"transform", "translate(20%, -20%) scale(1.1)",
 			"display", "none",
 			"background-color", "#27272A",
 			"border-radius", "50%"
