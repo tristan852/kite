@@ -9,6 +9,7 @@ public class ImportantBoardScoreCache {
 	
 	private static final long ENTRY_DATA_PARTIAL_HASH_MASK  = 0xFFFFFFFFFFFFF000L;
 	private static final long ENTRY_DATA_SCORE_MASK = 0x00000000000000FFL;
+	private static final long ENTRY_DATA_EXACT_MASK = 0x0000000000000100L;
 	
 	private static final int ENTRY_DATA_SCORE_UNPACK_OFFSET = 56;
 	
@@ -23,11 +24,13 @@ public class ImportantBoardScoreCache {
 		Arrays.fill(entryData, MISSING_ENTRY_DATA);
 	}
 	
-	public void updateEntry(long mixedHash, int score) {
+	public void updateEntry(long mixedHash, int score, boolean exact) {
 		int key = (int) (mixedHash & KEY_MASK);
 		
 		mixedHash &= ENTRY_DATA_PARTIAL_HASH_MASK;
 		mixedHash |= score & ENTRY_DATA_SCORE_MASK;
+		
+		if(exact) mixedHash |= ENTRY_DATA_EXACT_MASK;
 		
 		entryData[key] = mixedHash;
 	}
@@ -43,6 +46,12 @@ public class ImportantBoardScoreCache {
 		mixedHash |= entryKey;
 		
 		return mixedHash;
+	}
+	
+	public boolean entryExact(int entryKey) {
+		long data = entryData[entryKey];
+		
+		return (data & ENTRY_DATA_EXACT_MASK) != 0;
 	}
 	
 	public int entryScore(int entryKey) {

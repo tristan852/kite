@@ -132,6 +132,8 @@ public final class Board {
 	
 	private static final int MOVES_LENGTH = 294;
 	
+	private static final int MINIMAL_IMPORTANT_NODE_EVALUATION_AMOUNT = 10000;
+	
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
 	private static final String TO_STRING_EMPTY_CELL_String = ".";
 	private static final String TO_STRING_MOVES_PREFIX_STRING = "moves: ";
@@ -824,8 +826,6 @@ public final class Board {
 			return BoardScore.win(filledCellAmount + 1);
 		}
 		
-		// TODO here
-		
 		int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this, filledCellAmount);
 		if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
 		
@@ -834,13 +834,35 @@ public final class Board {
 		
 		if(maximalScore > maxScore) maximalScore = maxScore;
 		
+		int key = importantScoreCache.entryKey(mixedHash);
+		if(key >= 0) {
+			
+			int importantBoardScore = importantScoreCache.entryScore(key);
+			
+			boolean exact = importantScoreCache.entryExact(key);
+			if(exact) return importantBoardScore;
+			
+			if(minimalScore < importantBoardScore) minimalScore = importantBoardScore;
+		}
+		
 		if(filledCellAmount > 0) {
 			
 			undoMove();
 			
 			int lastMove = playedMoves[filledCellAmount];
 			
-			// TODO here
+			key = importantScoreCache.entryKey(mixedHash);
+			if(key >= 0) {
+				
+				int importantBoardScore = importantScoreCache.entryScore(key);
+				
+				boolean exact = importantScoreCache.entryExact(key);
+				if(exact) {
+					
+					int s = -importantBoardScore;
+					if(minimalScore < s) minimalScore = s;
+				}
+			}
 			
 			openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this, filledCellAmount);
 			if(openingBoardScore != Integer.MIN_VALUE) {
@@ -862,7 +884,7 @@ public final class Board {
 			if(entryMaxScore < maximalScore) maximalScore = entryMaxScore;
 		}
 		
-		int count = nodeEvaluationAmount;
+		int n = nodeEvaluationAmount;
 		while(minimalScore < maximalScore) {
 			
 			int score = (minimalScore + maximalScore) >> 1;
@@ -877,8 +899,16 @@ public final class Board {
 				minimalScore = evaluationResult;
 			}
 		}
-		count = nodeEvaluationAmount - count;
-		if(count >= 100) System.out.println("node count: " + count);
+		
+		n = nodeEvaluationAmount - n;
+		if(n >= MINIMAL_IMPORTANT_NODE_EVALUATION_AMOUNT) {
+			
+			boolean exact = minimalScore < maxScore;
+			importantScoreCache.updateEntry(mixedHash, minimalScore, exact);
+		}
+		
+		// TODO remove
+		if(n >= 100) System.out.println("node count: " + n);
 		
 		return minimalScore;
 	}
