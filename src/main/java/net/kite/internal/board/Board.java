@@ -908,7 +908,11 @@ public final class Board {
 		}
 		
 		// TODO remove
-		if(n >= 100) System.out.println("node count: " + n);
+		if(n >= 100) {
+			
+			System.out.println(toString(true, false, false, false));
+			System.out.println("node count: " + n);
+		}
 		
 		return minimalScore;
 	}
