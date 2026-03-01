@@ -366,7 +366,7 @@ public final class KiteDemo {
 	private static final String RED_STROKE_ATTRIBUTE_VALUE = "#C10007";
 	private static final String YELLOW_STROKE_ATTRIBUTE_VALUE = "#A65F00";
 	private static final String STRAIGHT_STROKE_WIDTH_ATTRIBUTE_VALUE = "30";
-	private static final String DIAGONAL_STROKE_WIDTH_ATTRIBUTE_VALUE = "21";
+	private static final String DIAGONAL_STROKE_WIDTH_ATTRIBUTE_VALUE = "21.21";
 	private static final String DEFAULT_STROKE_LINE_CAPE_ATTRIBUTE_VALUE = "round";
 	
 	private static final String XMLNS_ATTRIBUTE_NAME = "xmlns";
