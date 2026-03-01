@@ -945,19 +945,18 @@ public final class Board {
 				long yellowWinningStones = nonVerticalWinCellsBitboard(yellowCells);
 				if(yellowWinningStones != 0) {
 					
-					int y = LARGEST_MOVE_CELL_Y;
+					int n = FULL_CELL_AMOUNT;
 					for(long row : Bitboards.DESCENDINGLY_ORDERED_EVEN_BOARD_ROWS) {
 						
 						if((row & yellowWinningStones) != 0) {
 							
-							int n = FULL_CELL_AMOUNT - LARGEST_MOVE_CELL_Y + y;
 							int score = BoardScore.loss(n);
 							if(maxScore > score) maxScore = score;
 							
 							break;
 						}
 						
-						y -= 2;
+						n -= 2;
 					}
 				}
 			}
