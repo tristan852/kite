@@ -16,8 +16,6 @@ import net.kite.internal.util.ansi.AnsiUtil;
 
 public final class Board {
 	
-	private static final int PLAYER_AMOUNT = 2;
-	
 	private static final int WIDTH = 7;
 	private static final int HEIGHT = 6;
 	
@@ -105,6 +103,8 @@ public final class Board {
 	private static final int MINIMAL_CHILD_CACHE_LOOKUP_DEPTH = 16;
 	
 	private static final int BITBOARD_HEIGHT = 8;
+	
+	private static final int OPENING_SCORE_CACHE_MAXIMAL_DEPTH = 14;
 	
 	private static final float[] FIRST_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
 			-1.480893f,  7.600903f
@@ -826,8 +826,11 @@ public final class Board {
 			return BoardScore.win(filledCellAmount + 1);
 		}
 		
-		int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this, filledCellAmount);
-		if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
+		if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
+			
+			int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
+			if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
+		}
 		
 		int minimalScore = BoardScore.minimal(filledCellAmount);
 		int maximalScore = BoardScore.maximal(filledCellAmount);
@@ -864,11 +867,14 @@ public final class Board {
 				}
 			}
 			
-			openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this, filledCellAmount);
-			if(openingBoardScore != Integer.MIN_VALUE) {
+			if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
 				
-				int s = -openingBoardScore;
-				if(minimalScore < s) minimalScore = s;
+				int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
+				if(openingBoardScore != Integer.MIN_VALUE) {
+					
+					int s = -openingBoardScore;
+					if(minimalScore < s) minimalScore = s;
+				}
 			}
 			
 			playMove(lastMove);
@@ -905,13 +911,6 @@ public final class Board {
 			
 			boolean exact = minimalScore < maxScore;
 			importantScoreCache.updateEntry(mixedHash, minimalScore, exact);
-		}
-		
-		// TODO remove
-		if(n >= 100) {
-			
-			System.out.println(toString(true, false, false, false));
-			System.out.println("node count: " + n);
 		}
 		
 		return minimalScore;
@@ -969,8 +968,11 @@ public final class Board {
 		
 		if(minimalScore >= maximalScore) return minimalScore;
 		
-		int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this, filledCellAmount);
-		if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
+		if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
+			
+			int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
+			if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
+		}
 		
 		int entryKey = scoreCache.entryKey(mixedHash);
 		if(entryKey >= 0) {
