@@ -13,7 +13,6 @@ public final class BoardScoreCache {
 	
 	private static final int ENTRY_DATA_MAXIMAL_SCORE_PACK_OFFSET = 8;
 	
-	private static final int ENTRY_DATA_MINIMAL_SCORE_UNPACK_OFFSET = 56;
 	private static final int ENTRY_DATA_MAXIMAL_SCORE_UNPACK_OFFSET = 48;
 	private static final int ENTRY_DATA_SCORE_UNPACK_OFFSET = 56;
 	
@@ -39,7 +38,7 @@ public final class BoardScoreCache {
 			long h = data & ENTRY_DATA_PARTIAL_HASH_MASK;
 			if(h == mixedHash) {
 				
-				int min = (int) ((data << ENTRY_DATA_MINIMAL_SCORE_UNPACK_OFFSET) >> ENTRY_DATA_SCORE_UNPACK_OFFSET);
+				int min = (int) ((data << ENTRY_DATA_SCORE_UNPACK_OFFSET) >> ENTRY_DATA_SCORE_UNPACK_OFFSET);
 				int max = (int) ((data << ENTRY_DATA_MAXIMAL_SCORE_UNPACK_OFFSET) >> ENTRY_DATA_SCORE_UNPACK_OFFSET);
 				
 				if(min > minimalScore) minimalScore = min;
@@ -69,7 +68,7 @@ public final class BoardScoreCache {
 	public int entryMinimalScore(int entryKey) {
 		long minimalScore = entryData[entryKey];
 		
-		minimalScore <<= ENTRY_DATA_MINIMAL_SCORE_UNPACK_OFFSET;
+		minimalScore <<= ENTRY_DATA_SCORE_UNPACK_OFFSET;
 		minimalScore >>= ENTRY_DATA_SCORE_UNPACK_OFFSET;
 		
 		return (int) minimalScore;

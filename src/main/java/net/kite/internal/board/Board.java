@@ -10,6 +10,7 @@ import net.kite.internal.board.bit.Bitboard;
 import net.kite.internal.board.bit.Bitboards;
 import net.kite.internal.board.score.BoardScore;
 import net.kite.internal.board.score.cache.BoardScoreCache;
+import net.kite.internal.board.score.cache.important.ImportantBoardScoreCache;
 import net.kite.internal.board.score.cache.opening.OpeningBoardScoreCaches;
 import net.kite.internal.util.ansi.AnsiUtil;
 
@@ -205,15 +206,15 @@ public final class Board {
 	private final int[] undoneMoves;
 	
 	private final BoardScoreCache scoreCache;
+	private final ImportantBoardScoreCache importantScoreCache;
 	
 	private final BoardLine[] lines = new BoardLine[MAXIMAL_LINE_AMOUNT];
 	
 	private final boolean[][] winCells = new boolean[WIDTH][HEIGHT];
 	
-	private final GameAnalysis[] playerGameEvaluations = new GameAnalysis[PLAYER_AMOUNT];
-	
 	public Board() {
 		this.scoreCache = new BoardScoreCache();
+		this.importantScoreCache = new ImportantBoardScoreCache();
 		
 		this.moves = new int[MOVES_LENGTH];
 		this.moveScores = new int[MOVES_LENGTH];
@@ -823,6 +824,8 @@ public final class Board {
 			return BoardScore.win(filledCellAmount + 1);
 		}
 		
+		// TODO here
+		
 		int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this, filledCellAmount);
 		if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
 		
@@ -836,6 +839,8 @@ public final class Board {
 			undoMove();
 			
 			int lastMove = playedMoves[filledCellAmount];
+			
+			// TODO here
 			
 			openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this, filledCellAmount);
 			if(openingBoardScore != Integer.MIN_VALUE) {
@@ -857,6 +862,7 @@ public final class Board {
 			if(entryMaxScore < maximalScore) maximalScore = entryMaxScore;
 		}
 		
+		int count = nodeEvaluationAmount;
 		while(minimalScore < maximalScore) {
 			
 			int score = (minimalScore + maximalScore) >> 1;
@@ -871,6 +877,8 @@ public final class Board {
 				minimalScore = evaluationResult;
 			}
 		}
+		count = nodeEvaluationAmount - count;
+		if(count >= 100) System.out.println("node count: " + count);
 		
 		return minimalScore;
 	}
