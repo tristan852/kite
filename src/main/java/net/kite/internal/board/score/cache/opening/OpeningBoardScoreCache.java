@@ -12,7 +12,6 @@ import java.io.OutputStream;
 public final class OpeningBoardScoreCache {
 	
 	private static final int CAPACITY = 16777259;
-	private static final int MAXIMAL_DEPTH = 14;
 	
 	private static final long BOARD_PARTIAL_COLUMN_HASH_MASK = 0x00000000000000FFL;
 	
@@ -97,9 +96,7 @@ public final class OpeningBoardScoreCache {
 		}
 	}
 	
-	public int boardScore(Board board, int playedMoveAmount) {
-		if(playedMoveAmount > MAXIMAL_DEPTH) return Integer.MIN_VALUE;
-		
+	public int boardScore(Board board) {
 		long columnHash = board.columnHash();
 		int index = (int) Long.remainderUnsigned(columnHash, CAPACITY);
 		
