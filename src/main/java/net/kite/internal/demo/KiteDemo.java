@@ -517,7 +517,6 @@ public final class KiteDemo {
 	
 	private void buildApp() {
 		solver = Kite.createInstance();
-		Kite.runBenchmark();
 		
 		HTMLBodyElement bodyElement = DOCUMENT.getBody();
 		
