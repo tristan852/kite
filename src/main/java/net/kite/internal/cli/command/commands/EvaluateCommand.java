@@ -12,7 +12,7 @@ import java.util.Scanner;
 public final class EvaluateCommand extends Command {
 	
 	public EvaluateCommand() {
-		super("evaluate", "Evaluate the board or a specific move", "evaluate [move]");
+		super("evaluate", "eval", "Evaluate the board or a specific move", "evaluate [move]");
 	}
 	
 	@Override
