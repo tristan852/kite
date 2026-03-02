@@ -1080,11 +1080,6 @@ public final class Board {
 		int moveAmount = 0;
 		
 		long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
-		long mirroredBitboard = Long.reverseBytes(bitboard) >>> MIRRORED_BITBOARD_SHIFT_AMOUNT;
-		
-		boolean symmetrical = bitboard == mirroredBitboard;
-		if(symmetrical) movesBitboard &= Bitboards.SYMMETRY_PRUNE_BITBOARD;
-		
 		movesBitboard &= ~(opponentThreatsBitboard >>> 1);
 		
 		int moveIndex = movesBaseIndex;

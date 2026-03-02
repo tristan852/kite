@@ -25,8 +25,6 @@ public final class Bitboards {
 			0x0002020202020202L
 	};
 	
-	public static final long SYMMETRY_PRUNE_BITBOARD = 0x000000003F3F3F3FL;
-	
 	public static final long[] BOTTOM_CELL_BITBOARDS = new long[] {
 			0x0000000000000001L,
 			0x0000000000000100L,
