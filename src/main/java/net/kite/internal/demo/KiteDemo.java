@@ -35,10 +35,12 @@ public final class KiteDemo {
 	
 	private static final long AI_MOVE_TIME_DELAY = 1000;
 	
+	// TODO sanitize the input processing?
 	private static final String LOCATION_SEARCH_PREFIX = "?";
 	private static final String LOCATION_SEARCH_ITEM_SEPARATOR = "&";
 	private static final String LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR = "=";
 	private static final String LOCATION_SEARCH_MOVES_KEY = "moves";
+	private static final String LOCATION_SEARCH_UNDONE_MOVES_KEY = "undone-moves";
 	private static final String LOCATION_SEARCH_AI_COLOR_KEY = "ai-color";
 	private static final String LOCATION_SEARCH_AI_LEVEL_KEY = "ai-level";
 	
@@ -876,6 +878,17 @@ public final class KiteDemo {
 							playMove(moveX, true);
 						}
 					}
+					case LOCATION_SEARCH_UNDONE_MOVES_KEY -> {
+						
+						int l = itemValue.length();
+						for(int i = 0; i < l; i++) {
+							
+							int moveX = itemValue.charAt(i) - SMALLEST_LOCATION_SEARCH_MOVE + 1;
+							solver.playMove(moveX);
+						}
+						
+						for(int i = 0; i < l; i++) solver.undoMove();
+					}
 					case LOCATION_SEARCH_AI_COLOR_KEY -> {
 						
 						aiModeSelected = true;
@@ -1399,9 +1412,11 @@ public final class KiteDemo {
 		String locationPath = location.getPathName();
 		
 		int playedMoveAmount = solver.playedMoveAmount();
+		int undoneMoveAmount = solver.undoneMoveAmount();
 		boolean movesWerePlayed = playedMoveAmount != 0;
+		boolean movesWereUndone = undoneMoveAmount != 0;
 		boolean aiLevelNotPerfect = aiSkillLevel != SkillLevel.PERFECT;
-		boolean searchNotEmpty = movesWerePlayed || aiModeSelected || aiLevelNotPerfect;
+		boolean searchNotEmpty = movesWerePlayed || movesWereUndone || aiModeSelected || aiLevelNotPerfect;
 		if(searchNotEmpty) {
 			
 			StringBuilder stringBuilder = new StringBuilder(locationPath);
@@ -1417,6 +1432,23 @@ public final class KiteDemo {
 				stringBuilder.append(LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR);
 				
 				for(int i = 0; i < playedMoveAmount; i++) {
+					
+					int playedMove = solver.playedMove(i) - 1;
+					char c = (char) (SMALLEST_LOCATION_SEARCH_MOVE + playedMove);
+					stringBuilder.append(c);
+				}
+			}
+			
+			if(movesWereUndone) {
+				
+				if(b) stringBuilder.append(LOCATION_SEARCH_ITEM_SEPARATOR);
+				b = true;
+				
+				stringBuilder.append(LOCATION_SEARCH_UNDONE_MOVES_KEY);
+				stringBuilder.append(LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR);
+				
+				int n = playedMoveAmount + undoneMoveAmount;
+				for(int i = playedMoveAmount; i < n; i++) {
 					
 					int playedMove = solver.playedMove(i) - 1;
 					char c = (char) (SMALLEST_LOCATION_SEARCH_MOVE + playedMove);
