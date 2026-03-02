@@ -13,7 +13,6 @@ public class ImportantBoardScoreCache {
 	
 	private static final int ENTRY_DATA_SCORE_UNPACK_OFFSET = 56;
 	
-	private static final int MISSING_ENTRY_KEY = -1;
 	private static final long MISSING_ENTRY_DATA = 0x0000000000000080L;
 	
 	private final long[] entryData;
@@ -54,30 +53,15 @@ public class ImportantBoardScoreCache {
 		entryData[key] = mixedHash;
 	}
 	
-	public boolean entryExact(int entryKey) {
-		long data = entryData[entryKey];
-		
-		return (data & ENTRY_DATA_EXACT_MASK) != 0;
-	}
-	
-	public int entryScore(int entryKey) {
-		long minimalScore = entryData[entryKey];
-		
-		minimalScore <<= ENTRY_DATA_SCORE_UNPACK_OFFSET;
-		minimalScore >>= ENTRY_DATA_SCORE_UNPACK_OFFSET;
-		
-		return (int) minimalScore;
-	}
-	
-	public int entryKey(long mixedHash) {
+	public long entry(long mixedHash) {
 		int key = (int) (mixedHash & KEY_MASK);
 		
 		long data = entryData[key];
-		if(data == MISSING_ENTRY_DATA) return MISSING_ENTRY_KEY;
+		if(data == MISSING_ENTRY_DATA) return Long.MIN_VALUE;
 		
 		mixedHash &= ENTRY_DATA_PARTIAL_HASH_MASK;
 		
-		return (data & ENTRY_DATA_PARTIAL_HASH_MASK) == mixedHash ? key : MISSING_ENTRY_KEY;
+		return (data & ENTRY_DATA_PARTIAL_HASH_MASK) == mixedHash ? data ^ mixedHash : Long.MIN_VALUE;
 	}
 	
 	public static int getCapacity() {

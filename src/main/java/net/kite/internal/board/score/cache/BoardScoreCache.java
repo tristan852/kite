@@ -16,7 +16,6 @@ public final class BoardScoreCache {
 	private static final int ENTRY_DATA_MAXIMAL_SCORE_UNPACK_OFFSET = 48;
 	private static final int ENTRY_DATA_SCORE_UNPACK_OFFSET = 56;
 	
-	private static final int MISSING_ENTRY_KEY = -1;
 	private static final long MISSING_ENTRY_DATA = 0x0000000000000080L;
 	
 	private final long[] entryData;
@@ -52,47 +51,15 @@ public final class BoardScoreCache {
 		entryData[key] = mixedHash;
 	}
 	
-	public boolean entryFilled(int entryKey) {
-		return entryData[entryKey] != MISSING_ENTRY_DATA;
-	}
-	
-	public long entryMixedHash(int entryKey) {
-		long mixedHash = entryData[entryKey];
-		
-		mixedHash &= ENTRY_DATA_PARTIAL_HASH_MASK;
-		mixedHash |= entryKey;
-		
-		return mixedHash;
-	}
-	
-	public int entryMinimalScore(int entryKey) {
-		long minimalScore = entryData[entryKey];
-		
-		minimalScore <<= ENTRY_DATA_SCORE_UNPACK_OFFSET;
-		minimalScore >>= ENTRY_DATA_SCORE_UNPACK_OFFSET;
-		
-		return (int) minimalScore;
-	}
-	
-	public int entryMaximalScore(int entryKey) {
-		long maximalScore = entryData[entryKey];
-		
-		maximalScore <<= ENTRY_DATA_MAXIMAL_SCORE_UNPACK_OFFSET;
-		maximalScore >>= ENTRY_DATA_SCORE_UNPACK_OFFSET;
-		
-		return (int) maximalScore;
-	}
-	
-	public int entryKey(long mixedHash) {
+	public long entry(long mixedHash) {
 		int key = (int) (mixedHash & KEY_MASK);
 		
 		long data = entryData[key];
-		if(data == MISSING_ENTRY_DATA) return MISSING_ENTRY_KEY;
+		if(data == MISSING_ENTRY_DATA) return Long.MIN_VALUE;
 		
-		long h = data & ENTRY_DATA_PARTIAL_HASH_MASK;
 		mixedHash &= ENTRY_DATA_PARTIAL_HASH_MASK;
 		
-		return h == mixedHash ? key : MISSING_ENTRY_KEY;
+		return (data & ENTRY_DATA_PARTIAL_HASH_MASK) == mixedHash ? data ^ mixedHash : Long.MIN_VALUE;
 	}
 	
 	public static int getCapacity() {

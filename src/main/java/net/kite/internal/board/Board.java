@@ -87,7 +87,6 @@ public final class Board {
 	private static final int LARGEST_BITBOARD_Y = 7;
 	
 	private static final int LARGEST_MOVE_CELL_X = 6;
-	private static final int LARGEST_MOVE_CELL_Y = 5;
 	
 	private static final char SMALLEST_MOVE_CHARACTER = '1';
 	
@@ -105,6 +104,10 @@ public final class Board {
 	private static final int BITBOARD_HEIGHT = 8;
 	
 	private static final int OPENING_SCORE_CACHE_MAXIMAL_DEPTH = 14;
+	
+	private static final long ENTRY_DATA_EXACT_MASK = 0x0000000000000100L;
+	private static final int ENTRY_DATA_SCORE_UNPACK_OFFSET = 56;
+	private static final int ENTRY_DATA_MAXIMAL_SCORE_UNPACK_OFFSET = 48;
 	
 	private static final float[] FIRST_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
 			-1.480893f,  7.600903f
@@ -839,12 +842,16 @@ public final class Board {
 		
 		if(maximalScore > maxScore) maximalScore = maxScore;
 		
-		int key = importantScoreCache.entryKey(mixedHash);
-		if(key >= 0) {
+		long entry = importantScoreCache.entry(mixedHash);
+		if(entry != Long.MIN_VALUE) {
 			
-			int importantBoardScore = importantScoreCache.entryScore(key);
+			boolean exact = (entry & ENTRY_DATA_EXACT_MASK) != 0;
 			
-			boolean exact = importantScoreCache.entryExact(key);
+			entry <<= ENTRY_DATA_SCORE_UNPACK_OFFSET;
+			entry >>= ENTRY_DATA_SCORE_UNPACK_OFFSET;
+			
+			int importantBoardScore = (int) entry;
+			
 			if(exact) return importantBoardScore;
 			
 			if(minimalScore < importantBoardScore) minimalScore = importantBoardScore;
@@ -856,16 +863,19 @@ public final class Board {
 			
 			int lastMove = playedMoves[filledCellAmount];
 			
-			key = importantScoreCache.entryKey(mixedHash);
-			if(key >= 0) {
+			entry = importantScoreCache.entry(mixedHash);
+			if(entry != Long.MIN_VALUE) {
 				
-				int importantBoardScore = importantScoreCache.entryScore(key);
-				
-				boolean exact = importantScoreCache.entryExact(key);
+				boolean exact = (entry & ENTRY_DATA_EXACT_MASK) != 0;
 				if(exact) {
 					
-					int s = -importantBoardScore;
-					if(minimalScore < s) minimalScore = s;
+					entry <<= ENTRY_DATA_SCORE_UNPACK_OFFSET;
+					entry >>= ENTRY_DATA_SCORE_UNPACK_OFFSET;
+					
+					int importantBoardScore = (int) entry;
+					importantBoardScore = -importantBoardScore;
+					
+					if(minimalScore < importantBoardScore) minimalScore = importantBoardScore;
 				}
 			}
 			
@@ -882,11 +892,11 @@ public final class Board {
 			playMove(lastMove);
 		}
 		
-		int entryKey = scoreCache.entryKey(mixedHash);
-		if(entryKey >= 0) {
+		entry = scoreCache.entry(mixedHash);
+		if(entry != Long.MIN_VALUE) {
 			
-			int entryMinScore = scoreCache.entryMinimalScore(entryKey);
-			int entryMaxScore = scoreCache.entryMaximalScore(entryKey);
+			int entryMinScore = (int) ((entry << ENTRY_DATA_SCORE_UNPACK_OFFSET) >> ENTRY_DATA_SCORE_UNPACK_OFFSET);
+			int entryMaxScore = (int) ((entry << ENTRY_DATA_MAXIMAL_SCORE_UNPACK_OFFSET) >> ENTRY_DATA_SCORE_UNPACK_OFFSET);
 			
 			if(entryMinScore > minimalScore) minimalScore = entryMinScore;
 			if(entryMaxScore < maximalScore) maximalScore = entryMaxScore;
@@ -976,11 +986,11 @@ public final class Board {
 			if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
 		}
 		
-		int entryKey = scoreCache.entryKey(mixedHash);
-		if(entryKey >= 0) {
+		long entry = scoreCache.entry(mixedHash);
+		if(entry != Long.MIN_VALUE) {
 			
-			int entryMinScore = scoreCache.entryMinimalScore(entryKey);
-			int entryMaxScore = scoreCache.entryMaximalScore(entryKey);
+			int entryMinScore = (int) ((entry << ENTRY_DATA_SCORE_UNPACK_OFFSET) >> ENTRY_DATA_SCORE_UNPACK_OFFSET);
+			int entryMaxScore = (int) ((entry << ENTRY_DATA_MAXIMAL_SCORE_UNPACK_OFFSET) >> ENTRY_DATA_SCORE_UNPACK_OFFSET);
 			
 			if(entryMinScore > minimalScore) minimalScore = entryMinScore;
 			if(entryMaxScore < maximalScore) maximalScore = entryMaxScore;
@@ -1007,17 +1017,20 @@ public final class Board {
 				
 				long mixedHash = mixedHash(h1);
 				
-				entryKey = scoreCache.entryKey(mixedHash);
-				if(entryKey >= 0) {
+				entry = scoreCache.entry(mixedHash);
+				if(entry != Long.MIN_VALUE) {
 					
-					int entryMinScore = -scoreCache.entryMaximalScore(entryKey);
-					int entryMaxScore = -scoreCache.entryMinimalScore(entryKey);
+					int entryMinScore = (int) ((entry << ENTRY_DATA_MAXIMAL_SCORE_UNPACK_OFFSET) >> ENTRY_DATA_SCORE_UNPACK_OFFSET);
+					entryMinScore = -entryMinScore;
 					
 					if(entryMinScore > minimalScore) {
 						
 						minimalScore = entryMinScore;
 						if(minimalScore >= maximalScore) return minimalScore;
 					}
+					
+					int entryMaxScore = (int) ((entry << ENTRY_DATA_SCORE_UNPACK_OFFSET) >> ENTRY_DATA_SCORE_UNPACK_OFFSET);
+					entryMaxScore = -entryMaxScore;
 					
 					if(entryMaxScore > max) max = entryMaxScore;
 					
