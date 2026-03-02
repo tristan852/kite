@@ -189,7 +189,6 @@ public final class Board {
 	}
 	
 	private int filledCellAmount;
-	private int evenParityCellColumnAmount = WIDTH;
 	
 	private int evaluationAmount;
 	private int nodeEvaluationAmount;
@@ -934,7 +933,8 @@ public final class Board {
 			if(canNoLongerWin) maxScore = 0;
 		}
 		
-		if(evenParityCellColumnAmount == WIDTH) {
+		boolean allColumnsEvenParity = (ceilingBitboard & Bitboards.EVEN_BOARD_ROWS) == 0;
+		if(allColumnsEvenParity) {
 			
 			long redCells = activeBitboard | (Bitboards.ODD_BOARD_ROWS & (~maskBitboard));
 			long yellowCells = Bitboards.FULL_BOARD ^ redCells;
@@ -1237,10 +1237,6 @@ public final class Board {
 	public void playMove(int moveCellX) {
 		long b = ceilingBitboard & Bitboards.COLUMNS[moveCellX];
 		
-		boolean wasEven = (b & Bitboards.ODD_BOARD_ROWS) == 0;
-		if(wasEven) evenParityCellColumnAmount--;
-		else evenParityCellColumnAmount++;
-		
 		playedMoves[filledCellAmount] = moveCellX;
 		filledCellAmount++;
 		
@@ -1263,10 +1259,6 @@ public final class Board {
 		
 		long b = ceilingBitboard & Bitboards.COLUMNS[moveCellX];
 		b >>>= 1;
-		
-		boolean isEven = (b & Bitboards.ODD_BOARD_ROWS) == 0;
-		if(isEven) evenParityCellColumnAmount++;
-		else evenParityCellColumnAmount--;
 		
 		maskBitboard ^= b;
 		activeBitboard ^= maskBitboard;
