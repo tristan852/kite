@@ -961,7 +961,7 @@ public final class KiteDemo {
 			disableButtonElement(redoButtonElement);
 			enableSelectElement(aiSkillLevelSelectElement);
 			
-			setupNewGame();
+			setupNewGame(true);
 			
 		} else {
 			
@@ -989,7 +989,11 @@ public final class KiteDemo {
 		updateLocationSearch();
 	}
 	
-	private void setupNewGame() {
+	public void setupNewGame() {
+		setupNewGame(false);
+	}
+	
+	private void setupNewGame(boolean clearRedoHistory) {
 		int playedMoveAmount = solver.playedMoveAmount();
 		if(playedMoveAmount != 0) {
 			
@@ -1002,12 +1006,18 @@ public final class KiteDemo {
 			}
 			
 			solver.clearBoard();
+			solver.clearRedoHistory();
 			lastMoveAnalysis = null;
 			
 			redAtTurn = true;
 			
 			if(!aiModeSelected) updateCellLabelElements();
 			updateWinnerLabelElement();
+			updateLocationSearch();
+			
+		} else if(clearRedoHistory && solver.canRedoMove()) {
+			
+			solver.clearRedoHistory();
 			updateLocationSearch();
 		}
 		
