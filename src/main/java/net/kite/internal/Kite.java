@@ -723,6 +723,13 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
+	public KiteApi clearRedoHistory() {
+		undoneMoveAmount = 0;
+		
+		return null;
+	}
+	
+	@Override
 	public KiteApi playMoves(String moveColumnIndicesString) {
 		int n = moveColumnIndicesString.length();
 		for(int i = 0; i < n; i++) {

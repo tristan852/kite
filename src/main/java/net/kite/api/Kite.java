@@ -948,6 +948,23 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
+	 * Clears the internal list of
+	 * moves that were undone.
+	 * <p>
+	 * After calling this method
+	 * {@link Kite#undoneMoveAmount()}
+	 * will return {@code 0}.
+	 *
+	 * @return this solver instance
+	 */
+	@Override
+	public synchronized Kite clearRedoHistory() {
+		internalSolver.clearRedoHistory();
+		
+		return this;
+	}
+	
+	/**
 	 * Plays multiple moves on behalf of the player
 	 * that is allowed to move next by inserting one
 	 * of their stones into the given column.

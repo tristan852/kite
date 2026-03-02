@@ -79,6 +79,8 @@ public interface KiteApi {
 	
 	boolean moveLegal(int moveColumnIndex);
 	
+	KiteApi clearRedoHistory();
+	
 	KiteApi playMoves(String moveColumnIndicesString);
 	KiteApi playMoves(int... moveColumnIndices);
 	KiteApi playMove(int moveColumnIndex);
