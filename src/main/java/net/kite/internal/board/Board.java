@@ -821,7 +821,10 @@ public final class Board {
 		
 		if(filledCellAmount == FULL_CELL_AMOUNT) return BoardScore.DRAW;
 		
-		if(activePlayerHasImmediateWin()) {
+		long result = bitboardConnectionOpportunities(activeBitboard);
+		result &= ceilingBitboard;
+		
+		if(result != 0) {
 			
 			return BoardScore.win(filledCellAmount + 1);
 		}
@@ -1212,13 +1215,6 @@ public final class Board {
 		return moveScore;
 	}
 	
-	private boolean activePlayerHasImmediateWin() {
-		long result = bitboardConnectionOpportunities(activeBitboard);
-		result &= ceilingBitboard;
-		
-		return result != 0;
-	}
-	
 	public boolean moveLegalWhileGameNotOver(int moveCellX) {
 		long b = Bitboards.COLUMNS[moveCellX];
 		b &= ceilingBitboard;
@@ -1377,7 +1373,7 @@ public final class Board {
 			long redBuilds = Bitboards.RIGHT_CELLS_BELOW_LINE_BITBOARDS[winPosition];
 			
 			long cells = currentYellowCells | (~currentMask & yellowCells & redBuilds);
-			if(bitboardContainsConnection(cells)) continue;
+			if(bitboardContainsNonVerticalConnection(cells)) continue;
 			
 			return true;
 		}
@@ -1397,7 +1393,7 @@ public final class Board {
 			long redBuilds = Bitboards.DOWN_RIGHT_CELLS_BELOW_LINE_BITBOARDS[winPosition];
 			
 			long cells = currentYellowCells | (~currentMask & yellowCells & redBuilds);
-			if(bitboardContainsConnection(cells)) continue;
+			if(bitboardContainsNonVerticalConnection(cells)) continue;
 			
 			return true;
 		}
@@ -1417,7 +1413,7 @@ public final class Board {
 			long redBuilds = Bitboards.UP_RIGHT_CELLS_BELOW_LINE_BITBOARDS[winPosition];
 			
 			long cells = currentYellowCells | (~currentMask & yellowCells & redBuilds);
-			if(bitboardContainsConnection(cells)) continue;
+			if(bitboardContainsNonVerticalConnection(cells)) continue;
 			
 			return true;
 		}
