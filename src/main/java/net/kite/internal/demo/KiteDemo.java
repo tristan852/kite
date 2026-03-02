@@ -35,7 +35,6 @@ public final class KiteDemo {
 	
 	private static final long AI_MOVE_TIME_DELAY = 1000;
 	
-	// TODO sanitize the input processing?
 	private static final String LOCATION_SEARCH_PREFIX = "?";
 	private static final String LOCATION_SEARCH_ITEM_SEPARATOR = "&";
 	private static final String LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR = "=";
