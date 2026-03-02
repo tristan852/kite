@@ -1006,7 +1006,7 @@ public final class KiteDemo {
 			}
 			
 			solver.clearBoard();
-			solver.clearRedoHistory();
+			if(clearRedoHistory) solver.clearRedoHistory();
 			lastMoveAnalysis = null;
 			
 			redAtTurn = true;
