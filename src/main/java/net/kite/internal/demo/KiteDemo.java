@@ -1155,13 +1155,13 @@ public final class KiteDemo {
 			
 			if(aiModeSelected) {
 				
+				updateLocationSearch();
+				
 				if(aiPlaysRed == redAtTurn && outcome == BoardOutcome.UNDECIDED) {
 					
 					scheduleAIMove();
 					return;
 				}
-				
-				updateLocationSearch();
 				
 			} else {
 				
