@@ -92,6 +92,7 @@ graalvmNative {
 	            println("[native-image-plugin] Using -march=native: binary will be CPU-specific")
             }
             
+            buildArgs.add("-O3")
             buildArgs.add("--future-defaults=all")
             
             buildArgs.add("--no-fallback")
