@@ -606,7 +606,7 @@ public final class KiteDemo {
 			
 			eventID++;
 			
-			setupNewGame();
+			setupNewGame(aiModeSelected);
 		});
 		
 		undoButtonElement.onClick((mouseEvent) -> {
@@ -932,7 +932,13 @@ public final class KiteDemo {
 				solver.undoMove();
 				lastMoveAnalysis = solver.analyseMove(x);
 				solver.redoMove();
+				
+			} else {
+				
+				disableButtonElement(undoButtonElement);
 			}
+			
+			if(!solver.canRedoMove()) disableButtonElement(redoButtonElement);
 			
 			disableSelectElement(aiSkillLevelSelectElement);
 			updateCellLabelElements();
@@ -948,7 +954,7 @@ public final class KiteDemo {
 		aiSkillLevel = ORDERED_AI_SKILL_LEVELS[aiSkillLevelIndex];
 		
 		updateLocationSearch();
-		setupNewGame();
+		setupNewGame(true);
 	}
 	
 	private void changeMode() {
@@ -967,11 +973,11 @@ public final class KiteDemo {
 			
 			modeButtonElement.setTextContent(FIRST_MODE_BUTTON_ELEMENT_TEXT);
 			
-			enableButtonElement(undoButtonElement);
-			enableButtonElement(redoButtonElement);
 			disableSelectElement(aiSkillLevelSelectElement);
 			
 			if(solver.canUndoMove()) {
+				
+				enableButtonElement(undoButtonElement);
 				
 				int x = solver.lastMove();
 				
@@ -987,10 +993,6 @@ public final class KiteDemo {
 		
 		updateCellLabelElements();
 		updateLocationSearch();
-	}
-	
-	public void setupNewGame() {
-		setupNewGame(false);
 	}
 	
 	private void setupNewGame(boolean clearRedoHistory) {
@@ -1028,6 +1030,12 @@ public final class KiteDemo {
 			aiPlaysRed = random.nextBoolean();
 			if(aiPlaysRed) playAIMove();
 			else updateLocationSearch();
+			
+		} else {
+			
+			disableButtonElement(undoButtonElement);
+			if(solver.canRedoMove()) enableButtonElement(redoButtonElement);
+			else disableButtonElement(redoButtonElement);
 		}
 		
 		hideWinLines();
@@ -1076,6 +1084,10 @@ public final class KiteDemo {
 		if(!aiModeSelected) updateCellLabelElements();
 		updateWinnerLabelElement();
 		updateLocationSearch();
+		
+		enableButtonElement(redoButtonElement);
+		if(solver.canUndoMove()) enableButtonElement(undoButtonElement);
+		else disableButtonElement(undoButtonElement);
 	}
 	
 	private void redoMove() {
@@ -1139,13 +1151,18 @@ public final class KiteDemo {
 		BoardOutcome outcome = solver.gameOutcome();
 		if(outcome.isWin()) showWinLines();
 		
-		if(aiModeSelected && !initial) {
+		if(aiModeSelected) {
 			
-			if(aiPlaysRed == redAtTurn && outcome == BoardOutcome.UNDECIDED) {
+			if(!initial && aiPlaysRed == redAtTurn && outcome == BoardOutcome.UNDECIDED) {
 				
 				scheduleAIMove();
 				return;
 			}
+			
+		} else {
+			
+			enableButtonElement(undoButtonElement);
+			if(!solver.canRedoMove()) disableButtonElement(redoButtonElement);
 		}
 		
 		updateWinnerLabelElement();
