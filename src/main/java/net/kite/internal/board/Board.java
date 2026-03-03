@@ -1572,7 +1572,6 @@ public final class Board {
 		if(scoreAfter == scoreBefore) return MoveAnalysis.MoveQuality.BEST;
 		
 		boolean outcomeStayedTheSame = scoreBefore > 0 ? scoreAfter > 0 : scoreBefore != 0;
-		
 		if(outcomeStayedTheSame) {
 			
 			int scoreLoss = scoreBefore - scoreAfter;
