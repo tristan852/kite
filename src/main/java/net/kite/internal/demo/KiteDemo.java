@@ -1151,26 +1151,29 @@ public final class KiteDemo {
 		BoardOutcome outcome = solver.gameOutcome();
 		if(outcome.isWin()) showWinLines();
 		
-		if(aiModeSelected) {
+		if(!initial) {
 			
-			if(!initial && aiPlaysRed == redAtTurn && outcome == BoardOutcome.UNDECIDED) {
+			if(aiModeSelected) {
 				
-				scheduleAIMove();
-				return;
+				if(aiPlaysRed == redAtTurn && outcome == BoardOutcome.UNDECIDED) {
+					
+					scheduleAIMove();
+					return;
+				}
+				
+				updateLocationSearch();
+				
+			} else {
+				
+				enableButtonElement(undoButtonElement);
+				if(!solver.canRedoMove()) disableButtonElement(redoButtonElement);
+				
+				updateLocationSearch();
+				updateCellLabelElements();
 			}
-			
-		} else {
-			
-			enableButtonElement(undoButtonElement);
-			if(!solver.canRedoMove()) disableButtonElement(redoButtonElement);
 		}
 		
 		updateWinnerLabelElement();
-		if(!initial) {
-			
-			updateLocationSearch();
-			if(!aiModeSelected) updateCellLabelElements();
-		}
 	}
 	
 	private void showWinLines() {
