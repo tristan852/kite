@@ -1,6 +1,5 @@
 package net.kite.internal.board.score.cache.opening;
 
-import net.kite.internal.board.Board;
 import net.kite.internal.board.score.BoardScore;
 import net.kite.internal.board.score.cache.BoardScoreCache;
 
@@ -96,21 +95,18 @@ public final class OpeningBoardScoreCache {
 		}
 	}
 	
-	public int boardScore(Board board) {
-		long columnHash = board.columnHash();
-		int index = (int) Long.remainderUnsigned(columnHash, CAPACITY);
+	public int boardScore(long boardColumnHash) {
+		int index = (int) Long.remainderUnsigned(boardColumnHash, CAPACITY);
 		
 		byte boardScore = boardScores[index];
 		if(boardScore == BoardScore.INVALID) return Integer.MIN_VALUE;
 		
 		long partialColumnHash = boardPartialColumnHashes[index];
 		
-		columnHash &= BOARD_PARTIAL_COLUMN_HASH_MASK;
+		boardColumnHash &= BOARD_PARTIAL_COLUMN_HASH_MASK;
 		partialColumnHash &= BOARD_PARTIAL_COLUMN_HASH_MASK;
 		
-		if(columnHash == partialColumnHash) return boardScore;
-		
-		return Integer.MIN_VALUE;
+		return boardColumnHash == partialColumnHash ? boardScore : Integer.MIN_VALUE;
 	}
 	
 }

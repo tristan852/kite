@@ -757,7 +757,7 @@ public final class Board {
 		return stringBuilder.toString();
 	}
 	
-	public long columnHash() {
+	private long columnHash() {
 		long h1 = 0;
 		long h2 = 0;
 		
@@ -829,7 +829,9 @@ public final class Board {
 		
 		if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
 			
-			int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
+			long columnHash = columnHash();
+			
+			int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(columnHash);
 			if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
 		}
 		
@@ -870,7 +872,9 @@ public final class Board {
 			
 			if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
 				
-				int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
+				long columnHash = columnHash();
+				
+				int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(columnHash);
 				if(openingBoardScore != Integer.MIN_VALUE) {
 					
 					int s = -openingBoardScore;
@@ -971,7 +975,9 @@ public final class Board {
 		
 		if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
 			
-			int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(this);
+			long columnHash = columnHash();
+			
+			int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(columnHash);
 			if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
 		}
 		
