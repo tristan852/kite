@@ -329,7 +329,7 @@ public final class KiteDemo {
 	
 	private static final String RED_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR = "#FB2C36";
 	private static final String YELLOW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR = "#F0B100";
-	private static final String DRAW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR = "#71717B";
+	private static final String DRAW_WINNER_LABEL_ELEMENT_BACKGROUND_COLOR = "#9F9FA9";
 	
 	private static final String CELL_HIGHLIGHT_BACKGROUND_COLOR = "#7CCF00";
 	
