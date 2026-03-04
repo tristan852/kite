@@ -167,7 +167,7 @@ public final class KiteDemo {
 			"font-style", "italic"
 	};
 	
-	private static final String[] AI_SKILL_LEVEL_SELECT_ELEMENT_STYLES = new String[] {
+	private static final String[] SELECT_ELEMENT_STYLES = new String[] {
 			"text-align", "center"
 	};
 	
@@ -315,9 +315,9 @@ public final class KiteDemo {
 	private static final String GITHUB_LOGO_ELEMENT_TARGET_PATH = "https://github.com/tristan852/kite";
 	
 	private static final String VERSION_ELEMENT_TEXT_FORMAT = "v%s";
-	private static final String FIRST_MODE_BUTTON_ELEMENT_TEXT = "Mode: Analysis";
-	private static final String SECOND_MODE_BUTTON_ELEMENT_TEXT = "Mode: Play vs. AI";
-	private static final String THIRD_MODE_BUTTON_ELEMENT_TEXT = "Mode: Local Multiplayer";
+	private static final String FIRST_MODE_BUTTON_ELEMENT_TEXT = "Analysis";
+	private static final String SECOND_MODE_BUTTON_ELEMENT_TEXT = "Play vs. AI";
+	private static final String THIRD_MODE_BUTTON_ELEMENT_TEXT = "Local Multiplayer";
 	private static final String NEW_GAME_BUTTON_ELEMENT_TEXT = "New Game";
 	private static final String UNDO_BUTTON_ELEMENT_TEXT = "Undo Move";
 	private static final String REDO_BUTTON_ELEMENT_TEXT = "Redo Move";
@@ -604,7 +604,8 @@ public final class KiteDemo {
 			aiSkillLevelSelectElement.appendChild(optionElement);
 		}
 		
-		setElementStyles(aiSkillLevelSelectElement, AI_SKILL_LEVEL_SELECT_ELEMENT_STYLES);
+		setElementStyles(modeSelectElement, SELECT_ELEMENT_STYLES);
+		setElementStyles(aiSkillLevelSelectElement, SELECT_ELEMENT_STYLES);
 		
 		modeSelectElement.addEventListener(ELEMENT_CHANGE_EVENT_TYPE, (event) -> {
 			
@@ -979,25 +980,29 @@ public final class KiteDemo {
 				}
 			}
 			
-		} else if(!multiplayerModeSelected) {
-			
-			if(solver.canUndoMove()) {
-				
-				int x = solver.lastMove();
-				
-				solver.undoMove();
-				lastMoveAnalysis = solver.analyseMove(x);
-				solver.redoMove();
-				
-			} else {
-				
-				disableButtonElement(undoButtonElement);
-			}
-			
-			if(!solver.canRedoMove()) disableButtonElement(redoButtonElement);
+		} else {
 			
 			disableSelectElement(aiSkillLevelSelectElement);
-			updateCellLabelElements();
+			
+			if(!multiplayerModeSelected) {
+				
+				if(solver.canUndoMove()) {
+					
+					int x = solver.lastMove();
+					
+					solver.undoMove();
+					lastMoveAnalysis = solver.analyseMove(x);
+					solver.redoMove();
+					
+				} else {
+					
+					disableButtonElement(undoButtonElement);
+				}
+				
+				if(!solver.canRedoMove()) disableButtonElement(redoButtonElement);
+				
+				updateCellLabelElements();
+			}
 		}
 		
 		bodyElement.appendChild(appElement);
