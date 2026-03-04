@@ -37,11 +37,12 @@ public final class KiteDemo {
 	
 	private static final String LOCATION_SEARCH_PREFIX = "?";
 	private static final String LOCATION_SEARCH_ITEM_SEPARATOR = "&";
-	private static final String LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR = "=";
+	private static final char LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR = '=';
 	private static final String LOCATION_SEARCH_MOVES_KEY = "moves";
 	private static final String LOCATION_SEARCH_UNDONE_MOVES_KEY = "undone-moves";
 	private static final String LOCATION_SEARCH_AI_COLOR_KEY = "ai-color";
 	private static final String LOCATION_SEARCH_AI_LEVEL_KEY = "ai-level";
+	private static final String LOCATION_SEARCH_MULTIPLAYER_KEY = "multiplayer";
 	
 	private static final char SMALLEST_LOCATION_SEARCH_MOVE = '1';
 	private static final String RED_LOCATION_SEARCH_AI_COLOR = "red";
@@ -314,8 +315,9 @@ public final class KiteDemo {
 	private static final String GITHUB_LOGO_ELEMENT_TARGET_PATH = "https://github.com/tristan852/kite";
 	
 	private static final String VERSION_ELEMENT_TEXT_FORMAT = "v%s";
-	private static final String FIRST_MODE_BUTTON_ELEMENT_TEXT = "Mode: Analyse";
+	private static final String FIRST_MODE_BUTTON_ELEMENT_TEXT = "Mode: Analysis";
 	private static final String SECOND_MODE_BUTTON_ELEMENT_TEXT = "Mode: Play vs. AI";
+	private static final String THIRD_MODE_BUTTON_ELEMENT_TEXT = "Mode: Local Multiplayer";
 	private static final String NEW_GAME_BUTTON_ELEMENT_TEXT = "New Game";
 	private static final String UNDO_BUTTON_ELEMENT_TEXT = "Undo Move";
 	private static final String REDO_BUTTON_ELEMENT_TEXT = "Redo Move";
@@ -386,6 +388,7 @@ public final class KiteDemo {
 	private static final HTMLDocument DOCUMENT = HTMLDocument.current();
 	
 	private boolean aiModeSelected;
+	private boolean multiplayerModeSelected;
 	private SkillLevel aiSkillLevel;
 	
 	private boolean aiPlaysRed;
@@ -396,10 +399,10 @@ public final class KiteDemo {
 	
 	private HTMLElement loadingMessageElement;
 	
-	private HTMLButtonElement modeButtonElement;
 	private HTMLButtonElement undoButtonElement;
 	private HTMLButtonElement redoButtonElement;
 	
+	private HTMLSelectElement modeSelectElement;
 	private HTMLSelectElement aiSkillLevelSelectElement;
 	
 	private HTMLElement boardLinesElement;
@@ -571,7 +574,7 @@ public final class KiteDemo {
 		brandElement.appendChild(logoAndVersionElement);
 		brandElement.appendChild(githubLogoContainerContainerElement);
 		
-		modeButtonElement = (HTMLButtonElement) createControlElement(BUTTON_ELEMENT_TYPE);
+		modeSelectElement = (HTMLSelectElement) createControlElement(SELECT_ELEMENT_TYPE);
 		undoButtonElement = (HTMLButtonElement) createControlElement(BUTTON_ELEMENT_TYPE);
 		redoButtonElement = (HTMLButtonElement) createControlElement(BUTTON_ELEMENT_TYPE);
 		
@@ -579,34 +582,43 @@ public final class KiteDemo {
 		
 		aiSkillLevelSelectElement = (HTMLSelectElement) createControlElement(SELECT_ELEMENT_TYPE);
 		
-		modeButtonElement.setTextContent(FIRST_MODE_BUTTON_ELEMENT_TEXT);
 		undoButtonElement.setTextContent(UNDO_BUTTON_ELEMENT_TEXT);
 		redoButtonElement.setTextContent(REDO_BUTTON_ELEMENT_TEXT);
 		
 		newGameButtonElement.setTextContent(NEW_GAME_BUTTON_ELEMENT_TEXT);
 		
+		HTMLOptionElement optionElement = createOptionElement(FIRST_MODE_BUTTON_ELEMENT_TEXT);
+		modeSelectElement.appendChild(optionElement);
+		
+		optionElement = createOptionElement(SECOND_MODE_BUTTON_ELEMENT_TEXT);
+		modeSelectElement.appendChild(optionElement);
+		
+		optionElement = createOptionElement(THIRD_MODE_BUTTON_ELEMENT_TEXT);
+		modeSelectElement.appendChild(optionElement);
+		
 		for(SkillLevel skillLevel : ORDERED_AI_SKILL_LEVELS) {
 			
 			String skillLevelDisplayName = skillLevel.getDisplayName();
 			
-			HTMLOptionElement optionElement = createOptionElement(skillLevelDisplayName);
+			optionElement = createOptionElement(skillLevelDisplayName);
 			aiSkillLevelSelectElement.appendChild(optionElement);
 		}
 		
 		setElementStyles(aiSkillLevelSelectElement, AI_SKILL_LEVEL_SELECT_ELEMENT_STYLES);
 		
-		modeButtonElement.onClick((mouseEvent) -> {
+		modeSelectElement.addEventListener(ELEMENT_CHANGE_EVENT_TYPE, (event) -> {
 			
 			eventID++;
 			
-			changeMode();
+			int i = modeSelectElement.getSelectedIndex();
+			changeMode(i);
 		});
 		
 		newGameButtonElement.onClick((mouseEvent) -> {
 			
 			eventID++;
 			
-			setupNewGame(aiModeSelected);
+			setupNewGame(aiModeSelected || multiplayerModeSelected);
 		});
 		
 		undoButtonElement.onClick((mouseEvent) -> {
@@ -624,6 +636,8 @@ public final class KiteDemo {
 		});
 		
 		aiSkillLevelSelectElement.addEventListener(ELEMENT_CHANGE_EVENT_TYPE, (event) -> {
+			
+			eventID++;
 			
 			int i = aiSkillLevelSelectElement.getSelectedIndex();
 			changeAISkillLevel(i);
@@ -643,7 +657,17 @@ public final class KiteDemo {
 					
 					if(keyboardEvent.isRepeat()) return;
 					
-					if(!modeButtonElement.isDisabled()) modeButtonElement.click();
+					if(!modeSelectElement.isDisabled()) {
+						
+						eventID++;
+						
+						int i = modeSelectElement.getSelectedIndex();
+						i = i == 0 ? 1 : 0;
+						
+						modeSelectElement.setSelectedIndex(i);
+						changeMode(i);
+					}
+					
 					keyboardEvent.preventDefault();
 				}
 				case BACKSPACE_KEY_NAME -> {
@@ -656,6 +680,8 @@ public final class KiteDemo {
 				case ARROW_UP_KEY_NAME -> {
 					
 					if(!aiSkillLevelSelectElement.isDisabled()) {
+						
+						eventID++;
 						
 						int i = aiSkillLevelSelectElement.getSelectedIndex();
 						if(i > 0) {
@@ -672,6 +698,8 @@ public final class KiteDemo {
 				case ARROW_DOWN_KEY_NAME -> {
 					
 					if(!aiSkillLevelSelectElement.isDisabled()) {
+						
+						eventID++;
 						
 						int i = aiSkillLevelSelectElement.getSelectedIndex();
 						int n = ORDERED_AI_SKILL_LEVELS.length;
@@ -734,7 +762,7 @@ public final class KiteDemo {
 			}
 		});
 		
-		controlsElement.appendChild(modeButtonElement);
+		controlsElement.appendChild(modeSelectElement);
 		controlsElement.appendChild(aiSkillLevelSelectElement);
 		controlsElement.appendChild(newGameButtonElement);
 		controlsElement.appendChild(undoButtonElement);
@@ -862,13 +890,26 @@ public final class KiteDemo {
 			String[] items = locationSearch.split(LOCATION_SEARCH_ITEM_SEPARATOR);
 			for(String item : items) {
 				
-				String[] itemKeyAndValue = item.split(LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR);
+				int splitIndex = item.indexOf(LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR);
 				
-				String itemKey = itemKeyAndValue[0];
-				String itemValue = itemKeyAndValue[1];
+				String itemKey;
+				String itemValue;
+				
+				if(splitIndex < 0) {
+					
+					itemKey = item;
+					itemValue = null;
+					
+				} else {
+					
+					itemKey = item.substring(0, splitIndex);
+					itemValue = item.substring(splitIndex + 1);
+				}
 				
 				switch(itemKey) {
 					case LOCATION_SEARCH_MOVES_KEY -> {
+						
+						if(itemValue == null) return;
 						
 						int l = itemValue.length();
 						for(int i = 0; i < l; i++) {
@@ -878,6 +919,8 @@ public final class KiteDemo {
 						}
 					}
 					case LOCATION_SEARCH_UNDONE_MOVES_KEY -> {
+						
+						if(itemValue == null) return;
 						
 						int l = itemValue.length();
 						for(int i = 0; i < l; i++) {
@@ -890,21 +933,34 @@ public final class KiteDemo {
 					}
 					case LOCATION_SEARCH_AI_COLOR_KEY -> {
 						
+						if(itemValue == null) return;
+						
 						aiModeSelected = true;
 						
-						modeButtonElement.setTextContent(SECOND_MODE_BUTTON_ELEMENT_TEXT);
+						modeSelectElement.setSelectedIndex(1);
 						
 						disableButtonElement(undoButtonElement);
 						disableButtonElement(redoButtonElement);
 						
 						aiPlaysRed = itemValue.equals(RED_LOCATION_SEARCH_AI_COLOR);
 					}
-					default -> {
+					case LOCATION_SEARCH_AI_LEVEL_KEY -> {
+						
+						if(itemValue == null) return;
 						
 						int i = Integer.parseInt(itemValue);
 						
 						aiSkillLevel = ORDERED_AI_SKILL_LEVELS[i];
 						aiSkillLevelSelectElement.setSelectedIndex(i);
+					}
+					default -> {
+						
+						multiplayerModeSelected = true;
+						
+						modeSelectElement.setSelectedIndex(2);
+						
+						disableButtonElement(undoButtonElement);
+						disableButtonElement(redoButtonElement);
 					}
 				}
 			}
@@ -923,7 +979,7 @@ public final class KiteDemo {
 				}
 			}
 			
-		} else {
+		} else if(!multiplayerModeSelected) {
 			
 			if(solver.canUndoMove()) {
 				
@@ -957,37 +1013,57 @@ public final class KiteDemo {
 		setupNewGame(true);
 	}
 	
-	private void changeMode() {
-		aiModeSelected = !aiModeSelected;
-		if(aiModeSelected) {
-			
-			modeButtonElement.setTextContent(SECOND_MODE_BUTTON_ELEMENT_TEXT);
-			
-			disableButtonElement(undoButtonElement);
-			disableButtonElement(redoButtonElement);
-			enableSelectElement(aiSkillLevelSelectElement);
-			
-			setupNewGame(true);
-			
-		} else {
-			
-			modeButtonElement.setTextContent(FIRST_MODE_BUTTON_ELEMENT_TEXT);
-			
-			disableSelectElement(aiSkillLevelSelectElement);
-			
-			if(solver.canUndoMove()) {
+	private void changeMode(int mode) {
+		switch(mode) {
+			case 0 -> {
 				
-				enableButtonElement(undoButtonElement);
+				aiModeSelected = false;
+				multiplayerModeSelected = false;
 				
-				int x = solver.lastMove();
+				modeSelectElement.setSelectedIndex(0);
 				
-				solver.undoMove();
-				lastMoveAnalysis = solver.analyseMove(x);
-				solver.redoMove();
+				disableSelectElement(aiSkillLevelSelectElement);
 				
-			} else {
+				if(solver.canUndoMove()) {
+					
+					enableButtonElement(undoButtonElement);
+					
+					int x = solver.lastMove();
+					
+					solver.undoMove();
+					lastMoveAnalysis = solver.analyseMove(x);
+					solver.redoMove();
+					
+				} else {
+					
+					lastMoveAnalysis = null;
+				}
+			}
+			case 1 -> {
 				
-				lastMoveAnalysis = null;
+				aiModeSelected = true;
+				multiplayerModeSelected = false;
+				
+				modeSelectElement.setSelectedIndex(1);
+				
+				disableButtonElement(undoButtonElement);
+				disableButtonElement(redoButtonElement);
+				enableSelectElement(aiSkillLevelSelectElement);
+				
+				setupNewGame(true);
+			}
+			case 2 -> {
+				
+				aiModeSelected = false;
+				multiplayerModeSelected = true;
+				
+				modeSelectElement.setSelectedIndex(2);
+				
+				disableButtonElement(undoButtonElement);
+				disableButtonElement(redoButtonElement);
+				disableSelectElement(aiSkillLevelSelectElement);
+				
+				setupNewGame(true);
 			}
 		}
 		
@@ -1013,7 +1089,7 @@ public final class KiteDemo {
 			
 			redAtTurn = true;
 			
-			if(!aiModeSelected) updateCellLabelElements();
+			if(!(aiModeSelected || multiplayerModeSelected)) updateCellLabelElements();
 			updateWinnerLabelElement();
 			updateLocationSearch();
 			
@@ -1031,7 +1107,7 @@ public final class KiteDemo {
 			if(aiPlaysRed) playAIMove();
 			else updateLocationSearch();
 			
-		} else {
+		} else if(!multiplayerModeSelected) {
 			
 			disableButtonElement(undoButtonElement);
 			if(solver.canRedoMove()) enableButtonElement(redoButtonElement);
@@ -1051,7 +1127,7 @@ public final class KiteDemo {
 		
 		solver.undoMove();
 		
-		if(!aiModeSelected) {
+		if(!(aiModeSelected || multiplayerModeSelected)) {
 			
 			if(solver.canUndoMove()) {
 				
@@ -1081,7 +1157,7 @@ public final class KiteDemo {
 		
 		hideWinLines();
 		
-		if(!aiModeSelected) updateCellLabelElements();
+		if(!(aiModeSelected || multiplayerModeSelected)) updateCellLabelElements();
 		updateWinnerLabelElement();
 		updateLocationSearch();
 		
@@ -1140,7 +1216,7 @@ public final class KiteDemo {
 		
 		redAtTurn = !redAtTurn;
 		
-		if(!aiModeSelected && !initial) {
+		if(!initial && !(aiModeSelected || multiplayerModeSelected)) {
 			
 			lastMoveAnalysis = solver.analyseMove(moveX + 1);
 		}
@@ -1153,9 +1229,9 @@ public final class KiteDemo {
 		
 		if(!initial) {
 			
+			updateLocationSearch();
+			
 			if(aiModeSelected) {
-				
-				updateLocationSearch();
 				
 				if(aiPlaysRed == redAtTurn && outcome == BoardOutcome.UNDECIDED) {
 					
@@ -1163,12 +1239,11 @@ public final class KiteDemo {
 					return;
 				}
 				
-			} else {
+			} else if(!multiplayerModeSelected) {
 				
 				enableButtonElement(undoButtonElement);
 				if(!solver.canRedoMove()) disableButtonElement(redoButtonElement);
 				
-				updateLocationSearch();
 				updateCellLabelElements();
 			}
 		}
@@ -1356,7 +1431,7 @@ public final class KiteDemo {
 	}
 	
 	private void updateCellLabelElements() {
-		if(aiModeSelected) {
+		if(aiModeSelected || multiplayerModeSelected) {
 			
 			for(int x = 0; x < BOARD_WIDTH; x++) {
 				
@@ -1445,7 +1520,7 @@ public final class KiteDemo {
 		boolean movesWerePlayed = playedMoveAmount != 0;
 		boolean movesWereUndone = undoneMoveAmount != 0;
 		boolean aiLevelNotPerfect = aiSkillLevel != SkillLevel.PERFECT;
-		boolean searchNotEmpty = movesWerePlayed || movesWereUndone || aiModeSelected || aiLevelNotPerfect;
+		boolean searchNotEmpty = movesWerePlayed || movesWereUndone || aiModeSelected || multiplayerModeSelected || aiLevelNotPerfect;
 		if(searchNotEmpty) {
 			
 			StringBuilder stringBuilder = new StringBuilder(locationPath);
@@ -1495,6 +1570,13 @@ public final class KiteDemo {
 				stringBuilder.append(LOCATION_SEARCH_AI_COLOR_KEY);
 				stringBuilder.append(LOCATION_SEARCH_ITEM_KEY_AND_VALUE_SEPARATOR);
 				stringBuilder.append(s);
+				
+			} else if(multiplayerModeSelected) {
+				
+				if(b) stringBuilder.append(LOCATION_SEARCH_ITEM_SEPARATOR);
+				b = true;
+				
+				stringBuilder.append(LOCATION_SEARCH_MULTIPLAYER_KEY);
 			}
 			
 			if(aiLevelNotPerfect) {
