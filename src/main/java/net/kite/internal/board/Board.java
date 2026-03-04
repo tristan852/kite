@@ -52,7 +52,7 @@ public final class Board {
 	};
 	
 	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 229;
-	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 282;
+	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 599;
 	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 463;
 	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 602;
 	
