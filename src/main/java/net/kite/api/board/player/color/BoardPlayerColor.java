@@ -1,6 +1,7 @@
 package net.kite.api.board.player.color;
 
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Represents the color of a Connect Four player.
@@ -84,16 +85,22 @@ public enum BoardPlayerColor {
 	/**
 	 * Returns a color given the requested
 	 * color name.
-	 * {@code color("red")} returns {@link BoardPlayerColor#RED} and
-	 * {@code color("yellow")} returns {@link BoardPlayerColor#YELLOW}.
+	 * {@code color("red")} returns {@link BoardPlayerColor#RED},
+	 * {@code color("RED")} returns {@link BoardPlayerColor#RED},
+	 * {@code color("yellow")} returns {@link BoardPlayerColor#YELLOW},
+	 * and so on.
 	 *
 	 * @param colorName the color name in snake case
 	 * @return corresponding color
+	 * @throws NullPointerException if {@code colorName} is {@code null}
+	 * @throws IllegalArgumentException if the specified color name does not match any {@link BoardPlayerColor}
 	 */
 	public static BoardPlayerColor color(String colorName) {
-		String redName = RED.getName();
+		Objects.requireNonNull(colorName, "colorName must not be null");
 		
-		return colorName.charAt(0) == redName.charAt(0) ? RED : YELLOW;
+		colorName = colorName.toUpperCase(Locale.ROOT);
+		
+		return valueOf(colorName);
 	}
 	
 }
