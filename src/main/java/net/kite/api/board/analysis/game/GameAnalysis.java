@@ -244,8 +244,16 @@ public class GameAnalysis {
 	 * move index
 	 * @return move analysis at the
 	 * given index
+	 * @throws IndexOutOfBoundsException if
+	 * {@code moveIndex} is out of range
 	 */
 	public MoveAnalysis moveAnalysis(int moveIndex) {
+		if(moveIndex < 0 || moveIndex >= moveAnalyses.length) {
+			
+			String exceptionMessage = String.format("moveIndex out of range: %s", moveIndex);
+			throw new IndexOutOfBoundsException(exceptionMessage);
+		}
+		
 		return moveAnalyses[moveIndex];
 	}
 	
