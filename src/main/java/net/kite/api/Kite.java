@@ -629,6 +629,20 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
+	 * Returns {@code true} if and only if this solver instance
+	 * is currently recording performance metrics.
+	 * <p>
+	 * Metrics recording can be started using
+	 * {@link Kite#startRecordingPerformanceMetrics()}.
+	 *
+	 * @return {@code true} if this solver instance is recording metrics, {@code false} otherwise
+	 */
+	@Override
+	public synchronized boolean isRecordingMetrics() {
+		return internalSolver.isRecordingMetrics();
+	}
+	
+	/**
 	 * Evaluates the game state and returns
 	 * a legal move that is chosen according
 	 * to the provided {@code skillLevel}.

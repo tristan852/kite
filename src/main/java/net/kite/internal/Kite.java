@@ -372,6 +372,11 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
+	public boolean isRecordingMetrics() {
+		return recordingMetrics;
+	}
+	
+	@Override
 	public int skilledMove(SkillLevel skillLevel) {
 		boolean perfect = skillLevel == SkillLevel.PERFECT;
 		
