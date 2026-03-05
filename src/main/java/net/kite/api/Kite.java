@@ -608,13 +608,11 @@ public final class Kite implements KiteApi {
 	 * recorded metrics as well as resetting
 	 * them.
 	 *
-	 * @return this solver instance
+	 * @return the number of nodes evaluated during the recording
 	 */
 	@Override
-	public synchronized Kite printAndResetPerformanceMetrics() {
-		internalSolver.printAndResetPerformanceMetrics();
-		
-		return this;
+	public synchronized int printAndResetPerformanceMetrics() {
+		return internalSolver.printAndResetPerformanceMetrics();
 	}
 	
 	/**

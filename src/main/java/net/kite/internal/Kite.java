@@ -326,7 +326,7 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
-	public KiteApi printAndResetPerformanceMetrics() {
+	public int printAndResetPerformanceMetrics() {
 		double averageTime = 0;
 		double averageAmount = 0;
 		double throughput = 0;
@@ -351,11 +351,13 @@ public final class Kite implements KiteApi {
 		String message = String.format(Locale.ROOT, pattern, metricsEvaluationAmount, s, averageAmount, throughput);
 		System.out.println(message);
 		
+		int n = metricsNodeEvaluationAmount;
+		
 		metricsEvaluationAmount = 0;
 		metricsNodeEvaluationAmount = 0;
 		metricsEvaluationTime = 0;
 		
-		return null;
+		return n;
 	}
 	
 	@Override
