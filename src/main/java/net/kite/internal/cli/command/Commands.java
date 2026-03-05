@@ -26,6 +26,7 @@ public final class Commands {
 	public static final Command SKILLED = new SkilledCommand();
 	public static final Command ANALYSIS = new AnalysisCommand();
 	public static final Command BENCHMARK = new BenchmarkCommand();
+	public static final Command METRICS = new MetricsCommand();
 	
 	public static final Command PRINT = new PrintCommand();
 	public static final Command PRINT_MOVES = new PrintMovesCommand();
@@ -66,6 +67,7 @@ public final class Commands {
 			SKILLED,
 			ANALYSIS,
 			BENCHMARK,
+			METRICS,
 			
 			PRINT,
 			PRINT_MOVES,
@@ -109,7 +111,8 @@ public final class Commands {
 					RANDOM,
 					SKILLED,
 					ANALYSIS,
-					BENCHMARK
+					BENCHMARK,
+					METRICS
 			},
 			{
 					PRINT,

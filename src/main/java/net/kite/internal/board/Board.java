@@ -189,6 +189,7 @@ public final class Board {
 	
 	private int filledCellAmount;
 	
+	private long evaluationTime;
 	private int evaluationAmount;
 	private int nodeEvaluationAmount;
 	
@@ -813,17 +814,27 @@ public final class Board {
 	
 	public int evaluate(int maxScore) {
 		evaluationAmount++;
+		long t = System.nanoTime();
 		
 		long board = activeBitboard ^ maskBitboard;
-		if(bitboardContainsConnection(board)) return BoardScore.loss(filledCellAmount);
+		if(bitboardContainsConnection(board)) {
+			
+			evaluationTime += System.nanoTime() - t;
+			return BoardScore.loss(filledCellAmount);
+		}
 		
-		if(filledCellAmount == FULL_CELL_AMOUNT) return BoardScore.DRAW;
+		if(filledCellAmount == FULL_CELL_AMOUNT) {
+			
+			evaluationTime += System.nanoTime() - t;
+			return BoardScore.DRAW;
+		}
 		
 		long result = bitboardConnectionOpportunities(activeBitboard);
 		result &= ceilingBitboard;
 		
 		if(result != 0) {
 			
+			evaluationTime += System.nanoTime() - t;
 			return BoardScore.win(filledCellAmount + 1);
 		}
 		
@@ -832,7 +843,11 @@ public final class Board {
 			long columnHash = columnHash();
 			
 			int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(columnHash);
-			if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
+			if(openingBoardScore != Integer.MIN_VALUE) {
+				
+				evaluationTime += System.nanoTime() - t;
+				return openingBoardScore;
+			}
 		}
 		
 		int minimalScore = BoardScore.minimal(filledCellAmount);
@@ -846,7 +861,11 @@ public final class Board {
 			int importantBoardScore = importantScoreCache.entryScore(key);
 			
 			boolean exact = importantScoreCache.entryExact(key);
-			if(exact) return importantBoardScore;
+			if(exact) {
+				
+				evaluationTime += System.nanoTime() - t;
+				return importantBoardScore;
+			}
 			
 			if(minimalScore < importantBoardScore) minimalScore = importantBoardScore;
 		}
@@ -918,6 +937,7 @@ public final class Board {
 			importantScoreCache.updateEntry(mixedHash, minimalScore, exact);
 		}
 		
+		evaluationTime += System.nanoTime() - t;
 		return minimalScore;
 	}
 	
@@ -1310,8 +1330,13 @@ public final class Board {
 	}
 	
 	public void resetEvaluationMetrics() {
+		evaluationTime = 0;
 		evaluationAmount = 0;
 		nodeEvaluationAmount = 0;
+	}
+	
+	public long getEvaluationTime() {
+		return evaluationTime;
 	}
 	
 	public int getEvaluationAmount() {

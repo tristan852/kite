@@ -97,7 +97,7 @@ public final class Kite implements KiteApi {
 	private int metricsEvaluationAmount;
 	private int metricsNodeEvaluationAmount;
 	private long metricsEvaluationTime;
-	private long metricsRecordingStartTime;
+	private boolean recordingMetrics;
 	
 	public Kite() {
 		this.board = new Board();
@@ -304,23 +304,23 @@ public final class Kite implements KiteApi {
 	public KiteApi startRecordingPerformanceMetrics() {
 		board.resetEvaluationMetrics();
 		
-		metricsRecordingStartTime = System.nanoTime();
+		recordingMetrics = true;
 		
 		return null;
 	}
 	
 	@Override
 	public KiteApi stopRecordingPerformanceMetrics() {
-		if(metricsRecordingStartTime == 0) {
+		if(!recordingMetrics) {
 			
 			throw new IllegalStateException("Cannot stop the recording of performance metrics if the recording has not started yet!");
 		}
 		
-		long endTime = System.nanoTime();
-		
 		metricsEvaluationAmount += board.getEvaluationAmount();
 		metricsNodeEvaluationAmount += board.getNodeEvaluationAmount();
-		metricsEvaluationTime += endTime - metricsRecordingStartTime;
+		metricsEvaluationTime += board.getEvaluationTime();
+		
+		recordingMetrics = false;
 		
 		return null;
 	}
