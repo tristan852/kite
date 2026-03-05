@@ -57,6 +57,7 @@ public interface KiteApi {
 	KiteApi startRecordingPerformanceMetrics();
 	KiteApi stopRecordingPerformanceMetrics();
 	KiteApi printAndResetPerformanceMetrics();
+	int resetPerformanceMetrics();
 	
 	int skilledMove(SkillLevel skillLevel);
 	int optimalMove();

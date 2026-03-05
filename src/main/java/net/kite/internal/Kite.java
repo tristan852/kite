@@ -359,6 +359,17 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
+	public int resetPerformanceMetrics() {
+		int n = metricsNodeEvaluationAmount;
+		
+		metricsEvaluationAmount = 0;
+		metricsNodeEvaluationAmount = 0;
+		metricsEvaluationTime = 0;
+		
+		return n;
+	}
+	
+	@Override
 	public int skilledMove(SkillLevel skillLevel) {
 		boolean perfect = skillLevel == SkillLevel.PERFECT;
 		

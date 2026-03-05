@@ -618,6 +618,19 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
+	 * After using {@link Kite#startRecordingPerformanceMetrics()}
+	 * and {@link Kite#stopRecordingPerformanceMetrics()},
+	 * this method can be used to reset the
+	 * recorded metrics.
+	 *
+	 * @return the number of nodes evaluated during the recording
+	 */
+	@Override
+	public synchronized int resetPerformanceMetrics() {
+		return internalSolver.resetPerformanceMetrics();
+	}
+	
+	/**
 	 * Evaluates the game state and returns
 	 * a legal move that is chosen according
 	 * to the provided {@code skillLevel}.
