@@ -1,11 +1,11 @@
 package net.kite.internal.board;
 
-import net.kite.api.board.analysis.move.MoveAnalysis;
 import net.kite.api.board.analysis.game.GameAnalysis;
+import net.kite.api.board.analysis.move.MoveAnalysis;
+import net.kite.api.board.evaluation.BoardEvaluation;
 import net.kite.api.board.line.BoardLine;
 import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.board.player.color.BoardPlayerColor;
-import net.kite.api.board.evaluation.BoardEvaluation;
 import net.kite.internal.board.bit.Bitboard;
 import net.kite.internal.board.bit.Bitboards;
 import net.kite.internal.board.score.BoardScore;
@@ -51,29 +51,29 @@ public final class Board {
 			3, 2, 4, 1, 5, 0, 6
 	};
 	
-	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 229;
-	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 599;
-	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 463;
+	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 808;
 	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 602;
+	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 463;
+	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 231;
 	
 	private static final int[] RED_MOVE_CELL_SCORES = new int[] {
-			 13,  17,  33, 148,  43, 459,   0,   0,
-			  9,  94,  34, 153, 146, 258,   0,   0,
-			130, 167, 470, 356, 184, 221,   0,   0,
-			366, 273, 356, 276, 395, 471,   0,   0,
-			130, 167, 470, 356, 184, 221,   0,   0,
-			  9,  94,  34, 153, 146, 258,   0,   0,
-			 13,  17,  33, 148,  43, 459
+			  0,  66,  79, 196,  92, 572,   0,   0,
+			178,  73,  83, 202, 186, 307,   0,   0,
+			 94, 202, 386, 306, 259, 298,   0,   0,
+			406, 303, 388, 434, 610, 687,   0,   0,
+			 94, 202, 386, 306, 259, 298,   0,   0,
+			178,  73,  83, 202, 186, 307,   0,   0,
+			  0,  66,  79, 196,  92, 572
 	};
 	
 	private static final int[] YELLOW_MOVE_CELL_SCORES = new int[] {
-			 20, 134,  38, 172, 114, 403,   0,   0,
-			  0, 144, 137, 214, 118, 408,   0,   0,
-			 96, 295, 204, 405, 159, 398,   0,   0,
-			134, 421, 459, 436, 435, 445,   0,   0,
-			 96, 295, 204, 405, 159, 398,   0,   0,
-			  0, 144, 137, 214, 118, 408,   0,   0,
-			 20, 134,  38, 172, 114, 403
+			 19, 113,  71, 198, 111, 402,   0,   0,
+			  0, 193, 135, 381, 117, 406,   0,   0,
+			 61, 294, 203, 404, 158, 398,   0,   0,
+			133, 420, 437, 525, 522, 524,   0,   0,
+			 61, 294, 203, 404, 158, 398,   0,   0,
+			  0, 193, 135, 381, 117, 406,   0,   0,
+			 19, 113,  71, 198, 111, 402
 	};
 	
 	private static final int INFINITE_MOVE_SCORE = 1000000;
@@ -769,7 +769,7 @@ public final class Board {
 	}
 	
 	private long partialColumnHash(long columnHash, int x) {
-		long board = Bitboards.BOTTOM_CELL_BITBOARDS[x];
+		long board = 1L << (x << LOGARITHMIC_BITBOARD_LENGTH);
 		
 		while((board & maskBitboard) != 0) {
 			
@@ -952,7 +952,8 @@ public final class Board {
 				if(yellowWinningStones != 0) {
 					
 					int n = FULL_CELL_AMOUNT;
-					for(long row : Bitboards.DESCENDINGLY_ORDERED_EVEN_BOARD_ROWS) {
+					long row = Bitboards.TOP_EVEN_BOARD_ROW;
+					while(true) {
 						
 						if((row & yellowWinningStones) != 0) {
 							
@@ -963,6 +964,7 @@ public final class Board {
 						}
 						
 						n -= 2;
+						row >>= 2;
 					}
 				}
 			}
@@ -1215,7 +1217,7 @@ public final class Board {
 	}
 	
 	public boolean moveLegalWhileGameNotOver(int moveCellX) {
-		long b = Bitboards.COLUMNS[moveCellX];
+		long b = Bitboards.FIRST_COLUMN << (moveCellX << LOGARITHMIC_BITBOARD_LENGTH);
 		b &= ceilingBitboard;
 		
 		return (b & Bitboards.FULL_BOARD) != 0;
@@ -1232,14 +1234,14 @@ public final class Board {
 		long board = activeBitboard ^ maskBitboard;
 		if(bitboardContainsConnection(board)) return false;
 		
-		long b = Bitboards.COLUMNS[moveCellX];
+		long b = Bitboards.FIRST_COLUMN << (moveCellX << LOGARITHMIC_BITBOARD_LENGTH);
 		b &= ceilingBitboard;
 		
 		return (b & Bitboards.FULL_BOARD) != 0;
 	}
 	
 	public void playMove(int moveCellX) {
-		long b = ceilingBitboard & Bitboards.COLUMNS[moveCellX];
+		long b = ceilingBitboard & (Bitboards.FIRST_COLUMN << (moveCellX << LOGARITHMIC_BITBOARD_LENGTH));
 		
 		playedMoves[filledCellAmount] = moveCellX;
 		filledCellAmount++;
@@ -1261,7 +1263,7 @@ public final class Board {
 		filledCellAmount--;
 		int moveCellX = playedMoves[filledCellAmount];
 		
-		long b = ceilingBitboard & Bitboards.COLUMNS[moveCellX];
+		long b = ceilingBitboard & (Bitboards.FIRST_COLUMN << (moveCellX << LOGARITHMIC_BITBOARD_LENGTH));
 		b >>>= 1;
 		
 		maskBitboard ^= b;
@@ -1278,7 +1280,9 @@ public final class Board {
 	}
 	
 	public int cellColumnHeight(int cellColumnIndex) {
-		return Long.bitCount(maskBitboard & Bitboards.COLUMNS[cellColumnIndex]);
+		long column = Bitboards.FIRST_COLUMN << (cellColumnIndex << LOGARITHMIC_BITBOARD_LENGTH);
+		
+		return Long.bitCount(maskBitboard & column);
 	}
 	
 	public boolean cellFilled(int cellX, int cellY) {
