@@ -22,8 +22,7 @@ public final class MetricsCommand extends Command {
 			String s = arguments[0];
 			
 			if(s.equals("true")) reset = true;
-			else if(s.equals("false")) reset = false;
-			else {
+			else if(!s.equals("false")) {
 				
 				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown boolean value for argument 'reset': \"%s\"", s)));
 				if(exitOnError) System.exit(1);
@@ -37,24 +36,21 @@ public final class MetricsCommand extends Command {
 			return false;
 		}
 		
+		if(reset) {
+			
+			System.out.println();
+			solver.printAndResetPerformanceMetrics();
+			System.out.println();
+			
+			return false;
+		}
+		
 		if(solver.isRecordingMetrics()) {
 			
 			solver.stopRecordingPerformanceMetrics();
 			System.out.println("Recording stopped...");
 			
-			if(reset) {
-				
-				System.out.println();
-				solver.printAndResetPerformanceMetrics();
-			}
-			
 		} else {
-			
-			if(reset) {
-				
-				solver.printAndResetPerformanceMetrics();
-				System.out.println();
-			}
 			
 			solver.startRecordingPerformanceMetrics();
 			System.out.println("Recording started...");
