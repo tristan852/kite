@@ -3,6 +3,7 @@ package net.kite.api.board.outcome;
 import net.kite.api.board.player.color.BoardPlayerColor;
 
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Represents the outcome of a Connect Four game.
@@ -105,8 +106,11 @@ public enum BoardOutcome {
 	 *
 	 * @param playerColor color of the winning player
 	 * @return win game outcome
+	 * @throws NullPointerException if {@code playerColor} is {@code null}
 	 */
 	public static BoardOutcome winOfPlayerColor(BoardPlayerColor playerColor) {
+		Objects.requireNonNull(playerColor, "playerColor must not be null");
+		
 		return playerColor == BoardPlayerColor.RED ? RED_WIN : YELLOW_WIN;
 	}
 	
