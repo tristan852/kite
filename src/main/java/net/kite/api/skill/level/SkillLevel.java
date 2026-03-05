@@ -1,6 +1,7 @@
 package net.kite.api.skill.level;
 
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Represents the skill level of
@@ -332,8 +333,12 @@ public enum SkillLevel {
 	 *
 	 * @param levelName the level name in snake case
 	 * @return corresponding skill level
+	 * @throws NullPointerException if {@code levelName} is {@code null}
+	 * @throws IllegalArgumentException if the specified level name does not match any {@link SkillLevel}
 	 */
 	public static SkillLevel level(String levelName) {
+		Objects.requireNonNull(levelName, "levelName must not be null");
+		
 		levelName = levelName.toUpperCase(Locale.ROOT);
 		
 		return valueOf(levelName);
@@ -349,8 +354,16 @@ public enum SkillLevel {
 	 *
 	 * @param level an integer from {@code 1} to {@code 10}
 	 * @return corresponding skill level
+	 * @throws IllegalArgumentException if {@code level} is less than {@code 1}
+	 *         or greater than {@code 10}
 	 */
 	public static SkillLevel level(int level) {
+		if(level <= 0 || level > ORDERED_LEVELS.length) {
+			
+			String exceptionMessage = String.format("level must be between 1 and 10: %s", level);
+			throw new IllegalArgumentException(exceptionMessage);
+		}
+		
 		level--;
 		
 		return ORDERED_LEVELS[level];
