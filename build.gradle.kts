@@ -1,4 +1,5 @@
 import org.teavm.gradle.api.OptimizationLevel
+import java.io.ByteArrayOutputStream
 
 plugins {
     id("java")
@@ -52,6 +53,27 @@ tasks.named("build") {
 tasks.register<Copy>("copyDemoAssetFiles") {
     from("assets/demo/")
     into("build/war-unpacked")
+}
+
+val gitCommit: String by lazy {
+    try {
+        val stdout = ByteArrayOutputStream()
+        providers.exec {
+            commandLine("git", "rev-parse", "--short", "HEAD")
+            standardOutput = stdout
+        }
+        stdout.toString().trim()
+    } catch(_: Exception) {
+        "unknown"
+    }
+}
+
+tasks.processResources {
+    inputs.property("gitCommit", gitCommit)
+
+    filesMatching("build.properties") {
+        expand(mapOf("gitCommit" to gitCommit))
+    }
 }
 
 val isSignedPublishEnabled: Boolean = project.hasProperty("enableSignedPublish")
