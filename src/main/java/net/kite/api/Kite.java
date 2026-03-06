@@ -22,6 +22,7 @@ public final class Kite implements KiteApi {
 	private static final String NAME = "Kite";
 	private static final String VERSION = "1.19.2";
 	private static final String AUTHOR = "tristan852";
+	private static final String LICENSE = "GPL-3.0";
 	
 	private final KiteApi internalSolver;
 	
@@ -1190,6 +1191,16 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
+	 * Returns the name of the license under
+	 * which the Kite solver is published.
+	 *
+	 * @return license name
+	 */
+	public static String getLicense() {
+		return LICENSE;
+	}
+	
+	/**
 	 * Runs the benchmark by Pascal Pons
 	 * (see README for further information).
 	 * <p>
@@ -1242,6 +1253,13 @@ public final class Kite implements KiteApi {
 	 */
 	public static Kite createInstance() {
 		return new Kite();
+	}
+	
+	public static void main(String[] args) {
+		Kite solver = createInstance();
+		
+		solver.playMoves("44444222266663");
+		solver.skilledMove(SkillLevel.SUPER_GRANDMASTER);
 	}
 	
 }
