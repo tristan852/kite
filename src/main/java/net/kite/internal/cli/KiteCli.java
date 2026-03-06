@@ -163,6 +163,7 @@ public final class KiteCli {
 		String author = Kite.getAuthor();
 		
 		String s = AnsiUtil.boldBrightYellowAnsi(String.format("%s v%s", name, version));
+		buildCommit = AnsiUtil.brightCyanAnsi(buildCommit);
 		
 		AnsiUtil.clearScreen();
 		
