@@ -8,6 +8,10 @@ import net.kite.api.board.player.color.BoardPlayerColor;
 import net.kite.api.exception.IllegalMoveException;
 import net.kite.api.skill.level.SkillLevel;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  * This is the public API to a {@link Kite} solver.
  * Use {@link Kite#createInstance()} to obtain a reference
@@ -21,8 +25,42 @@ public final class Kite implements KiteApi {
 	
 	private static final String NAME = "Kite";
 	private static final String VERSION = "1.19.2";
+	private static final String BUILD_COMMIT;
 	private static final String AUTHOR = "tristan852";
 	private static final String LICENSE = "GPL-3.0";
+	
+	private static final String BUILD_COMMIT_RESOURCE_PATH = "/build.properties";
+	
+	static {
+		InputStream inputStream = Kite.class.getResourceAsStream(BUILD_COMMIT_RESOURCE_PATH);
+		
+		if(inputStream == null) {
+			
+			System.err.println("The build information could not be found in resources!");
+			BUILD_COMMIT = "unknown";
+			
+		} else {
+			
+			String s;
+			
+			try(inputStream) {
+				
+				Properties p = new Properties();
+				p.load(inputStream);
+				
+				s = p.getProperty("git.commit", "unknown");
+				
+			} catch(IOException exception) {
+				
+				String errorMessage = String.format("An exception occurred while loading build information from resources: %s", exception);
+				System.err.println(errorMessage);
+				
+				s = "unknown";
+			}
+			
+			BUILD_COMMIT = s;
+		}
+	}
 	
 	private final KiteApi internalSolver;
 	
@@ -1181,6 +1219,17 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
+	 * Returns the hash of the commit
+	 * that this Kite version was
+	 * build on.
+	 *
+	 * @return commit hash of this build
+	 */
+	public static String getBuildCommit() {
+		return BUILD_COMMIT;
+	}
+	
+	/**
 	 * Returns the name of the author of
 	 * the Kite solver.
 	 *
@@ -1253,13 +1302,6 @@ public final class Kite implements KiteApi {
 	 */
 	public static Kite createInstance() {
 		return new Kite();
-	}
-	
-	public static void main(String[] args) {
-		Kite solver = createInstance();
-		
-		solver.playMoves("44444222266663");
-		solver.skilledMove(SkillLevel.SUPER_GRANDMASTER);
 	}
 	
 }
