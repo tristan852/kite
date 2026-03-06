@@ -30,7 +30,7 @@ public final class PrintCommand extends Command {
 			String s = arguments[0];
 			
 			boolean includeAnalysis;
-			if(s.equals("true")) includeAnalysis = true;
+			if(s.equals("true") || s.equals("include-analysis")) includeAnalysis = true;
 			else if(s.equals("false")) includeAnalysis = false;
 			else {
 				

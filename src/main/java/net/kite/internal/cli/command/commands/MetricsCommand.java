@@ -21,7 +21,7 @@ public final class MetricsCommand extends Command {
 			
 			String s = arguments[0];
 			
-			if(s.equals("true")) reset = true;
+			if(s.equals("true") || s.equals("reset")) reset = true;
 			else if(!s.equals("false")) {
 				
 				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown boolean value for argument 'reset': \"%s\"", s)));

@@ -70,7 +70,7 @@ public final class AnalysisCommand extends Command {
 			
 			s = arguments[1];
 			
-			if(s.equals("true")) includeMoves = true;
+			if(s.equals("true") || s.equals("include-moves")) includeMoves = true;
 			else if(!s.equals("false")) {
 				
 				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown boolean value for argument 'include-moves': \"%s\"", s)));

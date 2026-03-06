@@ -24,7 +24,7 @@ public final class BenchmarkCommand extends Command {
 			String s = arguments[0];
 			
 			boolean printMetrics;
-			if(s.equals("true")) printMetrics = true;
+			if(s.equals("true") || s.equals("print-metrics")) printMetrics = true;
 			else if(s.equals("false")) printMetrics = false;
 			else {
 				
