@@ -85,10 +85,10 @@ jobs:
           # Normalize line endings (CRLF -> LF)
           if [[ "$OSTYPE" == "darwin"* ]]; then
             sed -i '' 's/\r$//' test_script_output.txt
-            sed -i '' "s/GIT_COMMIT/$SHORT_HASH/g" test_script_output.txt
+            sed -i '' "s/GIT_COMMIT/$SHORT_HASH/g" assets/cli/test/expected_test_script_output.txt
           else
             sed -i 's/\r$//' test_script_output.txt
-            sed -i "s/GIT_COMMIT/$SHORT_HASH/g" test_script_output.txt
+            sed -i "s/GIT_COMMIT/$SHORT_HASH/g" assets/cli/test/expected_test_script_output.txt
           fi
 
           # Force UTF-8 without BOM
