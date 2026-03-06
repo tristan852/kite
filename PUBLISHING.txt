@@ -14,7 +14,7 @@ Publishing steps of a new Kite release
 
 2) push all changes to the GitHub repository
 
-3) publish the new release to Maven Central (done via publishToMavenCentral Gradle task)
+3) publish the new release to Maven Central (done via "./gradlew clean publishToMavenCentral -PenableSignedPublish")
     - this requires access to the Maven Central account as well as the private key used for signing
 
 4) publish CLI release to Homebrew and Scoop
