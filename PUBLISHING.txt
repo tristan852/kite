@@ -12,10 +12,10 @@ Publishing steps of a new Kite release
     - increase MINOR if: the project has changed in a way that is noticeable to an end-user (e.g. new API method)
     - increase PATCH if: a change was done that is not directly visible from the outside
 
-2) publish the new release to Maven Central (done via publishToMavenCentral Gradle task)
-    - this requires access to the Maven Central account as well as the private key used for signing
+2) push all changes to the GitHub repository
 
-3) push all changes to the GitHub repository
+3) publish the new release to Maven Central (done via publishToMavenCentral Gradle task)
+    - this requires access to the Maven Central account as well as the private key used for signing
 
 4) publish CLI release to Homebrew and Scoop
     - download the binaries built by GitHub actions on the latest commit: https://github.com/tristan852/kite/actions/workflows/graalvm-native.yml
