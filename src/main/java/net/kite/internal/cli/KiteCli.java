@@ -45,7 +45,7 @@ public final class KiteCli {
 				case HELP_PROGRAM_ARGUMENT -> {
 					
 					String messagePattern = """
-						%s v%s
+						%s v%s (%s)
 						
 						Usage:
 						  kite [arguments]
@@ -70,7 +70,8 @@ public final class KiteCli {
 					
 					String name = Kite.getName();
 					String version = Kite.getVersion();
-					System.out.printf(messagePattern, name, version);
+					String buildCommit = Kite.getBuildCommit();
+					System.out.printf(messagePattern, name, version, buildCommit);
 					
 					return;
 				}
@@ -158,6 +159,7 @@ public final class KiteCli {
 		
 		String name = Kite.getName();
 		String version = Kite.getVersion();
+		String buildCommit = Kite.getBuildCommit();
 		String author = Kite.getAuthor();
 		
 		String s = AnsiUtil.boldBrightYellowAnsi(String.format("%s v%s", name, version));
@@ -166,7 +168,7 @@ public final class KiteCli {
 		
 		if(quiet) {
 			
-			System.out.printf("%s by %s%n", s, author);
+			System.out.printf("%s (%s) by %s%n", s, buildCommit, author);
 			
 		} else {
 			
@@ -181,8 +183,9 @@ public final class KiteCli {
 			runtime.addShutdownHook(shutdownThread);
 			
 			String message = String.format(
-					" __  __    __    ______   ______   %n/\\ \\/ /   /\\ \\  /\\__  _\\ /\\  ___\\  %n\\ \\  _\"-. \\ \\ \\ \\/_/\\ \\/ \\ \\  __\\  %n \\ \\_\\ \\_\\ \\ \\_\\   \\ \\_\\  \\ \\_____\\%n  \\/_/\\/_/  \\/_/    \\/_/   \\/_____/%n%n%s by %s%n",
+					" __  __    __    ______   ______   %n/\\ \\/ /   /\\ \\  /\\__  _\\ /\\  ___\\  %n\\ \\  _\"-. \\ \\ \\ \\/_/\\ \\/ \\ \\  __\\  %n \\ \\_\\ \\_\\ \\ \\_\\   \\ \\_\\  \\ \\_____\\%n  \\/_/\\/_/  \\/_/    \\/_/   \\/_____/%n%n%s (%s) by %s%n",
 					s,
+					buildCommit,
 					author
 			);
 			
