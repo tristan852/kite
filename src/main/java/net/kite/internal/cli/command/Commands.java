@@ -8,6 +8,7 @@ import java.util.Map;
 public final class Commands {
 	
 	public static final Command HELP = new HelpCommand();
+	public static final Command VERSION = new VersionCommand();
 	public static final Command SKILL_LEVELS = new SkillLevelsCommand();
 	public static final Command EXIT = new ExitCommand();
 	public static final Command SEED = new SeedCommand();
@@ -49,6 +50,7 @@ public final class Commands {
 	
 	public static final Command[] COMMANDS = new Command[] {
 			HELP,
+			VERSION,
 			SKILL_LEVELS,
 			EXIT,
 			SEED,
@@ -92,6 +94,7 @@ public final class Commands {
 	public static final Command[][] CATEGORIZED_COMMANDS = new Command[][] {
 			{
 					HELP,
+					VERSION,
 					SKILL_LEVELS,
 					EXIT,
 					SEED,
