@@ -1,5 +1,4 @@
 import org.teavm.gradle.api.OptimizationLevel
-import java.io.ByteArrayOutputStream
 
 plugins {
     id("java")
@@ -55,24 +54,18 @@ tasks.register<Copy>("copyDemoAssetFiles") {
     into("build/war-unpacked")
 }
 
-val gitCommit: String by lazy {
-    try {
-        val stdout = ByteArrayOutputStream()
-        providers.exec {
-            commandLine("git", "rev-parse", "--short", "HEAD")
-            standardOutput = stdout
-        }
-        stdout.toString().trim()
-    } catch(_: Exception) {
-        "unknown"
-    }
-}
-
 tasks.processResources {
-    inputs.property("gitCommit", gitCommit)
-
-    filesMatching("build.properties") {
-        expand(mapOf("gitCommit" to gitCommit))
+    doLast {
+        val gitCommit = providers.exec {
+            commandLine("git", "rev-parse", "--short", "HEAD")
+        }.standardOutput.asText.getOrElse("unknown")
+        
+        val file = destinationDir.resolve("build.properties")
+        if(file.exists()) {
+            
+            val text = file.readText().replace("\${gitCommit}", gitCommit)
+            file.writeText(text)
+        }
     }
 }
 
