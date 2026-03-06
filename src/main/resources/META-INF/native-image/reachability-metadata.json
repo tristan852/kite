@@ -20,6 +20,9 @@
     },
     {
       "glob": "benchmarks/opening_hard.txt"
+    },
+    {
+      "glob": "build.properties"
     }
   ]
 }

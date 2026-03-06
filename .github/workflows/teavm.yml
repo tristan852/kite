@@ -66,6 +66,7 @@ jobs:
 
           mkdir -p build/deploy/kite_resources/board_score_caches
           cp -r build/war-unpacked/WEB-INF/classes/board_score_caches/* build/deploy/kite_resources/board_score_caches/
+          cp -r build/war-unpacked/WEB-INF/classes/build.properties build/deploy/kite_resources/build.properties
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
