@@ -295,6 +295,12 @@ public final class KiteDemo {
 			"right", "0"
 	};
 	
+	private static final String[] AUDIO_SETTING_ELEMENT_STYLES = new String[] {
+			"position", "fixed",
+			"margin", "2.5dvh 2.5dvw",
+			"padding", "6px"
+	};
+	
 	private static final String APP_ELEMENT_CLASS_NAME = "app";
 	private static final String SIDEBAR_ELEMENT_CLASS_NAME = "sidebar";
 	private static final String CONTROLS_ELEMENT_CLASS_NAME = "controls";
@@ -880,6 +886,11 @@ public final class KiteDemo {
 		
 		appElement.appendChild(sidebarElement);
 		appElement.appendChild(boardAndLabelsElement);
+		
+		HTMLElement audioSettingElement = createImageElement(GITHUB_LOGO_ELEMENT_SOURCE_PATH, GITHUB_LOGO_ELEMENT_ALTERNATIVE_TEXT, GITHUB_LOGO_ELEMENT_SIZE);
+		setElementStyles(audioSettingElement, AUDIO_SETTING_ELEMENT_STYLES);
+		
+		appElement.appendChild(audioSettingElement);
 		
 		int perfectIndex = SkillLevel.PERFECT.ordinal();
 		
