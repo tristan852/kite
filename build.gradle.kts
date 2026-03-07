@@ -51,7 +51,7 @@ tasks.named("build") {
 
 tasks.register<Copy>("copyDemoAssetFiles") {
     from("assets/demo/")
-    into("build/war-unpacked")
+    into("build/war-unpacked/assets")
 }
 
 tasks.processResources {

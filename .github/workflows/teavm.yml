@@ -61,7 +61,7 @@ jobs:
           # Create output folder
           mkdir -p build/deploy
 
-          cp build/war-unpacked/index.html build/deploy/
+          cp -r build/war-unpacked/assets/* build/deploy/
           cp -r build/war-unpacked/wasm-gc/* build/deploy/
 
           mkdir -p build/deploy/kite_resources/board_score_caches
