@@ -7,10 +7,7 @@ import net.kite.api.board.outcome.BoardOutcome;
 import net.kite.api.skill.level.SkillLevel;
 import net.kite.internal.board.score.cache.opening.OpeningBoardScoreCaches;
 import org.teavm.jso.ajax.XMLHttpRequest;
-import org.teavm.jso.browser.History;
-import org.teavm.jso.browser.Location;
-import org.teavm.jso.browser.TimerHandler;
-import org.teavm.jso.browser.Window;
+import org.teavm.jso.browser.*;
 import org.teavm.jso.dom.css.CSSStyleDeclaration;
 import org.teavm.jso.dom.css.ElementCSSInlineStyle;
 import org.teavm.jso.dom.events.KeyboardEvent;
@@ -47,6 +44,12 @@ public final class KiteDemo {
 	private static final char SMALLEST_LOCATION_SEARCH_MOVE = '1';
 	private static final String RED_LOCATION_SEARCH_AI_COLOR = "red";
 	private static final String YELLOW_LOCATION_SEARCH_AI_COLOR = "yellow";
+	
+	private static final String AUDIO_SETTING_LOCAL_STORAGE_ITEM_NAME = "volume";
+	
+	private static final float[] VOLUME_LEVELS = new float[] {
+			0.0f, 1.0f
+	};
 	
 	private static final SkillLevel[] ORDERED_AI_SKILL_LEVELS = SkillLevel.values();
 	
@@ -443,6 +446,8 @@ public final class KiteDemo {
 	
 	private int cellAnalysisX = Integer.MIN_VALUE;
 	private int cellAnalysisY;
+	
+	private int volumeLevel;
 	
 	public KiteDemo() {
 		this.redAtTurn = true;
@@ -889,6 +894,26 @@ public final class KiteDemo {
 		
 		HTMLElement audioSettingElement = createImageElement(GITHUB_LOGO_ELEMENT_SOURCE_PATH, GITHUB_LOGO_ELEMENT_ALTERNATIVE_TEXT, GITHUB_LOGO_ELEMENT_SIZE);
 		setElementStyles(audioSettingElement, AUDIO_SETTING_ELEMENT_STYLES);
+		
+		Storage localStorage = WINDOW.getLocalStorage();
+		
+		String s = localStorage.getItem(AUDIO_SETTING_LOCAL_STORAGE_ITEM_NAME);
+		if(s != null) {
+			
+			volumeLevel = Integer.parseInt(s);
+			moveAudioElement.setVolume(VOLUME_LEVELS[volumeLevel]);
+		}
+		
+		audioSettingElement.onClick((mouseEvent) -> {
+			
+			volumeLevel++;
+			if(volumeLevel == VOLUME_LEVELS.length) volumeLevel = 0;
+			
+			moveAudioElement.setVolume(VOLUME_LEVELS[volumeLevel]);
+			
+			if(volumeLevel == 0) localStorage.removeItem(AUDIO_SETTING_LOCAL_STORAGE_ITEM_NAME);
+			else localStorage.setItem(AUDIO_SETTING_LOCAL_STORAGE_ITEM_NAME, String.valueOf(volumeLevel));
+		});
 		
 		appElement.appendChild(audioSettingElement);
 		
