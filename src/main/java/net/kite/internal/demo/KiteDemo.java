@@ -48,7 +48,7 @@ public final class KiteDemo {
 	private static final String AUDIO_SETTING_LOCAL_STORAGE_ITEM_NAME = "volume";
 	
 	private static final float[] VOLUME_LEVELS = new float[] {
-			0.0f, 1.0f
+			1.0f, 0.0f, 0.3f
 	};
 	
 	private static final SkillLevel[] ORDERED_AI_SKILL_LEVELS = SkillLevel.values();
@@ -319,10 +319,19 @@ public final class KiteDemo {
 	private static final String LOGO_ELEMENT_ALTERNATIVE_TEXT = "The Kite logo";
 	private static final int LOGO_ELEMENT_SIZE = 120;
 	
-	private static final String GITHUB_LOGO_ELEMENT_SOURCE_PATH = "https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/socials/github.svg";
+	private static final String GITHUB_LOGO_ELEMENT_SOURCE_PATH = "images/github.svg";
 	private static final String GITHUB_LOGO_ELEMENT_ALTERNATIVE_TEXT = "The GitHub logo";
 	private static final int GITHUB_LOGO_ELEMENT_SIZE = 50;
 	private static final String GITHUB_LOGO_ELEMENT_TARGET_PATH = "https://github.com/tristan852/kite";
+	
+	private static final String[] AUDIO_SETTING_ELEMENT_SOURCE_PATHS = new String[] {
+			"images/volume_full.svg",
+			"images/volume_mute.svg",
+			"images/volume_low.svg"
+	};
+	
+	private static final String AUDIO_SETTING_ELEMENT_ALTERNATIVE_TEXT = "Volume control";
+	private static final int AUDIO_SETTING_ELEMENT_SIZE = 30;
 	
 	private static final String VERSION_ELEMENT_TEXT_FORMAT = "v%s";
 	private static final String FIRST_MODE_BUTTON_ELEMENT_TEXT = "Analysis";
@@ -892,9 +901,6 @@ public final class KiteDemo {
 		appElement.appendChild(sidebarElement);
 		appElement.appendChild(boardAndLabelsElement);
 		
-		HTMLElement audioSettingElement = createImageElement(GITHUB_LOGO_ELEMENT_SOURCE_PATH, GITHUB_LOGO_ELEMENT_ALTERNATIVE_TEXT, GITHUB_LOGO_ELEMENT_SIZE);
-		setElementStyles(audioSettingElement, AUDIO_SETTING_ELEMENT_STYLES);
-		
 		Storage localStorage = WINDOW.getLocalStorage();
 		
 		String s = localStorage.getItem(AUDIO_SETTING_LOCAL_STORAGE_ITEM_NAME);
@@ -904,12 +910,17 @@ public final class KiteDemo {
 			moveAudioElement.setVolume(VOLUME_LEVELS[volumeLevel]);
 		}
 		
+		HTMLElement audioSettingElement = createImageElement(AUDIO_SETTING_ELEMENT_SOURCE_PATHS[volumeLevel], AUDIO_SETTING_ELEMENT_ALTERNATIVE_TEXT, AUDIO_SETTING_ELEMENT_SIZE);
+		setElementStyles(audioSettingElement, AUDIO_SETTING_ELEMENT_STYLES);
+		
 		audioSettingElement.onClick((mouseEvent) -> {
 			
 			volumeLevel++;
 			if(volumeLevel == VOLUME_LEVELS.length) volumeLevel = 0;
 			
 			moveAudioElement.setVolume(VOLUME_LEVELS[volumeLevel]);
+			
+			((HTMLImageElement) audioSettingElement).setSrc(AUDIO_SETTING_ELEMENT_SOURCE_PATHS[volumeLevel]);
 			
 			if(volumeLevel == 0) localStorage.removeItem(AUDIO_SETTING_LOCAL_STORAGE_ITEM_NAME);
 			else localStorage.setItem(AUDIO_SETTING_LOCAL_STORAGE_ITEM_NAME, String.valueOf(volumeLevel));
