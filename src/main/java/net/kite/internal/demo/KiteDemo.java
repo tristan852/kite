@@ -319,15 +319,15 @@ public final class KiteDemo {
 	private static final String LOGO_ELEMENT_ALTERNATIVE_TEXT = "The Kite logo";
 	private static final int LOGO_ELEMENT_SIZE = 120;
 	
-	private static final String GITHUB_LOGO_ELEMENT_SOURCE_PATH = "images/github.svg";
+	private static final String GITHUB_LOGO_ELEMENT_SOURCE_PATH = "images/icons/github.svg";
 	private static final String GITHUB_LOGO_ELEMENT_ALTERNATIVE_TEXT = "The GitHub logo";
 	private static final int GITHUB_LOGO_ELEMENT_SIZE = 50;
 	private static final String GITHUB_LOGO_ELEMENT_TARGET_PATH = "https://github.com/tristan852/kite";
 	
 	private static final String[] AUDIO_SETTING_ELEMENT_SOURCE_PATHS = new String[] {
-			"images/volume_full.svg",
-			"images/volume_mute.svg",
-			"images/volume_low.svg"
+			"images/icons/volume_full.svg",
+			"images/icons/volume_mute.svg",
+			"images/icons/volume_low.svg"
 	};
 	
 	private static final String AUDIO_SETTING_ELEMENT_ALTERNATIVE_TEXT = "Volume control";
