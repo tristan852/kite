@@ -300,6 +300,8 @@ public final class KiteDemo {
 	
 	private static final String[] AUDIO_SETTING_ELEMENT_STYLES = new String[] {
 			"position", "fixed",
+			"bottom", "0",
+			"right", "0",
 			"margin", "2.5dvh 2.5dvw",
 			"padding", "6px"
 	};
