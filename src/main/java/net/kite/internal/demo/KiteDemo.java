@@ -69,6 +69,7 @@ public final class KiteDemo {
 	private static final String BUTTON_ELEMENT_TYPE = "button";
 	private static final String SELECT_ELEMENT_TYPE = "select";
 	private static final String OPTION_ELEMENT_TYPE = "option";
+	private static final String AUDIO_ELEMENT_TYPE = "audio";
 	
 	private static final String LOADING_MESSAGE_ELEMENT_ID = "loading-message";
 	
@@ -382,6 +383,8 @@ public final class KiteDemo {
 	private static final String REQUEST_RESPONSE_TYPE = "arraybuffer";
 	private static final String REQUEST_URL = "kite_resources/board_score_caches/opening.cfc";
 	
+	private static final String MOVE_SOUND_URL = "sounds/move.mp3";
+	
 	private static final int SUCCESSFUL_REQUEST_STATUS = 200;
 	
 	private static final Window WINDOW = Window.current();
@@ -418,6 +421,8 @@ public final class KiteDemo {
 	private final HTMLElement[] cellLabelElements = new HTMLElement[BOARD_WIDTH];
 	
 	private HTMLElement winnerLabelElement;
+	
+	private HTMLAudioElement moveAudioElement;
 	
 	private String currentLoadingMessage;
 	
@@ -1005,6 +1010,9 @@ public final class KiteDemo {
 			}
 		}
 		
+		moveAudioElement = (HTMLAudioElement) DOCUMENT.createElement(AUDIO_ELEMENT_TYPE);
+		moveAudioElement.setSrc(MOVE_SOUND_URL);
+		
 		bodyElement.appendChild(appElement);
 	}
 	
@@ -1228,6 +1236,8 @@ public final class KiteDemo {
 		
 		solver.playMove(moveX + 1);
 		setCellElementBackgroundColor(moveX, moveY, i, true);
+		
+		if(!initial) moveAudioElement.play();
 		
 		BoardOutcome outcome = solver.gameOutcome();
 		if(outcome.isWin()) showWinLines();
