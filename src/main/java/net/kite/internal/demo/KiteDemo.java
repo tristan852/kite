@@ -177,9 +177,9 @@ public final class KiteDemo {
 	
 	private static final String[] WINNER_LABEL_ELEMENT_STYLES = new String[] {
 			"text-align", "center",
+			"font-size", "calc(min(80dvw / 436 * 24, 24px))",
 			"font-style", "italic",
-			"font-weight", "bold",
-			"font-size", "24px"
+			"font-weight", "bold"
 	};
 	
 	private static final String[] CELL_ELEMENT_STYLES = new String[] {
@@ -240,6 +240,7 @@ public final class KiteDemo {
 	private static final String[] CELL_EVALUATION_TEXT_ELEMENT_STYLES = new String[] {
 			"line-height", "0",
 			"color", "#FFFFFF",
+			"font-size", "calc(min(80dvw / 436 * 16, 16px))",
 			"font-weight", "bold"
 	};
 	
@@ -265,6 +266,7 @@ public final class KiteDemo {
 	private static final String[] CELL_LABEL_ELEMENT_STYLES = new String[] {
 			"width", "calc(min(80dvw / 436 * 56, 56px))",
 			"text-align", "center",
+			"font-size", "calc(min(80dvw / 436 * 16, 16px))",
 			"font-weight", "bold"
 	};
 	
