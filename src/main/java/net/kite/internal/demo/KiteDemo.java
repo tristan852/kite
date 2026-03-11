@@ -18,6 +18,7 @@ import org.teavm.jso.dom.xml.Node;
 import org.teavm.jso.typedarrays.ArrayBuffer;
 import org.teavm.jso.typedarrays.Int8Array;
 
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -56,9 +57,8 @@ public final class KiteDemo {
 	private static final String POSITIVE_MOVE_SCORE_FORMAT_PREFIX = "+";
 	
 	private static final int OPENING_SCORE_CACHE_SIZE_IN_BYTES = 33554518;
-	private static final int OPENING_SCORE_CACHE_HALF_SIZE_IN_BYTES = 16777259;
 	private static final float OPENING_SCORE_CACHE_SIZE_IN_MEGABYTES = 33.6f;
-	private static final int MAXIMAL_LOADING_PROGRESS = 100;
+	private static final float MAXIMAL_LOADING_PROGRESS = 100.0f;
 	
 	private static final float MEGABYTE_IN_BYTES = 1000000.0f;
 	private static final float MEGABYTE_FORMAT_PRECISION = 10.0f;
@@ -75,6 +75,8 @@ public final class KiteDemo {
 	private static final String AUDIO_ELEMENT_TYPE = "audio";
 	
 	private static final String LOADING_MESSAGE_ELEMENT_ID = "loading-message";
+	private static final String LOADING_BAR_ELEMENT_ID = "loading-bar";
+	private static final String LOADING_BAR_PROGRESS_ELEMENT_ID = "loading-bar-progress";
 	
 	private static final String SVG_ELEMENT_NAMESPACE = "http://www.w3.org/2000/svg";
 	
@@ -308,6 +310,17 @@ public final class KiteDemo {
 			"padding", "6px"
 	};
 	
+	private static final String[] LOADING_BAR_ERROR_ELEMENT_STYLES = new String[] {
+			"background-color", "#9F0712"
+	};
+	
+	private static final String[] LOADING_BAR_PROGRESS_ERROR_ELEMENT_STYLES = new String[] {
+			"background-color", "#FFA2A2"
+	};
+	
+	private static final String WIDTH_ELEMENT_STYLE_KEY = "width";
+	private static final String WIDTH_ELEMENT_STYLE_VALUE_FORMAT = "%.6f%%";
+	
 	private static final String APP_ELEMENT_CLASS_NAME = "app";
 	private static final String SIDEBAR_ELEMENT_CLASS_NAME = "sidebar";
 	private static final String CONTROLS_ELEMENT_CLASS_NAME = "controls";
@@ -423,6 +436,8 @@ public final class KiteDemo {
 	private MoveAnalysis lastMoveAnalysis;
 	
 	private HTMLElement loadingMessageElement;
+	private HTMLElement loadingBarElement;
+	private HTMLElement loadingBarProgressElement;
 	
 	private HTMLButtonElement undoButtonElement;
 	private HTMLButtonElement redoButtonElement;
@@ -447,6 +462,7 @@ public final class KiteDemo {
 	private HTMLAudioElement moveAudioElement;
 	
 	private String currentLoadingMessage;
+	private String currentLoadingProgress;
 	
 	private Kite solver;
 	
@@ -468,6 +484,8 @@ public final class KiteDemo {
 	
 	public void onStart() {
 		loadingMessageElement = DOCUMENT.getElementById(LOADING_MESSAGE_ELEMENT_ID);
+		loadingBarElement = DOCUMENT.getElementById(LOADING_BAR_ELEMENT_ID);
+		loadingBarProgressElement = DOCUMENT.getElementById(LOADING_BAR_PROGRESS_ELEMENT_ID);
 		
 		XMLHttpRequest request = new XMLHttpRequest();
 		
@@ -479,7 +497,7 @@ public final class KiteDemo {
 			int requestStatus = request.getStatus();
 			if(requestStatus == SUCCESSFUL_REQUEST_STATUS) {
 				
-				updateLoadProgress(MAXIMAL_LOADING_PROGRESS, OPENING_SCORE_CACHE_SIZE_IN_BYTES);
+				updateLoadingProgress(MAXIMAL_LOADING_PROGRESS, OPENING_SCORE_CACHE_SIZE_IN_BYTES);
 				
 				ArrayBuffer arrayBuffer = (ArrayBuffer) request.getResponse();
 				Int8Array array = new Int8Array(arrayBuffer);
@@ -521,31 +539,43 @@ public final class KiteDemo {
 	
 	private void onLoadError() {
 		System.err.println("An error occurred while loading the opening score cache!");
-		updateLoadingMessage("Error while loading Kite solver!");
+		updateLoadingProgress("Error while loading Kite solver!", -1);
+		
+		setElementStyles(loadingBarElement, LOADING_BAR_ERROR_ELEMENT_STYLES);
+		setElementStyles(loadingBarProgressElement, LOADING_BAR_PROGRESS_ERROR_ELEMENT_STYLES);
 	}
 	
 	private void computeAndUpdateLoadProgress(int loadedBytes) {
 		if(loadedBytes < 0) loadedBytes = 0;
 		else if(loadedBytes > OPENING_SCORE_CACHE_SIZE_IN_BYTES) loadedBytes = OPENING_SCORE_CACHE_SIZE_IN_BYTES;
 		
-		int progress = (int) (((long) loadedBytes * MAXIMAL_LOADING_PROGRESS + OPENING_SCORE_CACHE_HALF_SIZE_IN_BYTES) / OPENING_SCORE_CACHE_SIZE_IN_BYTES);
-		updateLoadProgress(progress, loadedBytes);
+		float progress = (float) loadedBytes / OPENING_SCORE_CACHE_SIZE_IN_BYTES;
+		updateLoadingProgress(progress, loadedBytes);
 	}
 	
-	private void updateLoadProgress(int progress, int loadedBytes) {
+	private void updateLoadingProgress(float progress, int loadedBytes) {
 		float loadedMB = loadedBytes / MEGABYTE_IN_BYTES;
 		loadedMB = Math.round(loadedMB * MEGABYTE_FORMAT_PRECISION) / MEGABYTE_FORMAT_PRECISION;
 		
-		String message = "Loading Kite solver... " + progress + "% (" + loadedMB + " MB / " + OPENING_SCORE_CACHE_SIZE_IN_MEGABYTES + " MB)";
-		
-		updateLoadingMessage(message);
+		String message = "Loading Kite solver... (" + loadedMB + " MB / " + OPENING_SCORE_CACHE_SIZE_IN_MEGABYTES + " MB)";
+		updateLoadingProgress(message, progress);
 	}
 	
-	private void updateLoadingMessage(String message) {
-		if(message.equals(currentLoadingMessage)) return;
+	private void updateLoadingProgress(String message, float progress) {
+		if(!message.equals(currentLoadingMessage)) {
+			
+			currentLoadingMessage = message;
+			loadingMessageElement.setInnerText(message);
+		}
 		
-		currentLoadingMessage = message;
-		loadingMessageElement.setInnerText(message);
+		if(progress < 0) return;
+		
+		String s = String.format(Locale.ROOT, WIDTH_ELEMENT_STYLE_VALUE_FORMAT, progress);
+		if(!s.equals(currentLoadingProgress)) {
+			
+			currentLoadingProgress = s;
+			setElementStyles(loadingBarProgressElement, WIDTH_ELEMENT_STYLE_KEY, s);
+		}
 	}
 	
 	private void buildApp() {
