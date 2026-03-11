@@ -550,6 +550,8 @@ public final class KiteDemo {
 		else if(loadedBytes > OPENING_SCORE_CACHE_SIZE_IN_BYTES) loadedBytes = OPENING_SCORE_CACHE_SIZE_IN_BYTES;
 		
 		float progress = (float) loadedBytes / OPENING_SCORE_CACHE_SIZE_IN_BYTES;
+		progress *= MAXIMAL_LOADING_PROGRESS;
+		
 		updateLoadingProgress(progress, loadedBytes);
 	}
 	
