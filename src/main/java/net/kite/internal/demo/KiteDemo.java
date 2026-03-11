@@ -534,9 +534,7 @@ public final class KiteDemo {
 			onLoadError();
 		});
 		
-		// request.send();
-		updateLoadingProgress("test", 50.0f);
-		onLoadError();
+		request.send();
 	}
 	
 	private void onLoadError() {
