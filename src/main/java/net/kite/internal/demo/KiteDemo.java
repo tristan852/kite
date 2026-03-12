@@ -1320,12 +1320,7 @@ public final class KiteDemo {
 		solver.playMove(moveX + 1);
 		setCellElementBackgroundColor(moveX, moveY, i, true);
 		
-		if(!initial) {
-			
-			moveAudioElement.pause();
-			moveAudioElement.setCurrentTime(0.0);
-			moveAudioElement.play();
-		}
+		if(!initial) moveAudioElement.play();
 		
 		BoardOutcome outcome = solver.gameOutcome();
 		if(outcome.isWin()) showWinLines();
