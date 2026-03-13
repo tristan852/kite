@@ -942,6 +942,8 @@ public final class KiteDemo {
 		String s = localStorage.getItem(AUDIO_SETTING_LOCAL_STORAGE_ITEM_NAME);
 		if(s != null) {
 			
+			System.out.println("found in ls: " + s);
+			System.out.println(moveAudioElement);
 			volumeLevel = Integer.parseInt(s);
 			moveAudioElement.setVolume(VOLUME_LEVELS[volumeLevel]);
 		}
