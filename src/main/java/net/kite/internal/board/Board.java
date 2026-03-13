@@ -1607,8 +1607,10 @@ public final class Board {
 		
 		int scoreLoss = scoreBefore - scoreAfter;
 		boolean scoreDroppedALot = scoreLoss > 3;
+		if(scoreDroppedALot) return MoveAnalysis.MoveQuality.BLUNDER;
 		
-		return scoreDroppedALot ? MoveAnalysis.MoveQuality.BLUNDER : MoveAnalysis.MoveQuality.MISTAKE;
+		int movesLeft = BoardEvaluation.gameOverInTotalMoves(-scoreAfter, movesDoneAfterMove);
+		return movesLeft > 3 ? MoveAnalysis.MoveQuality.MISTAKE : MoveAnalysis.MoveQuality.BLUNDER;
 	}
 	
 	private static float approximateElo(float averageScoreLoss) {
