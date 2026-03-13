@@ -1095,8 +1095,6 @@ public final class Board {
 				return s;
 			}
 			
-			if(s > minimalScore) minimalScore = s;
-			
 			scoreCache.updateEntry(mixedHash, minScore, minimalScore);
 			
 			return minimalScore;
@@ -1161,11 +1159,6 @@ public final class Board {
 				
 				scoreCache.updateEntry(mixedHash, s, maxScore);
 				return s;
-			}
-			
-			if(s > minimalScore) {
-				
-				minimalScore = s;
 			}
 			
 			i++;
