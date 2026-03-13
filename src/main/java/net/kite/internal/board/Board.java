@@ -919,7 +919,7 @@ public final class Board {
 			
 			int score = (minimalScore + maximalScore) >> 1;
 			
-			int evaluationResult = evaluateWithNoImmediateWin(score, score + 1);
+			int evaluationResult = evaluateWithNoImmediateWin(score);
 			if(evaluationResult <= score) {
 				
 				maximalScore = evaluationResult;
@@ -942,13 +942,14 @@ public final class Board {
 	}
 	
 	// only interested in scores in between min and max (excluding min and max tho)
-	private int evaluateWithNoImmediateWin(int minimalScore, int maximalScore) {
+	// maximalScore is implicitly defined by minimalScore + 1
+	private int evaluateWithNoImmediateWin(int minimalScore) {
 		nodeEvaluationAmount++;
 		
 		int minScore = BoardScore.minimal(filledCellAmount);
 		int maxScore = BoardScore.maximalWithNoImmediateWin(filledCellAmount);
 		
-		if(maximalScore > 0) {
+		if(minimalScore >= 0) {
 			
 			long emptyCells = Bitboards.FULL_BOARD ^ maskBitboard;
 			
@@ -990,10 +991,8 @@ public final class Board {
 			}
 		}
 		
-		if(minScore > minimalScore) minimalScore = minScore;
-		if(maxScore < maximalScore) maximalScore = maxScore;
-		
-		if(minimalScore >= maximalScore) return minimalScore;
+		if(minScore > minimalScore) return minScore;
+		if(maxScore <= minimalScore) return minimalScore;
 		
 		if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
 			
@@ -1009,10 +1008,8 @@ public final class Board {
 			int entryMinScore = scoreCache.entryMinimalScore(entryKey);
 			int entryMaxScore = scoreCache.entryMaximalScore(entryKey);
 			
-			if(entryMinScore > minimalScore) minimalScore = entryMinScore;
-			if(entryMaxScore < maximalScore) maximalScore = entryMaxScore;
-			
-			if(minimalScore >= maximalScore) return minimalScore;
+			if(entryMinScore > minimalScore) return entryMinScore;
+			if(entryMaxScore <= minimalScore) return minimalScore;
 		}
 		
 		if(filledCellAmount > MINIMAL_CHILD_CACHE_LOOKUP_DEPTH) {
@@ -1038,11 +1035,7 @@ public final class Board {
 				if(entryKey >= 0) {
 					
 					int entryMinScore = -scoreCache.entryMaximalScore(entryKey);
-					if(entryMinScore > minimalScore) {
-						
-						minimalScore = entryMinScore;
-						if(minimalScore >= maximalScore) return minimalScore;
-					}
+					if(entryMinScore > minimalScore) return entryMinScore;
 					
 					int entryMaxScore = -scoreCache.entryMinimalScore(entryKey);
 					if(entryMaxScore > max) max = entryMaxScore;
@@ -1053,12 +1046,7 @@ public final class Board {
 				}
 			}
 			
-			if(max < maximalScore) {
-				
-				maximalScore = max;
-				
-				if(minimalScore >= maximalScore) return minimalScore;
-			}
+			if(max <= minimalScore) return minimalScore;
 		}
 		
 		long opponentThreatsBitboard = bitboardConnectionOpportunities(activeBitboard ^ maskBitboard) & (~maskBitboard);
@@ -1085,11 +1073,11 @@ public final class Board {
 			
 			playMove(forcedX);
 			
-			int s = -evaluateWithNoImmediateWin(-maximalScore, -minimalScore);
+			int s = -evaluateWithNoImmediateWin(-minimalScore - 1);
 			
 			undoMove();
 			
-			if(s >= maximalScore) {
+			if(s > minimalScore) {
 				
 				scoreCache.updateEntry(mixedHash, s, maxScore);
 				return s;
@@ -1151,11 +1139,11 @@ public final class Board {
 			
 			playMove(moveCellX);
 			
-			int s = -evaluateWithNoImmediateWin(-maximalScore, -minimalScore);
+			int s = -evaluateWithNoImmediateWin(-minimalScore - 1);
 			
 			undoMove();
 			
-			if(s >= maximalScore) {
+			if(s > minimalScore) {
 				
 				scoreCache.updateEntry(mixedHash, s, maxScore);
 				return s;
