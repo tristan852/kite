@@ -1120,7 +1120,7 @@ public final class Board {
 			movesBitboard ^= moveBitboard;
 			
 			int moveScore = moveScore(movePosition, moveBitboard, opponentThreatsBitboard);
-			if(moveScore == INFINITE_MOVE_SCORE) return maximalScore;
+			if(moveScore == INFINITE_MOVE_SCORE) return maxScore;
 			
 			moves[moveIndex] = moveCellX;
 			moveScores[moveIndex] = moveScore;
