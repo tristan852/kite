@@ -937,13 +937,14 @@ public final class KiteDemo {
 		appElement.appendChild(sidebarElement);
 		appElement.appendChild(boardAndLabelsElement);
 		
+		moveAudioElement = (HTMLAudioElement) DOCUMENT.createElement(AUDIO_ELEMENT_TYPE);
+		moveAudioElement.setSrc(MOVE_SOUND_URL);
+		
 		Storage localStorage = WINDOW.getLocalStorage();
 		
 		String s = localStorage.getItem(AUDIO_SETTING_LOCAL_STORAGE_ITEM_NAME);
 		if(s != null) {
 			
-			System.out.println("found in ls: " + s);
-			System.out.println(moveAudioElement);
 			volumeLevel = Integer.parseInt(s);
 			moveAudioElement.setVolume(VOLUME_LEVELS[volumeLevel]);
 		}
@@ -1094,9 +1095,6 @@ public final class KiteDemo {
 				updateCellLabelElements();
 			}
 		}
-		
-		moveAudioElement = (HTMLAudioElement) DOCUMENT.createElement(AUDIO_ELEMENT_TYPE);
-		moveAudioElement.setSrc(MOVE_SOUND_URL);
 		
 		bodyElement.appendChild(appElement);
 	}
