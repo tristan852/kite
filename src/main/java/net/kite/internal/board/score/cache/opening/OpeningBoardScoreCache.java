@@ -98,15 +98,12 @@ public final class OpeningBoardScoreCache {
 	public int boardScore(long boardColumnHash) {
 		int index = (int) Long.remainderUnsigned(boardColumnHash, CAPACITY);
 		
-		byte boardScore = boardScores[index];
-		if(boardScore == BoardScore.INVALID) return Integer.MIN_VALUE;
-		
 		long partialColumnHash = boardPartialColumnHashes[index];
 		
 		boardColumnHash &= BOARD_PARTIAL_COLUMN_HASH_MASK;
 		partialColumnHash &= BOARD_PARTIAL_COLUMN_HASH_MASK;
 		
-		return boardColumnHash == partialColumnHash ? boardScore : Integer.MIN_VALUE;
+		return boardColumnHash == partialColumnHash ? boardScores[index] : Integer.MIN_VALUE;
 	}
 	
 }
