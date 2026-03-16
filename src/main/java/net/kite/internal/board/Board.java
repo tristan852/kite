@@ -105,6 +105,8 @@ public final class Board {
 	
 	private static final int OPENING_SCORE_CACHE_MAXIMAL_DEPTH = 14;
 	
+	private static final int SCORE_BOUND_WEIGHT_INCREMENT = 5;
+	
 	private static final float[] FIRST_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
 			-1.480893f,  7.600903f
 	};
@@ -914,19 +916,29 @@ public final class Board {
 			if(entryMaxScore < maximalScore) maximalScore = entryMaxScore;
 		}
 		
+		int minimalScoreWeight = 1;
+		int maximalScoreWeight = 1;
+		
 		int n = nodeEvaluationAmount;
 		while(minimalScore < maximalScore) {
 			
-			int score = (minimalScore + maximalScore) >> 1;
+			int score = minimalScore * minimalScoreWeight + maximalScore * maximalScoreWeight;
+			score = Math.floorDiv(score, minimalScoreWeight + maximalScoreWeight);
 			
 			int evaluationResult = evaluateWithNoImmediateWin(score);
 			if(evaluationResult <= score) {
 				
 				maximalScore = evaluationResult;
 				
+				minimalScoreWeight += SCORE_BOUND_WEIGHT_INCREMENT;
+				maximalScoreWeight = 1;
+				
 			} else {
 				
 				minimalScore = evaluationResult;
+				
+				minimalScoreWeight = 1;
+				maximalScoreWeight += SCORE_BOUND_WEIGHT_INCREMENT;
 			}
 		}
 		
