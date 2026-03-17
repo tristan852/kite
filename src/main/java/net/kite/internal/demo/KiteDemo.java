@@ -56,8 +56,8 @@ public final class KiteDemo {
 	
 	private static final String POSITIVE_MOVE_SCORE_FORMAT_PREFIX = "+";
 	
-	private static final int OPENING_SCORE_CACHE_SIZE_IN_BYTES = 26622063;
-	private static final float OPENING_SCORE_CACHE_SIZE_IN_MEGABYTES = 26.6f;
+	private static final int OPENING_SCORE_CACHE_SIZE_IN_BYTES = 33554518;
+	private static final float OPENING_SCORE_CACHE_SIZE_IN_MEGABYTES = 33.6f;
 	private static final float MAXIMAL_LOADING_PROGRESS = 100.0f;
 	
 	private static final float MEGABYTE_IN_BYTES = 1000000.0f;

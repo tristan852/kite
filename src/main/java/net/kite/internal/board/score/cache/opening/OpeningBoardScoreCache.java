@@ -3,18 +3,16 @@ package net.kite.internal.board.score.cache.opening;
 import net.kite.internal.board.score.BoardScore;
 import net.kite.internal.board.score.cache.BoardScoreCache;
 
-import java.io.*;
-import java.util.zip.Deflater;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.InflaterInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public final class OpeningBoardScoreCache {
 	
 	private static final int CAPACITY = 16777259;
 	
 	private static final long BOARD_PARTIAL_COLUMN_HASH_MASK = 0x00000000000000FFL;
-	
-	private static final int SAVE_TO_FILE_BUFFER_SIZE = 131072;
 	
 	private final byte[] boardPartialColumnHashes;
 	private final byte[] boardScores;
@@ -33,8 +31,21 @@ public final class OpeningBoardScoreCache {
 			return;
 		}
 		
-		inputStream = new BufferedInputStream(inputStream);
-		loadFromStream(inputStream);
+		try(inputStream) {
+			
+			inputStream.readNBytes(boardPartialColumnHashes, 0, CAPACITY);
+			inputStream.readNBytes(boardScores, 0, CAPACITY);
+			
+			for(int i = 0; i < CAPACITY; i++) {
+				
+				boardScores[i] += BoardScore.INVALID;
+			}
+			
+		} catch(IOException exception) {
+			
+			String errorMessage = String.format("An exception occurred while loading opening score cache from resources: %s", exception);
+			System.err.println(errorMessage);
+		}
 	}
 	
 	public void loadFromBytes(byte[] bytes) {
@@ -44,18 +55,10 @@ public final class OpeningBoardScoreCache {
 			return;
 		}
 		
-		InputStream inputStream = new ByteArrayInputStream(bytes);
-		loadFromStream(inputStream);
-	}
-	
-	private void loadFromStream(InputStream inputStream) {
-		try(
-				inputStream;
-				InputStream inflatedInputStream = new InflaterInputStream(inputStream)
-		) {
+		try {
 			
-			readFromInputStream(inflatedInputStream, boardPartialColumnHashes);
-			readFromInputStream(inflatedInputStream, boardScores);
+			System.arraycopy(bytes, 0, boardPartialColumnHashes, 0, CAPACITY);
+			System.arraycopy(bytes, CAPACITY, boardScores, 0, CAPACITY);
 			
 			for(int i = 0; i < CAPACITY; i++) {
 				
@@ -64,32 +67,28 @@ public final class OpeningBoardScoreCache {
 			
 		} catch(Exception exception) {
 			
-			String errorMessage = String.format("An exception occurred while loading opening score cache: %s", exception);
+			String errorMessage = String.format("An exception occurred while loading opening score cache from bytes: %s", exception);
 			System.err.println(errorMessage);
 		}
 	}
 	
 	public void saveToFile(String filePath) {
-		try(
-				OutputStream outputStream = new FileOutputStream(filePath);
-				OutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, SAVE_TO_FILE_BUFFER_SIZE);
-				OutputStream deflatedOutputStream = new DeflaterOutputStream(bufferedOutputStream, new Deflater(Deflater.BEST_COMPRESSION))
-		) {
+		try(OutputStream outputStream = new FileOutputStream(filePath)) {
 			
 			for(int i = 0; i < CAPACITY; i++) {
 				
 				boardScores[i] -= BoardScore.INVALID;
 			}
 			
-			deflatedOutputStream.write(boardPartialColumnHashes);
-			deflatedOutputStream.write(boardScores);
+			outputStream.write(boardPartialColumnHashes);
+			outputStream.write(boardScores);
 			
 			for(int i = 0; i < CAPACITY; i++) {
 				
 				boardScores[i] += BoardScore.INVALID;
 			}
 			
-		} catch(Exception exception) {
+		} catch(IOException exception) {
 			
 			String errorMessage = String.format("An exception occurred while saving opening score cache to file: %s", exception);
 			System.err.println(errorMessage);
@@ -105,19 +104,6 @@ public final class OpeningBoardScoreCache {
 		partialColumnHash &= BOARD_PARTIAL_COLUMN_HASH_MASK;
 		
 		return boardColumnHash == partialColumnHash ? boardScores[index] : Integer.MIN_VALUE;
-	}
-	
-	private static void readFromInputStream(InputStream inputStream, byte[] array) throws IOException {
-		int bytesRead = 0;
-		int l = array.length;
-		
-		while(bytesRead < l) {
-			
-			int n = inputStream.read(array, bytesRead, l - bytesRead);
-			if(n < 0) throw new IOException("Reached end of stream while reading into byte array!");
-			
-			bytesRead += n;
-		}
 	}
 	
 }
