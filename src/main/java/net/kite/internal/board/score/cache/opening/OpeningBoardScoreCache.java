@@ -33,6 +33,7 @@ public final class OpeningBoardScoreCache {
 			return;
 		}
 		
+		inputStream = new BufferedInputStream(inputStream);
 		loadFromStream(inputStream);
 	}
 	
@@ -53,8 +54,8 @@ public final class OpeningBoardScoreCache {
 				InputStream inflatedInputStream = new InflaterInputStream(inputStream)
 		) {
 			
-			inflatedInputStream.readNBytes(boardPartialColumnHashes, 0, CAPACITY);
-			inflatedInputStream.readNBytes(boardScores, 0, CAPACITY);
+			readFromInputStream(inflatedInputStream, boardPartialColumnHashes);
+			readFromInputStream(inflatedInputStream, boardScores);
 			
 			for(int i = 0; i < CAPACITY; i++) {
 				
@@ -104,6 +105,19 @@ public final class OpeningBoardScoreCache {
 		partialColumnHash &= BOARD_PARTIAL_COLUMN_HASH_MASK;
 		
 		return boardColumnHash == partialColumnHash ? boardScores[index] : Integer.MIN_VALUE;
+	}
+	
+	private static void readFromInputStream(InputStream inputStream, byte[] array) throws IOException {
+		int bytesRead = 0;
+		int l = array.length;
+		
+		while(bytesRead < l) {
+			
+			int n = inputStream.read(array, bytesRead, l - bytesRead);
+			if(n < 0) throw new IOException("Reached end of stream while reading into byte array!");
+			
+			bytesRead += n;
+		}
 	}
 	
 }
