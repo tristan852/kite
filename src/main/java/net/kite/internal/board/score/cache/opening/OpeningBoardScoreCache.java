@@ -61,7 +61,7 @@ public final class OpeningBoardScoreCache {
 				boardScores[i] += BoardScore.INVALID;
 			}
 			
-		} catch(IOException exception) {
+		} catch(Exception exception) {
 			
 			String errorMessage = String.format("An exception occurred while loading opening score cache: %s", exception);
 			System.err.println(errorMessage);
@@ -88,7 +88,7 @@ public final class OpeningBoardScoreCache {
 				boardScores[i] += BoardScore.INVALID;
 			}
 			
-		} catch(IOException exception) {
+		} catch(Exception exception) {
 			
 			String errorMessage = String.format("An exception occurred while saving opening score cache to file: %s", exception);
 			System.err.println(errorMessage);

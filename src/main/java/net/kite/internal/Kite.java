@@ -105,7 +105,7 @@ public final class Kite implements KiteApi {
 		
 		OpeningBoardScoreCaches.ensureDefaultIsLoaded(null);
 		
-		// board.evaluate();
+		board.evaluate();
 	}
 	
 	@Override
