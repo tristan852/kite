@@ -106,6 +106,10 @@ public final class Board {
 	private static final int OPENING_SCORE_CACHE_MAXIMAL_DEPTH = 14;
 	
 	private static final int SCORE_BOUND_WEIGHT_INCREMENT = 5;
+	private static final int CACHE_SCORE_BOUND_WEIGHT = 6;
+	private static final int IMPORTANT_CACHE_SCORE_BOUND_WEIGHT = 2;
+	private static final int PARENT_IMPORTANT_SCORE_BOUND_WEIGHT = 15;
+	private static final int OPENING_SCORE_BOUND_WEIGHT = 4;
 	
 	private static final float[] FIRST_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
 			-1.480893f,  7.600903f
@@ -855,7 +859,8 @@ public final class Board {
 		int minimalScore = BoardScore.minimal(filledCellAmount);
 		int maximalScore = BoardScore.maximal(filledCellAmount);
 		
-		if(maximalScore > maxScore) maximalScore = maxScore;
+		int minimalScoreWeight = 1;
+		int maximalScoreWeight = 1;
 		
 		int key = importantScoreCache.entryKey(mixedHash);
 		if(key >= 0) {
@@ -869,7 +874,11 @@ public final class Board {
 				return importantBoardScore;
 			}
 			
-			if(minimalScore < importantBoardScore) minimalScore = importantBoardScore;
+			if(minimalScore < importantBoardScore) {
+				
+				minimalScore = importantBoardScore;
+				minimalScoreWeight = IMPORTANT_CACHE_SCORE_BOUND_WEIGHT;
+			}
 		}
 		
 		if(filledCellAmount > 0) {
@@ -887,7 +896,11 @@ public final class Board {
 				if(exact) {
 					
 					int s = -importantBoardScore;
-					if(minimalScore < s) minimalScore = s;
+					if(minimalScore < s) {
+						
+						minimalScore = s;
+						minimalScoreWeight = PARENT_IMPORTANT_SCORE_BOUND_WEIGHT;
+					}
 				}
 			}
 			
@@ -899,12 +912,18 @@ public final class Board {
 				if(openingBoardScore != Integer.MIN_VALUE) {
 					
 					int s = -openingBoardScore;
-					if(minimalScore < s) minimalScore = s;
+					if(minimalScore < s) {
+						
+						minimalScore = s;
+						minimalScoreWeight = OPENING_SCORE_BOUND_WEIGHT;
+					}
 				}
 			}
 			
 			playMove(lastMove);
 		}
+		
+		if(maximalScore > maxScore) maximalScore = maxScore;
 		
 		int entryKey = scoreCache.entryKey(mixedHash);
 		if(entryKey >= 0) {
@@ -912,12 +931,18 @@ public final class Board {
 			int entryMinScore = scoreCache.entryMinimalScore(entryKey);
 			int entryMaxScore = scoreCache.entryMaximalScore(entryKey);
 			
-			if(entryMinScore > minimalScore) minimalScore = entryMinScore;
-			if(entryMaxScore < maximalScore) maximalScore = entryMaxScore;
+			if(entryMinScore > minimalScore) {
+				
+				minimalScore = entryMinScore;
+				minimalScoreWeight = CACHE_SCORE_BOUND_WEIGHT;
+			}
+			
+			if(entryMaxScore < maximalScore) {
+				
+				maximalScore = entryMaxScore;
+				maximalScoreWeight = 0;
+			}
 		}
-		
-		int minimalScoreWeight = 1;
-		int maximalScoreWeight = 1;
 		
 		int n = nodeEvaluationAmount;
 		while(minimalScore < maximalScore) {
