@@ -3,10 +3,10 @@ package net.kite.internal.board.score.cache.opening;
 import net.kite.internal.board.score.BoardScore;
 import net.kite.internal.board.score.cache.BoardScoreCache;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.zip.Deflater;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterInputStream;
 
 public final class OpeningBoardScoreCache {
 	
@@ -31,21 +31,7 @@ public final class OpeningBoardScoreCache {
 			return;
 		}
 		
-		try(inputStream) {
-			
-			inputStream.readNBytes(boardPartialColumnHashes, 0, CAPACITY);
-			inputStream.readNBytes(boardScores, 0, CAPACITY);
-			
-			for(int i = 0; i < CAPACITY; i++) {
-				
-				boardScores[i] += BoardScore.INVALID;
-			}
-			
-		} catch(IOException exception) {
-			
-			String errorMessage = String.format("An exception occurred while loading opening score cache from resources: %s", exception);
-			System.err.println(errorMessage);
-		}
+		loadFromStream(inputStream);
 	}
 	
 	public void loadFromBytes(byte[] bytes) {
@@ -55,10 +41,18 @@ public final class OpeningBoardScoreCache {
 			return;
 		}
 		
-		try {
+		InputStream inputStream = new ByteArrayInputStream(bytes);
+		loadFromStream(inputStream);
+	}
+	
+	private void loadFromStream(InputStream inputStream) {
+		try(
+				inputStream;
+				InputStream inflatedInputStream = new InflaterInputStream(inputStream)
+		) {
 			
-			System.arraycopy(bytes, 0, boardPartialColumnHashes, 0, CAPACITY);
-			System.arraycopy(bytes, CAPACITY, boardScores, 0, CAPACITY);
+			inflatedInputStream.readNBytes(boardPartialColumnHashes, 0, CAPACITY);
+			inflatedInputStream.readNBytes(boardScores, 0, CAPACITY);
 			
 			for(int i = 0; i < CAPACITY; i++) {
 				
@@ -67,21 +61,24 @@ public final class OpeningBoardScoreCache {
 			
 		} catch(Exception exception) {
 			
-			String errorMessage = String.format("An exception occurred while loading opening score cache from bytes: %s", exception);
+			String errorMessage = String.format("An exception occurred while loading opening score cache: %s", exception);
 			System.err.println(errorMessage);
 		}
 	}
 	
 	public void saveToFile(String filePath) {
-		try(OutputStream outputStream = new FileOutputStream(filePath)) {
+		try(
+				OutputStream outputStream = new FileOutputStream(filePath);
+				OutputStream deflatedOutputStream = new DeflaterOutputStream(outputStream, new Deflater(Deflater.BEST_COMPRESSION))
+		) {
 			
 			for(int i = 0; i < CAPACITY; i++) {
 				
 				boardScores[i] -= BoardScore.INVALID;
 			}
 			
-			outputStream.write(boardPartialColumnHashes);
-			outputStream.write(boardScores);
+			deflatedOutputStream.write(boardPartialColumnHashes);
+			deflatedOutputStream.write(boardScores);
 			
 			for(int i = 0; i < CAPACITY; i++) {
 				

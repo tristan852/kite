@@ -42,7 +42,7 @@ public final class Kite implements KiteApi {
 	private static final int MOVE_COLUMN_INDEX_LARGEST_CHARACTER = 55;
 	
 	private static final double METRICS_THROUGHPUT_CONVERSION_FACTOR = 1000.0;
-	private static final String METRICS_STRING_PATTERN = "positions evaluated      : %d\naverage evaluation time  : %s\naverage node evaluations : %.2f\nnode throughput          : %.2f Mn/s";
+	private static final String METRICS_STRING_PATTERN = "positions evaluated      : %d\naverage evaluation time  : %s\naverage node evaluations : %,.2f\nnode throughput          : %,.2f Mn/s";
 	private static final String COLORED_METRICS_STRING_PATTERN;
 	
 	private static final String[] BENCHMARK_RESOURCE_PATHS = new String[] {
@@ -70,9 +70,9 @@ public final class Kite implements KiteApi {
 					AnsiUtil.cyanAnsi("\naverage evaluation time  : ") +
 					AnsiUtil.brightYellowAnsi("%s") +
 					AnsiUtil.cyanAnsi("\naverage node evaluations : ") +
-					AnsiUtil.brightYellowAnsi("%.2f") +
+					AnsiUtil.brightYellowAnsi("%,.2f") +
 					AnsiUtil.cyanAnsi("\nnode throughput          : ") +
-					AnsiUtil.brightYellowAnsi("%.2f") +
+					AnsiUtil.brightYellowAnsi("%,.2f") +
 					AnsiUtil.cyanAnsi(" Mn/s");
 			
 			if(disabled) AnsiUtil.disableAnsiCodes();
@@ -105,7 +105,7 @@ public final class Kite implements KiteApi {
 		
 		OpeningBoardScoreCaches.ensureDefaultIsLoaded(null);
 		
-		board.evaluate();
+		// board.evaluate();
 	}
 	
 	@Override
