@@ -14,6 +14,8 @@ public final class OpeningBoardScoreCache {
 	
 	private static final long BOARD_PARTIAL_COLUMN_HASH_MASK = 0x00000000000000FFL;
 	
+	private static final int SAVE_TO_FILE_BUFFER_SIZE = 131072;
+	
 	private final byte[] boardPartialColumnHashes;
 	private final byte[] boardScores;
 	
@@ -59,7 +61,7 @@ public final class OpeningBoardScoreCache {
 				boardScores[i] += BoardScore.INVALID;
 			}
 			
-		} catch(Exception exception) {
+		} catch(IOException exception) {
 			
 			String errorMessage = String.format("An exception occurred while loading opening score cache: %s", exception);
 			System.err.println(errorMessage);
@@ -69,7 +71,8 @@ public final class OpeningBoardScoreCache {
 	public void saveToFile(String filePath) {
 		try(
 				OutputStream outputStream = new FileOutputStream(filePath);
-				OutputStream deflatedOutputStream = new DeflaterOutputStream(outputStream, new Deflater(Deflater.BEST_COMPRESSION))
+				OutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, SAVE_TO_FILE_BUFFER_SIZE);
+				OutputStream deflatedOutputStream = new DeflaterOutputStream(bufferedOutputStream, new Deflater(Deflater.BEST_COMPRESSION))
 		) {
 			
 			for(int i = 0; i < CAPACITY; i++) {
