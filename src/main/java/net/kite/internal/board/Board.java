@@ -51,9 +51,6 @@ public final class Board {
 			3, 2, 4, 1, 5, 0, 6
 	};
 	
-	private static final int INFINITE_MOVE_SCORE = 1000000;
-	private static final int MISSING_MOVE_SCORE = Integer.MIN_VALUE;
-	
 	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 808;
 	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 602;
 	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 463;
@@ -78,6 +75,9 @@ public final class Board {
 			  0, 193, 135, 381, 117, 406,   0,   0,
 			 19, 113,  71, 198, 111, 402
 	};
+	
+	private static final int INFINITE_MOVE_SCORE = 1000000;
+	private static final int MISSING_MOVE_SCORE = Integer.MIN_VALUE;
 	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
 	
