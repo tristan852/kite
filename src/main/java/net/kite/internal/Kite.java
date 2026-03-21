@@ -1347,6 +1347,34 @@ public final class Kite implements KiteApi {
 			
 			boolean noAnsiCodes = AnsiUtil.areAnsiCodesDisabled() || System.console() == null;
 			
+			String s1 = net.kite.api.Kite.getVersion();
+			String s2 = net.kite.api.Kite.getBuildCommit();
+			
+			String s = String.format("%s (%s)", s1, s2);
+			if(!noAnsiCodes) s = AnsiUtil.brightMagentaAnsi(s);
+			
+			System.out.printf("Kite version    : %s%n", s);
+			
+			s = System.getProperty("java.version");
+			if(!noAnsiCodes) s = AnsiUtil.brightMagentaAnsi(s);
+			
+			System.out.printf("Java version    : %s%n", s);
+			
+			s = System.getProperty("java.vendor");
+			if(!noAnsiCodes) s = AnsiUtil.brightMagentaAnsi(s);
+			
+			System.out.printf("Java vendor     : %s%n", s);
+			
+			s = System.getProperty("os.name");
+			if(!noAnsiCodes) s = AnsiUtil.brightMagentaAnsi(s);
+			
+			System.out.printf("OS name         : %s%n", s);
+			
+			s = System.getProperty("os.arch");
+			if(!noAnsiCodes) s = AnsiUtil.brightMagentaAnsi(s);
+			
+			System.out.printf("OS architecture : %s%n%n", s);
+			
 			for(int i = 1; i < 3; i++) {
 				
 				if(i == 2) {
