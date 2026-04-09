@@ -1051,8 +1051,6 @@ public final class Board {
 		
 		if(filledCellAmount > MINIMAL_CHILD_CACHE_LOOKUP_DEPTH) {
 			
-			int max = Integer.MIN_VALUE;
-			
 			long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
 			while(movesBitboard != 0) {
 				
@@ -1073,17 +1071,8 @@ public final class Board {
 					
 					int entryMinScore = -scoreCache.entryMaximalScore(entryKey);
 					if(entryMinScore > minimalScore) return entryMinScore;
-					
-					int entryMaxScore = -scoreCache.entryMinimalScore(entryKey);
-					if(entryMaxScore > max) max = entryMaxScore;
-					
-				} else {
-					
-					max = Integer.MAX_VALUE;
 				}
 			}
-			
-			if(max <= minimalScore) return minimalScore;
 		}
 		
 		long opponentThreatsBitboard = bitboardConnectionOpportunities(activeBitboard ^ maskBitboard) & (~maskBitboard);
