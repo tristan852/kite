@@ -53,27 +53,27 @@ public final class Board {
 	
 	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 808;
 	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 602;
-	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 463;
+	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 461;
 	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 231;
 	
 	private static final int[] RED_MOVE_CELL_SCORES = new int[] {
-			  0,  66,  79, 196,  92, 572,   0,   0,
-			178,  73,  83, 202, 186, 307,   0,   0,
-			 94, 202, 386, 306, 259, 298,   0,   0,
-			406, 303, 388, 434, 610, 687,   0,   0,
-			 94, 202, 386, 306, 259, 298,   0,   0,
-			178,  73,  83, 202, 186, 307,   0,   0,
-			  0,  66,  79, 196,  92, 572
+			  0,  79,  91, 209, 105, 544,   0,   0,
+			191,  90,  96, 215, 207, 328,   0,   0,
+			120, 215, 399, 319, 272, 311,   0,   0,
+			419, 316, 401, 343, 604, 684,   0,   0,
+			120, 215, 399, 319, 272, 311,   0,   0,
+			191,  90,  96, 215, 207, 328,   0,   0,
+			  0,  79,  91, 209, 105, 544
 	};
 	
 	private static final int[] YELLOW_MOVE_CELL_SCORES = new int[] {
-			 19, 113,  71, 198, 111, 402,   0,   0,
-			  0, 193, 135, 381, 117, 406,   0,   0,
-			 61, 294, 203, 404, 158, 398,   0,   0,
-			133, 420, 437, 525, 522, 524,   0,   0,
-			 61, 294, 203, 404, 158, 398,   0,   0,
-			  0, 193, 135, 381, 117, 406,   0,   0,
-			 19, 113,  71, 198, 111, 402
+			  2,  35,  36, 145,  34, 344,   0,   0,
+			  0, 135,  85, 228,  59, 360,   0,   0,
+			  4, 236, 145, 346,  97, 340,   0,   0,
+			 75, 362, 379, 472, 489, 466,   0,   0,
+			  4, 236, 145, 346,  97, 340,   0,   0,
+			  0, 135,  85, 228,  59, 360,   0,   0,
+			  2,  35,  36, 145,  34, 344
 	};
 	
 	private static final int INFINITE_MOVE_SCORE = 1000000;
