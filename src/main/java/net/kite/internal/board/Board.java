@@ -1155,7 +1155,9 @@ public final class Board {
 			return minimalScore;
 		}
 		
-		int i = 0;
+		int startMoveIndex = movesBaseIndex + 1;
+		int endMoveIndex = movesBaseIndex + moveAmount;
+		
 		while(true) {
 			
 			moveScores[bestMoveIndex] = MISSING_MOVE_SCORE;
@@ -1174,14 +1176,11 @@ public final class Board {
 				return s;
 			}
 			
-			i++;
-			if(i == moveAmount) break;
+			moveAmount--;
+			if(moveAmount == 0) break;
 			
 			bestMoveIndex = movesBaseIndex;
 			bestMoveScore = moveScores[movesBaseIndex];
-			
-			int startMoveIndex = movesBaseIndex + 1;
-			int endMoveIndex = movesBaseIndex + moveAmount;
 			
 			for(int j = startMoveIndex; j < endMoveIndex; j++) {
 				
