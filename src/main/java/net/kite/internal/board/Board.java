@@ -134,7 +134,7 @@ public final class Board {
 	
 	private static final int MAXIMAL_LINE_AMOUNT = 4;
 	
-	private static final int MOVES_LENGTH = 294;
+	private static final int MOVES_LENGTH = 282;
 	
 	private static final int MINIMAL_IMPORTANT_NODE_EVALUATION_AMOUNT = 10000;
 	
