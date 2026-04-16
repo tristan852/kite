@@ -76,7 +76,6 @@ public final class Board {
 			  2,  35,  36, 145,  34, 344
 	};
 	
-	private static final int INFINITE_MOVE_SCORE = 1000000;
 	private static final int MISSING_MOVE_SCORE = Integer.MIN_VALUE;
 	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
@@ -1132,8 +1131,44 @@ public final class Board {
 			long moveBitboard = 1L << movePosition;
 			movesBitboard ^= moveBitboard;
 			
-			int moveScore = moveScore(movePosition, moveBitboard, opponentThreatsBitboard);
-			if(moveScore == INFINITE_MOVE_SCORE) return maxScore;
+			long board = activeBitboard;
+			long ceiling = ceilingBitboard;
+			
+			board |= moveBitboard;
+			ceiling += moveBitboard;
+			
+			long result = bitboardConnectionOpportunities(board);
+			immediateThreats = result & ceiling;
+			if(Long.bitCount(immediateThreats) > 1) return maxScore;
+			
+			immediateThreats &= result >>> 1;
+			if(immediateThreats != 0) return maxScore;
+			
+			long mask = maskBitboard;
+			mask |= moveBitboard;
+			
+			result &= ~mask;
+			result &= ~(opponentThreatsBitboard << 1);
+			
+			boolean redAtTurn = (filledCellAmount & 1) == 0;
+			int[] moveCellScores = redAtTurn ? RED_MOVE_CELL_SCORES : YELLOW_MOVE_CELL_SCORES;
+			
+			int moveScore = moveCellScores[movePosition];
+			
+			moveScore += Long.bitCount(result) * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT;
+			
+			long l1 = result & ceiling;
+			
+			moveScore += Long.bitCount(l1) * MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT;
+			
+			ceiling <<= 1;
+			long l2 = result & ceiling;
+			
+			moveScore += Long.bitCount(l2) * MOVE_SCORE_SOON_THREAT_WEIGHT;
+			
+			result &= result << 1;
+			
+			moveScore += Long.bitCount(result) * MOVE_SCORE_COLUMN_FORK_WEIGHT;
 			
 			moves[moveIndex] = moveCellX;
 			moveScores[moveIndex] = moveScore;
@@ -1196,49 +1231,6 @@ public final class Board {
 		scoreCache.updateEntry(mixedHash, minScore, minimalScore);
 		
 		return minimalScore;
-	}
-	
-	private int moveScore(int moveCellPosition, long moveBitboard, long opponentOpenThreats) {
-		long board = activeBitboard;
-		long ceiling = ceilingBitboard;
-		
-		board |= moveBitboard;
-		ceiling += moveBitboard;
-		
-		long result = bitboardConnectionOpportunities(board);
-		long immediateThreats = result & ceiling;
-		if(Long.bitCount(immediateThreats) > 1) return INFINITE_MOVE_SCORE;
-		
-		immediateThreats &= result >>> 1;
-		if(immediateThreats != 0) return INFINITE_MOVE_SCORE;
-		
-		long mask = maskBitboard;
-		mask |= moveBitboard;
-		
-		result &= ~mask;
-		result &= ~(opponentOpenThreats << 1);
-		
-		boolean redAtTurn = (filledCellAmount & 1) == 0;
-		int[] moveCellScores = redAtTurn ? RED_MOVE_CELL_SCORES : YELLOW_MOVE_CELL_SCORES;
-		
-		int moveScore = moveCellScores[moveCellPosition];
-		
-		moveScore += Long.bitCount(result) * MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT;
-		
-		long l1 = result & ceiling;
-		
-		moveScore += Long.bitCount(l1) * MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT;
-		
-		ceiling <<= 1;
-		long l2 = result & ceiling;
-		
-		moveScore += Long.bitCount(l2) * MOVE_SCORE_SOON_THREAT_WEIGHT;
-		
-		result &= result << 1;
-		
-		moveScore += Long.bitCount(result) * MOVE_SCORE_COLUMN_FORK_WEIGHT;
-		
-		return moveScore;
 	}
 	
 	public boolean moveLegalWhileGameNotOver(int moveCellX) {
