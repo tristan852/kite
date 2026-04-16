@@ -1115,7 +1115,6 @@ public final class Board {
 		}
 		
 		int movesBaseIndex = filledCellAmount * WIDTH;
-		int moveAmount = 0;
 		
 		long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
 		movesBitboard &= ~(opponentThreatsBitboard >>> 1);
@@ -1145,10 +1144,10 @@ public final class Board {
 				bestMoveScore = moveScore;
 			}
 			
-			moveAmount++;
 			moveIndex++;
 		}
 		
+		int moveAmount = moveIndex - movesBaseIndex;
 		if(moveAmount == 0) {
 			
 			scoreCache.updateEntry(mixedHash, minScore, minScore);
