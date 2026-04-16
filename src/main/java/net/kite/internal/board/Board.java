@@ -1118,6 +1118,9 @@ public final class Board {
 		long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
 		movesBitboard &= ~(opponentThreatsBitboard >>> 1);
 		
+		opponentThreatsBitboard <<= 1;
+		opponentThreatsBitboard |= maskBitboard;
+		
 		int moveIndex = movesBaseIndex;
 		
 		int bestMoveIndex = 0;
@@ -1144,11 +1147,7 @@ public final class Board {
 			immediateThreats &= result >>> 1;
 			if(immediateThreats != 0) return maxScore;
 			
-			long mask = maskBitboard;
-			mask |= moveBitboard;
-			
-			result &= ~mask;
-			result &= ~(opponentThreatsBitboard << 1);
+			result &= ~(opponentThreatsBitboard | moveBitboard);
 			
 			boolean redAtTurn = (filledCellAmount & 1) == 0;
 			int[] moveCellScores = redAtTurn ? RED_MOVE_CELL_SCORES : YELLOW_MOVE_CELL_SCORES;
