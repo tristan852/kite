@@ -100,6 +100,45 @@ public class MoveAnalysis {
 	}
 	
 	/**
+	 * Returns the hash code of this
+	 * move analysis based on column
+	 * index, evaluation and move quality.
+	 *
+	 * @return hash code of this move analysis
+	 */
+	@Override
+	public int hashCode() {
+		int hash = Integer.hashCode(moveColumnIndex);
+		
+		hash = hash * 31 + Integer.hashCode(moveEvaluation);
+		hash = hash * 31 + moveQuality.ordinal();
+		
+		return hash;
+	}
+	
+	/**
+	 * Compares this move analysis
+	 * to another object.
+	 * <p>
+	 * Two move analyses are equal
+	 * if column index, evaluation
+	 * and move quality are identical.
+	 *
+	 * @param object object to compare with
+	 * @return {@code true} if equal, {@code false} otherwise
+	 */
+	@Override
+	public boolean equals(Object object) {
+		if(object == this) return true;
+		if(object instanceof MoveAnalysis moveAnalysis) {
+			
+			return moveAnalysis.moveColumnIndex == moveColumnIndex && moveAnalysis.moveEvaluation == moveEvaluation && moveAnalysis.moveQuality == moveQuality;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Returns the one-based column
 	 * index in which the move
 	 * was played.

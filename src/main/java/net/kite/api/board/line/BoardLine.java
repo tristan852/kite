@@ -62,6 +62,44 @@ public final class BoardLine {
 	}
 	
 	/**
+	 * Returns the hash code of this line based on its
+	 * start and end cell coordinates.
+	 *
+	 * @return hash code of this line
+	 */
+	@Override
+	public int hashCode() {
+		int hash = Integer.hashCode(startCellX);
+		
+		hash = hash * 31 + Integer.hashCode(startCellY);
+		hash = hash * 31 + Integer.hashCode(endCellX);
+		hash = hash * 31 + Integer.hashCode(endCellY);
+		
+		return hash;
+	}
+	
+	/**
+	 * Compares this line to the given object.
+	 * <p>
+	 * Two lines are considered equal if their
+	 * start and end cell coordinates are identical.
+	 *
+	 * @param object object to compare with
+	 * @return {@code true} if the given object represents
+	 *         the same line, {@code false} otherwise
+	 */
+	@Override
+	public boolean equals(Object object) {
+		if(object == this) return true;
+		if(object instanceof BoardLine line) {
+			
+			return line.startCellX == startCellX && line.startCellY == startCellY && line.endCellX == endCellX && line.endCellY == endCellY;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * Returns the x-coordinate of the
 	 * cell that was determined to be
 	 * the start of this line.

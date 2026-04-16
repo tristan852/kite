@@ -3,6 +3,7 @@ package net.kite.api.board.analysis.game;
 import net.kite.api.Kite;
 import net.kite.api.board.analysis.move.MoveAnalysis;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -234,6 +235,45 @@ public class GameAnalysis {
 		}
 		
 		return stringBuilder.toString();
+	}
+	
+	/**
+	 * Returns the hash code of
+	 * this game analysis based
+	 * on ELO performance and
+	 * move analyses.
+	 *
+	 * @return hash code of this game analysis
+	 */
+	@Override
+	public int hashCode() {
+		int hash = Float.hashCode(approximateEloPerformance);
+		
+		hash = hash * 31 + Arrays.hashCode(moveAnalyses);
+		
+		return hash;
+	}
+	
+	/**
+	 * Compares this game analysis
+	 * to another object.
+	 * <p>
+	 * Two game analyses are equal
+	 * if ELO performance and move
+	 * analyses are identical.
+	 *
+	 * @param object object to compare with
+	 * @return {@code true} if equal, {@code false} otherwise
+	 */
+	@Override
+	public boolean equals(Object object) {
+		if(object == this) return true;
+		if(object instanceof GameAnalysis analysis) {
+			
+			return Float.compare(analysis.approximateEloPerformance, approximateEloPerformance) == 0 && Arrays.equals(analysis.moveAnalyses, moveAnalyses);
+		}
+		
+		return false;
 	}
 	
 	/**
