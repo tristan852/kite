@@ -1160,8 +1160,6 @@ public final class Board {
 		
 		while(true) {
 			
-			moveScores[bestMoveIndex] = MISSING_MOVE_SCORE;
-			
 			int moveCellX = moves[bestMoveIndex];
 			
 			playMove(moveCellX);
@@ -1178,6 +1176,8 @@ public final class Board {
 			
 			moveAmount--;
 			if(moveAmount == 0) break;
+			
+			moveScores[bestMoveIndex] = MISSING_MOVE_SCORE;
 			
 			bestMoveIndex = movesBaseIndex;
 			bestMoveScore = moveScores[movesBaseIndex];
