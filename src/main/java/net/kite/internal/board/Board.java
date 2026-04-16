@@ -1053,9 +1053,7 @@ public final class Board {
 			long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
 			while(movesBitboard != 0) {
 				
-				int movePosition = Long.numberOfTrailingZeros(movesBitboard);
-				
-				long moveBitboard = 1L << movePosition;
+				long moveBitboard = Long.lowestOneBit(movesBitboard);
 				movesBitboard ^= moveBitboard;
 				
 				long h1 = (bitboard ^ maskBitboard) + moveBitboard;
@@ -1216,12 +1214,12 @@ public final class Board {
 			bestMoveIndex = movesBaseIndex;
 			bestMoveScore = moveScores[movesBaseIndex];
 			
-			for(int j = startMoveIndex; j < endMoveIndex; j++) {
+			for(int i = startMoveIndex; i < endMoveIndex; i++) {
 				
-				int moveScore = moveScores[j];
+				int moveScore = moveScores[i];
 				if(moveScore > bestMoveScore) {
 					
-					bestMoveIndex = j;
+					bestMoveIndex = i;
 					bestMoveScore = moveScore;
 				}
 			}
