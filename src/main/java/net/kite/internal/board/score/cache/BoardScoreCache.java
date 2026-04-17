@@ -1,7 +1,5 @@
 package net.kite.internal.board.score.cache;
 
-import java.util.Arrays;
-
 public final class BoardScoreCache {
 	
 	private static final int CAPACITY  = 65536;
@@ -17,14 +15,11 @@ public final class BoardScoreCache {
 	private static final int ENTRY_DATA_SCORE_UNPACK_OFFSET = 56;
 	
 	private static final int MISSING_ENTRY_KEY = -1;
-	private static final long MISSING_ENTRY_DATA = 0x0000000000000080L;
 	
 	private final long[] entryData;
 	
 	public BoardScoreCache() {
 		this.entryData = new long[CAPACITY];
-		
-		Arrays.fill(entryData, MISSING_ENTRY_DATA);
 	}
 	
 	public void updateEntry(long mixedHash, int minimalScore, int maximalScore) {
@@ -33,17 +28,13 @@ public final class BoardScoreCache {
 		mixedHash &= ENTRY_DATA_PARTIAL_HASH_MASK;
 		
 		long data = entryData[key];
-		if(data != MISSING_ENTRY_DATA) {
+		if((data & ENTRY_DATA_PARTIAL_HASH_MASK) == mixedHash) {
 			
-			long h = data & ENTRY_DATA_PARTIAL_HASH_MASK;
-			if(h == mixedHash) {
-				
-				int min = (int) ((data << ENTRY_DATA_SCORE_UNPACK_OFFSET) >> ENTRY_DATA_SCORE_UNPACK_OFFSET);
-				int max = (int) ((data << ENTRY_DATA_MAXIMAL_SCORE_UNPACK_OFFSET) >> ENTRY_DATA_SCORE_UNPACK_OFFSET);
-				
-				if(min > minimalScore) minimalScore = min;
-				if(max < maximalScore) maximalScore = max;
-			}
+			int min = (int) ((data << ENTRY_DATA_SCORE_UNPACK_OFFSET) >> ENTRY_DATA_SCORE_UNPACK_OFFSET);
+			int max = (int) ((data << ENTRY_DATA_MAXIMAL_SCORE_UNPACK_OFFSET) >> ENTRY_DATA_SCORE_UNPACK_OFFSET);
+			
+			if(min > minimalScore) minimalScore = min;
+			if(max < maximalScore) maximalScore = max;
 		}
 		
 		mixedHash |= minimalScore & ENTRY_DATA_MINIMAL_SCORE_MASK;
@@ -53,7 +44,7 @@ public final class BoardScoreCache {
 	}
 	
 	public boolean entryFilled(int entryKey) {
-		return entryData[entryKey] != MISSING_ENTRY_DATA;
+		return entryData[entryKey] != 0;
 	}
 	
 	public long entryMixedHash(int entryKey) {
@@ -86,13 +77,7 @@ public final class BoardScoreCache {
 	public int entryKey(long mixedHash) {
 		int key = (int) (mixedHash & KEY_MASK);
 		
-		long data = entryData[key];
-		if(data == MISSING_ENTRY_DATA) return MISSING_ENTRY_KEY;
-		
-		long h = data & ENTRY_DATA_PARTIAL_HASH_MASK;
-		mixedHash &= ENTRY_DATA_PARTIAL_HASH_MASK;
-		
-		return h == mixedHash ? key : MISSING_ENTRY_KEY;
+		return (entryData[key] & ENTRY_DATA_PARTIAL_HASH_MASK) == (mixedHash & ENTRY_DATA_PARTIAL_HASH_MASK) ? key : MISSING_ENTRY_KEY;
 	}
 	
 	public static int getCapacity() {
