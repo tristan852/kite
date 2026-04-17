@@ -1108,8 +1108,6 @@ public final class Board {
 			return minimalScore;
 		}
 		
-		int movesBaseIndex = filledCellAmount * WIDTH;
-		
 		long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
 		movesBitboard &= ~(opponentThreatsBitboard >>> 1);
 		
@@ -1123,6 +1121,7 @@ public final class Board {
 		opponentThreatsBitboard <<= 1;
 		opponentThreatsBitboard |= maskBitboard;
 		
+		int movesBaseIndex = filledCellAmount * WIDTH;
 		int moveIndex = movesBaseIndex;
 		
 		int bestMoveIndex = 0;
