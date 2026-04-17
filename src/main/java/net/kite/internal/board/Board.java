@@ -1080,8 +1080,7 @@ public final class Board {
 			int p = Long.numberOfTrailingZeros(immediateThreats);
 			long b = 1L << p;
 			
-			immediateThreats ^= b;
-			if(immediateThreats != Bitboards.EMPTY) {
+			if(immediateThreats != b) {
 				
 				return minScore;
 			}
