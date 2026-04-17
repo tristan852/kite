@@ -1083,14 +1083,13 @@ public final class Board {
 				return minScore;
 			}
 			
-			int forcedX = p >>> LOGARITHMIC_BITBOARD_LENGTH;
-			
-			long upperCellBitboard = b << 1;
-			if((upperCellBitboard & opponentThreatsBitboard) != 0) {
+			b <<= 1;
+			if((b & opponentThreatsBitboard) != 0) {
 				
 				return minScore;
 			}
 			
+			int forcedX = p >>> LOGARITHMIC_BITBOARD_LENGTH;
 			playMove(forcedX);
 			
 			int s = -evaluateWithNoImmediateWin(-minimalScore - 1);
