@@ -76,8 +76,6 @@ public final class Board {
 			  2,  35,  36, 145,  34, 344
 	};
 	
-	private static final int MISSING_MOVE_SCORE = Integer.MIN_VALUE;
-	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
 	
 	private static final int MIRRORED_BITBOARD_SHIFT_AMOUNT = 8;
@@ -1186,7 +1184,6 @@ public final class Board {
 			return minimalScore;
 		}
 		
-		int startMoveIndex = movesBaseIndex + 1;
 		int endMoveIndex = movesBaseIndex + moveAmount;
 		
 		while(true) {
@@ -1208,12 +1205,15 @@ public final class Board {
 			moveAmount--;
 			if(moveAmount == 0) break;
 			
-			moveScores[bestMoveIndex] = MISSING_MOVE_SCORE;
+			moves[bestMoveIndex] = moves[movesBaseIndex];
+			moveScores[bestMoveIndex] = moveScores[movesBaseIndex];
+			
+			movesBaseIndex++;
 			
 			bestMoveIndex = movesBaseIndex;
 			bestMoveScore = moveScores[movesBaseIndex];
 			
-			for(int i = startMoveIndex; i < endMoveIndex; i++) {
+			for(int i = movesBaseIndex + 1; i < endMoveIndex; i++) {
 				
 				int moveScore = moveScores[i];
 				if(moveScore > bestMoveScore) {
