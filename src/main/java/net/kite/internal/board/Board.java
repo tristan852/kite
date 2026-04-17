@@ -1113,6 +1113,13 @@ public final class Board {
 		long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
 		movesBitboard &= ~(opponentThreatsBitboard >>> 1);
 		
+		if(movesBitboard == 0) {
+			
+			scoreCache.updateEntry(mixedHash, minScore, minScore);
+			
+			return minimalScore;
+		}
+		
 		opponentThreatsBitboard <<= 1;
 		opponentThreatsBitboard |= maskBitboard;
 		
@@ -1177,13 +1184,6 @@ public final class Board {
 		}
 		
 		int moveAmount = moveIndex - movesBaseIndex;
-		if(moveAmount == 0) {
-			
-			scoreCache.updateEntry(mixedHash, minScore, minScore);
-			
-			return minimalScore;
-		}
-		
 		int endMoveIndex = movesBaseIndex + moveAmount;
 		
 		while(true) {
