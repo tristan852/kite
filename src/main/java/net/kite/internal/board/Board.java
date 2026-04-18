@@ -534,7 +534,12 @@ public final class Board {
 		
 		playMove(moveColumnIndex);
 		
+		int storedMove = playedMoves[filledCellAmount];
+		playedMoves[filledCellAmount] = moveColumnIndex;
+		
 		int scoreAfter = -evaluate(playedMoves);
+		
+		playedMoves[filledCellAmount] = storedMove;
 		
 		undoMove(moveColumnIndex);
 		
@@ -774,20 +779,30 @@ public final class Board {
 		return columnHash;
 	}
 	
-	public int evaluateMove(int moveCellX, int[] playedMoves) {
+	public int evaluateMove(int moveCellX, int filledCellAmount, int[] playedMoves) {
 		playMove(moveCellX);
 		
+		int storedMove = playedMoves[filledCellAmount];
+		playedMoves[filledCellAmount] = moveCellX;
+		
 		int score = -evaluate(playedMoves);
+		
+		playedMoves[filledCellAmount] = storedMove;
 		
 		undoMove(moveCellX);
 		
 		return score;
 	}
 	
-	public int evaluateMove(int moveCellX, int minScore, int[] playedMoves) {
+	public int evaluateMove(int moveCellX, int minScore, int filledCellAmount, int[] playedMoves) {
 		playMove(moveCellX);
 		
+		int storedMove = playedMoves[filledCellAmount];
+		playedMoves[filledCellAmount] = moveCellX;
+		
 		int score = -evaluate(-minScore, playedMoves);
+		
+		playedMoves[filledCellAmount] = storedMove;
 		
 		undoMove(moveCellX);
 		
