@@ -434,7 +434,7 @@ public final class Kite implements KiteApi {
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			int moveScore = board.moveLegalWhileGameNotOver(moveColumnIndex) ? board.evaluateMove(moveColumnIndex, minimalScore - 1, playedMoves) : Integer.MIN_VALUE;
+			int moveScore = board.moveLegalWhileGameNotOver(moveColumnIndex) ? board.evaluateMove(moveColumnIndex, minimalScore - 1, playedMoveAmount, playedMoves) : Integer.MIN_VALUE;
 			
 			moveScores[moveColumnIndex] = moveScore;
 			
@@ -527,7 +527,7 @@ public final class Kite implements KiteApi {
 			
 			if(!board.moveLegalWhileGameNotOver(moveColumnIndex)) continue;
 			
-			int moveScore = board.evaluateMove(moveColumnIndex, -bestAbsoluteMoveScore - 1, playedMoves);
+			int moveScore = board.evaluateMove(moveColumnIndex, -bestAbsoluteMoveScore - 1, playedMoveAmount, playedMoves);
 			if(moveScore < 0) moveScore = -moveScore;
 			
 			moveScores[moveColumnIndex] = moveScore;
@@ -569,7 +569,7 @@ public final class Kite implements KiteApi {
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			int moveScore = board.moveLegalWhileGameNotOver(moveColumnIndex) ? board.evaluateMove(moveColumnIndex, optimalMoveScore - 1, playedMoves) : Integer.MIN_VALUE;
+			int moveScore = board.moveLegalWhileGameNotOver(moveColumnIndex) ? board.evaluateMove(moveColumnIndex, optimalMoveScore - 1, playedMoveAmount, playedMoves) : Integer.MIN_VALUE;
 			
 			moveScores[moveColumnIndex] = moveScore;
 			
