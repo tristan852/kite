@@ -173,8 +173,6 @@ public final class Board {
 	private static final String TO_STRING_FANCY_BOARD_ROW_SUFFIX_STRING = " │";
 	private static final String TO_STRING_FANCY_BOARD_COLUMN_SEPARATOR_STRING = " │ ";
 	
-	private static final String EMPTY_MOVES_STRING = "";
-	
 	static {
 		synchronized(AnsiUtil.class) {
 			
@@ -190,8 +188,6 @@ public final class Board {
 		}
 	}
 	
-	private int filledCellAmount;
-	
 	private long evaluationTime;
 	private int evaluationAmount;
 	private int nodeEvaluationAmount;
@@ -206,9 +202,6 @@ public final class Board {
 	private final int[] moves;
 	private final int[] moveScores;
 	
-	private final int[] playedMoves;
-	private final int[] undoneMoves;
-	
 	private final BoardScoreCache scoreCache;
 	private final ImportantBoardScoreCache importantScoreCache;
 	
@@ -222,12 +215,10 @@ public final class Board {
 		
 		this.moves = new int[MOVES_LENGTH];
 		this.moveScores = new int[MOVES_LENGTH];
-		this.playedMoves = new int[FULL_CELL_AMOUNT];
-		this.undoneMoves = new int[FULL_CELL_AMOUNT];
 	}
 	
 	@SuppressWarnings("DataFlowIssue")
-	public String toString(boolean boardOnly, boolean spaciousBoard, boolean fancyBoard, boolean colored) {
+	public String toString(boolean boardOnly, boolean spaciousBoard, boolean fancyBoard, boolean colored, int filledCellAmount, int[] playedMoves) {
 		BoardOutcome outcome = null;
 		
 		boolean anyWinCells = false;
@@ -404,7 +395,7 @@ public final class Board {
 				
 				if(moveLegalWhileGameNotOver(x)) {
 					
-					int moveScore = evaluateMove(x);
+					int moveScore = evaluateMove(x, playedMoves);
 					if(moveScore > boardScore) boardScore = moveScore;
 					
 					moveScores[x] = moveScore;
@@ -536,16 +527,16 @@ public final class Board {
 		return winningLines;
 	}
 	
-	public MoveAnalysis analyseMove(int moveColumnIndex) {
+	public MoveAnalysis analyseMove(int moveColumnIndex, int filledCellAmount, int[] playedMoves) {
 		boolean moveIsForced = legalMoveAmount() == 1;
 		
-		int scoreBefore = moveIsForced ? 0 : evaluate();
+		int scoreBefore = moveIsForced ? 0 : evaluate(playedMoves);
 		
 		playMove(moveColumnIndex);
 		
-		int scoreAfter = -evaluate();
+		int scoreAfter = -evaluate(playedMoves);
 		
-		undoMove();
+		undoMove(moveColumnIndex);
 		
 		int previousMoveScore = 0;
 		boolean previousMoveCouldHaveBeenWin = false;
@@ -558,31 +549,38 @@ public final class Board {
 				boolean droppedALot = previousMoveScore - scoreAfter > 3;
 				if(!droppedALot) {
 					
-					undoMove();
+					filledCellAmount--;
 					int lastMove = playedMoves[filledCellAmount];
 					
-					int scoreBefore2 = evaluate();
+					undoMove(lastMove);
+					
+					int scoreBefore2 = evaluate(playedMoves);
 					previousMoveCouldHaveBeenWin = scoreBefore2 > 0;
 					
 					playMove(lastMove);
+					filledCellAmount++;
 				}
 				
 			} else {
 				
-				undoMove();
+				filledCellAmount--;
 				int lastMove = playedMoves[filledCellAmount];
 				
-				undoMove();
+				undoMove(lastMove);
+				
+				filledCellAmount--;
 				int lastMove2 = playedMoves[filledCellAmount];
 				
-				previousMoveScore = -evaluate();
+				undoMove(lastMove2);
+				
+				previousMoveScore = -evaluate(playedMoves);
 				
 				playMove(lastMove2);
 				
 				boolean droppedALot = previousMoveScore - scoreAfter > 3;
 				if(!droppedALot) {
 					
-					int scoreBefore2 = evaluate();
+					int scoreBefore2 = evaluate(playedMoves);
 					previousMoveCouldHaveBeenWin = scoreBefore2 > 0;
 				}
 				
@@ -594,17 +592,18 @@ public final class Board {
 		return new MoveAnalysis(moveColumnIndex + 1, scoreAfter, moveQuality);
 	}
 	
-	public void evaluateGamePerformanceOfBothPlayers(GameAnalysis[] gameAnalyses) {
+	public void evaluateGamePerformanceOfBothPlayers(GameAnalysis[] gameAnalyses, int filledCellAmount, int[] playedMoves) {
 		int n = filledCellAmount;
-		while(filledCellAmount != 0) {
+		while(n != 0) {
 			
-			undoMove();
+			n--;
+			int lastMove = playedMoves[n];
 			
-			undoneMoves[filledCellAmount] = playedMoves[filledCellAmount];
+			undoMove(lastMove);
 		}
 		
-		int yellowPlayerMoveAmount = n >> 1;
-		int redPlayerMoveAmount = n - yellowPlayerMoveAmount;
+		int yellowPlayerMoveAmount = filledCellAmount >> 1;
+		int redPlayerMoveAmount = filledCellAmount - yellowPlayerMoveAmount;
 		
 		MoveAnalysis[] redMoveAnalyses = new MoveAnalysis[redPlayerMoveAmount];
 		MoveAnalysis[] yellowMoveAnalyses = new MoveAnalysis[yellowPlayerMoveAmount];
@@ -612,7 +611,7 @@ public final class Board {
 		int redTotalScoreLoss = 0;
 		int yellowTotalScoreLoss = 0;
 		
-		int previousBoardScore = evaluate();
+		int previousBoardScore = evaluate(playedMoves);
 		
 		boolean redAtTurn = true;
 		boolean previousMoveCouldHaveBeenWin = false;
@@ -623,15 +622,15 @@ public final class Board {
 		int i1 = 0;
 		int i2 = 0;
 		
-		for(int i = 0; i < n; i++) {
+		for(int i = 0; i < filledCellAmount; i++) {
 			
-			int move = undoneMoves[i];
+			int move = playedMoves[i];
 			
 			boolean moveIsForced = legalMoveAmount() == 1;
 			
 			playMove(move);
 			
-			int boardScore = evaluate();
+			int boardScore = evaluate(playedMoves);
 			if(redAtTurn) {
 				
 				redTotalScoreLoss += previousBoardScore + boardScore;
@@ -681,11 +680,9 @@ public final class Board {
 		gameAnalyses[1] = new GameAnalysis(f2, yellowMoveAnalyses);
 	}
 	
-	public GameAnalysis evaluateGamePerformanceOfPlayer(BoardPlayerColor playerColor) {
-		int n = filledCellAmount;
-		
-		int playerMoveAmount = n >> 1;
-		if(playerColor == BoardPlayerColor.RED) playerMoveAmount = n - playerMoveAmount;
+	public GameAnalysis evaluateGamePerformanceOfPlayer(BoardPlayerColor playerColor, int filledCellAmount, int[] playedMoves) {
+		int playerMoveAmount = filledCellAmount >> 1;
+		if(playerColor == BoardPlayerColor.RED) playerMoveAmount = filledCellAmount - playerMoveAmount;
 		
 		MoveAnalysis[] moveAnalyses = new MoveAnalysis[playerMoveAmount];
 		
@@ -694,16 +691,18 @@ public final class Board {
 			return new GameAnalysis(PERFECT_ELO_APPROXIMATION, moveAnalyses);
 		}
 		
-		while(filledCellAmount != 0) {
+		int n = filledCellAmount;
+		while(n != 0) {
 			
-			undoMove();
+			n--;
+			int lastMove = playedMoves[n];
 			
-			undoneMoves[filledCellAmount] = playedMoves[filledCellAmount];
+			undoMove(lastMove);
 		}
 		
 		int totalScoreLoss = 0;
 		
-		int previousBoardScore = evaluate();
+		int previousBoardScore = evaluate(playedMoves);
 		
 		boolean playerAtTurn = playerColor == BoardPlayerColor.RED;
 		boolean previousMoveCouldHaveBeenWin = false;
@@ -712,15 +711,15 @@ public final class Board {
 		
 		int moveIndex = 0;
 		
-		for(int i = 0; i < n; i++) {
+		for(int i = 0; i < filledCellAmount; i++) {
 			
-			int move = undoneMoves[i];
+			int move = playedMoves[i];
 			
 			boolean moveIsForced = playerAtTurn && legalMoveAmount() == 1;
 			
 			playMove(move);
 			
-			int boardScore = evaluate();
+			int boardScore = evaluate(playedMoves);
 			if(playerAtTurn) {
 				
 				totalScoreLoss += previousBoardScore + boardScore;
@@ -743,22 +742,6 @@ public final class Board {
 		float f = approximateElo(averageScoreLoss);
 		
 		return new GameAnalysis(f, moveAnalyses);
-	}
-	
-	public String movesString() {
-		if(filledCellAmount == 0) return EMPTY_MOVES_STRING;
-		
-		StringBuilder stringBuilder = new StringBuilder();
-		
-		for(int i = 0; i < filledCellAmount; i++) {
-			
-			int move = playedMoves[i];
-			char moveCharacter = (char) (SMALLEST_MOVE_CHARACTER + move);
-			
-			stringBuilder.append(moveCharacter);
-		}
-		
-		return stringBuilder.toString();
 	}
 	
 	private long columnHash() {
@@ -791,33 +774,35 @@ public final class Board {
 		return columnHash;
 	}
 	
-	public int evaluateMove(int moveCellX) {
+	public int evaluateMove(int moveCellX, int[] playedMoves) {
 		playMove(moveCellX);
 		
-		int score = -evaluate();
+		int score = -evaluate(playedMoves);
 		
-		undoMove();
+		undoMove(moveCellX);
 		
 		return score;
 	}
 	
-	public int evaluateMove(int moveCellX, int minScore) {
+	public int evaluateMove(int moveCellX, int minScore, int[] playedMoves) {
 		playMove(moveCellX);
 		
-		int score = -evaluate(-minScore);
+		int score = -evaluate(-minScore, playedMoves);
 		
-		undoMove();
+		undoMove(moveCellX);
 		
 		return score;
 	}
 	
-	public int evaluate() {
-		return evaluate(Integer.MAX_VALUE);
+	public int evaluate(int[] playedMoves) {
+		return evaluate(Integer.MAX_VALUE, playedMoves);
 	}
 	
-	public int evaluate(int maxScore) {
+	public int evaluate(int maxScore, int[] playedMoves) {
 		evaluationAmount++;
 		long t = System.nanoTime();
+		
+		int filledCellAmount = Long.bitCount(maskBitboard);
 		
 		long board = activeBitboard ^ maskBitboard;
 		if(bitboardContainsConnection(board)) {
@@ -880,9 +865,10 @@ public final class Board {
 		
 		if(filledCellAmount > 0) {
 			
-			undoMove();
-			
+			filledCellAmount--;
 			int lastMove = playedMoves[filledCellAmount];
+			
+			undoMove(lastMove);
 			
 			key = importantScoreCache.entryKey(mixedHash);
 			if(key >= 0) {
@@ -980,6 +966,7 @@ public final class Board {
 	private int evaluateWithNoImmediateWin(int minimalScore) {
 		nodeEvaluationAmount++;
 		
+		int filledCellAmount = Long.bitCount(maskBitboard);
 		int minScore = BoardScore.minimal(filledCellAmount);
 		int maxScore = BoardScore.maximalWithNoImmediateWin(filledCellAmount);
 		
@@ -1094,7 +1081,7 @@ public final class Board {
 			
 			int s = -evaluateWithNoImmediateWin(-minimalScore - 1);
 			
-			undoMove();
+			undoMove(forcedX);
 			
 			if(s > minimalScore) {
 				
@@ -1192,7 +1179,7 @@ public final class Board {
 			
 			int s = -evaluateWithNoImmediateWin(-minimalScore - 1);
 			
-			undoMove();
+			undoMove(moveCellX);
 			
 			if(s > minimalScore) {
 				
@@ -1254,9 +1241,6 @@ public final class Board {
 	public void playMove(int moveCellX) {
 		long b = ceilingBitboard & (Bitboards.FIRST_COLUMN << (moveCellX << LOGARITHMIC_BITBOARD_LENGTH));
 		
-		playedMoves[filledCellAmount] = moveCellX;
-		filledCellAmount++;
-		
 		activeBitboard ^= maskBitboard;
 		maskBitboard |= b;
 		ceilingBitboard += b;
@@ -1270,10 +1254,7 @@ public final class Board {
 		mixedHash = mixedHash(hash);
 	}
 	
-	public void undoMove() {
-		filledCellAmount--;
-		int moveCellX = playedMoves[filledCellAmount];
-		
+	public void undoMove(int moveCellX) {
 		long b = ceilingBitboard & (Bitboards.FIRST_COLUMN << (moveCellX << LOGARITHMIC_BITBOARD_LENGTH));
 		b >>>= 1;
 		
@@ -1309,7 +1290,7 @@ public final class Board {
 		
 		if((board & maskBitboard) == 0) return null;
 		
-		boolean redAtTurn = (filledCellAmount & 1) == 0;
+		boolean redAtTurn = (Long.bitCount(maskBitboard) & 1) == 0;
 		return (activeBitboard & board) == 0 ? (redAtTurn ? BoardPlayerColor.YELLOW : BoardPlayerColor.RED) : (redAtTurn ? BoardPlayerColor.RED : BoardPlayerColor.YELLOW);
 	}
 	
@@ -1317,7 +1298,7 @@ public final class Board {
 		long board = activeBitboard ^ maskBitboard;
 		if(bitboardContainsConnection(board)) return false;
 		
-		return filledCellAmount != FULL_CELL_AMOUNT;
+		return maskBitboard != Bitboards.FULL_BOARD;
 	}
 	
 	public void resetEvaluationMetrics() {
@@ -1342,18 +1323,18 @@ public final class Board {
 		long board = activeBitboard ^ maskBitboard;
 		if(bitboardContainsConnection(board)) return true;
 		
-		return filledCellAmount == FULL_CELL_AMOUNT;
+		return maskBitboard == Bitboards.FULL_BOARD;
 	}
 	
 	public BoardOutcome outcome() {
 		long board = activeBitboard ^ maskBitboard;
 		if(bitboardContainsConnection(board)) {
 			
-			boolean redAtTurn = (filledCellAmount & 1) == 0;
+			boolean redAtTurn = (Long.bitCount(maskBitboard) & 1) == 0;
 			return redAtTurn ? BoardOutcome.YELLOW_WIN : BoardOutcome.RED_WIN;
 		}
 		
-		return filledCellAmount == FULL_CELL_AMOUNT ? BoardOutcome.DRAW : BoardOutcome.UNDECIDED;
+		return maskBitboard == Bitboards.FULL_BOARD ? BoardOutcome.DRAW : BoardOutcome.UNDECIDED;
 	}
 	
 	private static long mixedHash(long hash) {
