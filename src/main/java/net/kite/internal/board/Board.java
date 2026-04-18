@@ -1036,6 +1036,28 @@ public final class Board {
 			
 			int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(columnHash);
 			if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
+			
+			if(filledCellAmount < OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
+				
+				long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
+				while(movesBitboard != 0) {
+					
+					int p = Long.numberOfTrailingZeros(movesBitboard);
+					int x = p >>> LOGARITHMIC_BITBOARD_LENGTH;
+					long b = 1L << p;
+					
+					movesBitboard ^= b;
+					
+					playMove(x);
+					
+					columnHash = columnHash();
+					openingBoardScore = -OpeningBoardScoreCaches.DEFAULT.boardScore(columnHash);
+					
+					undoMove(x);
+					
+					if(openingBoardScore > minimalScore) return openingBoardScore;
+				}
+			}
 		}
 		
 		int entryKey = scoreCache.entryKey(mixedHash);
