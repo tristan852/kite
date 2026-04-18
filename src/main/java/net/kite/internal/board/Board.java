@@ -395,7 +395,7 @@ public final class Board {
 				
 				if(moveLegalWhileGameNotOver(x)) {
 					
-					int moveScore = evaluateMove(x, playedMoves);
+					int moveScore = evaluateMove(x, filledCellAmount, playedMoves);
 					if(moveScore > boardScore) boardScore = moveScore;
 					
 					moveScores[x] = moveScore;
