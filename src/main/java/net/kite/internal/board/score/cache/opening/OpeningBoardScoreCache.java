@@ -96,7 +96,7 @@ public final class OpeningBoardScoreCache {
 	}
 	
 	public int boardScore(long boardColumnHash) {
-		int index = (int) Long.remainderUnsigned(boardColumnHash, CAPACITY);
+		int index = (int) (boardColumnHash % CAPACITY);
 		
 		long partialColumnHash = boardPartialColumnHashes[index];
 		
