@@ -1148,6 +1148,9 @@ public final class Board {
 		int bestMoveIndex = 0;
 		int bestMoveScore = Integer.MIN_VALUE;
 		
+		boolean redAtTurn = (filledCellAmount & 1) == 0;
+		int[] moveCellScores = redAtTurn ? RED_MOVE_CELL_SCORES : YELLOW_MOVE_CELL_SCORES;
+		
 		while(movesBitboard != 0) {
 			
 			int movePosition = Long.numberOfTrailingZeros(movesBitboard);
@@ -1170,9 +1173,6 @@ public final class Board {
 			if(immediateThreats != 0) return maxScore;
 			
 			result &= ~(opponentThreatsBitboard | moveBitboard);
-			
-			boolean redAtTurn = (filledCellAmount & 1) == 0;
-			int[] moveCellScores = redAtTurn ? RED_MOVE_CELL_SCORES : YELLOW_MOVE_CELL_SCORES;
 			
 			int moveScore = moveCellScores[movePosition];
 			
