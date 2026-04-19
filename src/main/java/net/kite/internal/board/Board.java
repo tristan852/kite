@@ -57,23 +57,23 @@ public final class Board {
 	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 231;
 	
 	private static final int[] RED_MOVE_CELL_SCORES = new int[] {
-			  0,  79,  91, 209, 105, 544,   0,   0,
-			191,  90,  96, 215, 207, 328,   0,   0,
-			120, 215, 399, 319, 272, 311,   0,   0,
-			419, 316, 401, 343, 604, 684,   0,   0,
-			120, 215, 399, 319, 272, 311,   0,   0,
-			191,  90,  96, 215, 207, 328,   0,   0,
-			  0,  79,  91, 209, 105, 544
+			  0,  79,  91, 210, 105, 543,   0,   0,
+			191,  90,  96, 211, 207, 328,   0,   0,
+			110, 217, 343, 215, 283, 311,   0,   0,
+			433, 339, 345, 343, 560, 684,   0,   0,
+			110, 217, 343, 215, 283, 311,   0,   0,
+			191,  90,  96, 211, 207, 328,   0,   0,
+			  0,  79,  91, 210, 105, 543
 	};
 	
 	private static final int[] YELLOW_MOVE_CELL_SCORES = new int[] {
-			  2,  35,  36, 145,  34, 344,   0,   0,
-			  0, 135,  85, 228,  59, 360,   0,   0,
-			  4, 236, 145, 346,  97, 340,   0,   0,
-			 75, 362, 379, 472, 489, 466,   0,   0,
-			  4, 236, 145, 346,  97, 340,   0,   0,
-			  0, 135,  85, 228,  59, 360,   0,   0,
-			  2,  35,  36, 145,  34, 344
+			  0,  99, 110, 209,  98, 408,   0,   0,
+			 64,   3, 131, 364, 123, 421,   0,   0,
+			 61, 301, 209, 408, 161, 396,   0,   0,
+			196, 426, 443, 536, 556, 530,   0,   0,
+			 61, 301, 209, 408, 161, 396,   0,   0,
+			 64,   3, 131, 364, 123, 421,   0,   0,
+			  0,  99, 110, 209,  98, 408
 	};
 	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
@@ -888,15 +888,13 @@ public final class Board {
 			key = importantScoreCache.entryKey(mixedHash);
 			if(key >= 0) {
 				
-				int importantBoardScore = importantScoreCache.entryScore(key);
-				
 				boolean exact = importantScoreCache.entryExact(key);
 				if(exact) {
 					
-					int s = -importantBoardScore;
-					if(minimalScore < s) {
+					int importantBoardScore = -importantScoreCache.entryScore(key);
+					if(minimalScore < importantBoardScore) {
 						
-						minimalScore = s;
+						minimalScore = importantBoardScore;
 						minimalScoreWeight = PARENT_IMPORTANT_SCORE_BOUND_WEIGHT;
 					}
 				}
