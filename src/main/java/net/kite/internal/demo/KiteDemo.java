@@ -307,7 +307,8 @@ public final class KiteDemo {
 			"bottom", "0",
 			"right", "0",
 			"margin", "2.5dvh 2.5dvw",
-			"padding", "6px"
+			"padding", "6px",
+			"cursor", "pointer"
 	};
 	
 	private static final String[] LOADING_BAR_ERROR_ELEMENT_STYLES = new String[] {
