@@ -83,8 +83,6 @@ public final class Board {
 	private static final int LOGARITHMIC_BITBOARD_LENGTH = 3;
 	private static final int LARGEST_BITBOARD_Y = 7;
 	
-	private static final int LARGEST_MOVE_CELL_X = 6;
-	
 	private static final char SMALLEST_MOVE_CHARACTER = '1';
 	
 	private static final long HASH_MIX_FIRST_MAGIC = 0xFF51AFD7ED558CCDL;
