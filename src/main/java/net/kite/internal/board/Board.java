@@ -749,36 +749,6 @@ public final class Board {
 		return new GameAnalysis(f, moveAnalyses);
 	}
 	
-	private long columnHash() {
-		long h1 = 0;
-		long h2 = 0;
-		
-		for(int x = 0; x < WIDTH; x++) h1 = partialColumnHash(h1, x);
-		for(int x = LARGEST_MOVE_CELL_X; x >= 0; x--) h2 = partialColumnHash(h2, x);
-		
-		if(h2 < h1) h1 = h2;
-		return h1 / COLUMN_HASH_BASE;
-	}
-	
-	private long partialColumnHash(long columnHash, int x) {
-		long board = 1L << (x << LOGARITHMIC_BITBOARD_LENGTH);
-		
-		while((board & maskBitboard) != 0) {
-			
-			columnHash *= COLUMN_HASH_BASE;
-			
-			boolean activeCell = (activeBitboard & board) != 0;
-			
-			if(activeCell) columnHash++;
-			else columnHash += 2;
-			
-			board <<= 1;
-		}
-		
-		columnHash *= COLUMN_HASH_BASE;
-		return columnHash;
-	}
-	
 	public int evaluateMove(int moveCellX, int filledCellAmount, int[] playedMoves) {
 		playMove(moveCellX);
 		
@@ -843,7 +813,7 @@ public final class Board {
 		
 		if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
 			
-			long columnHash = columnHash();
+			long columnHash = columnHash(maskBitboard, activeBitboard);
 			
 			int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(columnHash);
 			if(openingBoardScore != Integer.MIN_VALUE) {
@@ -902,7 +872,7 @@ public final class Board {
 			
 			if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
 				
-				long columnHash = columnHash();
+				long columnHash = columnHash(maskBitboard, activeBitboard);
 				
 				int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(columnHash);
 				if(openingBoardScore != Integer.MIN_VALUE) {
@@ -1030,7 +1000,7 @@ public final class Board {
 		
 		if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
 			
-			long columnHash = columnHash();
+			long columnHash = columnHash(maskBitboard, activeBitboard);
 			
 			int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(columnHash);
 			if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
@@ -1040,19 +1010,15 @@ public final class Board {
 				long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
 				while(movesBitboard != 0) {
 					
-					int p = Long.numberOfTrailingZeros(movesBitboard);
-					int x = p >>> LOGARITHMIC_BITBOARD_LENGTH;
-					long b = 1L << p;
-					
+					long b = Long.lowestOneBit(movesBitboard);
 					movesBitboard ^= b;
 					
-					playMove(x);
+					long active = maskBitboard ^ activeBitboard;
+					long mask = maskBitboard | b;
 					
-					columnHash = columnHash();
+					columnHash = columnHash(mask, active);
+					
 					openingBoardScore = -OpeningBoardScoreCaches.DEFAULT.boardScore(columnHash);
-					
-					undoMove(x);
-					
 					if(openingBoardScore > minimalScore) return openingBoardScore;
 				}
 			}
@@ -1370,6 +1336,53 @@ public final class Board {
 		}
 		
 		return maskBitboard == Bitboards.FULL_BOARD ? BoardOutcome.DRAW : BoardOutcome.UNDECIDED;
+	}
+	
+	private static long columnHash(long maskBitboard, long activeBitboard) {
+		long h1 = 0;
+		long h2 = 0;
+		long b1 = 1;
+		long b2 = Bitboards.BOTTOM_CELL_OF_LAST_COLUMN;
+		
+		while(true) {
+			
+			long board = b1;
+			while((board & maskBitboard) != 0) {
+				
+				h1 *= COLUMN_HASH_BASE;
+				
+				boolean activeCell = (activeBitboard & board) != 0;
+				
+				if(activeCell) h1++;
+				else h1 += 2;
+				
+				board <<= 1;
+			}
+			
+			board = b2;
+			while((board & maskBitboard) != 0) {
+				
+				h2 *= COLUMN_HASH_BASE;
+				
+				boolean activeCell = (activeBitboard & board) != 0;
+				
+				if(activeCell) h2++;
+				else h2 += 2;
+				
+				board <<= 1;
+			}
+			
+			h1 *= COLUMN_HASH_BASE;
+			h2 *= COLUMN_HASH_BASE;
+			
+			b2 >>>= RIGHT_BITBOARD_DIRECTION;
+			if(b2 == 0) break;
+			
+			b1 <<= RIGHT_BITBOARD_DIRECTION;
+		}
+		
+		if(h2 < h1) h1 = h2;
+		return h1 / COLUMN_HASH_BASE;
 	}
 	
 	private static long mixedHash(long hash) {

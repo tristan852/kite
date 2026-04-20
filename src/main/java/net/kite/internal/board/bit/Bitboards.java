@@ -11,6 +11,7 @@ public final class Bitboards {
 	public static final long EVEN_BOARD_ROWS = 0x002A2A2A2A2A2A2AL;
 	
 	public static final long FIRST_COLUMN = 0x00000000000000FFL;
+	public static final long BOTTOM_CELL_OF_LAST_COLUMN = 0x0001000000000000L;
 	
 	public static final long TOP_EVEN_BOARD_ROW = 0x0020202020202020L;
 	
