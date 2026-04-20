@@ -45,7 +45,7 @@ public final class Kite implements KiteApi {
 	private static final char SMALLEST_MOVE_CHARACTER = '1';
 	
 	private static final double METRICS_THROUGHPUT_CONVERSION_FACTOR = 1000.0;
-	private static final String METRICS_STRING_PATTERN = "positions evaluated      : %d\naverage evaluation time  : %s\naverage node evaluations : %,.2f\nnode throughput          : %,.2f Mn/s";
+	private static final String METRICS_STRING_PATTERN = "positions evaluated      : %,d\naverage evaluation time  : %s\naverage node evaluations : %,.2f\nnode throughput          : %,.2f Mn/s";
 	private static final String COLORED_METRICS_STRING_PATTERN;
 	
 	private static final String[] BENCHMARK_RESOURCE_PATHS = new String[] {
@@ -69,7 +69,7 @@ public final class Kite implements KiteApi {
 			
 			COLORED_METRICS_STRING_PATTERN =
 					AnsiUtil.cyanAnsi("positions evaluated      : ") +
-					AnsiUtil.brightYellowAnsi("%d") +
+					AnsiUtil.brightYellowAnsi("%,d") +
 					AnsiUtil.cyanAnsi("\naverage evaluation time  : ") +
 					AnsiUtil.brightYellowAnsi("%s") +
 					AnsiUtil.cyanAnsi("\naverage node evaluations : ") +
@@ -638,7 +638,7 @@ public final class Kite implements KiteApi {
 			
 			moveColumnIndex++;
 			
-			String message = String.format("Cannot evaluate illegal move: '%d'", moveColumnIndex);
+			String message = String.format(Locale.ROOT, "Cannot evaluate illegal move: '%,d'", moveColumnIndex);
 			throw new IllegalMoveException(moveColumnIndex, message);
 		}
 		
@@ -716,7 +716,7 @@ public final class Kite implements KiteApi {
 			
 			moveColumnIndex++;
 			
-			String message = String.format("Cannot evaluate illegal move: '%d'", moveColumnIndex);
+			String message = String.format(Locale.ROOT, "Cannot evaluate illegal move: '%,d'", moveColumnIndex);
 			throw new IllegalMoveException(moveColumnIndex, message);
 		}
 		
@@ -800,7 +800,7 @@ public final class Kite implements KiteApi {
 				
 				moveColumnIndex++;
 				
-				String message = String.format("moveColumnIndicesString contains an illegal move: '%d'", moveColumnIndex);
+				String message = String.format(Locale.ROOT, "moveColumnIndicesString contains an illegal move: '%,d'", moveColumnIndex);
 				throw new IllegalMoveException(moveColumnIndex, message);
 			}
 			
@@ -834,7 +834,7 @@ public final class Kite implements KiteApi {
 			
 			if(moveColumnIndex < 1 || moveColumnIndex > BOARD_WIDTH) {
 				
-				String message = String.format("moveColumnIndices must contain indices between 1 and 7 (inclusive) but found: %d", moveColumnIndex);
+				String message = String.format(Locale.ROOT, "moveColumnIndices must contain indices between 1 and 7 (inclusive) but found: %,d", moveColumnIndex);
 				throw new IndexOutOfBoundsException(message);
 			}
 		}
@@ -865,7 +865,7 @@ public final class Kite implements KiteApi {
 				
 				moveColumnIndex++;
 				
-				String message = String.format("moveColumnIndices contains an illegal move: '%d'", moveColumnIndex);
+				String message = String.format(Locale.ROOT, "moveColumnIndices contains an illegal move: '%,d'", moveColumnIndex);
 				throw new IllegalMoveException(moveColumnIndex, message);
 			}
 			
@@ -907,7 +907,7 @@ public final class Kite implements KiteApi {
 			
 			moveColumnIndex++;
 			
-			String message = String.format("Cannot play illegal move: '%d'", moveColumnIndex);
+			String message = String.format(Locale.ROOT, "Cannot play illegal move: '%,d'", moveColumnIndex);
 			throw new IllegalMoveException(moveColumnIndex, message);
 		}
 		
@@ -1188,7 +1188,7 @@ public final class Kite implements KiteApi {
 			
 			if(moveColumnIndex < 1 || moveColumnIndex > BOARD_WIDTH) {
 				
-				String message = String.format("moveColumnIndices must contain indices between 1 and 7 (inclusive) but found: %d", moveColumnIndex);
+				String message = String.format(Locale.ROOT, "moveColumnIndices must contain indices between 1 and 7 (inclusive) but found: %,d", moveColumnIndex);
 				throw new IndexOutOfBoundsException(message);
 			}
 		}
