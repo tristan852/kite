@@ -14,6 +14,8 @@ public final class Bitboard {
 	
 	private static final int LARGEST_CELL_POSITION = 63;
 	
+	private static final int RIGHT_SHIFT_AMOUNT = 8;
+	
 	private static final String TO_STRING_CELL_STRING = "O";
 	private static final String TO_STRING_RED_CELL_STRING = "X";
 	private static final String TO_STRING_YELLOW_CELL_STRING = "O";
@@ -63,11 +65,11 @@ public final class Bitboard {
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		for(int y = BOARD_HEIGHT - 1; y >= 0; y--) {
+			
+			long board = 1L << y;
+			
 			for(int x = 0; x < BOARD_WIDTH; x++) {
 				
-				int p = HEIGHT * x + y;
-				
-				long board = 1L << p;
 				boolean contained = (b & board) != 0;
 				
 				String s;
@@ -78,6 +80,8 @@ public final class Bitboard {
 				} else s = TO_STRING_MISSING_CELL_STRING;
 				
 				stringBuilder.append(s);
+				
+				board <<= RIGHT_SHIFT_AMOUNT;
 			}
 			
 			if(y != 0) stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
@@ -90,15 +94,17 @@ public final class Bitboard {
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		for(int y = HEIGHT - 1; y >= 0; y--) {
+			
+			long board = 1L << y;
+			
 			for(int x = 0; x < WIDTH; x++) {
 				
-				int p = HEIGHT * x + y;
-				
-				long board = 1L << p;
 				boolean contained = (bitboard & board) != 0;
 				
 				String s = contained ? TO_STRING_CELL_STRING : TO_STRING_MISSING_CELL_STRING;
 				stringBuilder.append(s);
+				
+				board <<= RIGHT_SHIFT_AMOUNT;
 			}
 			
 			if(y != 0) stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
