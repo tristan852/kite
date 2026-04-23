@@ -4,6 +4,7 @@ public final class Bitboards {
 	
 	public static final long EMPTY = 0x0000000000000000L;
 	public static final long FULL_BOARD = 0x003F3F3F3F3F3F3FL;
+	public static final long FULL_EXTENDED_BOARD = 0x007F7F7F7F7F7F7FL;
 	
 	public static final long EMPTY_CEILING = 0x0001010101010101L;
 	

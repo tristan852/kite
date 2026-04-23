@@ -7,11 +7,16 @@ public final class Bitboard {
 	private static final int WIDTH = 8;
 	private static final int HEIGHT = 8;
 	
+	private static final int BOARD_WIDTH = 7;
+	private static final int BOARD_HEIGHT = 6;
+	
 	private static final int SIZE = 64;
 	
 	private static final int LARGEST_CELL_POSITION = 63;
 	
 	private static final String TO_STRING_CELL_STRING = "O";
+	private static final String TO_STRING_RED_CELL_STRING = "X";
+	private static final String TO_STRING_YELLOW_CELL_STRING = "O";
 	private static final String TO_STRING_MISSING_CELL_STRING = ".";
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
 	
@@ -24,6 +29,61 @@ public final class Bitboard {
 		
 		int n = TO_HEXADECIMAL_STRING_LENGTH - string.length();
 		return TO_HEXADECIMAL_STRING_PADDING_STRING.repeat(n) + string;
+	}
+	
+	public static String toBoardString(long bitboard) {
+		long b = bitboard;
+		
+		for(int i = 0; i < BOARD_HEIGHT; i++) {
+			
+			b |= b >>> 1;
+			b &= Bitboards.FULL_EXTENDED_BOARD;
+		}
+		
+		int n = Long.bitCount(b) - BOARD_WIDTH;
+		boolean redAtTurn = (n & 1) == 0;
+		
+		b >>>= 1;
+		long activeBitboard = bitboard & b;
+		
+		String s1;
+		String s2;
+		
+		if(redAtTurn) {
+			
+			s1 = TO_STRING_RED_CELL_STRING;
+			s2 = TO_STRING_YELLOW_CELL_STRING;
+			
+		} else {
+			
+			s1 = TO_STRING_YELLOW_CELL_STRING;
+			s2 = TO_STRING_RED_CELL_STRING;
+		}
+		
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		for(int y = BOARD_HEIGHT - 1; y >= 0; y--) {
+			for(int x = 0; x < BOARD_WIDTH; x++) {
+				
+				int p = HEIGHT * x + y;
+				
+				long board = 1L << p;
+				boolean contained = (b & board) != 0;
+				
+				String s;
+				if(contained) {
+					
+					s = (activeBitboard & board) == 0 ? s2 : s1;
+					
+				} else s = TO_STRING_MISSING_CELL_STRING;
+				
+				stringBuilder.append(s);
+			}
+			
+			if(y != 0) stringBuilder.append(TO_STRING_CELL_ROW_SEPARATOR_STRING);
+		}
+		
+		return stringBuilder.toString();
 	}
 	
 	public static String toString(long bitboard) {
