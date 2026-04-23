@@ -6,6 +6,7 @@ public final class Bitboard {
 	
 	private static final int WIDTH = 8;
 	private static final int HEIGHT = 8;
+	private static final int LOGARITHMIC_WIDTH = 3;
 	
 	private static final int BOARD_WIDTH = 7;
 	private static final int BOARD_HEIGHT = 6;
@@ -22,6 +23,8 @@ public final class Bitboard {
 	private static final String TO_STRING_MISSING_CELL_STRING = ".";
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
 	
+	private static final int TO_BOARD_MOVES_STRING_MOVE_CHARACTER_OFFSET = 49;
+	
 	private static final int TO_HEXADECIMAL_STRING_LENGTH = 16;
 	private static final String TO_HEXADECIMAL_STRING_PADDING_STRING = "0";
 	
@@ -31,6 +34,52 @@ public final class Bitboard {
 		
 		int n = TO_HEXADECIMAL_STRING_LENGTH - string.length();
 		return TO_HEXADECIMAL_STRING_PADDING_STRING.repeat(n) + string;
+	}
+	
+	public static String toBoardMovesString(long bitboard) {
+		long b = bitboard;
+		
+		for(int i = 0; i < BOARD_HEIGHT; i++) {
+			
+			b |= b >>> 1;
+			b &= Bitboards.FULL_EXTENDED_BOARD;
+		}
+		
+		b >>>= 1;
+		b &= Bitboards.FULL_EXTENDED_BOARD;
+		
+		long activeBitboard = bitboard & b;
+		int n = Long.bitCount(b);
+		
+		StringBuilder stringBuilder = toBoardMovesString(b, activeBitboard, Bitboards.EMPTY_CEILING, n);
+		return stringBuilder == null ? null : stringBuilder.toString();
+	}
+	
+	private static StringBuilder toBoardMovesString(long maskBitboard, long activeBitboard, long ceilingBitboard, int totalMoves) {
+		if(maskBitboard == 0) return new StringBuilder(totalMoves);
+		
+		long moves = activeBitboard & ceilingBitboard;
+		long newActiveBitboard = maskBitboard ^ activeBitboard;
+		while(moves != 0) {
+			
+			long move = Long.lowestOneBit(moves);
+			moves ^= move;
+			
+			long newMaskBitboard = maskBitboard ^ move;
+			long newCeilingBitboard = ceilingBitboard + move;
+			
+			StringBuilder stringBuilder = toBoardMovesString(newMaskBitboard, newActiveBitboard, newCeilingBitboard, totalMoves);
+			if(stringBuilder != null) {
+				
+				int x = Long.numberOfTrailingZeros(move);
+				x >>>= LOGARITHMIC_WIDTH;
+				
+				char c = (char) (TO_BOARD_MOVES_STRING_MOVE_CHARACTER_OFFSET + x);
+				return stringBuilder.insert(0, c);
+			}
+		}
+		
+		return null;
 	}
 	
 	public static String toBoardString(long bitboard) {
