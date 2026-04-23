@@ -42,11 +42,12 @@ public final class Bitboard {
 			b &= Bitboards.FULL_EXTENDED_BOARD;
 		}
 		
-		int n = Long.bitCount(b) - BOARD_WIDTH;
-		boolean redAtTurn = (n & 1) == 0;
-		
 		b >>>= 1;
+		b &= Bitboards.FULL_EXTENDED_BOARD;
+		
 		long activeBitboard = bitboard & b;
+		
+		boolean redAtTurn = (Long.bitCount(b) & 1) == 0;
 		
 		String s1;
 		String s2;
