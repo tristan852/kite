@@ -14,10 +14,11 @@ public final class OpeningBoardScoreCaches {
 		synchronized(OpeningBoardScoreCaches.class) {
 			
 			if(defaultLoaded) return;
-			defaultLoaded = true;
 			
 			if(prefetchedCacheBytes == null) DEFAULT.loadFromResources(DEFAULT_RESOURCE_PATH);
 			else DEFAULT.loadFromBytes(prefetchedCacheBytes);
+			
+			defaultLoaded = true;
 		}
 	}
 	
