@@ -20,6 +20,9 @@ repositories {
 }
 
 dependencies {
+    implementation("it.unimi.dsi:sux4j:5.4.1")
+    implementation("it.unimi.dsi:fastutil:8.5.18")
+    
     implementation("org.fusesource.jansi:jansi:2.4.2")
     
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
