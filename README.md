@@ -32,7 +32,7 @@ Internally, Kite leverages **alpha-beta pruning**, **symmetry reduction**, **bit
 * **Move Ordering**: Uses heuristics that favor center columns and winning threats.
 * **Bitboard Representation**: Game states use 64-bit integers for fast updates and operations.
 * **Transposition Caching**: Hashes each position and stores scores in an efficient score cache.
-* **Opening Book**: Uses a precomputed 14-ply opening book containing all opening positions up to 14 ply for instant early-game solves.
+* **Opening Book**: Uses a precomputed complete 14-ply opening book containing all opening positions up to 14 ply for instant early-game solves.
 * **Claim-even**: Applies the claim-even strategy to solve certain special positions in *O(1)* time.
 * *and much more...*
 
