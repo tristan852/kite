@@ -10,7 +10,6 @@ module kite.main {
 	
 	requires it.unimi.dsi.sux4j;
 	requires it.unimi.dsi.fastutil;
-	requires it.unimi.dsi.dsiutils;
 	requires org.fusesource.jansi;
 	requires org.teavm.jso.apis;
 }
