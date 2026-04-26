@@ -1,25 +1,22 @@
 package net.kite.internal.board.score.cache.opening;
 
-import net.kite.internal.board.score.BoardScore;
+import it.unimi.dsi.fastutil.io.BinIO;
+import it.unimi.dsi.sux4j.mph.GOVMinimalPerfectHashFunction;
 import net.kite.internal.board.score.cache.BoardScoreCache;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 public final class OpeningBoardScoreCache {
 	
-	private static final int CAPACITY = 16777259;
+	private static final int BOARD_SCORES_SIZE_IN_BYTES  = 41047131;
+	private static final int HASH_FUNCTION_SIZE_IN_BYTES = 11538791;
 	
-	private static final long BOARD_PARTIAL_COLUMN_HASH_MASK = 0x00000000000000FFL;
-	
-	private final byte[] boardPartialColumnHashes;
 	private final byte[] boardScores;
 	
+	private GOVMinimalPerfectHashFunction<Long> hashFunction;
+	
 	public OpeningBoardScoreCache() {
-		this.boardPartialColumnHashes = new byte[CAPACITY];
-		this.boardScores = new byte[CAPACITY];
+		this.boardScores = new byte[BOARD_SCORES_SIZE_IN_BYTES];
 	}
 	
 	public void loadFromResources(String resourcePath) {
@@ -33,15 +30,14 @@ public final class OpeningBoardScoreCache {
 		
 		try(inputStream) {
 			
-			inputStream.readNBytes(boardPartialColumnHashes, 0, CAPACITY);
-			inputStream.readNBytes(boardScores, 0, CAPACITY);
+			inputStream.readNBytes(boardScores, 0, BOARD_SCORES_SIZE_IN_BYTES);
 			
-			for(int i = 0; i < CAPACITY; i++) {
-				
-				boardScores[i] += BoardScore.INVALID;
-			}
+			@SuppressWarnings("unchecked")
+			GOVMinimalPerfectHashFunction<Long> hf = (GOVMinimalPerfectHashFunction<Long>) BinIO.loadObject(inputStream);
 			
-		} catch(IOException exception) {
+			hashFunction = hf;
+			
+		} catch(IOException | ClassNotFoundException exception) {
 			
 			String errorMessage = String.format("An exception occurred while loading opening score cache from resources: %s", exception);
 			System.err.println(errorMessage);
@@ -57,13 +53,13 @@ public final class OpeningBoardScoreCache {
 		
 		try {
 			
-			System.arraycopy(bytes, 0, boardPartialColumnHashes, 0, CAPACITY);
-			System.arraycopy(bytes, CAPACITY, boardScores, 0, CAPACITY);
+			System.arraycopy(bytes, 0, boardScores, 0, BOARD_SCORES_SIZE_IN_BYTES);
+			InputStream stream = new ByteArrayInputStream(bytes, BOARD_SCORES_SIZE_IN_BYTES, HASH_FUNCTION_SIZE_IN_BYTES);
 			
-			for(int i = 0; i < CAPACITY; i++) {
-				
-				boardScores[i] += BoardScore.INVALID;
-			}
+			@SuppressWarnings("unchecked")
+			GOVMinimalPerfectHashFunction<Long> hf = (GOVMinimalPerfectHashFunction<Long>) BinIO.loadObject(stream);
+			
+			hashFunction = hf;
 			
 		} catch(Exception exception) {
 			
@@ -72,38 +68,10 @@ public final class OpeningBoardScoreCache {
 		}
 	}
 	
-	public void saveToFile(String filePath) {
-		try(OutputStream outputStream = new FileOutputStream(filePath)) {
-			
-			for(int i = 0; i < CAPACITY; i++) {
-				
-				boardScores[i] -= BoardScore.INVALID;
-			}
-			
-			outputStream.write(boardPartialColumnHashes);
-			outputStream.write(boardScores);
-			
-			for(int i = 0; i < CAPACITY; i++) {
-				
-				boardScores[i] += BoardScore.INVALID;
-			}
-			
-		} catch(IOException exception) {
-			
-			String errorMessage = String.format("An exception occurred while saving opening score cache to file: %s", exception);
-			System.err.println(errorMessage);
-		}
-	}
-	
-	public int boardScore(long boardColumnHash) {
-		int index = (int) (boardColumnHash % CAPACITY);
+	public int boardScore(long mixedHash) {
+		int index = (int) hashFunction.getLong(mixedHash);
 		
-		long partialColumnHash = boardPartialColumnHashes[index];
-		
-		boardColumnHash &= BOARD_PARTIAL_COLUMN_HASH_MASK;
-		partialColumnHash &= BOARD_PARTIAL_COLUMN_HASH_MASK;
-		
-		return boardColumnHash == partialColumnHash ? boardScores[index] : Integer.MIN_VALUE;
+		return boardScores[index];
 	}
 	
 }
