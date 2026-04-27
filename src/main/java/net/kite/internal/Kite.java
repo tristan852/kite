@@ -45,8 +45,9 @@ public final class Kite implements KiteApi {
 	private static final char SMALLEST_MOVE_CHARACTER = '1';
 	
 	private static final double METRICS_THROUGHPUT_CONVERSION_FACTOR = 1000.0;
-	private static final String METRICS_STRING_PATTERN = "positions evaluated      : %,d\naverage evaluation time  : %s\naverage node evaluations : %,.2f\nnode throughput          : %,.2f Mn/s";
+	private static final String METRICS_STRING_PATTERN = "positions evaluated      : %,d\naverage evaluation time  : %s\naverage node evaluations : %s\nnode throughput          : %s%s";
 	private static final String COLORED_METRICS_STRING_PATTERN;
+	private static final String METRICS_STRING_MISSING_VALUE_STRING = "N/A";
 	
 	private static final String[] BENCHMARK_RESOURCE_PATHS = new String[] {
 			"/benchmarks/endgame_easy.txt",
@@ -73,10 +74,10 @@ public final class Kite implements KiteApi {
 					AnsiUtil.cyanAnsi("\naverage evaluation time  : ") +
 					AnsiUtil.brightYellowAnsi("%s") +
 					AnsiUtil.cyanAnsi("\naverage node evaluations : ") +
-					AnsiUtil.brightYellowAnsi("%,.2f") +
+					AnsiUtil.brightYellowAnsi("%s") +
 					AnsiUtil.cyanAnsi("\nnode throughput          : ") +
-					AnsiUtil.brightYellowAnsi("%,.2f") +
-					AnsiUtil.cyanAnsi(" Mn/s");
+					AnsiUtil.brightYellowAnsi("%s") +
+					AnsiUtil.cyanAnsi("%s");
 			
 			if(disabled) AnsiUtil.disableAnsiCodes();
 		}
@@ -342,28 +343,43 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public int printAndResetPerformanceMetrics() {
-		double averageTime = 0;
-		double averageAmount = 0;
-		double throughput = 0;
+		String s1;
+		String s2;
+		String s3;
+		String s4;
 		
-		if(metricsEvaluationAmount != 0) {
+		if(metricsEvaluationAmount == 0) {
 			
-			averageTime = (double) metricsEvaluationTime / metricsEvaluationAmount;
-			averageAmount = (double) metricsNodeEvaluationAmount / metricsEvaluationAmount;
+			s1 = METRICS_STRING_MISSING_VALUE_STRING;
+			s2 = METRICS_STRING_MISSING_VALUE_STRING;
+			
+		} else {
+			
+			double averageTime = (double) metricsEvaluationTime / metricsEvaluationAmount;
+			double averageAmount = (double) metricsNodeEvaluationAmount / metricsEvaluationAmount;
+			
+			s1 = TimeUtil.formatDuration(averageTime);
+			s2 = String.format(Locale.ROOT, "%,.2f", averageAmount);
 		}
 		
-		if(metricsEvaluationTime != 0) {
+		if(metricsEvaluationTime == 0 || metricsNodeEvaluationAmount == 0) {
 			
-			throughput = (double) metricsNodeEvaluationAmount / metricsEvaluationTime;
+			s3 = METRICS_STRING_MISSING_VALUE_STRING;
+			s4 = "";
+			
+		} else {
+			
+			double throughput = (double) metricsNodeEvaluationAmount / metricsEvaluationTime;
 			throughput *= METRICS_THROUGHPUT_CONVERSION_FACTOR;
+			
+			s3 = String.format(Locale.ROOT, "%,.2f", throughput);
+			s4 = " Mn/s";
 		}
-		
-		String s = TimeUtil.formatDuration(averageTime);
 		
 		boolean noAnsiCodes = AnsiUtil.areAnsiCodesDisabled() || System.console() == null;
 		
 		String pattern = noAnsiCodes ? METRICS_STRING_PATTERN : COLORED_METRICS_STRING_PATTERN;
-		String message = String.format(Locale.ROOT, pattern, metricsEvaluationAmount, s, averageAmount, throughput);
+		String message = String.format(Locale.ROOT, pattern, metricsEvaluationAmount, s1, s2, s3, s4);
 		System.out.println(message);
 		
 		int n = metricsNodeEvaluationAmount;
