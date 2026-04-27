@@ -1310,7 +1310,6 @@ public final class Board {
 		return maskBitboard == Bitboards.FULL_BOARD ? BoardOutcome.DRAW : BoardOutcome.UNDECIDED;
 	}
 	
-	// TODO: entire method and name
 	private static long unXORRightShift(long x) {
 		long result = 0;
 		
@@ -1320,7 +1319,7 @@ public final class Board {
 			
 			if(i + HASH_MIX_SHIFT_AMOUNT <= 63) {
 				
-				b ^= (result >>> (i + HASH_MIX_SHIFT_AMOUNT)) & 1L;
+				b ^= (result >>> (i + HASH_MIX_SHIFT_AMOUNT)) & 1;
 			}
 			
 			result |= b << i;
@@ -1330,13 +1329,13 @@ public final class Board {
 	}
 	
 	private static long unmixedHash(long mixedHash) {
-		mixedHash = unxorshiftRight(mixedHash);
+		mixedHash = unXORRightShift(mixedHash);
 		
 		mixedHash *= HASH_MIX_SECOND_INVERSE_MAGIC;
-		mixedHash = unxorshiftRight(mixedHash);
+		mixedHash = unXORRightShift(mixedHash);
 		
 		mixedHash *= HASH_MIX_FIRST_INVERSE_MAGIC;
-		mixedHash = unxorshiftRight(mixedHash);
+		mixedHash = unXORRightShift(mixedHash);
 		
 		return mixedHash;
 	}
