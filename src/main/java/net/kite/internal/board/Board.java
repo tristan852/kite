@@ -51,29 +51,29 @@ public final class Board {
 			3, 2, 4, 1, 5, 0, 6
 	};
 	
-	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 808;
-	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 602;
-	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 461;
-	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 231;
+	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 767;
+	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 606;
+	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 459;
+	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 230;
 	
 	private static final int[] RED_MOVE_CELL_SCORES = new int[] {
-			  0,  79,  91, 210, 105, 543,   0,   0,
-			191,  90,  96, 211, 207, 328,   0,   0,
-			110, 217, 343, 215, 283, 311,   0,   0,
-			433, 339, 345, 343, 560, 684,   0,   0,
-			110, 217, 343, 215, 283, 311,   0,   0,
-			191,  90,  96, 211, 207, 328,   0,   0,
-			  0,  79,  91, 210, 105, 543
+			 64,  88, 118, 229, 152, 566,   0,   0,
+			  0, 109, 136, 231, 226, 335,   0,   0,
+			 69, 113, 347, 322, 308, 330,   0,   0,
+			341, 345, 364, 365, 744, 718,   0,   0,
+			 69, 113, 347, 322, 308, 330,   0,   0,
+			  0, 109, 136, 231, 226, 335,   0,   0,
+			 64,  88, 118, 229, 152, 566
 	};
 	
 	private static final int[] YELLOW_MOVE_CELL_SCORES = new int[] {
-			  0,  99, 110, 209,  98, 408,   0,   0,
-			 64,   3, 131, 364, 123, 421,   0,   0,
-			 61, 301, 209, 408, 161, 396,   0,   0,
-			196, 426, 443, 536, 556, 530,   0,   0,
-			 61, 301, 209, 408, 161, 396,   0,   0,
-			 64,   3, 131, 364, 123, 421,   0,   0,
-			  0,  99, 110, 209,  98, 408
+			  0, 111, 122,  94,  84, 420,   0,   0,
+			 97,  26, 143, 321, 133, 441,   0,   0,
+			 47, 313, 126, 392, 167, 414,   0,   0,
+			286, 458, 391, 548, 513, 540,   0,   0,
+			 47, 313, 126, 392, 167, 414,   0,   0,
+			 97,  26, 143, 321, 133, 441,   0,   0,
+			  0, 111, 122,  94,  84, 420
 	};
 	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
@@ -85,14 +85,15 @@ public final class Board {
 	
 	private static final char SMALLEST_MOVE_CHARACTER = '1';
 	
-	private static final long HASH_MIX_FIRST_MAGIC = 0xFF51AFD7ED558CCDL;
+	private static final long HASH_MIX_FIRST_MAGIC  = 0xFF51AFD7ED558CCDL;
 	private static final long HASH_MIX_SECOND_MAGIC = 0xC4CEB9FE1A85EC53L;
+	
+	private static final long HASH_MIX_FIRST_INVERSE_MAGIC  = 0x4F74430C22A54005L;
+	private static final long HASH_MIX_SECOND_INVERSE_MAGIC = 0x9CB4B2F8129337DBL;
 	
 	private static final long EMPTY_MIXED_HASH = 0x2373BFB0BD385EEAL;
 	
 	private static final int HASH_MIX_SHIFT_AMOUNT = 33;
-	
-	private static final int COLUMN_HASH_BASE = 3;
 	
 	private static final int MINIMAL_CHILD_CACHE_LOOKUP_DEPTH = 16;
 	
@@ -811,14 +812,10 @@ public final class Board {
 		
 		if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
 			
-			long columnHash = columnHash(maskBitboard, activeBitboard);
+			int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(mixedHash);
 			
-			int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(columnHash);
-			if(openingBoardScore != Integer.MIN_VALUE) {
-				
-				evaluationTime += System.nanoTime() - t;
-				return openingBoardScore;
-			}
+			evaluationTime += System.nanoTime() - t;
+			return openingBoardScore;
 		}
 		
 		int minimalScore = BoardScore.minimal(filledCellAmount);
@@ -846,46 +843,49 @@ public final class Board {
 			}
 		}
 		
-		if(filledCellAmount > 0) {
+		filledCellAmount--;
+		int lastMove = playedMoves[filledCellAmount];
+		
+		undoMove(lastMove);
+		
+		key = importantScoreCache.entryKey(mixedHash);
+		if(key >= 0) {
 			
-			filledCellAmount--;
-			int lastMove = playedMoves[filledCellAmount];
-			
-			undoMove(lastMove);
-			
-			key = importantScoreCache.entryKey(mixedHash);
-			if(key >= 0) {
+			boolean exact = importantScoreCache.entryExact(key);
+			if(exact) {
 				
-				boolean exact = importantScoreCache.entryExact(key);
-				if(exact) {
+				int importantBoardScore = -importantScoreCache.entryScore(key);
+				if(minimalScore < importantBoardScore) {
 					
-					int importantBoardScore = -importantScoreCache.entryScore(key);
-					if(minimalScore < importantBoardScore) {
-						
-						minimalScore = importantBoardScore;
-						minimalScoreWeight = PARENT_IMPORTANT_SCORE_BOUND_WEIGHT;
-					}
+					minimalScore = importantBoardScore;
+					minimalScoreWeight = PARENT_IMPORTANT_SCORE_BOUND_WEIGHT;
 				}
 			}
-			
-			if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
-				
-				long columnHash = columnHash(maskBitboard, activeBitboard);
-				
-				int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(columnHash);
-				if(openingBoardScore != Integer.MIN_VALUE) {
-					
-					int s = -openingBoardScore;
-					if(minimalScore < s) {
-						
-						minimalScore = s;
-						minimalScoreWeight = OPENING_SCORE_BOUND_WEIGHT;
-					}
-				}
-			}
-			
-			playMove(lastMove);
 		}
+		
+		if(filledCellAmount == OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
+			
+			result = bitboardConnectionOpportunities(activeBitboard);
+			result &= ceilingBitboard;
+			
+			int openingBoardScore;
+			if(result == 0) {
+				
+				openingBoardScore = -OpeningBoardScoreCaches.DEFAULT.boardScore(mixedHash);
+				
+			} else {
+				
+				openingBoardScore = -BoardScore.win(filledCellAmount + 1);
+			}
+			
+			if(minimalScore < openingBoardScore) {
+				
+				minimalScore = openingBoardScore;
+				minimalScoreWeight = OPENING_SCORE_BOUND_WEIGHT;
+			}
+		}
+		
+		playMove(lastMove);
 		
 		if(maximalScore > maxScore) maximalScore = maxScore;
 		
@@ -995,32 +995,6 @@ public final class Board {
 		
 		if(minScore > minimalScore) return minScore;
 		if(maxScore <= minimalScore) return minimalScore;
-		
-		if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
-			
-			long columnHash = columnHash(maskBitboard, activeBitboard);
-			
-			int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(columnHash);
-			if(openingBoardScore != Integer.MIN_VALUE) return openingBoardScore;
-			
-			if(filledCellAmount < OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
-				
-				long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
-				while(movesBitboard != 0) {
-					
-					long b = Long.lowestOneBit(movesBitboard);
-					movesBitboard ^= b;
-					
-					long active = maskBitboard ^ activeBitboard;
-					long mask = maskBitboard | b;
-					
-					columnHash = columnHash(mask, active);
-					
-					openingBoardScore = -OpeningBoardScoreCaches.DEFAULT.boardScore(columnHash);
-					if(openingBoardScore > minimalScore) return openingBoardScore;
-				}
-			}
-		}
 		
 		int entryKey = scoreCache.entryKey(mixedHash);
 		if(entryKey >= 0) {
@@ -1336,51 +1310,35 @@ public final class Board {
 		return maskBitboard == Bitboards.FULL_BOARD ? BoardOutcome.DRAW : BoardOutcome.UNDECIDED;
 	}
 	
-	private static long columnHash(long maskBitboard, long activeBitboard) {
-		long h1 = 0;
-		long h2 = 0;
-		long b1 = 1;
-		long b2 = Bitboards.BOTTOM_CELL_OF_LAST_COLUMN;
+	// TODO: entire method and name
+	private static long unXORRightShift(long x) {
+		long result = 0;
 		
-		while(true) {
+		for(int i = 63; i >= 0; i--) {
 			
-			long board = b1;
-			while((board & maskBitboard) != 0) {
+			long b = (x >>> i) & 1;
+			
+			if(i + HASH_MIX_SHIFT_AMOUNT <= 63) {
 				
-				h1 *= COLUMN_HASH_BASE;
-				
-				boolean activeCell = (activeBitboard & board) != 0;
-				
-				if(activeCell) h1++;
-				else h1 += 2;
-				
-				board <<= 1;
+				b ^= (result >>> (i + HASH_MIX_SHIFT_AMOUNT)) & 1L;
 			}
 			
-			board = b2;
-			while((board & maskBitboard) != 0) {
-				
-				h2 *= COLUMN_HASH_BASE;
-				
-				boolean activeCell = (activeBitboard & board) != 0;
-				
-				if(activeCell) h2++;
-				else h2 += 2;
-				
-				board <<= 1;
-			}
-			
-			h1 *= COLUMN_HASH_BASE;
-			h2 *= COLUMN_HASH_BASE;
-			
-			b2 >>>= RIGHT_BITBOARD_DIRECTION;
-			if(b2 == 0) break;
-			
-			b1 <<= RIGHT_BITBOARD_DIRECTION;
+			result |= b << i;
 		}
 		
-		if(h2 < h1) h1 = h2;
-		return h1 / COLUMN_HASH_BASE;
+		return result;
+	}
+	
+	private static long unmixedHash(long mixedHash) {
+		mixedHash = unxorshiftRight(mixedHash);
+		
+		mixedHash *= HASH_MIX_SECOND_INVERSE_MAGIC;
+		mixedHash = unxorshiftRight(mixedHash);
+		
+		mixedHash *= HASH_MIX_FIRST_INVERSE_MAGIC;
+		mixedHash = unxorshiftRight(mixedHash);
+		
+		return mixedHash;
 	}
 	
 	private static long mixedHash(long hash) {
