@@ -102,10 +102,10 @@ public final class Board {
 	private static final int OPENING_SCORE_CACHE_MAXIMAL_DEPTH = 14;
 	
 	private static final int SCORE_BOUND_WEIGHT_INCREMENT = 5;
-	private static final int CACHE_SCORE_BOUND_WEIGHT = 6;
+	private static final int CACHE_SCORE_BOUND_WEIGHT = 5;
 	private static final int IMPORTANT_CACHE_SCORE_BOUND_WEIGHT = 2;
 	private static final int PARENT_IMPORTANT_SCORE_BOUND_WEIGHT = 15;
-	private static final int OPENING_SCORE_BOUND_WEIGHT = 4;
+	private static final int OPENING_SCORE_BOUND_WEIGHT = 12;
 	
 	private static final float[] FIRST_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
 			-1.480893f,  7.600903f
