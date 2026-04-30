@@ -1008,7 +1008,7 @@ public final class Board {
 			if(entryMaxScore <= minimalScore) return minimalScore;
 		}
 		
-		if(filledCellAmount > MINIMAL_CHILD_CACHE_LOOKUP_DEPTH) {
+		if(filledCellAmount != MINIMAL_CHILD_CACHE_LOOKUP_DEPTH) {
 			
 			long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
 			while(movesBitboard != 0) {
