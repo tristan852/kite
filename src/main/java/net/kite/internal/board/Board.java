@@ -99,7 +99,7 @@ public final class Board {
 	
 	private static final int BITBOARD_HEIGHT = 8;
 	
-	private static final int OPENING_SCORE_CACHE_MAXIMAL_DEPTH = 14;
+	private static final int OPENING_SCORE_CACHE_MAXIMAL_DEPTH = 15;
 	
 	private static final int SCORE_BOUND_WEIGHT_INCREMENT = 5;
 	private static final int CACHE_SCORE_BOUND_WEIGHT = 5;
@@ -848,21 +848,6 @@ public final class Board {
 		
 		undoMove(lastMove);
 		
-		key = importantScoreCache.entryKey(mixedHash);
-		if(key >= 0) {
-			
-			boolean exact = importantScoreCache.entryExact(key);
-			if(exact) {
-				
-				int importantBoardScore = -importantScoreCache.entryScore(key);
-				if(minimalScore < importantBoardScore) {
-					
-					minimalScore = importantBoardScore;
-					minimalScoreWeight = PARENT_IMPORTANT_SCORE_BOUND_WEIGHT;
-				}
-			}
-		}
-		
 		if(filledCellAmount == OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
 			
 			result = bitboardConnectionOpportunities(activeBitboard);
@@ -882,6 +867,23 @@ public final class Board {
 				
 				minimalScore = openingBoardScore;
 				minimalScoreWeight = OPENING_SCORE_BOUND_WEIGHT;
+			}
+			
+		} else {
+			
+			key = importantScoreCache.entryKey(mixedHash);
+			if(key >= 0) {
+				
+				boolean exact = importantScoreCache.entryExact(key);
+				if(exact) {
+					
+					int importantBoardScore = -importantScoreCache.entryScore(key);
+					if(minimalScore < importantBoardScore) {
+						
+						minimalScore = importantBoardScore;
+						minimalScoreWeight = PARENT_IMPORTANT_SCORE_BOUND_WEIGHT;
+					}
+				}
 			}
 		}
 		
