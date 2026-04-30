@@ -8,8 +8,8 @@ import java.io.*;
 
 public final class OpeningBoardScoreCache {
 	
-	private static final int BOARD_SCORES_SIZE_IN_BYTES  = 41047131;
-	private static final int HASH_FUNCTION_SIZE_IN_BYTES = 11538791;
+	private static final int BOARD_SCORES_SIZE_IN_BYTES  = 96529631;
+	private static final int HASH_FUNCTION_SIZE_IN_BYTES = 27134232;
 	
 	private final byte[] boardScores;
 	
