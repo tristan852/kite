@@ -45,3 +45,8 @@ LICENSE text eol=lf
 # Optional: treat all other text as auto
 # ========================
 * text=auto
+
+# ========================
+# Git LFS
+# ========================
+src/main/resources/board_score_caches/opening.cfc filter=lfs diff=lfs merge=lfs -text
