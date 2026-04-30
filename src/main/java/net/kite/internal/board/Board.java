@@ -51,29 +51,29 @@ public final class Board {
 			3, 2, 4, 1, 5, 0, 6
 	};
 	
-	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 767;
+	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 830;
 	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 606;
 	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 459;
 	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 230;
 	
 	private static final int[] RED_MOVE_CELL_SCORES = new int[] {
-			 64,  88, 118, 229, 152, 566,   0,   0,
-			  0, 109, 136, 231, 226, 335,   0,   0,
-			 69, 113, 347, 322, 308, 330,   0,   0,
-			341, 345, 364, 365, 744, 718,   0,   0,
-			 69, 113, 347, 322, 308, 330,   0,   0,
-			  0, 109, 136, 231, 226, 335,   0,   0,
-			 64,  88, 118, 229, 152, 566
+			  0,   2,  32, 136,  66, 617,   0,   0,
+			102,  36,  33, 140, 136, 271,   0,   0,
+			 69,  26, 258, 224, 215, 244,   0,   0,
+			351, 146, 174, 279, 631, 622,   0,   0,
+			 69,  26, 258, 224, 215, 244,   0,   0,
+			102,  36,  33, 140, 136, 271,   0,   0,
+			  0,   2,  32, 136,  66, 617
 	};
 	
 	private static final int[] YELLOW_MOVE_CELL_SCORES = new int[] {
-			  0, 111, 122,  94,  84, 420,   0,   0,
-			 97,  26, 143, 321, 133, 441,   0,   0,
-			 47, 313, 126, 392, 167, 414,   0,   0,
-			286, 458, 391, 548, 513, 540,   0,   0,
-			 47, 313, 126, 392, 167, 414,   0,   0,
-			 97,  26, 143, 321, 133, 441,   0,   0,
-			  0, 111, 122,  94,  84, 420
+			  0, 111, 122, 207,  84, 444,   0,   0,
+			 87,   3, 143, 321, 139, 470,   0,   0,
+			  1, 103, 136, 345, 159, 429,   0,   0,
+			 57, 655, 217, 540, 538, 473,   0,   0,
+			  1, 103, 136, 345, 159, 429,   0,   0,
+			 87,   3, 143, 321, 139, 470,   0,   0,
+			  0, 111, 122, 207,  84, 444
 	};
 	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
@@ -101,11 +101,11 @@ public final class Board {
 	
 	private static final int OPENING_SCORE_CACHE_MAXIMAL_DEPTH = 15;
 	
-	private static final int SCORE_BOUND_WEIGHT_INCREMENT = 5;
+	private static final int SCORE_BOUND_WEIGHT_INCREMENT = 8;
 	private static final int CACHE_SCORE_BOUND_WEIGHT = 5;
 	private static final int IMPORTANT_CACHE_SCORE_BOUND_WEIGHT = 2;
-	private static final int PARENT_IMPORTANT_SCORE_BOUND_WEIGHT = 15;
-	private static final int OPENING_SCORE_BOUND_WEIGHT = 12;
+	private static final int PARENT_IMPORTANT_CACHE_SCORE_BOUND_WEIGHT = 15;
+	private static final int OPENING_SCORE_BOUND_WEIGHT = 6;
 	
 	private static final float[] FIRST_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
 			-1.480893f,  7.600903f
@@ -881,7 +881,7 @@ public final class Board {
 					if(minimalScore < importantBoardScore) {
 						
 						minimalScore = importantBoardScore;
-						minimalScoreWeight = PARENT_IMPORTANT_SCORE_BOUND_WEIGHT;
+						minimalScoreWeight = PARENT_IMPORTANT_CACHE_SCORE_BOUND_WEIGHT;
 					}
 				}
 			}
