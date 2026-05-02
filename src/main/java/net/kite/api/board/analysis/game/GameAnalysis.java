@@ -21,14 +21,14 @@ import java.util.Locale;
 public class GameAnalysis {
 	
 	private static final String TO_STRING_ELO_PREFIX = "approximate elo  ";
-	private static final String TO_STRING_MOVE_ACCURACY_PREFIX = "\nmove accuracy     ";
+	private static final String TO_STRING_MOVE_ACCURACY_PREFIX = "\nmove accuracy    ";
 	private static final String TO_STRING_MOVES_PREFIX = "\n\nmoves";
 	private static final String TO_STRING_NO_MOVES_PREFIX = "\n\nmoves               none";
 	private static final String TO_STRING_MOVE_PREFIX = "\n  ";
 	private static final String TO_STRING_MOVE_FIRST_INFIX = ". ";
 	private static final String TO_STRING_MOVE_SECOND_INFIX = "  ";
 	
-	private static final String TO_STRING_BEST_MOVES_PREFIX       = "\n\nbest                  ";
+	private static final String TO_STRING_BEST_MOVES_PREFIX       = "%\n\nbest                  ";
 	private static final String TO_STRING_GOOD_MOVES_PREFIX       = "\ngood                  ";
 	private static final String TO_STRING_INACCURATE_MOVES_PREFIX = "\ninaccurate            ";
 	private static final String TO_STRING_MISTAKES_PREFIX         = "\nmistakes              ";
@@ -193,7 +193,7 @@ public class GameAnalysis {
 		
 		stringBuilder.append(s);
 		
-		s = String.format(Locale.ROOT, "%.2f", moveAccuracy);
+		s = String.format(Locale.ROOT, "%.2f", moveAccuracy * 100);
 		
 		stringBuilder.append(TO_STRING_MOVE_ACCURACY_PREFIX);
 		
