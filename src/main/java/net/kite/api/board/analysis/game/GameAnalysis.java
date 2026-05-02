@@ -21,6 +21,7 @@ import java.util.Locale;
 public class GameAnalysis {
 	
 	private static final String TO_STRING_ELO_PREFIX = "approximate elo  ";
+	private static final String TO_STRING_MOVE_ACCURACY_PREFIX = "move accuracy     ";
 	private static final String TO_STRING_MOVES_PREFIX = "\n\nmoves";
 	private static final String TO_STRING_NO_MOVES_PREFIX = "\n\nmoves               none";
 	private static final String TO_STRING_MOVE_PREFIX = "\n  ";
@@ -36,6 +37,7 @@ public class GameAnalysis {
 	private static final String TO_STRING_FORCED_MOVES_PREFIX     = "\nforced                ";
 	
 	private final float approximateEloPerformance;
+	private final float moveAccuracy;
 	
 	private final MoveAnalysis[] moveAnalyses;
 	
@@ -58,12 +60,17 @@ public class GameAnalysis {
 	 * @param approximateEloPerformance
 	 * approximate ELO performance of
 	 * the analyzed player
+	 * @param moveAccuracy average
+	 * accuracy of the player's moves,
+	 * expressed as a value between 0%
+	 * and 100%
 	 * @param moveAnalyses array of
 	 * move analyses in chronological
 	 * order
 	 */
-	public GameAnalysis(float approximateEloPerformance, MoveAnalysis[] moveAnalyses) {
+	public GameAnalysis(float approximateEloPerformance, float moveAccuracy, MoveAnalysis[] moveAnalyses) {
 		this.approximateEloPerformance = approximateEloPerformance;
+		this.moveAccuracy = moveAccuracy;
 		this.moveAnalyses = moveAnalyses;
 		
 		int bestMoveAmount = 0;
@@ -167,6 +174,19 @@ public class GameAnalysis {
 		
 		stringBuilder.append(s);
 		
+		s = String.format(Locale.ROOT, "%.2f", moveAccuracy);
+		
+		stringBuilder.append(TO_STRING_MOVE_ACCURACY_PREFIX);
+		
+		l = s.length();
+		while(l < 6) {
+			
+			stringBuilder.append(' ');
+			l++;
+		}
+		
+		stringBuilder.append(s);
+		
 		stringBuilder.append(TO_STRING_BEST_MOVES_PREFIX);
 		s = String.valueOf(bestMoveAmount);
 		if(bestMoveAmount < 10) stringBuilder.append(" ");
@@ -240,8 +260,9 @@ public class GameAnalysis {
 	/**
 	 * Returns the hash code of
 	 * this game analysis based
-	 * on ELO performance and
-	 * move analyses.
+	 * on ELO performance, move
+	 * accuracy and move
+	 * analyses.
 	 *
 	 * @return hash code of this game analysis
 	 */
@@ -249,6 +270,7 @@ public class GameAnalysis {
 	public int hashCode() {
 		int hash = Float.hashCode(approximateEloPerformance);
 		
+		hash = hash * 31 + Float.hashCode(moveAccuracy);
 		hash = hash * 31 + Arrays.hashCode(moveAnalyses);
 		
 		return hash;
@@ -270,7 +292,7 @@ public class GameAnalysis {
 		if(object == this) return true;
 		if(object instanceof GameAnalysis analysis) {
 			
-			return Float.compare(analysis.approximateEloPerformance, approximateEloPerformance) == 0 && Arrays.equals(analysis.moveAnalyses, moveAnalyses);
+			return Float.compare(analysis.approximateEloPerformance, approximateEloPerformance) == 0 && Float.compare(analysis.moveAccuracy, moveAccuracy) == 0 && Arrays.equals(analysis.moveAnalyses, moveAnalyses);
 		}
 		
 		return false;
@@ -317,6 +339,18 @@ public class GameAnalysis {
 	 */
 	public float getApproximateEloPerformance() {
 		return approximateEloPerformance;
+	}
+	
+	/**
+	 * Returns the average accuracy
+	 * of the analyzed player's
+	 * moves.
+	 *
+	 * @return move accuracy
+	 * (0% to 100%)
+	 */
+	public float getMoveAccuracy() {
+		return moveAccuracy;
 	}
 	
 	/**
