@@ -21,7 +21,7 @@ import java.util.Locale;
 public class GameAnalysis {
 	
 	private static final String TO_STRING_ELO_PREFIX = "approximate elo  ";
-	private static final String TO_STRING_MOVE_ACCURACY_PREFIX = "move accuracy     ";
+	private static final String TO_STRING_MOVE_ACCURACY_PREFIX = "\nmove accuracy     ";
 	private static final String TO_STRING_MOVES_PREFIX = "\n\nmoves";
 	private static final String TO_STRING_NO_MOVES_PREFIX = "\n\nmoves               none";
 	private static final String TO_STRING_MOVE_PREFIX = "\n  ";
