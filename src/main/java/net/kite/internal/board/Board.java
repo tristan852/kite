@@ -95,8 +95,6 @@ public final class Board {
 	
 	private static final int HASH_MIX_SHIFT_AMOUNT = 33;
 	
-	private static final int MINIMAL_CHILD_CACHE_LOOKUP_DEPTH = 16;
-	
 	private static final int BITBOARD_HEIGHT = 8;
 	
 	private static final int OPENING_SCORE_CACHE_MAXIMAL_DEPTH = 15;
@@ -1008,27 +1006,24 @@ public final class Board {
 			if(entryMaxScore <= minimalScore) return minimalScore;
 		}
 		
-		if(filledCellAmount != MINIMAL_CHILD_CACHE_LOOKUP_DEPTH) {
+		long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
+		while(movesBitboard != 0) {
 			
-			long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
-			while(movesBitboard != 0) {
+			long moveBitboard = Long.lowestOneBit(movesBitboard);
+			movesBitboard ^= moveBitboard;
+			
+			long h1 = (bitboard ^ maskBitboard) + moveBitboard;
+			long h2 = Long.reverseBytes(h1) >>> MIRRORED_BITBOARD_SHIFT_AMOUNT;
+			
+			if(h2 < h1) h1 = h2;
+			
+			long mixedHash = mixedHash(h1);
+			
+			entryKey = scoreCache.entryKey(mixedHash);
+			if(entryKey >= 0) {
 				
-				long moveBitboard = Long.lowestOneBit(movesBitboard);
-				movesBitboard ^= moveBitboard;
-				
-				long h1 = (bitboard ^ maskBitboard) + moveBitboard;
-				long h2 = Long.reverseBytes(h1) >>> MIRRORED_BITBOARD_SHIFT_AMOUNT;
-				
-				if(h2 < h1) h1 = h2;
-				
-				long mixedHash = mixedHash(h1);
-				
-				entryKey = scoreCache.entryKey(mixedHash);
-				if(entryKey >= 0) {
-					
-					int entryMinScore = -scoreCache.entryMaximalScore(entryKey);
-					if(entryMinScore > minimalScore) return entryMinScore;
-				}
+				int entryMinScore = -scoreCache.entryMaximalScore(entryKey);
+				if(entryMinScore > minimalScore) return entryMinScore;
 			}
 		}
 		
@@ -1069,7 +1064,7 @@ public final class Board {
 			return minimalScore;
 		}
 		
-		long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
+		movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
 		movesBitboard &= ~(opponentThreatsBitboard >>> 1);
 		
 		if(movesBitboard == 0) {
