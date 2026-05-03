@@ -753,7 +753,7 @@ public final class Board {
 		int storedMove = playedMoves[filledCellAmount];
 		playedMoves[filledCellAmount] = moveCellX;
 		
-		int score = -evaluate(maxScore, playedMoves);
+		int score = -evaluate(-maxScore, Integer.MAX_VALUE, playedMoves);
 		
 		playedMoves[filledCellAmount] = storedMove;
 		
@@ -783,7 +783,7 @@ public final class Board {
 		int storedMove = playedMoves[filledCellAmount];
 		playedMoves[filledCellAmount] = moveCellX;
 		
-		int score = -evaluate(-minScore, playedMoves);
+		int score = -evaluate(Integer.MIN_VALUE, -minScore, playedMoves);
 		
 		playedMoves[filledCellAmount] = storedMove;
 		
@@ -793,10 +793,10 @@ public final class Board {
 	}
 	
 	public int evaluate(int[] playedMoves) {
-		return evaluate(Integer.MAX_VALUE, playedMoves);
+		return evaluate(Integer.MIN_VALUE, Integer.MAX_VALUE, playedMoves);
 	}
 	
-	public int evaluate(int maxScore, int[] playedMoves) {
+	public int evaluate(int minScore, int maxScore, int[] playedMoves) {
 		evaluationAmount++;
 		long t = System.nanoTime();
 		
@@ -903,6 +903,7 @@ public final class Board {
 		
 		playMove(lastMove);
 		
+		if(minimalScore < minScore) minimalScore = minScore;
 		if(maximalScore > maxScore) maximalScore = maxScore;
 		
 		int entryKey = scoreCache.entryKey(mixedHash);
@@ -948,7 +949,7 @@ public final class Board {
 		}
 		
 		n = nodeEvaluationAmount - n;
-		if(n >= MINIMAL_IMPORTANT_NODE_EVALUATION_AMOUNT) {
+		if(n >= MINIMAL_IMPORTANT_NODE_EVALUATION_AMOUNT && minimalScore > minScore) {
 			
 			boolean exact = minimalScore < maxScore;
 			importantScoreCache.updateEntry(mixedHash, minimalScore, exact);
