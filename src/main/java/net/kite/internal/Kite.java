@@ -1415,15 +1415,15 @@ public final class Kite implements KiteApi {
 			
 			System.out.printf("OS architecture : %s%n%n", s);
 			
-			for(int i = 1; i < 3; i++) {
+			for(int i = 1; i < 4; i++) {
 				
-				if(i == 2) {
+				if(i != 1) {
 					
 					if(noAnsiCodes) System.out.println();
 					else AnsiUtil.moveCursorToBeginningOfLine();
 				}
 				
-				String message = String.format("Performing warmup... (%s/2)", i);
+				String message = String.format("Performing warmup... (%s/3)", i);
 				System.out.print(message);
 				
 				if(!runAndRecordBenchmark(false)) return false;
