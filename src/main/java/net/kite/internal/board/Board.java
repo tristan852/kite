@@ -105,28 +105,6 @@ public final class Board {
 	private static final int PARENT_IMPORTANT_CACHE_SCORE_BOUND_WEIGHT = 15;
 	private static final int OPENING_SCORE_BOUND_WEIGHT = 6;
 	
-	private static final float[] FIRST_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
-			-1.480893f,  7.600903f
-	};
-	
-	private static final float[] SECOND_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
-			-1.201268f,  7.593250f
-	};
-	
-	private static final float[] THIRD_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
-			-0.918798f,  7.535299f
-	};
-	
-	private static final float[] FOURTH_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
-			-0.429759f,  7.335698f
-	};
-	
-	private static final float ELO_APPROXIMATION_FIRST_SPLIT  = 0.0273690f;
-	private static final float ELO_APPROXIMATION_SECOND_SPLIT = 0.2051580f;
-	private static final float ELO_APPROXIMATION_THIRD_SPLIT  = 0.4081490f;
-	
-	private static final float PERFECT_ELO_APPROXIMATION = 2000.0f;
-	
 	private static final int MAXIMAL_LINE_AMOUNT = 4;
 	
 	private static final int MOVES_LENGTH = 282;
@@ -610,10 +588,13 @@ public final class Board {
 		MoveAnalysis[] redMoveAnalyses = new MoveAnalysis[redPlayerMoveAmount];
 		MoveAnalysis[] yellowMoveAnalyses = new MoveAnalysis[yellowPlayerMoveAmount];
 		
-		int redTotalScoreLoss = 0;
-		int yellowTotalScoreLoss = 0;
+		float redTotalScoreLoss = 0;
+		float yellowTotalScoreLoss = 0;
 		
-		int previousBoardScore = evaluate(playedMoves);
+		int redScoredMoves = 0;
+		int yellowScoredMoves = 0;
+		
+		int boardScore = 1;
 		
 		boolean redAtTurn = true;
 		boolean previousMoveCouldHaveBeenWin = false;
@@ -627,56 +608,61 @@ public final class Board {
 		for(int i = 0; i < filledCellAmount; i++) {
 			
 			int move = playedMoves[i];
+			int moveScore = evaluateMoveWithMaximalScore(move, boardScore, i, playedMoves);
+			int worstMoveScore = moveScore;
+			
+			for(int x : ORDERED_MOVE_COLUMN_INDICES) {
+				
+				if(!moveLegalWhileGameNotOver(x)) continue;
+				
+				int s = evaluateMoveWithMaximalScore(x, worstMoveScore, i, playedMoves);
+				if(s < worstMoveScore) worstMoveScore = s;
+			}
+			
+			int worstMoveScoreLoss = boardScore - worstMoveScore;
 			
 			boolean moveIsForced = legalMoveAmount() == 1;
 			
 			playMove(move);
 			
-			int boardScore = evaluate(playedMoves);
 			if(redAtTurn) {
 				
-				redTotalScoreLoss += previousBoardScore + boardScore;
+				if(worstMoveScoreLoss != 0) {
+					
+					redTotalScoreLoss += (float) (boardScore - moveScore) / worstMoveScoreLoss;
+					redScoredMoves++;
+				}
 				
-				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(previousBoardScore, -boardScore, previousPreviousMoveScore, previousMoveCouldHaveBeenWin, i + 1);
+				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(boardScore, moveScore, previousPreviousMoveScore, previousMoveCouldHaveBeenWin, i + 1);
 				
-				redMoveAnalyses[i1] = new MoveAnalysis(move + 1, -boardScore, moveQuality);
+				redMoveAnalyses[i1] = new MoveAnalysis(move + 1, moveScore, moveQuality);
 				i1++;
 				
 			} else {
 				
-				yellowTotalScoreLoss += previousBoardScore + boardScore;
+				if(worstMoveScoreLoss != 0) {
+					
+					yellowTotalScoreLoss += (float) (boardScore - moveScore) / worstMoveScoreLoss;
+					yellowScoredMoves++;
+				}
 				
-				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(previousBoardScore, -boardScore, previousPreviousMoveScore, previousMoveCouldHaveBeenWin, i + 1);
+				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(boardScore, moveScore, previousPreviousMoveScore, previousMoveCouldHaveBeenWin, i + 1);
 				
-				yellowMoveAnalyses[i2] = new MoveAnalysis(move + 1, -boardScore, moveQuality);
+				yellowMoveAnalyses[i2] = new MoveAnalysis(move + 1, moveScore, moveQuality);
 				i2++;
 			}
 			
 			previousPreviousMoveScore = previousMoveScore;
-			previousMoveScore = -boardScore;
+			previousMoveScore = moveScore;
 			
-			previousMoveCouldHaveBeenWin = previousBoardScore > 0;
+			previousMoveCouldHaveBeenWin = boardScore > 0;
 			
 			redAtTurn = !redAtTurn;
-			previousBoardScore = boardScore;
+			boardScore = -moveScore;
 		}
 		
-		float f1;
-		float f2;
-		
-		if(redPlayerMoveAmount == 0) f1 = PERFECT_ELO_APPROXIMATION;
-		else {
-			
-			float averageScoreLoss = (float) redTotalScoreLoss / redPlayerMoveAmount;
-			f1 = approximateElo(averageScoreLoss);
-		}
-		
-		if(yellowPlayerMoveAmount == 0) f2 = PERFECT_ELO_APPROXIMATION;
-		else {
-			
-			float averageScoreLoss = (float) yellowTotalScoreLoss / yellowPlayerMoveAmount;
-			f2 = approximateElo(averageScoreLoss);
-		}
+		float f1 = redScoredMoves == 0 ? 1.0f : 1 - redTotalScoreLoss / redScoredMoves;
+		float f2 = yellowScoredMoves == 0 ? 1.0f : 1 - yellowTotalScoreLoss / yellowScoredMoves;
 		
 		gameAnalyses[0] = new GameAnalysis(f1, redMoveAnalyses);
 		gameAnalyses[1] = new GameAnalysis(f2, yellowMoveAnalyses);
@@ -690,7 +676,7 @@ public final class Board {
 		
 		if(playerMoveAmount == 0) {
 			
-			return new GameAnalysis(PERFECT_ELO_APPROXIMATION, moveAnalyses);
+			return new GameAnalysis(1.0f, moveAnalyses);
 		}
 		
 		int n = filledCellAmount;
@@ -702,9 +688,10 @@ public final class Board {
 			undoMove(lastMove);
 		}
 		
-		int totalScoreLoss = 0;
+		float totalScoreLoss = 0;
+		int scoredMoves = 0;
 		
-		int previousBoardScore = evaluate(playedMoves);
+		int boardScore = 1;
 		
 		boolean playerAtTurn = playerColor == BoardPlayerColor.RED;
 		boolean previousMoveCouldHaveBeenWin = false;
@@ -716,34 +703,63 @@ public final class Board {
 		for(int i = 0; i < filledCellAmount; i++) {
 			
 			int move = playedMoves[i];
+			int moveScore = evaluateMoveWithMaximalScore(move, boardScore, i, playedMoves);
 			
-			boolean moveIsForced = playerAtTurn && legalMoveAmount() == 1;
+			if(playerAtTurn) {
+				
+				int worstMoveScore = moveScore;
+				
+				for(int x : ORDERED_MOVE_COLUMN_INDICES) {
+					
+					if(!moveLegalWhileGameNotOver(x)) continue;
+					
+					int s = evaluateMoveWithMaximalScore(x, worstMoveScore, i, playedMoves);
+					if(s < worstMoveScore) worstMoveScore = s;
+				}
+				
+				int worstMoveScoreLoss = boardScore - worstMoveScore;
+				
+				boolean moveIsForced = legalMoveAmount() == 1;
+				
+				if(worstMoveScoreLoss != 0) {
+					
+					totalScoreLoss += (float) (boardScore - moveScore) / worstMoveScoreLoss;
+					scoredMoves++;
+				}
+				
+				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(boardScore, moveScore, previousMoveScore, previousMoveCouldHaveBeenWin, i + 1);
+				
+				moveAnalyses[moveIndex] = new MoveAnalysis(move + 1, moveScore, moveQuality);
+				moveIndex++;
+				
+				previousMoveScore = moveScore;
+			}
 			
 			playMove(move);
 			
-			int boardScore = evaluate(playedMoves);
-			if(playerAtTurn) {
-				
-				totalScoreLoss += previousBoardScore + boardScore;
-				
-				MoveAnalysis.MoveQuality moveQuality = moveIsForced ? MoveAnalysis.MoveQuality.FORCED : moveQuality(previousBoardScore, -boardScore, previousMoveScore, previousMoveCouldHaveBeenWin, i + 1);
-				
-				moveAnalyses[moveIndex] = new MoveAnalysis(move + 1, -boardScore, moveQuality);
-				moveIndex++;
-				
-				previousMoveScore = -boardScore;
-			}
-			
-			previousMoveCouldHaveBeenWin = previousBoardScore > 0;
+			previousMoveCouldHaveBeenWin = boardScore > 0;
 			
 			playerAtTurn = !playerAtTurn;
-			previousBoardScore = boardScore;
+			boardScore = -moveScore;
 		}
 		
-		float averageScoreLoss = (float) totalScoreLoss / playerMoveAmount;
-		float f = approximateElo(averageScoreLoss);
-		
+		float f = scoredMoves == 0 ? 1.0f : 1 - totalScoreLoss / scoredMoves;
 		return new GameAnalysis(f, moveAnalyses);
+	}
+	
+	private int evaluateMoveWithMaximalScore(int moveCellX, int maxScore, int filledCellAmount, int[] playedMoves) {
+		playMove(moveCellX);
+		
+		int storedMove = playedMoves[filledCellAmount];
+		playedMoves[filledCellAmount] = moveCellX;
+		
+		int score = -evaluate(maxScore, playedMoves);
+		
+		playedMoves[filledCellAmount] = storedMove;
+		
+		undoMove(moveCellX);
+		
+		return score;
 	}
 	
 	public int evaluateMove(int moveCellX, int filledCellAmount, int[] playedMoves) {
@@ -1602,21 +1618,6 @@ public final class Board {
 		
 		int movesLeft = BoardEvaluation.gameOverInTotalMoves(-scoreAfter, movesDoneAfterMove);
 		return movesLeft > 3 ? MoveAnalysis.MoveQuality.MISTAKE : MoveAnalysis.MoveQuality.BLUNDER;
-	}
-	
-	private static float approximateElo(float averageScoreLoss) {
-		float[] coefficients =
-				averageScoreLoss < ELO_APPROXIMATION_FIRST_SPLIT ? FIRST_ELO_APPROXIMATION_COEFFICIENTS :
-				averageScoreLoss <= ELO_APPROXIMATION_SECOND_SPLIT ? SECOND_ELO_APPROXIMATION_COEFFICIENTS :
-				averageScoreLoss < ELO_APPROXIMATION_THIRD_SPLIT ? THIRD_ELO_APPROXIMATION_COEFFICIENTS :
-				FOURTH_ELO_APPROXIMATION_COEFFICIENTS;
-		
-		averageScoreLoss *= coefficients[0];
-		averageScoreLoss += coefficients[1];
-		
-		averageScoreLoss = (float) Math.exp(averageScoreLoss);
-		
-		return Math.min(averageScoreLoss, PERFECT_ELO_APPROXIMATION);
 	}
 	
 }
