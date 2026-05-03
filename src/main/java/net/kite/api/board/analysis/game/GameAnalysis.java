@@ -36,28 +36,6 @@ public class GameAnalysis {
 	private static final String TO_STRING_MISSED_WINS_PREFIX      = "\nmissed wins           ";
 	private static final String TO_STRING_FORCED_MOVES_PREFIX     = "\nforced                ";
 	
-	private static final float[] FIRST_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
-			-1.480893f,  7.600903f
-	};
-	
-	private static final float[] SECOND_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
-			-1.201268f,  7.593250f
-	};
-	
-	private static final float[] THIRD_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
-			-0.918798f,  7.535299f
-	};
-	
-	private static final float[] FOURTH_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
-			-0.429759f,  7.335698f
-	};
-	
-	private static final float ELO_APPROXIMATION_FIRST_SPLIT  = 0.0273690f;
-	private static final float ELO_APPROXIMATION_SECOND_SPLIT = 0.2051580f;
-	private static final float ELO_APPROXIMATION_THIRD_SPLIT  = 0.4081490f;
-	
-	private static final float PERFECT_ELO_APPROXIMATION = 2000.0f;
-	
 	private final float approximateEloPerformance;
 	private final float moveAccuracy;
 	
@@ -79,6 +57,9 @@ public class GameAnalysis {
 	 * class {@link Kite} to obtain game
 	 * analyses.
 	 *
+	 * @param approximateEloPerformance
+	 * approximate ELO performance of
+	 * the analyzed player
 	 * @param moveAccuracy average
 	 * accuracy of the player's moves,
 	 * expressed as a value between 0%
@@ -87,8 +68,8 @@ public class GameAnalysis {
 	 * move analyses in chronological
 	 * order
 	 */
-	public GameAnalysis(float moveAccuracy, MoveAnalysis[] moveAnalyses) {
-		this.approximateEloPerformance = approximateElo(moveAccuracy);
+	public GameAnalysis(float approximateEloPerformance, float moveAccuracy, MoveAnalysis[] moveAnalyses) {
+		this.approximateEloPerformance = approximateEloPerformance;
 		this.moveAccuracy = moveAccuracy;
 		this.moveAnalyses = moveAnalyses;
 		
@@ -458,21 +439,6 @@ public class GameAnalysis {
 	 */
 	public int getForcedMoveAmount() {
 		return forcedMoveAmount;
-	}
-	
-	private static float approximateElo(float moveAccuracy) {
-		float[] coefficients =
-				moveAccuracy < ELO_APPROXIMATION_FIRST_SPLIT ? FIRST_ELO_APPROXIMATION_COEFFICIENTS :
-				moveAccuracy <= ELO_APPROXIMATION_SECOND_SPLIT ? SECOND_ELO_APPROXIMATION_COEFFICIENTS :
-				moveAccuracy < ELO_APPROXIMATION_THIRD_SPLIT ? THIRD_ELO_APPROXIMATION_COEFFICIENTS :
-				FOURTH_ELO_APPROXIMATION_COEFFICIENTS;
-		
-		moveAccuracy *= coefficients[0];
-		moveAccuracy += coefficients[1];
-		
-		moveAccuracy = (float) Math.exp(moveAccuracy);
-		
-		return Math.min(moveAccuracy, PERFECT_ELO_APPROXIMATION);
 	}
 	
 }
