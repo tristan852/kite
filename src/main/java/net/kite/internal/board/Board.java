@@ -105,6 +105,28 @@ public final class Board {
 	private static final int PARENT_IMPORTANT_CACHE_SCORE_BOUND_WEIGHT = 15;
 	private static final int OPENING_SCORE_BOUND_WEIGHT = 6;
 	
+	private static final float[] FIRST_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
+			-1.480893f,  7.600903f
+	};
+	
+	private static final float[] SECOND_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
+			-1.201268f,  7.593250f
+	};
+	
+	private static final float[] THIRD_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
+			-0.918798f,  7.535299f
+	};
+	
+	private static final float[] FOURTH_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
+			-0.429759f,  7.335698f
+	};
+	
+	private static final float ELO_APPROXIMATION_FIRST_SPLIT  = 0.0273690f;
+	private static final float ELO_APPROXIMATION_SECOND_SPLIT = 0.2051580f;
+	private static final float ELO_APPROXIMATION_THIRD_SPLIT  = 0.4081490f;
+	
+	private static final float PERFECT_ELO_APPROXIMATION = 2000.0f;
+	
 	private static final int MAXIMAL_LINE_AMOUNT = 4;
 	
 	private static final int MOVES_LENGTH = 282;
@@ -588,8 +610,11 @@ public final class Board {
 		MoveAnalysis[] redMoveAnalyses = new MoveAnalysis[redPlayerMoveAmount];
 		MoveAnalysis[] yellowMoveAnalyses = new MoveAnalysis[yellowPlayerMoveAmount];
 		
-		float redTotalScoreLoss = 0;
-		float yellowTotalScoreLoss = 0;
+		int redTotalScoreLoss = 0;
+		int yellowTotalScoreLoss = 0;
+		
+		float redNormalizedTotalScoreLoss = 0;
+		float yellowNormalizedTotalScoreLoss = 0;
 		
 		int redScoredMoves = 0;
 		int yellowScoredMoves = 0;
@@ -629,7 +654,10 @@ public final class Board {
 				
 				if(worstMoveScoreLoss != 0) {
 					
-					redTotalScoreLoss += (float) (boardScore - moveScore) / worstMoveScoreLoss;
+					int loss = boardScore - moveScore;
+					
+					redNormalizedTotalScoreLoss += (float) loss / worstMoveScoreLoss;
+					redTotalScoreLoss += loss;
 					redScoredMoves++;
 				}
 				
@@ -642,7 +670,10 @@ public final class Board {
 				
 				if(worstMoveScoreLoss != 0) {
 					
-					yellowTotalScoreLoss += (float) (boardScore - moveScore) / worstMoveScoreLoss;
+					int loss = boardScore - moveScore;
+					
+					yellowNormalizedTotalScoreLoss += (float) loss / worstMoveScoreLoss;
+					yellowTotalScoreLoss += loss;
 					yellowScoredMoves++;
 				}
 				
@@ -661,11 +692,14 @@ public final class Board {
 			boardScore = -moveScore;
 		}
 		
-		float f1 = redScoredMoves == 0 ? 1.0f : 1 - redTotalScoreLoss / redScoredMoves;
-		float f2 = yellowScoredMoves == 0 ? 1.0f : 1 - yellowTotalScoreLoss / yellowScoredMoves;
+		float elo1 = redPlayerMoveAmount == 0 ? PERFECT_ELO_APPROXIMATION : approximateElo((float) redTotalScoreLoss / redPlayerMoveAmount);
+		float elo2 = yellowPlayerMoveAmount == 0 ? PERFECT_ELO_APPROXIMATION : approximateElo((float) yellowTotalScoreLoss / yellowPlayerMoveAmount);
 		
-		gameAnalyses[0] = new GameAnalysis(f1, redMoveAnalyses);
-		gameAnalyses[1] = new GameAnalysis(f2, yellowMoveAnalyses);
+		float f1 = redScoredMoves == 0 ? 1.0f : 1 - redNormalizedTotalScoreLoss / redScoredMoves;
+		float f2 = yellowScoredMoves == 0 ? 1.0f : 1 - yellowNormalizedTotalScoreLoss / yellowScoredMoves;
+		
+		gameAnalyses[0] = new GameAnalysis(elo1, f1, redMoveAnalyses);
+		gameAnalyses[1] = new GameAnalysis(elo2, f2, yellowMoveAnalyses);
 	}
 	
 	public GameAnalysis evaluateGamePerformanceOfPlayer(BoardPlayerColor playerColor, int filledCellAmount, int[] playedMoves) {
@@ -676,7 +710,7 @@ public final class Board {
 		
 		if(playerMoveAmount == 0) {
 			
-			return new GameAnalysis(1.0f, moveAnalyses);
+			return new GameAnalysis(PERFECT_ELO_APPROXIMATION, 1.0f, moveAnalyses);
 		}
 		
 		int n = filledCellAmount;
@@ -688,7 +722,9 @@ public final class Board {
 			undoMove(lastMove);
 		}
 		
-		float totalScoreLoss = 0;
+		int totalScoreLoss = 0;
+		float normalizedTotalScoreLoss = 0;
+		
 		int scoredMoves = 0;
 		
 		int boardScore = 1;
@@ -723,7 +759,10 @@ public final class Board {
 				
 				if(worstMoveScoreLoss != 0) {
 					
-					totalScoreLoss += (float) (boardScore - moveScore) / worstMoveScoreLoss;
+					int loss = boardScore - moveScore;
+					
+					normalizedTotalScoreLoss += (float) loss / worstMoveScoreLoss;
+					totalScoreLoss += loss;
 					scoredMoves++;
 				}
 				
@@ -743,8 +782,10 @@ public final class Board {
 			boardScore = -moveScore;
 		}
 		
-		float f = scoredMoves == 0 ? 1.0f : 1 - totalScoreLoss / scoredMoves;
-		return new GameAnalysis(f, moveAnalyses);
+		float elo = approximateElo((float) totalScoreLoss / playerMoveAmount);
+		
+		float f = scoredMoves == 0 ? 1.0f : 1 - normalizedTotalScoreLoss / scoredMoves;
+		return new GameAnalysis(elo, f, moveAnalyses);
 	}
 	
 	private int evaluateMoveWithMaximalScore(int moveCellX, int maxScore, int filledCellAmount, int[] playedMoves) {
@@ -1619,6 +1660,21 @@ public final class Board {
 		
 		int movesLeft = BoardEvaluation.gameOverInTotalMoves(-scoreAfter, movesDoneAfterMove);
 		return movesLeft > 3 ? MoveAnalysis.MoveQuality.MISTAKE : MoveAnalysis.MoveQuality.BLUNDER;
+	}
+	
+	private static float approximateElo(float averageScoreLoss) {
+		float[] coefficients =
+				averageScoreLoss < ELO_APPROXIMATION_FIRST_SPLIT ? FIRST_ELO_APPROXIMATION_COEFFICIENTS :
+				averageScoreLoss <= ELO_APPROXIMATION_SECOND_SPLIT ? SECOND_ELO_APPROXIMATION_COEFFICIENTS :
+				averageScoreLoss < ELO_APPROXIMATION_THIRD_SPLIT ? THIRD_ELO_APPROXIMATION_COEFFICIENTS :
+				FOURTH_ELO_APPROXIMATION_COEFFICIENTS;
+		
+		averageScoreLoss *= coefficients[0];
+		averageScoreLoss += coefficients[1];
+		
+		averageScoreLoss = (float) Math.exp(averageScoreLoss);
+		
+		return Math.min(averageScoreLoss, PERFECT_ELO_APPROXIMATION);
 	}
 	
 }
