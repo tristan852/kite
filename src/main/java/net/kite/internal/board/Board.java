@@ -392,7 +392,7 @@ public final class Board {
 				
 				if(moveLegalWhileGameNotOver(x)) {
 					
-					int moveScore = evaluateMove(x, filledCellAmount, playedMoves);
+					int moveScore = evaluateMove(x, Integer.MIN_VALUE, Integer.MAX_VALUE, filledCellAmount, playedMoves);
 					if(moveScore > boardScore) boardScore = moveScore;
 					
 					moveScores[x] = moveScore;
@@ -527,14 +527,14 @@ public final class Board {
 	public MoveAnalysis analyseMove(int moveColumnIndex, int filledCellAmount, int[] playedMoves) {
 		boolean moveIsForced = legalMoveAmount() == 1;
 		
-		int scoreBefore = moveIsForced ? 0 : evaluate(playedMoves);
+		int scoreBefore = moveIsForced ? 0 : evaluate(Integer.MIN_VALUE, Integer.MAX_VALUE, playedMoves);
 		
 		playMove(moveColumnIndex);
 		
 		int storedMove = playedMoves[filledCellAmount];
 		playedMoves[filledCellAmount] = moveColumnIndex;
 		
-		int scoreAfter = -evaluate(playedMoves);
+		int scoreAfter = -evaluate(moveIsForced ? Integer.MIN_VALUE : -scoreBefore, Integer.MAX_VALUE, playedMoves);
 		
 		playedMoves[filledCellAmount] = storedMove;
 		
@@ -556,7 +556,7 @@ public final class Board {
 					
 					undoMove(lastMove);
 					
-					int scoreBefore2 = evaluate(playedMoves);
+					int scoreBefore2 = evaluate(-scoreBefore, Integer.MAX_VALUE, playedMoves);
 					previousMoveCouldHaveBeenWin = scoreBefore2 > 0;
 					
 					playMove(lastMove);
@@ -575,14 +575,14 @@ public final class Board {
 				
 				undoMove(lastMove2);
 				
-				previousMoveScore = -evaluate(playedMoves);
+				previousMoveScore = -evaluate(Integer.MIN_VALUE, Integer.MAX_VALUE, playedMoves);
 				
 				playMove(lastMove2);
 				
 				boolean droppedALot = previousMoveScore - scoreAfter > 3;
 				if(!droppedALot) {
 					
-					int scoreBefore2 = evaluate(playedMoves);
+					int scoreBefore2 = evaluate(previousMoveScore, Integer.MAX_VALUE, playedMoves);
 					previousMoveCouldHaveBeenWin = scoreBefore2 > 0;
 				}
 				
@@ -633,14 +633,14 @@ public final class Board {
 		for(int i = 0; i < filledCellAmount; i++) {
 			
 			int move = playedMoves[i];
-			int moveScore = evaluateMoveWithMaximalScore(move, boardScore, i, playedMoves);
+			int moveScore = evaluateMove(move, Integer.MIN_VALUE, boardScore, i, playedMoves);
 			int worstMoveScore = moveScore;
 			
 			for(int x : ORDERED_MOVE_COLUMN_INDICES) {
 				
 				if(!moveLegalWhileGameNotOver(x)) continue;
 				
-				int s = evaluateMoveWithMaximalScore(x, worstMoveScore, i, playedMoves);
+				int s = evaluateMove(x, Integer.MIN_VALUE, worstMoveScore, i, playedMoves);
 				if(s < worstMoveScore) worstMoveScore = s;
 			}
 			
@@ -739,7 +739,7 @@ public final class Board {
 		for(int i = 0; i < filledCellAmount; i++) {
 			
 			int move = playedMoves[i];
-			int moveScore = evaluateMoveWithMaximalScore(move, boardScore, i, playedMoves);
+			int moveScore = evaluateMove(move, Integer.MIN_VALUE, boardScore, i, playedMoves);
 			
 			if(playerAtTurn) {
 				
@@ -749,7 +749,7 @@ public final class Board {
 					
 					if(!moveLegalWhileGameNotOver(x)) continue;
 					
-					int s = evaluateMoveWithMaximalScore(x, worstMoveScore, i, playedMoves);
+					int s = evaluateMove(x, Integer.MIN_VALUE, worstMoveScore, i, playedMoves);
 					if(s < worstMoveScore) worstMoveScore = s;
 				}
 				
@@ -788,53 +788,19 @@ public final class Board {
 		return new GameAnalysis(elo, f, moveAnalyses);
 	}
 	
-	private int evaluateMoveWithMaximalScore(int moveCellX, int maxScore, int filledCellAmount, int[] playedMoves) {
+	public int evaluateMove(int moveCellX, int minScore, int maxScore, int filledCellAmount, int[] playedMoves) {
 		playMove(moveCellX);
 		
 		int storedMove = playedMoves[filledCellAmount];
 		playedMoves[filledCellAmount] = moveCellX;
 		
-		int score = -evaluate(-maxScore, Integer.MAX_VALUE, playedMoves);
+		int score = -evaluate(-maxScore, -minScore, playedMoves);
 		
 		playedMoves[filledCellAmount] = storedMove;
 		
 		undoMove(moveCellX);
 		
 		return score;
-	}
-	
-	public int evaluateMove(int moveCellX, int filledCellAmount, int[] playedMoves) {
-		playMove(moveCellX);
-		
-		int storedMove = playedMoves[filledCellAmount];
-		playedMoves[filledCellAmount] = moveCellX;
-		
-		int score = -evaluate(playedMoves);
-		
-		playedMoves[filledCellAmount] = storedMove;
-		
-		undoMove(moveCellX);
-		
-		return score;
-	}
-	
-	public int evaluateMove(int moveCellX, int minScore, int filledCellAmount, int[] playedMoves) {
-		playMove(moveCellX);
-		
-		int storedMove = playedMoves[filledCellAmount];
-		playedMoves[filledCellAmount] = moveCellX;
-		
-		int score = -evaluate(Integer.MIN_VALUE, -minScore, playedMoves);
-		
-		playedMoves[filledCellAmount] = storedMove;
-		
-		undoMove(moveCellX);
-		
-		return score;
-	}
-	
-	public int evaluate(int[] playedMoves) {
-		return evaluate(Integer.MIN_VALUE, Integer.MAX_VALUE, playedMoves);
 	}
 	
 	public int evaluate(int minScore, int maxScore, int[] playedMoves) {
