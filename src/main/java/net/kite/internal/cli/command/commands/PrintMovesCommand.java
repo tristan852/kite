@@ -10,9 +10,10 @@ import java.util.Scanner;
 public final class PrintMovesCommand extends Command {
 	
 	private static final String BOARD_MOVES_STRING_FORMAT = "%s(%s)";
+	private static final String EMPTY_BOARD_MOVES_STRING = "()";
 	
 	public PrintMovesCommand() {
-		super("print-moves", "pm", "Show the sequence of played moves and undone moves (not included by default)", "print-moves [include-undone]");
+		super("print-moves", "pm", new String[] { "Show the sequence of played moves and undone moves", "(not included by default)" }, "print-moves [include-undone]");
 	}
 	
 	@Override
@@ -47,7 +48,7 @@ public final class PrintMovesCommand extends Command {
 			
 			if(solver.boardEmpty() && !solver.canRedoMove()) {
 				
-				if(quiet) System.out.println();
+				if(quiet) System.out.println(EMPTY_BOARD_MOVES_STRING);
 				else System.out.println("No moves played or undone so far.");
 				
 			} else {
