@@ -179,7 +179,22 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
-	 * Returns the sequence of move that
+	 * Returns the sequence of moves that
+	 * were currently undone from the
+	 * game state.
+	 * A move is represented by its
+	 * 1-indexed column number (from left
+	 * to right).
+	 *
+	 * @return undone moves string representation
+	 */
+	@Override
+	public synchronized String boardUndoneMovesString() {
+		return internalSolver.boardUndoneMovesString();
+	}
+	
+	/**
+	 * Returns the sequence of moves that
 	 * were currently played onto the
 	 * game state.
 	 * A move is represented by its

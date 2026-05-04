@@ -24,6 +24,7 @@ public interface KiteApi {
 	String fancyBoardString(boolean ansiColored);
 	
 	String boardAnalysisString(boolean ansiColored);
+	String boardUndoneMovesString();
 	String boardMovesString();
 	String boardString(boolean ansiColored);
 	

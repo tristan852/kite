@@ -128,6 +128,24 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
+	public String boardUndoneMovesString() {
+		if(undoneMoveAmount == 0) return EMPTY_MOVES_STRING;
+		
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		int n = playedMoveAmount + undoneMoveAmount;
+		for(int i = playedMoveAmount; i < n; i++) {
+			
+			int move = playedMoves[i];
+			char moveCharacter = (char) (SMALLEST_MOVE_CHARACTER + move);
+			
+			stringBuilder.append(moveCharacter);
+		}
+		
+		return stringBuilder.toString();
+	}
+	
+	@Override
 	public String boardMovesString() {
 		if(playedMoveAmount == 0) return EMPTY_MOVES_STRING;
 		
