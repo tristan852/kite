@@ -692,7 +692,7 @@ public final class Kite implements KiteApi {
 		
 		for(int x : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			if(board.moveLegalWhileGameNotOver(x)) moveScores[x] = board.evaluateMove(x, Integer.MIN_VALUE, Integer.MAX_VALUE, playedMoveAmount, playedMoves);
+			if(board.moveLegalWhileGameNotOver(x)) moveScores[x] = board.evaluateMove(x, Integer.MIN_VALUE + 1, Integer.MAX_VALUE, playedMoveAmount, playedMoves);
 			else moveScores[x] = Integer.MIN_VALUE;
 		}
 		
@@ -711,7 +711,7 @@ public final class Kite implements KiteApi {
 		
 		for(int x : ORDERED_MOVE_COLUMN_INDICES) {
 			
-			if(board.moveLegalWhileGameNotOver(x)) moveScores[x] = board.evaluateMove(x, Integer.MIN_VALUE, Integer.MAX_VALUE, playedMoveAmount, playedMoves);
+			if(board.moveLegalWhileGameNotOver(x)) moveScores[x] = board.evaluateMove(x, Integer.MIN_VALUE + 1, Integer.MAX_VALUE, playedMoveAmount, playedMoves);
 			else moveScores[x] = Integer.MIN_VALUE;
 		}
 		
@@ -736,7 +736,7 @@ public final class Kite implements KiteApi {
 			throw new IllegalMoveException(moveColumnIndex, message);
 		}
 		
-		return board.evaluateMove(moveColumnIndex, Integer.MIN_VALUE, Integer.MAX_VALUE, playedMoveAmount, playedMoves);
+		return board.evaluateMove(moveColumnIndex, Integer.MIN_VALUE + 1, Integer.MAX_VALUE, playedMoveAmount, playedMoves);
 	}
 	
 	@Override

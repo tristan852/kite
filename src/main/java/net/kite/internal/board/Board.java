@@ -392,7 +392,7 @@ public final class Board {
 				
 				if(moveLegalWhileGameNotOver(x)) {
 					
-					int moveScore = evaluateMove(x, Integer.MIN_VALUE, Integer.MAX_VALUE, filledCellAmount, playedMoves);
+					int moveScore = evaluateMove(x, Integer.MIN_VALUE + 1, Integer.MAX_VALUE, filledCellAmount, playedMoves);
 					if(moveScore > boardScore) boardScore = moveScore;
 					
 					moveScores[x] = moveScore;
@@ -633,14 +633,14 @@ public final class Board {
 		for(int i = 0; i < filledCellAmount; i++) {
 			
 			int move = playedMoves[i];
-			int moveScore = evaluateMove(move, Integer.MIN_VALUE, boardScore, i, playedMoves);
+			int moveScore = evaluateMove(move, Integer.MIN_VALUE + 1, boardScore, i, playedMoves);
 			int worstMoveScore = moveScore;
 			
 			for(int x : ORDERED_MOVE_COLUMN_INDICES) {
 				
 				if(!moveLegalWhileGameNotOver(x)) continue;
 				
-				int s = evaluateMove(x, Integer.MIN_VALUE, worstMoveScore, i, playedMoves);
+				int s = evaluateMove(x, Integer.MIN_VALUE + 1, worstMoveScore, i, playedMoves);
 				if(s < worstMoveScore) worstMoveScore = s;
 			}
 			
@@ -739,7 +739,7 @@ public final class Board {
 		for(int i = 0; i < filledCellAmount; i++) {
 			
 			int move = playedMoves[i];
-			int moveScore = evaluateMove(move, Integer.MIN_VALUE, boardScore, i, playedMoves);
+			int moveScore = evaluateMove(move, Integer.MIN_VALUE + 1, boardScore, i, playedMoves);
 			
 			if(playerAtTurn) {
 				
@@ -749,7 +749,7 @@ public final class Board {
 					
 					if(!moveLegalWhileGameNotOver(x)) continue;
 					
-					int s = evaluateMove(x, Integer.MIN_VALUE, worstMoveScore, i, playedMoves);
+					int s = evaluateMove(x, Integer.MIN_VALUE + 1, worstMoveScore, i, playedMoves);
 					if(s < worstMoveScore) worstMoveScore = s;
 				}
 				
