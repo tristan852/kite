@@ -445,8 +445,8 @@ public final class Kite implements KiteApi {
 			
 		} else {
 			
-			immediateWinMoveScore = BoardScore.win(playedMoveAmount + 1);
-			immediateLossMoveScore = -BoardScore.maximal(playedMoveAmount + 1);
+			immediateWinMoveScore = BoardScore.WINS[playedMoveAmount + 1];
+			immediateLossMoveScore = -BoardScore.MAXIMUMS[playedMoveAmount + 1];
 		}
 		
 		int maximalScoreLoss = skillLevel.getMaximalEvaluationLoss();
@@ -460,7 +460,7 @@ public final class Kite implements KiteApi {
 		}
 		
 		int optimalMoveScore = Integer.MIN_VALUE;
-		int theoreticallyWorstScoreLoss = BoardScore.maximalScoreLoss(playedMoveAmount);
+		int theoreticallyWorstScoreLoss = BoardScore.MAXIMAL_SCORE_LOSSES[playedMoveAmount];
 		
 		maximalScoreLoss = maximalScoreLoss * theoreticallyWorstScoreLoss / MAXIMAL_MOVE_SCORE_LOSS;
 		
