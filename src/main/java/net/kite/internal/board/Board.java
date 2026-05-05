@@ -813,7 +813,7 @@ public final class Board {
 		if(bitboardContainsConnection(board)) {
 			
 			evaluationTime += System.nanoTime() - t;
-			return BoardScore.loss(filledCellAmount);
+			return BoardScore.LOSSES[filledCellAmount];
 		}
 		
 		if(filledCellAmount == FULL_CELL_AMOUNT) {
@@ -828,7 +828,7 @@ public final class Board {
 		if(result != 0) {
 			
 			evaluationTime += System.nanoTime() - t;
-			return BoardScore.win(filledCellAmount + 1);
+			return BoardScore.WINS[filledCellAmount + 1];
 		}
 		
 		if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
@@ -839,8 +839,8 @@ public final class Board {
 			return openingBoardScore;
 		}
 		
-		int minimalScore = BoardScore.minimal(filledCellAmount);
-		int maximalScore = BoardScore.maximal(filledCellAmount);
+		int minimalScore = BoardScore.MINIMUMS[filledCellAmount];
+		int maximalScore = BoardScore.MAXIMUMS[filledCellAmount];
 		
 		int minimalScoreWeight = 1;
 		int maximalScoreWeight = 1;
@@ -881,7 +881,7 @@ public final class Board {
 				
 			} else {
 				
-				openingBoardScore = -BoardScore.win(filledCellAmount + 1);
+				openingBoardScore = -BoardScore.WINS[filledCellAmount + 1];
 			}
 			
 			if(minimalScore < openingBoardScore) {
@@ -972,8 +972,8 @@ public final class Board {
 		nodeEvaluationAmount++;
 		
 		int filledCellAmount = Long.bitCount(maskBitboard);
-		int minScore = BoardScore.minimal(filledCellAmount);
-		int maxScore = BoardScore.maximalWithNoImmediateWin(filledCellAmount);
+		int minScore = BoardScore.MINIMUMS[filledCellAmount];
+		int maxScore = BoardScore.MAXIMUMS_WITH_NO_IMMEDIATE_WIN[filledCellAmount];
 		
 		if(minimalScore >= 0) {
 			
@@ -1004,7 +1004,7 @@ public final class Board {
 						
 						if((row & yellowWinningStones) != 0) {
 							
-							int score = BoardScore.loss(n);
+							int score = BoardScore.LOSSES[n];
 							if(maxScore > score) maxScore = score;
 							
 							break;
@@ -1070,10 +1070,13 @@ public final class Board {
 				return minScore;
 			}
 			
+			int s = BoardScore.MINIMUMS_WITH_NO_IMMEDIATE_OPPONENT_WIN[filledCellAmount];
+			if(s > minimalScore) return s;
+			
 			int forcedX = p >>> LOGARITHMIC_BITBOARD_LENGTH;
 			playMove(forcedX);
 			
-			int s = -evaluateWithNoImmediateWin(-minimalScore - 1);
+			s = -evaluateWithNoImmediateWin(-minimalScore - 1);
 			
 			undoMove(forcedX);
 			
@@ -1097,6 +1100,9 @@ public final class Board {
 			
 			return minimalScore;
 		}
+		
+		int s = BoardScore.MINIMUMS_WITH_NO_IMMEDIATE_OPPONENT_WIN[filledCellAmount];
+		if(s > minimalScore) return s;
 		
 		opponentThreatsBitboard <<= 1;
 		opponentThreatsBitboard |= maskBitboard;
@@ -1171,7 +1177,7 @@ public final class Board {
 			
 			playMove(moveCellX);
 			
-			int s = -evaluateWithNoImmediateWin(-minimalScore - 1);
+			s = -evaluateWithNoImmediateWin(-minimalScore - 1);
 			
 			undoMove(moveCellX);
 			
