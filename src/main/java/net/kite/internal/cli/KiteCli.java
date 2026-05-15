@@ -232,8 +232,8 @@ public final class KiteCli {
 		
 		if(gameCommandArguments != null) {
 			
-			boolean exit = Commands.GAME.execute(gameCommandArguments, solver, errorStream, false, quiet, scanner);
-			if(exit) return;
+			Commands.GAME.execute(gameCommandArguments, solver, errorStream, false, quiet, scanner);
+			return;
 		}
 		
 		while(true) {
