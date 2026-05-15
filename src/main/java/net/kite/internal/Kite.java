@@ -641,7 +641,7 @@ public final class Kite implements KiteApi {
 					}
 					
 					int moveWeight = equalBoardScoreRange - absoluteMoveScore + 1;
-					if(moveScore > 0) moveWeight++;
+					if(moveScore > 0) moveWeight += 2;
 					
 					moveWeight *= moveWeight;
 					
