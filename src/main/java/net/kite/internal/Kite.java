@@ -38,6 +38,9 @@ public final class Kite implements KiteApi {
 	
 	private static final int NOTICED_WINNING_MOVE_WEIGHT = 1000000;
 	
+	private static final int EQUAL_BOARD_SCORE_RANGE_OFFSET = 2;
+	private static final int EQUAL_BOARD_SCORE_RANGE_DIVISOR = 14;
+	
 	private static final int MOVE_COLUMN_INDEX_SMALLEST_CHARACTER = 49;
 	private static final int MOVE_COLUMN_INDEX_LARGEST_CHARACTER = 55;
 	
@@ -551,30 +554,118 @@ public final class Kite implements KiteApi {
 		return INVALID_MOVE_COLUMN_INDEX;
 	}
 	
-	private int adaptiveMove() {
+	@Override
+	public int adaptiveMove() {
 		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
 		
-		int bestAbsoluteMoveScore = Integer.MAX_VALUE - 1;
+		int boardScore = board.evaluate(Integer.MIN_VALUE, Integer.MAX_VALUE, playedMoves);
+		int targetBoardScore = boardScore / 2;
+		int equalBoardScoreRange = EQUAL_BOARD_SCORE_RANGE_OFFSET - playedMoveAmount / EQUAL_BOARD_SCORE_RANGE_DIVISOR;
+		
+		boolean positionEqual = Math.abs(targetBoardScore) <= equalBoardScoreRange;
+		boolean moveInRange = false;
+		
+		int bestMoveScoreDistance = Integer.MAX_VALUE / 2;
 		int n = 0;
+		
+		int bestZeroMoveScoreDistance = Integer.MAX_VALUE - 1;
+		int n2 = 0;
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
 			
 			if(!board.moveLegalWhileGameNotOver(moveColumnIndex)) continue;
 			
-			int moveScore = board.evaluateMove(moveColumnIndex, -bestAbsoluteMoveScore - 1, Integer.MAX_VALUE, playedMoveAmount, playedMoves);
-			if(moveScore < 0) moveScore = -moveScore;
+			int s1;
+			int s2;
 			
-			moveScores[moveColumnIndex] = moveScore;
-			
-			if(moveScore < bestAbsoluteMoveScore) {
+			if(positionEqual) {
 				
-				bestAbsoluteMoveScore = moveScore;
-				n = 1;
+				if(moveInRange) {
+					
+					s1 = -equalBoardScoreRange - 1;
+					s2 = equalBoardScoreRange + 1;
+					
+				} else {
+					
+					s1 = -bestZeroMoveScoreDistance - 1;
+					s2 = bestZeroMoveScoreDistance + 1;
+				}
 				
-				continue;
+			} else {
+				
+				s1 = targetBoardScore - bestMoveScoreDistance - 1;
+				s2 = targetBoardScore + bestMoveScoreDistance + 1;
 			}
 			
-			if(moveScore == bestAbsoluteMoveScore) n++;
+			if(s2 > boardScore) s2 = boardScore;
+			
+			int moveScore = board.evaluateMove(moveColumnIndex, s1, s2, playedMoveAmount, playedMoves);
+			moveScores[moveColumnIndex] = moveScore;
+			
+			if(Math.abs(moveScore) <= equalBoardScoreRange) moveInRange = true;
+			
+			int moveScoreDistance = Math.abs(targetBoardScore - moveScore);
+			if(moveScoreDistance < bestMoveScoreDistance) {
+				
+				bestMoveScoreDistance = moveScoreDistance;
+				n = 1;
+				
+			} else if(moveScoreDistance == bestMoveScoreDistance) n++;
+			
+			moveScoreDistance = Math.abs(moveScore);
+			if(moveScoreDistance < bestZeroMoveScoreDistance) {
+				
+				bestZeroMoveScoreDistance = moveScoreDistance;
+				n2 = 1;
+				
+			} else if(moveScoreDistance == bestZeroMoveScoreDistance) n2++;
+		}
+		
+		if(positionEqual) {
+			
+			if(moveInRange) {
+				
+				int totalWeight = 0;
+				
+				for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
+					
+					if(!board.moveLegalWhileGameNotOver(moveColumnIndex)) continue;
+					
+					int moveScore = moveScores[moveColumnIndex];
+					moveScore = Math.abs(moveScore);
+					
+					if(moveScore > equalBoardScoreRange) {
+						
+						moveWeights[moveColumnIndex] = 0;
+						continue;
+					}
+					
+					int moveWeight = equalBoardScoreRange - moveScore + 1;
+					moveWeight *= moveWeight * moveWeight;
+					
+					moveWeights[moveColumnIndex] = moveWeight;
+					totalWeight += moveWeight;
+				}
+				
+				int weightIndex = random.randomInteger(totalWeight);
+				
+				for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
+					
+					if(!board.moveLegalWhileGameNotOver(moveColumnIndex)) continue;
+					
+					int moveWeight = moveWeights[moveColumnIndex];
+					if(weightIndex < moveWeight) return moveColumnIndex + 1;
+					
+					weightIndex -= moveWeight;
+				}
+				
+			} else {
+				
+				targetBoardScore = 0;
+				
+				bestMoveScoreDistance = bestZeroMoveScoreDistance;
+				n = n2;
+			}
 		}
 		
 		int index = random.randomInteger(n);
@@ -583,8 +674,10 @@ public final class Kite implements KiteApi {
 			
 			if(!board.moveLegalWhileGameNotOver(moveColumnIndex)) continue;
 			
-			int absoluteMoveScore = moveScores[moveColumnIndex];
-			if(absoluteMoveScore != bestAbsoluteMoveScore) continue;
+			int moveScore = moveScores[moveColumnIndex];
+			int moveScoreDistance = Math.abs(targetBoardScore - moveScore);
+			
+			if(moveScoreDistance != bestMoveScoreDistance) continue;
 			
 			if(index == 0) return moveColumnIndex + 1;
 			index--;
