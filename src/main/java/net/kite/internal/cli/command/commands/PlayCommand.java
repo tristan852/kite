@@ -18,7 +18,7 @@ public final class PlayCommand extends Command {
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length != 1) {
 			
-			errorStream.println(AnsiUtil.brightRedAnsi("Inorrect number of arguments!"));
+			errorStream.println(AnsiUtil.brightRedAnsi("Incorrect number of arguments!"));
 			if(exitOnError) System.exit(1);
 			return false;
 		}
