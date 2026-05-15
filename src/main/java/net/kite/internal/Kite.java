@@ -560,6 +560,8 @@ public final class Kite implements KiteApi {
 		
 		int boardScore = board.evaluate(Integer.MIN_VALUE, Integer.MAX_VALUE, playedMoves);
 		int targetBoardScore = boardScore / 2;
+		if(boardScore > 0) targetBoardScore++;
+		
 		int equalBoardScoreRange = EQUAL_BOARD_SCORE_RANGE_OFFSET - playedMoveAmount / EQUAL_BOARD_SCORE_RANGE_DIVISOR;
 		
 		boolean positionEqual = Math.abs(targetBoardScore) <= equalBoardScoreRange;
@@ -623,7 +625,7 @@ public final class Kite implements KiteApi {
 		
 		if(positionEqual) {
 			
-			if(moveInRange) {
+			if(moveInRange && equalBoardScoreRange != 0) {
 				
 				int totalWeight = 0;
 				
