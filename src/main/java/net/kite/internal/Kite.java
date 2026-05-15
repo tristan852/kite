@@ -733,14 +733,8 @@ public final class Kite implements KiteApi {
 	
 	@Override
 	public int randomMove() {
-		if(board.over()) return INVALID_MOVE_COLUMN_INDEX;
-		
-		int n = 0;
-		
-		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
-			
-			if(board.moveLegalWhileGameNotOver(moveColumnIndex)) n++;
-		}
+		int n = board.legalMoveAmount();
+		if(n == 0) return INVALID_MOVE_COLUMN_INDEX;
 		
 		int index = random.randomInteger(n);
 		
