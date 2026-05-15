@@ -564,13 +564,14 @@ public final class Kite implements KiteApi {
 		
 		int equalBoardScoreRange = EQUAL_BOARD_SCORE_RANGE_OFFSET - playedMoveAmount / EQUAL_BOARD_SCORE_RANGE_DIVISOR;
 		
+		int s = Math.abs(boardScore);
 		boolean positionEqual = Math.abs(targetBoardScore) <= equalBoardScoreRange;
-		boolean moveInRange = false;
+		boolean moveInRange = s <= equalBoardScoreRange;
 		
-		int bestMoveScoreDistance = Integer.MAX_VALUE / 2;
+		int bestMoveScoreDistance = Math.abs(targetBoardScore - boardScore);
 		int n = 0;
 		
-		int bestZeroMoveScoreDistance = Integer.MAX_VALUE - 1;
+		int bestZeroMoveScoreDistance = s;
 		int n2 = 0;
 		
 		for(int moveColumnIndex : ORDERED_MOVE_COLUMN_INDICES) {
