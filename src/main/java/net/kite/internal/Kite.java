@@ -632,16 +632,18 @@ public final class Kite implements KiteApi {
 					if(!board.moveLegalWhileGameNotOver(moveColumnIndex)) continue;
 					
 					int moveScore = moveScores[moveColumnIndex];
-					moveScore = Math.abs(moveScore);
+					int absoluteMoveScore = Math.abs(moveScore);
 					
-					if(moveScore > equalBoardScoreRange) {
+					if(absoluteMoveScore > equalBoardScoreRange) {
 						
 						moveWeights[moveColumnIndex] = 0;
 						continue;
 					}
 					
-					int moveWeight = equalBoardScoreRange - moveScore + 1;
-					moveWeight *= moveWeight * moveWeight;
+					int moveWeight = equalBoardScoreRange - absoluteMoveScore + 1;
+					if(moveScore > 0) moveWeight++;
+					
+					moveWeight *= moveWeight;
 					
 					moveWeights[moveColumnIndex] = moveWeight;
 					totalWeight += moveWeight;
