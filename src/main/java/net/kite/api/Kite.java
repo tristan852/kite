@@ -687,8 +687,9 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
-	 * Returns {@code true} if and only if this solver instance
-	 * is currently recording performance metrics.
+	 * Returns {@code true} if and only if
+	 * this solver instance is currently
+	 * recording performance metrics.
 	 * <p>
 	 * Metrics recording can be started using
 	 * {@link Kite#startRecordingPerformanceMetrics()}.
@@ -698,6 +699,21 @@ public final class Kite implements KiteApi {
 	@Override
 	public synchronized boolean isRecordingMetrics() {
 		return internalSolver.isRecordingMetrics();
+	}
+	
+	/**
+	 * Evaluates the game state and returns
+	 * a move chosen by the adaptive skill
+	 * level.
+	 * <p>
+	 * This method behaves identically to invoking
+	 * {@link Kite#skilledMove(SkillLevel skillLevel) skilledMove(SkillLevel.ADAPTIVE)}.
+	 *
+	 * @return a 1-indexed column number to play in (indexed from left to right) or {@code 0} if no legal move
+	 */
+	@Override
+	public synchronized int adaptiveMove() {
+		return internalSolver.adaptiveMove();
 	}
 	
 	/**
