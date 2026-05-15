@@ -36,7 +36,7 @@ public final class SkillLevelsCommand extends Command {
 	private static final int INVALID_ELO_RATING = -1;
 	
 	public SkillLevelsCommand() {
-		super("skill-levels", "Show all available skill levels", "skill-levels");
+		super("skill-levels", "sl", "Show all available skill levels", "skill-levels");
 	}
 	
 	@Override

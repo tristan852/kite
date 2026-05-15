@@ -10,7 +10,7 @@ import java.util.Scanner;
 public final class SeedCommand extends Command {
 	
 	public SeedCommand() {
-		super("seed", "Set the random seed", "seed [seed]");
+		super("seed", "se", "Set the random seed", "seed [seed]");
 	}
 	
 	@Override

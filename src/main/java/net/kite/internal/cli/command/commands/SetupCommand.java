@@ -11,7 +11,7 @@ import java.util.Scanner;
 public final class SetupCommand extends Command {
 	
 	public SetupCommand() {
-		super("setup", "Set up the game from a sequence of moves", "setup [moves]");
+		super("setup", "su", "Set up the game from a sequence of moves", "setup [moves]");
 	}
 	
 	@Override

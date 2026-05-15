@@ -115,7 +115,7 @@ public final class GameCommand extends Command {
 					return false;
 				}
 				
-				if(message.equals("skill-levels")) {
+				if(message.equals("skill-levels") || message.equals("sl")) {
 					
 					Commands.SKILL_LEVELS.execute(new String[] {}, null, errorStream, false, quiet, null);
 					continue;
