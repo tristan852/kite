@@ -25,6 +25,7 @@ public final class Commands {
 	public static final Command OPTIMAL = new OptimalCommand();
 	public static final Command RANDOM = new RandomCommand();
 	public static final Command SKILLED = new SkilledCommand();
+	public static final Command ADAPTIVE = new AdaptiveCommand();
 	public static final Command ANALYSIS = new AnalysisCommand();
 	public static final Command BENCHMARK = new BenchmarkCommand();
 	public static final Command METRICS = new MetricsCommand();
@@ -67,6 +68,7 @@ public final class Commands {
 			OPTIMAL,
 			RANDOM,
 			SKILLED,
+			ADAPTIVE,
 			ANALYSIS,
 			BENCHMARK,
 			METRICS,
@@ -113,6 +115,7 @@ public final class Commands {
 					OPTIMAL,
 					RANDOM,
 					SKILLED,
+					ADAPTIVE,
 					ANALYSIS,
 					BENCHMARK,
 					METRICS
