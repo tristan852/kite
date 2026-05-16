@@ -131,7 +131,7 @@ public final class Board {
 	
 	private static final int MOVES_LENGTH = 282;
 	
-	private static final int MINIMAL_IMPORTANT_NODE_EVALUATION_AMOUNT = 10000;
+	private static final int MINIMAL_IMPORTANT_NODE_EVALUATION_AMOUNT = 155;
 	
 	private static final String TO_STRING_CELL_ROW_SEPARATOR_STRING = "\n";
 	private static final String TO_STRING_EMPTY_CELL_String = ".";

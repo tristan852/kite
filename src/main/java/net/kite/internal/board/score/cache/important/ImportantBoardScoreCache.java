@@ -2,12 +2,12 @@ package net.kite.internal.board.score.cache.important;
 
 public class ImportantBoardScoreCache {
 	
-	private static final int CAPACITY  = 4096;
-	private static final long KEY_MASK = 4095;
+	private static final int  CAPACITY = 16384;
+	private static final long KEY_MASK = 16383;
 	
-	private static final long ENTRY_DATA_PARTIAL_HASH_MASK  = 0xFFFFFFFFFFFFF000L;
-	private static final long ENTRY_DATA_SCORE_MASK = 0x00000000000000FFL;
-	private static final long ENTRY_DATA_EXACT_MASK = 0x0000000000000100L;
+	private static final long ENTRY_DATA_PARTIAL_HASH_MASK = 0xFFFFFFFFFFFFC000L;
+	private static final long ENTRY_DATA_SCORE_MASK        = 0x00000000000000FFL;
+	private static final long ENTRY_DATA_EXACT_MASK        = 0x0000000000000100L;
 	
 	private static final int ENTRY_DATA_SCORE_UNPACK_OFFSET = 56;
 	
