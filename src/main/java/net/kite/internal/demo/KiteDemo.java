@@ -1141,6 +1141,9 @@ public final class KiteDemo {
 				aiModeSelected = true;
 				multiplayerModeSelected = false;
 				
+				Random random = ThreadLocalRandom.current();
+				aiPlaysRed = random.nextBoolean();
+				
 				modeSelectElement.setSelectedIndex(1);
 				
 				disableButtonElement(undoButtonElement);
@@ -1198,9 +1201,7 @@ public final class KiteDemo {
 		
 		if(aiModeSelected) {
 			
-			Random random = ThreadLocalRandom.current();
-			
-			aiPlaysRed = random.nextBoolean();
+			aiPlaysRed = !aiPlaysRed;
 			if(aiPlaysRed) playAIMove();
 			else updateLocationSearch();
 			

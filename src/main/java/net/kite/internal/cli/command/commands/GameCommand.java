@@ -18,6 +18,9 @@ public final class GameCommand extends Command {
 	
 	private Kite gameSolver;
 	
+	private SkillLevel previousSkillLevel;
+	private boolean previousSkillLevelWentFirst;
+	
 	public GameCommand() {
 		super("game", "g", "Start a new interactive game", "game [skill-level]");
 	}
@@ -152,8 +155,22 @@ public final class GameCommand extends Command {
 		if(gameSolver == null) gameSolver = Kite.createInstance();
 		else gameSolver.clearBoard();
 		
-		Random random = ThreadLocalRandom.current();
-		if(random.nextBoolean()) gameSolver.playMove(gameSolver.skilledMove(level));
+		boolean b;
+		if(level == previousSkillLevel) {
+			
+			b = !previousSkillLevelWentFirst;
+			previousSkillLevelWentFirst = b;
+			
+		} else {
+			
+			Random random = ThreadLocalRandom.current();
+			b = random.nextBoolean();
+			
+			previousSkillLevel = level;
+			previousSkillLevelWentFirst = b;
+		}
+		
+		if(b) gameSolver.playMove(gameSolver.skilledMove(level));
 		
 		System.out.println();
 		boolean ansiDisabled = AnsiUtil.areAnsiCodesDisabled();
