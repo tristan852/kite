@@ -11,34 +11,41 @@ import java.util.Scanner;
 public final class SeedCommand extends Command {
 	
 	public SeedCommand() {
-		super("seed", "se", "Set the random seed", "seed [seed]");
+		super("seed", "se", "Retrieve or set the random seed", "seed [seed/random]");
 	}
 	
 	@Override
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length == 0) {
 			
-			long seed = solver.seedRandomness();
+			long seed = solver.randomSeed();
 			
-			System.out.printf(Locale.ROOT, "new seed: %,d\n", seed);
+			System.out.printf(Locale.ROOT, "seed: %,d\n", seed);
 			
 		} else if(arguments.length == 1) {
 			
 			String s = arguments[0];
 			long seed;
 			
-			try {
+			if(s.equals("random")) {
 				
-				seed = Long.parseLong(s);
+				seed = solver.seedRandomness();
 				
-			} catch(NumberFormatException exception) {
+			} else {
 				
-				errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown long value for argument 'seed': \"%s\"", s)));
-				if(exitOnError) System.exit(1);
-				return false;
+				try {
+					
+					seed = Long.parseLong(s);
+					
+				} catch(NumberFormatException exception) {
+					
+					errorStream.println(AnsiUtil.brightRedAnsi(String.format("Unknown long value for argument 'seed': \"%s\"", s)));
+					if(exitOnError) System.exit(1);
+					return false;
+				}
+				
+				solver.seedRandomness(seed);
 			}
-			
-			solver.seedRandomness(seed);
 			
 			System.out.printf(Locale.ROOT, "new seed: %,d\n", seed);
 			
