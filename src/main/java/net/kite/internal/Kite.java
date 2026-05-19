@@ -855,10 +855,8 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
-	public KiteApi seedRandomness() {
-		random.setRandomSeed();
-		
-		return null;
+	public long seedRandomness() {
+		return random.setRandomSeed();
 	}
 	
 	@Override
@@ -866,6 +864,11 @@ public final class Kite implements KiteApi {
 		random.setSeed(seed);
 		
 		return null;
+	}
+	
+	@Override
+	public long randomSeed() {
+		return random.getSeed();
 	}
 	
 	@Override
