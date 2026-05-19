@@ -31,10 +31,10 @@ public final class BoardLine {
 	 * <p>
 	 * <b>Warning</b>: This constructor is intended for internal use only!
 	 *
-	 * @param startCellX x-coordinate of start cell
-	 * @param startCellY y-coordinate of start cell
-	 * @param endCellX x-coordinate of end cell
-	 * @param endCellY y-coordinate of end cell
+	 * @param startCellX x-coordinate of start cell (zero-indexed from left to right)
+	 * @param startCellY y-coordinate of start cell (zero-indexed from bottom to top)
+	 * @param endCellX x-coordinate of end cell (zero-indexed from left to right)
+	 * @param endCellY y-coordinate of end cell (zero-indexed from bottom to top)
 	 * @param directionX x-direction
 	 * @param directionY y-direction
 	 * @param length length of the line
@@ -106,7 +106,7 @@ public final class BoardLine {
 	 * The start cell sits at one of
 	 * the ends of the line.
 	 *
-	 * @return x-coordinate of start cell
+	 * @return x-coordinate of start cell (zero-indexed from left to right)
 	 */
 	public int getStartCellX() {
 		return startCellX;
@@ -119,7 +119,7 @@ public final class BoardLine {
 	 * The start cell sits at one of
 	 * the ends of the line.
 	 *
-	 * @return y-coordinate of start cell
+	 * @return y-coordinate of start cell (zero-indexed from bottom to top)
 	 */
 	public int getStartCellY() {
 		return startCellY;
@@ -132,7 +132,7 @@ public final class BoardLine {
 	 * The end cell sits at one of
 	 * the ends of the line.
 	 *
-	 * @return x-coordinate of end cell
+	 * @return x-coordinate of end cell (zero-indexed from left to right)
 	 */
 	public int getEndCellX() {
 		return endCellX;
@@ -145,7 +145,7 @@ public final class BoardLine {
 	 * The end cell sits at one of
 	 * the ends of the line.
 	 *
-	 * @return y-coordinate of end cell
+	 * @return y-coordinate of end cell (zero-indexed from bottom to top)
 	 */
 	public int getEndCellY() {
 		return endCellY;

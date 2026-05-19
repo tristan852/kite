@@ -32,6 +32,7 @@ public class IllegalMoveException extends IllegalStateException {
 	 */
 	public IllegalMoveException(int moveColumnIndex, String message) {
 		super(message);
+		
 		this.moveColumnIndex = moveColumnIndex;
 	}
 	
