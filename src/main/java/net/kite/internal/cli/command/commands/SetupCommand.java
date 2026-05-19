@@ -19,6 +19,9 @@ public final class SetupCommand extends Command {
 		if(arguments.length == 0) {
 			
 			solver.clearBoard();
+			
+			System.out.println("Board cleared.");
+			
 			return false;
 		}
 		
@@ -53,6 +56,8 @@ public final class SetupCommand extends Command {
 			if(exitOnError) System.exit(1);
 			return false;
 		}
+		
+		System.out.println("Position set up.");
 		
 		return false;
 	}

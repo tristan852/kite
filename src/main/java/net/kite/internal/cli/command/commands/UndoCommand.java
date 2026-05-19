@@ -26,6 +26,8 @@ public final class UndoCommand extends Command {
 			
 			solver.undoMove();
 			
+			System.out.println("Move undone.");
+			
 		} else if(arguments.length == 1) {
 			
 			String s = arguments[0];
@@ -58,6 +60,8 @@ public final class UndoCommand extends Command {
 			}
 			
 			solver.undoMoves(n);
+			
+			System.out.println("Moves undone.");
 			
 		} else {
 			

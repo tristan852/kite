@@ -50,6 +50,8 @@ public final class PlayCommand extends Command {
 			return false;
 		}
 		
+		System.out.println("Moves played.");
+		
 		return false;
 	}
 	

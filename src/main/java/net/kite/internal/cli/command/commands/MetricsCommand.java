@@ -75,12 +75,12 @@ public final class MetricsCommand extends Command {
 		if(solver.isRecordingMetrics()) {
 			
 			solver.stopRecordingPerformanceMetrics();
-			System.out.println("Recording stopped...");
+			System.out.println("Recording stopped.");
 			
 		} else {
 			
 			solver.startRecordingPerformanceMetrics();
-			System.out.println("Recording started...");
+			System.out.println("Recording started.");
 		}
 		
 		return false;

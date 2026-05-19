@@ -78,8 +78,10 @@ public interface KiteApi {
 	int evaluateMove(int moveColumnIndex);
 	int evaluateBoard();
 	
-	KiteApi seedRandomness();
+	long seedRandomness();
 	KiteApi seedRandomness(long seed);
+	
+	long randomSeed();
 	
 	boolean moveLegal(int moveColumnIndex);
 	

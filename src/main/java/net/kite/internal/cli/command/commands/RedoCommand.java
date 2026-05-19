@@ -26,6 +26,8 @@ public final class RedoCommand extends Command {
 			
 			solver.redoMove();
 			
+			System.out.println("Move redone.");
+			
 		} else if(arguments.length == 1) {
 			
 			String s = arguments[0];
@@ -58,6 +60,8 @@ public final class RedoCommand extends Command {
 			}
 			
 			solver.redoMoves(n);
+			
+			System.out.println("Moves redone.");
 			
 		} else {
 			

@@ -24,6 +24,8 @@ public final class ClearCommand extends Command {
 		
 		solver.clearBoard();
 		
+		System.out.println("Board cleared.");
+		
 		return false;
 	}
 	

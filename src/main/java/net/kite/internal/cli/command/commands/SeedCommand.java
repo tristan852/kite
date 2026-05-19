@@ -5,6 +5,7 @@ import net.kite.internal.cli.command.Command;
 import net.kite.internal.util.ansi.AnsiUtil;
 
 import java.io.PrintStream;
+import java.util.Locale;
 import java.util.Scanner;
 
 public final class SeedCommand extends Command {
@@ -17,7 +18,9 @@ public final class SeedCommand extends Command {
 	public boolean execute(String[] arguments, Kite solver, PrintStream errorStream, boolean exitOnError, boolean quiet, Scanner scanner) {
 		if(arguments.length == 0) {
 			
-			solver.seedRandomness();
+			long seed = solver.seedRandomness();
+			
+			System.out.printf(Locale.ROOT, "new seed: %,d\n", seed);
 			
 		} else if(arguments.length == 1) {
 			
@@ -36,6 +39,8 @@ public final class SeedCommand extends Command {
 			}
 			
 			solver.seedRandomness(seed);
+			
+			System.out.printf(Locale.ROOT, "new seed: %,d\n", seed);
 			
 		} else {
 			
