@@ -1001,13 +1001,11 @@ public final class Kite implements KiteApi {
 	 * this method will revert it back to non-deterministic
 	 * behavior.
 	 *
-	 * @return this solver instance
+	 * @return the start seed chosen at random
 	 */
 	@Override
-	public synchronized Kite seedRandomness() {
-		internalSolver.seedRandomness();
-		
-		return this;
+	public synchronized long seedRandomness() {
+		return internalSolver.seedRandomness();
 	}
 	
 	/**
@@ -1028,6 +1026,23 @@ public final class Kite implements KiteApi {
 		internalSolver.seedRandomness(seed);
 		
 		return this;
+	}
+	
+	/**
+	 * Returns the current seed/state
+	 * of the random number generator
+	 * of this solver instance.
+	 * <p>
+	 * The returned seed can be passed
+	 * to {@link Kite#seedRandomness(long seed)}
+	 * at any time to restore the RNG
+	 * state.
+	 *
+	 * @return the current random seed
+	 */
+	@Override
+	public synchronized long randomSeed() {
+		return internalSolver.randomSeed();
 	}
 	
 	/**
