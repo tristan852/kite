@@ -8,15 +8,21 @@ import java.io.*;
 
 public final class OpeningBoardScoreCache {
 	
-	private static final int BOARD_SCORES_SIZE_IN_BYTES  = 96529631;
-	private static final int HASH_FUNCTION_SIZE_IN_BYTES = 27134232;
+	private static final int PACKED_BOARD_SCORES_SIZE_IN_BYTES = 72397224;
+	private static final int HASH_FUNCTION_SIZE_IN_BYTES       = 27134232;
 	
-	private final byte[] boardScores;
+	private static final int BOARD_SCORE_SIZE_IN_BITS = 6;
+	private static final int BOARD_SCORE_MASK = 0x3F;
+	private static final int BOARD_SCORE_OFFSET = -18;
+	
+	private static final int BYTE_MASK = 0xFF;
+	
+	private final byte[] packedBoardScores;
 	
 	private GOVMinimalPerfectHashFunction<Long> hashFunction;
 	
 	public OpeningBoardScoreCache() {
-		this.boardScores = new byte[BOARD_SCORES_SIZE_IN_BYTES];
+		this.packedBoardScores = new byte[PACKED_BOARD_SCORES_SIZE_IN_BYTES];
 	}
 	
 	public void loadFromResources(String resourcePath) {
@@ -30,7 +36,7 @@ public final class OpeningBoardScoreCache {
 		
 		try(inputStream) {
 			
-			inputStream.readNBytes(boardScores, 0, BOARD_SCORES_SIZE_IN_BYTES);
+			inputStream.readNBytes(packedBoardScores, 0, PACKED_BOARD_SCORES_SIZE_IN_BYTES);
 			
 			@SuppressWarnings("unchecked")
 			GOVMinimalPerfectHashFunction<Long> hf = (GOVMinimalPerfectHashFunction<Long>) BinIO.loadObject(inputStream);
@@ -53,8 +59,8 @@ public final class OpeningBoardScoreCache {
 		
 		try {
 			
-			System.arraycopy(bytes, 0, boardScores, 0, BOARD_SCORES_SIZE_IN_BYTES);
-			InputStream stream = new ByteArrayInputStream(bytes, BOARD_SCORES_SIZE_IN_BYTES, HASH_FUNCTION_SIZE_IN_BYTES);
+			System.arraycopy(bytes, 0, packedBoardScores, 0, PACKED_BOARD_SCORES_SIZE_IN_BYTES);
+			InputStream stream = new ByteArrayInputStream(bytes, PACKED_BOARD_SCORES_SIZE_IN_BYTES, HASH_FUNCTION_SIZE_IN_BYTES);
 			
 			@SuppressWarnings("unchecked")
 			GOVMinimalPerfectHashFunction<Long> hf = (GOVMinimalPerfectHashFunction<Long>) BinIO.loadObject(stream);
@@ -70,8 +76,17 @@ public final class OpeningBoardScoreCache {
 	
 	public int boardScore(long mixedHash) {
 		int index = (int) hashFunction.getLong(mixedHash);
+		index *= BOARD_SCORE_SIZE_IN_BITS;
 		
-		return boardScores[index];
+		int byteIndex = index >> 3;
+		int bitIndex = index - (byteIndex << 3);
+		
+		int i = (packedBoardScores[byteIndex + 1] << 8) | (packedBoardScores[byteIndex] & BYTE_MASK);
+		
+		i >>>= bitIndex;
+		i &= BOARD_SCORE_MASK;
+		
+		return i + BOARD_SCORE_OFFSET;
 	}
 	
 }
