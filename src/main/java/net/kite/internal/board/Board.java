@@ -966,6 +966,7 @@ public final class Board {
 		return minimalScore;
 	}
 	
+	// --- CORE RECURSIVE SEARCH FUNCTION OF THE SOLVER ---
 	// only interested in scores in between min and max (excluding min and max tho)
 	// maximalScore is implicitly defined by minimalScore + 1
 	private int evaluateWithNoImmediateWin(int minimalScore) {
@@ -1030,6 +1031,8 @@ public final class Board {
 			if(entryMaxScore <= minimalScore) return minimalScore;
 		}
 		
+		long knownFailingMovesBitboard = Bitboards.EMPTY;
+		
 		long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
 		while(movesBitboard != 0) {
 			
@@ -1048,6 +1051,9 @@ public final class Board {
 				
 				int entryMinScore = -scoreCache.entryMaximalScore(entryKey);
 				if(entryMinScore > minimalScore) return entryMinScore;
+				
+				int entryMaxScore = -scoreCache.entryMinimalScore(entryKey);
+				if(entryMaxScore <= minimalScore) knownFailingMovesBitboard |= moveBitboard;
 			}
 		}
 		
@@ -1058,6 +1064,13 @@ public final class Board {
 			
 			int p = Long.numberOfTrailingZeros(immediateThreats);
 			long b = 1L << p;
+			
+			if((b & knownFailingMovesBitboard) != 0) {
+				
+				scoreCache.updateEntry(mixedHash, minScore, minimalScore);
+				
+				return minimalScore;
+			}
 			
 			if(immediateThreats != b) {
 				
@@ -1097,6 +1110,14 @@ public final class Board {
 		if(movesBitboard == 0) {
 			
 			scoreCache.updateEntry(mixedHash, minScore, minScore);
+			
+			return minimalScore;
+		}
+		
+		movesBitboard &= ~knownFailingMovesBitboard;
+		if(movesBitboard == 0) {
+			
+			scoreCache.updateEntry(mixedHash, minScore, minimalScore);
 			
 			return minimalScore;
 		}
