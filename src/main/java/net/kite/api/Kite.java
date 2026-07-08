@@ -1567,7 +1567,7 @@ public final class Kite implements KiteApi {
 	 * If you are creating the first (or one of the first)
 	 * solver instances, some additional time might be
 	 * spent on warming up the solver and initializing
-	 * solver-shared state, like the opening book.
+	 * solver-shared state such as the opening book.
 	 *
 	 * @return a newly created Kite solver instance
 	 */
