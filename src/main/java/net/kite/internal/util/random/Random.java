@@ -64,6 +64,10 @@ public final class Random {
 		randomLong();
 	}
 	
+	public boolean nextBoolean() {
+		return (randomLong() & 1L) == 0;
+	}
+	
 	public double nextDouble() {
 		return (randomLong() >>> NEXT_DOUBLE_OFFSET) * NEXT_DOUBLE_MULTIPLIER;
 	}
