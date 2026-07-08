@@ -1565,7 +1565,7 @@ public final class Kite implements KiteApi {
 	 * Solver instances are thread-safe by not allowing
 	 * multiple threads to use them in parallel.
 	 * If you are creating the first (or one of the first)
-	 * solver instances some additional time might be
+	 * solver instances, some additional time might be
 	 * spent on warming up the solver and initializing
 	 * solver-shared state, like the opening book.
 	 *
