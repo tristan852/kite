@@ -669,7 +669,7 @@ public final class Kite implements KiteApi {
 	 * @return the number of nodes evaluated during the recording
 	 */
 	@Override
-	public synchronized int printAndResetPerformanceMetrics() {
+	public synchronized long printAndResetPerformanceMetrics() {
 		return internalSolver.printAndResetPerformanceMetrics();
 	}
 	
@@ -682,7 +682,7 @@ public final class Kite implements KiteApi {
 	 * @return the number of nodes evaluated during the recording
 	 */
 	@Override
-	public synchronized int resetPerformanceMetrics() {
+	public synchronized long resetPerformanceMetrics() {
 		return internalSolver.resetPerformanceMetrics();
 	}
 	
@@ -988,6 +988,224 @@ public final class Kite implements KiteApi {
 	@Override
 	public synchronized int evaluateBoard() {
 		return internalSolver.evaluateBoard();
+	}
+	
+	/**
+	 * Produces a uniformly distributed
+	 * random boolean variable.
+	 * <p>
+	 * This method is useful when interacting
+	 * with the solver in a deterministic and
+	 * reproducible way while still requiring
+	 * random variables. The generated value
+	 * is obtained from the solver's random
+	 * source, allowing executions to be
+	 * reproduced when the same random seed/
+	 * state is used.
+	 *
+	 * @return a randomly generated boolean value
+	 */
+	@Override
+	public synchronized boolean randomBoolean() {
+		return internalSolver.randomBoolean();
+	}
+	
+	/**
+	 * Produces a uniformly distributed random
+	 * double variable in the interval
+	 * {@code [origin, bound)}.
+	 * <p>
+	 * This method is useful when interacting
+	 * with the solver in a deterministic and
+	 * reproducible way while still requiring
+	 * random variables. The generated value
+	 * is obtained from the solver's random
+	 * source, allowing executions to be
+	 * reproduced when the same random seed/
+	 * state is used.
+	 *
+	 * @param origin the inclusive lower bound of the random variable
+	 * @param bound the exclusive upper bound of the random variable
+	 * @return a random double value greater than or equal to {@code origin} and
+	 *         less than {@code bound}
+	 * @throws IllegalArgumentException if {@code origin} is greater than or equal
+	 *         to {@code bound}
+	 */
+	@Override
+	public synchronized double randomDouble(double origin, double bound) {
+		return internalSolver.randomDouble(origin, bound);
+	}
+	
+	/**
+	 * Produces a uniformly distributed random
+	 * double variable in the interval
+	 * {@code [0.0, 1.0)}.
+	 * <p>
+	 * This method is useful when interacting
+	 * with the solver in a deterministic and
+	 * reproducible way while still requiring
+	 * random variables. The generated value
+	 * is obtained from the solver's random
+	 * source, allowing executions to be
+	 * reproduced when the same random seed/
+	 * state is used.
+	 *
+	 * @return a random double value greater than or equal to {@code 0.0} and less
+	 *         than {@code 1.0}
+	 */
+	@Override
+	public synchronized double randomDouble() {
+		return internalSolver.randomDouble();
+	}
+	
+	/**
+	 * Produces a uniformly distributed random
+	 * float variable in the interval
+	 * {@code [origin, bound)}.
+	 * <p>
+	 * This method is useful when interacting
+	 * with the solver in a deterministic and
+	 * reproducible way while still requiring
+	 * random variables. The generated value
+	 * is obtained from the solver's random
+	 * source, allowing executions to be
+	 * reproduced when the same random seed/
+	 * state is used.
+	 *
+	 * @param origin the inclusive lower bound of the random variable
+	 * @param bound the exclusive upper bound of the random variable
+	 * @return a random float value greater than or equal to {@code origin} and
+	 *         less than {@code bound}
+	 * @throws IllegalArgumentException if {@code origin} is greater than or equal
+	 *         to {@code bound}
+	 */
+	@Override
+	public synchronized float randomFloat(float origin, float bound) {
+		return internalSolver.randomFloat(origin, bound);
+	}
+	
+	/**
+	 * Produces a uniformly distributed random
+	 * float variable in the interval
+	 * {@code [0.0, 1.0)}.
+	 * <p>
+	 * This method is useful when interacting
+	 * with the solver in a deterministic and
+	 * reproducible way while still requiring
+	 * random variables. The generated value
+	 * is obtained from the solver's random
+	 * source, allowing executions to be
+	 * reproduced when the same random seed/
+	 * state is used.
+	 *
+	 * @return a random float value greater than or equal to {@code 0.0} and less
+	 *         than {@code 1.0}
+	 */
+	@Override
+	public synchronized float randomFloat() {
+		return internalSolver.randomFloat();
+	}
+	
+	/**
+	 * Produces a uniformly distributed random
+	 * long variable in the interval
+	 * {@code [origin, bound)}.
+	 * <p>
+	 * This method is useful when interacting
+	 * with the solver in a deterministic and
+	 * reproducible way while still requiring
+	 * random variables. The generated value
+	 * is obtained from the solver's random
+	 * source, allowing executions to be
+	 * reproduced when the same random seed/
+	 * state is used.
+	 *
+	 * @param origin the inclusive lower bound of the random variable
+	 * @param bound the exclusive upper bound of the random variable
+	 * @return a random long value greater than or equal to {@code origin} and less
+	 *         than {@code bound}
+	 * @throws IllegalArgumentException if {@code origin} is greater than or equal
+	 *         to {@code bound}
+	 */
+	@Override
+	public synchronized long randomLong(long origin, long bound) {
+		return internalSolver.randomLong(origin, bound);
+	}
+	
+	/**
+	 * Produces a uniformly distributed random
+	 * long variable in the interval
+	 * {@code [0, bound)}.
+	 * <p>
+	 * This method is useful when interacting
+	 * with the solver in a deterministic and
+	 * reproducible way while still requiring
+	 * random variables. The generated value
+	 * is obtained from the solver's random
+	 * source, allowing executions to be
+	 * reproduced when the same random seed/
+	 * state is used.
+	 *
+	 * @param bound the exclusive upper bound of the random variable
+	 * @return a random long value greater than or equal to {@code 0} and less than
+	 *         {@code bound}
+	 * @throws IllegalArgumentException if {@code bound} is less than or equal to
+	 *         {@code 0}
+	 */
+	@Override
+	public synchronized long randomLong(long bound) {
+		return internalSolver.randomLong(bound);
+	}
+	
+	/**
+	 * Produces a uniformly distributed random
+	 * integer variable in the interval
+	 * {@code [origin, bound)}.
+	 * <p>
+	 * This method is useful when interacting
+	 * with the solver in a deterministic and
+	 * reproducible way while still requiring
+	 * random variables. The generated value
+	 * is obtained from the solver's random
+	 * source, allowing executions to be
+	 * reproduced when the same random seed/
+	 * state is used.
+	 *
+	 * @param origin the inclusive lower bound of the random variable
+	 * @param bound the exclusive upper bound of the random variable
+	 * @return a random integer value greater than or equal to {@code origin} and
+	 *         less than {@code bound}
+	 * @throws IllegalArgumentException if {@code origin} is greater than or equal
+	 *         to {@code bound}
+	 */
+	@Override
+	public synchronized int randomInteger(int origin, int bound) {
+		return internalSolver.randomInteger(origin, bound);
+	}
+	
+	/**
+	 * Produces a uniformly distributed random
+	 * integer variable in the interval
+	 * {@code [0, bound)}.
+	 * <p>
+	 * This method is useful when interacting
+	 * with the solver in a deterministic and
+	 * reproducible way while still requiring
+	 * random variables. The generated value
+	 * is obtained from the solver's random
+	 * source, allowing executions to be
+	 * reproduced when the same random seed/
+	 * state is used.
+	 *
+	 * @param bound the exclusive upper bound of the random variable
+	 * @return a random integer value greater than or equal to {@code 0} and less
+	 *         than {@code bound}
+	 * @throws IllegalArgumentException if {@code bound} is less than or equal to
+	 *         {@code 0}
+	 */
+	@Override
+	public synchronized int randomInteger(int bound) {
+		return internalSolver.randomInteger(bound);
 	}
 	
 	/**

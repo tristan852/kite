@@ -57,8 +57,8 @@ public interface KiteApi {
 	
 	KiteApi startRecordingPerformanceMetrics();
 	KiteApi stopRecordingPerformanceMetrics();
-	int printAndResetPerformanceMetrics();
-	int resetPerformanceMetrics();
+	long printAndResetPerformanceMetrics();
+	long resetPerformanceMetrics();
 	boolean isRecordingMetrics();
 	
 	int adaptiveMove();
@@ -77,6 +77,20 @@ public interface KiteApi {
 	
 	int evaluateMove(int moveColumnIndex);
 	int evaluateBoard();
+	
+	boolean randomBoolean();
+	
+	double randomDouble(double origin, double bound);
+	double randomDouble();
+	
+	float randomFloat(float origin, float bound);
+	float randomFloat();
+	
+	long randomLong(long origin, long bound);
+	long randomLong(long bound);
+	
+	int randomInteger(int origin, int bound);
+	int randomInteger(int bound);
 	
 	long seedRandomness();
 	KiteApi seedRandomness(long seed);

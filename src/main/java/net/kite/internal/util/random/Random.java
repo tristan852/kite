@@ -21,11 +21,11 @@ public final class Random {
 	
 	private static final long START_SEED_THREAD_ID_MULTIPLIER = 0x9E3779B97F4A7C15L;
 	
-	private static final int NEXT_FLOAT_OFFSET  = 40;
-	private static final int NEXT_DOUBLE_OFFSET = 11;
+	private static final int RANDOM_FLOAT_OFFSET  = 40;
+	private static final int RANDOM_DOUBLE_OFFSET = 11;
 	
-	private static final float  NEXT_FLOAT_MULTIPLIER  = 0x1.0p-24F;
-	private static final double NEXT_DOUBLE_MULTIPLIER = 0x1.0p-53;
+	private static final float  RANDOM_FLOAT_MULTIPLIER  = 0x1.0p-24F;
+	private static final double RANDOM_DOUBLE_MULTIPLIER = 0x1.0p-53;
 	
 	private long currentSeed;
 	
@@ -64,16 +64,16 @@ public final class Random {
 		randomLong();
 	}
 	
-	public boolean nextBoolean() {
+	public boolean randomBoolean() {
 		return (randomLong() & 1L) == 0;
 	}
 	
-	public double nextDouble() {
-		return (randomLong() >>> NEXT_DOUBLE_OFFSET) * NEXT_DOUBLE_MULTIPLIER;
+	public double randomDouble() {
+		return (randomLong() >>> RANDOM_DOUBLE_OFFSET) * RANDOM_DOUBLE_MULTIPLIER;
 	}
 	
-	public float nextFloat() {
-		return (randomLong() >>> NEXT_FLOAT_OFFSET) * NEXT_FLOAT_MULTIPLIER;
+	public float randomFloat() {
+		return (randomLong() >>> RANDOM_FLOAT_OFFSET) * RANDOM_FLOAT_MULTIPLIER;
 	}
 	
 	public int randomInteger(int maximalValue) {
