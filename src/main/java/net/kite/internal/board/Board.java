@@ -187,7 +187,7 @@ public final class Board {
 	
 	private long evaluationTime;
 	private int evaluationAmount;
-	private int nodeEvaluationAmount;
+	private long nodeEvaluationAmount;
 	
 	private long bitboard = Bitboards.EMPTY_CEILING;
 	private long activeBitboard = Bitboards.EMPTY;
@@ -932,7 +932,7 @@ public final class Board {
 			}
 		}
 		
-		int n = nodeEvaluationAmount;
+		long n = nodeEvaluationAmount;
 		while(minimalScore < maximalScore) {
 			
 			int score = minimalScore * minimalScoreWeight + maximalScore * maximalScoreWeight;
@@ -1336,7 +1336,7 @@ public final class Board {
 		return evaluationAmount;
 	}
 	
-	public int getNodeEvaluationAmount() {
+	public long getNodeEvaluationAmount() {
 		return nodeEvaluationAmount;
 	}
 	
