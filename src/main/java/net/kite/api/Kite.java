@@ -1528,6 +1528,8 @@ public final class Kite implements KiteApi {
 	 * Note that error messages are being
 	 * printed in case the evaluation of
 	 * a benchmark position is wrong.
+	 *
+	 * @return whether all benchmarks ran successfully
 	 */
 	public static boolean runBenchmark() {
 		return net.kite.internal.Kite.runBenchmark(true);
@@ -1545,7 +1547,8 @@ public final class Kite implements KiteApi {
 	 * printed in case the evaluation of
 	 * a benchmark position is wrong.
 	 *
-	 * @return whether to print metrics to standard output
+	 * @param printMetrics whether to print metrics to standard output
+	 * @return whether all benchmarks ran successfully
 	 */
 	public static boolean runBenchmark(boolean printMetrics) {
 		return net.kite.internal.Kite.runBenchmark(printMetrics);
