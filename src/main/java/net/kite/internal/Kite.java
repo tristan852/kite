@@ -102,7 +102,7 @@ public final class Kite implements KiteApi {
 	private final int[] moveWeights = new int[BOARD_WIDTH];
 	
 	private int metricsEvaluationAmount;
-	private int metricsNodeEvaluationAmount;
+	private long metricsNodeEvaluationAmount;
 	private long metricsEvaluationTime;
 	private boolean recordingMetrics;
 	
@@ -363,7 +363,7 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
-	public int printAndResetPerformanceMetrics() {
+	public long printAndResetPerformanceMetrics() {
 		String s1;
 		String s2;
 		String s3;
@@ -403,7 +403,7 @@ public final class Kite implements KiteApi {
 		String message = String.format(Locale.ROOT, pattern, metricsEvaluationAmount, s1, s2, s3, s4);
 		System.out.println(message);
 		
-		int n = metricsNodeEvaluationAmount;
+		long n = metricsNodeEvaluationAmount;
 		
 		metricsEvaluationAmount = 0;
 		metricsNodeEvaluationAmount = 0;
@@ -413,8 +413,8 @@ public final class Kite implements KiteApi {
 	}
 	
 	@Override
-	public int resetPerformanceMetrics() {
-		int n = metricsNodeEvaluationAmount;
+	public long resetPerformanceMetrics() {
+		long n = metricsNodeEvaluationAmount;
 		
 		metricsEvaluationAmount = 0;
 		metricsNodeEvaluationAmount = 0;
@@ -852,6 +852,101 @@ public final class Kite implements KiteApi {
 	@Override
 	public int evaluateBoard() {
 		return board.evaluate(Integer.MIN_VALUE, Integer.MAX_VALUE, playedMoves);
+	}
+	
+	@Override
+	public boolean randomBoolean() {
+		return random.randomBoolean();
+	}
+	
+	@Override
+	public double randomDouble(double origin, double bound) {
+		if(!(origin < bound)) {
+			
+			String message = String.format(Locale.ROOT, "Expected origin < bound, but got origin=%f, bound=%f", origin, bound);
+			throw new IllegalArgumentException(message);
+		}
+		
+		return origin + random.randomDouble() * (bound - origin);
+	}
+	
+	@Override
+	public double randomDouble() {
+		return random.randomDouble();
+	}
+	
+	@Override
+	public float randomFloat(float origin, float bound) {
+		if(!(origin < bound)) {
+			
+			String message = String.format(Locale.ROOT, "Expected origin < bound, but got origin=%f, bound=%f", origin, bound);
+			throw new IllegalArgumentException(message);
+		}
+		
+		return origin + random.randomFloat() * (bound - origin);
+	}
+	
+	@Override
+	public float randomFloat() {
+		return random.randomFloat();
+	}
+	
+	@Override
+	public long randomLong(long origin, long bound) {
+		if(origin >= bound) {
+			
+			String message = String.format(Locale.ROOT, "Expected origin < bound, but got origin=%d, bound=%d", origin, bound);
+			throw new IllegalArgumentException(message);
+		}
+		
+		long range = bound - origin;
+		if(range > 0) return origin + random.randomLong(range);
+		
+		while(true) {
+			
+			long r = random.randomLong();
+			if(r >= origin && r < bound) return r;
+		}
+	}
+	
+	@Override
+	public long randomLong(long bound) {
+		if(bound <= 0) {
+			
+			String message = String.format(Locale.ROOT, "Expected bound > 0, but got bound=%d", bound);
+			throw new IllegalArgumentException(message);
+		}
+		
+		return random.randomLong(bound);
+	}
+	
+	@Override
+	public int randomInteger(int origin, int bound) {
+		if(origin >= bound) {
+			
+			String message = String.format(Locale.ROOT, "Expected origin < bound, but got origin=%d, bound=%d", origin, bound);
+			throw new IllegalArgumentException(message);
+		}
+		
+		int range = bound - origin;
+		if(range > 0) return origin + random.randomInteger(range);
+		
+		while(true) {
+			
+			int r = (int) random.randomLong();
+			if(r >= origin && r < bound) return r;
+		}
+	}
+	
+	@Override
+	public int randomInteger(int bound) {
+		if(bound <= 0) {
+			
+			String message = String.format(Locale.ROOT, "Expected bound > 0, but got bound=%d", bound);
+			throw new IllegalArgumentException(message);
+		}
+		
+		return random.randomInteger(bound);
 	}
 	
 	@Override
