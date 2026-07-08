@@ -21,6 +21,12 @@ public final class Random {
 	
 	private static final long START_SEED_THREAD_ID_MULTIPLIER = 0x9E3779B97F4A7C15L;
 	
+	private static final int NEXT_FLOAT_OFFSET  = 40;
+	private static final int NEXT_DOUBLE_OFFSET = 11;
+	
+	private static final float  NEXT_FLOAT_MULTIPLIER  = 0x1.0p-24F;
+	private static final double NEXT_DOUBLE_MULTIPLIER = 0x1.0p-53;
+	
 	private long currentSeed;
 	
 	public Random() {
@@ -58,7 +64,19 @@ public final class Random {
 		randomLong();
 	}
 	
+	public double nextDouble() {
+		return (randomLong() >>> NEXT_DOUBLE_OFFSET) * NEXT_DOUBLE_MULTIPLIER;
+	}
+	
+	public float nextFloat() {
+		return (randomLong() >>> NEXT_FLOAT_OFFSET) * NEXT_FLOAT_MULTIPLIER;
+	}
+	
 	public int randomInteger(int maximalValue) {
+		return (int) randomLong(maximalValue);
+	}
+	
+	public long randomLong(long maximalValue) {
 		while(true) {
 			
 			long randomLong = randomLong();
@@ -67,7 +85,7 @@ public final class Random {
 			long lowerBits = randomLong * maximalValue;
 			
 			long threshold = Long.remainderUnsigned(-maximalValue, maximalValue);
-			if(Long.compareUnsigned(lowerBits, threshold) >= 0) return (int) upperBits;
+			if(Long.compareUnsigned(lowerBits, threshold) >= 0) return upperBits;
 		}
 	}
 	
