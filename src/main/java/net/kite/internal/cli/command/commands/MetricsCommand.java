@@ -55,7 +55,7 @@ public final class MetricsCommand extends Command {
 			
 			if(compact) {
 				
-				int n = solver.resetPerformanceMetrics();
+				long n = solver.resetPerformanceMetrics();
 				
 				String s = String.format(Locale.ROOT, "%,d", n);
 				s = AnsiUtil.brightYellowAnsi(s);
