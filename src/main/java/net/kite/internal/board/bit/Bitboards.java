@@ -13,7 +13,8 @@ public final class Bitboards {
 	
 	public static final long FIRST_COLUMN = 0x00000000000000FFL;
 	
-	public static final long TOP_BOARD_ROW = 0x0020202020202020L;
+	public static final long TOP_TWO_BOARD_ROWS = 0x0030303030303030L;
+	public static final long MIDDLE_TWO_BOARD_ROWS = 0x000C0C0C0C0C0C0CL;
 	
 	public static final long[] DOWN_RIGHT_CELLS_BELOW_LINE_BITBOARDS = new long[] {
 			0x0000000000000000L,
