@@ -1027,21 +1027,14 @@ public final class Board {
 						
 						opponentWinningStones &= evenCells;
 						
-						int n = FULL_CELL_AMOUNT;
-						long row = Bitboards.TOP_BOARD_ROW;
-						while(true) {
-							
-							if((row & opponentWinningStones) != 0) {
-								
-								int score = BoardScore.LOSSES[n];
-								if(maxScore > score) maxScore = score;
-								
-								break;
-							}
-							
-							n--;
-							row >>>= 1;
-						}
+						opponentWinningStones |= opponentWinningStones >>> 32;
+						opponentWinningStones |= opponentWinningStones >>> 16;
+						opponentWinningStones |= opponentWinningStones >>> 8;
+						
+						int n = FULL_CELL_AMOUNT - Long.numberOfLeadingZeros(opponentWinningStones & Bitboards.FIRST_COLUMN) + 58;
+						
+						int score = BoardScore.LOSSES[n];
+						if(maxScore > score) maxScore = score;
 					}
 				}
 			}
