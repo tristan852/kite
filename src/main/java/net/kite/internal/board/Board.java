@@ -53,27 +53,27 @@ public final class Board {
 	
 	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 830;
 	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 606;
-	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 459;
+	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 458;
 	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 230;
 	
 	private static final int[] RED_MOVE_CELL_SCORES = new int[] {
-			  0,   2,  32, 136,  66, 617,   0,   0,
-			102,  36,  33, 140, 136, 271,   0,   0,
-			 69,  28, 258, 224, 215, 244,   0,   0,
-			351, 146, 176, 279, 631, 622,   0,   0,
-			 69,  28, 258, 224, 215, 244,   0,   0,
-			102,  36,  33, 140, 136, 271,   0,   0,
-			  0,   2,  32, 136,  66, 617
+			  0,   5,  35, 139,  69, 620,   0,   0,
+			105,  63,  36, 143, 139, 274,   0,   0,
+			 83,  31, 261, 227, 218, 247,   0,   0,
+			224, 149, 179, 282, 634, 625,   0,   0,
+			 83,  31, 261, 227, 218, 247,   0,   0,
+			105,  63,  36, 143, 139, 274,   0,   0,
+			  0,   5,  35, 139,  69, 620
 	};
 	
 	private static final int[] YELLOW_MOVE_CELL_SCORES = new int[] {
-			  0, 111, 122, 207,  84, 444,   0,   0,
-			 87,   3, 143, 321, 139, 470,   0,   0,
-			  1, 103, 136, 345, 155, 429,   0,   0,
-			 57, 655, 217, 540, 526, 473,   0,   0,
-			  1, 103, 136, 345, 155, 429,   0,   0,
-			 87,   3, 143, 321, 139, 470,   0,   0,
-			  0, 111, 122, 207,  84, 444
+			142, 151, 162, 247, 127, 484,   0,   0,
+			127,  36, 183, 355, 179, 488,   0,   0,
+			  0, 146, 167, 385, 195, 469,   0,   0,
+			 97, 695, 265, 580, 578, 513,   0,   0,
+			  0, 146, 167, 385, 195, 469,   0,   0,
+			127,  36, 183, 355, 179, 488,   0,   0,
+			142, 151, 162, 247, 127, 484
 	};
 	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
@@ -985,56 +985,51 @@ public final class Board {
 			if(canNoLongerWin) maxScore = 0;
 		}
 		
-		long oddParityColumns = (Bitboards.EVEN_BOARD_ROWS & ceilingBitboard);
-		if(Long.bitCount(oddParityColumns) <= 1) {
+		if(minimalScore >= -3) {
 			
-			boolean canPerformClaimEven;
-			
-			long opponentCells = maskBitboard ^ activeBitboard;
-			long emptyCells = ~maskBitboard;
-			long evenCells = Bitboards.EVEN_BOARD_ROWS & emptyCells;
-			long oddCells = Bitboards.ODD_BOARD_ROWS & emptyCells;
-			
-			if(oddParityColumns != 0) {
+			long oddParityColumns = (Bitboards.EVEN_BOARD_ROWS & ceilingBitboard);
+			if(Long.bitCount(oddParityColumns) <= 1) {
 				
-				int oddParityColumnPosition = Long.numberOfTrailingZeros(oddParityColumns);
-				long oddParityColumn = Bitboards.FIRST_COLUMN << (oddParityColumnPosition & BOTTOM_ROW_BITBOARD_POSITION_MASK);
+				boolean canPerformClaimEven;
 				
-				long m = ~oddParityColumn;
-				long b = oddCells & oddParityColumn;
+				long opponentCells = maskBitboard ^ activeBitboard;
+				long emptyCells = ~maskBitboard;
+				long evenCells = Bitboards.EVEN_BOARD_ROWS & emptyCells;
+				long oddCells = Bitboards.ODD_BOARD_ROWS & emptyCells;
 				
-				evenCells = (evenCells & m) | b;
-				oddCells = (emptyCells & Bitboards.FULL_BOARD) ^ evenCells;
-				
-				canPerformClaimEven = bitboardContainsNonVerticalConnection(opponentCells | b);
-				
-			} else {
-				
-				canPerformClaimEven = true;
-			}
-			
-			if(canPerformClaimEven) {
-				
-				long activePlayerFutureCells = activeBitboard | oddCells;
-				long opponentFutureCells = opponentCells | evenCells;
-				
-				if(!canOpponentWinInClaimEven(activePlayerFutureCells, opponentFutureCells, opponentCells, maskBitboard)) {
+				if(oddParityColumns != 0) {
 					
-					if(maxScore > BoardScore.DRAW) maxScore = BoardScore.DRAW;
+					int oddParityColumnPosition = Long.numberOfTrailingZeros(oddParityColumns);
+					long oddParityColumn = Bitboards.FIRST_COLUMN << (oddParityColumnPosition & BOTTOM_ROW_BITBOARD_POSITION_MASK);
 					
-					long opponentWinningStones = nonVerticalWinCellsBitboard(opponentFutureCells);
-					if(opponentWinningStones != 0) {
+					long m = ~oddParityColumn;
+					long b = oddCells & oddParityColumn;
+					
+					evenCells = (evenCells & m) | b;
+					oddCells = (emptyCells & Bitboards.FULL_BOARD) ^ evenCells;
+					
+					canPerformClaimEven = bitboardContainsNonVerticalConnection(opponentCells | b);
+					
+				} else {
+					
+					canPerformClaimEven = true;
+				}
+				
+				if(canPerformClaimEven) {
+					
+					long activePlayerFutureCells = activeBitboard | oddCells;
+					long opponentFutureCells = opponentCells | evenCells;
+					
+					if(!canOpponentWinInClaimEven(activePlayerFutureCells, opponentFutureCells, opponentCells, maskBitboard)) {
 						
-						opponentWinningStones &= evenCells;
+						maxScore = BoardScore.DRAW;
 						
-						opponentWinningStones |= opponentWinningStones >>> 32;
-						opponentWinningStones |= opponentWinningStones >>> 16;
-						opponentWinningStones |= opponentWinningStones >>> 8;
-						
-						int n = FULL_CELL_AMOUNT - Long.numberOfLeadingZeros(opponentWinningStones & Bitboards.FIRST_COLUMN) + 58;
-						
-						int score = BoardScore.LOSSES[n];
-						if(maxScore > score) maxScore = score;
+						long opponentWinningStones = nonVerticalWinCellsBitboard(opponentFutureCells);
+						if(opponentWinningStones != 0) {
+							
+							opponentWinningStones &= evenCells;
+							maxScore = (opponentWinningStones & Bitboards.TOP_TWO_BOARD_ROWS) != 0 ? -1 : (opponentWinningStones & Bitboards.MIDDLE_TWO_BOARD_ROWS) != 0 ? -2 : -3;
+						}
 					}
 				}
 			}
