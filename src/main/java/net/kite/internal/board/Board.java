@@ -82,6 +82,7 @@ public final class Board {
 	
 	private static final int LOGARITHMIC_BITBOARD_LENGTH = 3;
 	private static final int LARGEST_BITBOARD_Y = 7;
+	private static final int BOTTOM_ROW_BITBOARD_POSITION_MASK = 0xFFFFFFF8;
 	
 	private static final char SMALLEST_MOVE_CHARACTER = '1';
 	
@@ -984,35 +985,63 @@ public final class Board {
 			if(canNoLongerWin) maxScore = 0;
 		}
 		
-		boolean allColumnsEvenParity = (ceilingBitboard & Bitboards.EVEN_BOARD_ROWS) == 0;
-		if(allColumnsEvenParity) {
+		long oddParityColumns = (Bitboards.EVEN_BOARD_ROWS & ceilingBitboard);
+		if(Long.bitCount(oddParityColumns) <= 1) {
 			
-			long redCells = activeBitboard | (Bitboards.ODD_BOARD_ROWS & (~maskBitboard));
-			long yellowCells = Bitboards.FULL_BOARD ^ redCells;
+			boolean canPerformClaimEven;
 			
-			long currentYellowCells = activeBitboard ^ maskBitboard;
+			long opponentCells = maskBitboard ^ activeBitboard;
+			long emptyCells = ~maskBitboard;
+			long evenCells = Bitboards.EVEN_BOARD_ROWS & emptyCells;
+			long oddCells = Bitboards.ODD_BOARD_ROWS & emptyCells;
 			
-			if(!canRedWinInClaimEven(redCells, yellowCells, currentYellowCells, maskBitboard)) {
+			if(oddParityColumns != 0) {
 				
-				if(maxScore > BoardScore.DRAW) maxScore = BoardScore.DRAW;
+				int oddParityColumnPosition = Long.numberOfTrailingZeros(oddParityColumns);
+				long oddParityColumn = Bitboards.FIRST_COLUMN << (oddParityColumnPosition & BOTTOM_ROW_BITBOARD_POSITION_MASK);
 				
-				long yellowWinningStones = nonVerticalWinCellsBitboard(yellowCells);
-				if(yellowWinningStones != 0) {
+				long m = ~oddParityColumn;
+				long b = oddCells & oddParityColumn;
+				
+				evenCells = (evenCells & m) | b;
+				oddCells = (emptyCells & Bitboards.FULL_BOARD) ^ evenCells;
+				
+				canPerformClaimEven = bitboardContainsNonVerticalConnection(opponentCells | b);
+				
+			} else {
+				
+				canPerformClaimEven = true;
+			}
+			
+			if(canPerformClaimEven) {
+				
+				long activePlayerFutureCells = activeBitboard | oddCells;
+				long opponentFutureCells = opponentCells | evenCells;
+				
+				if(!canOpponentWinInClaimEven(activePlayerFutureCells, opponentFutureCells, opponentCells, maskBitboard)) {
 					
-					int n = FULL_CELL_AMOUNT;
-					long row = Bitboards.TOP_EVEN_BOARD_ROW;
-					while(true) {
+					if(maxScore > BoardScore.DRAW) maxScore = BoardScore.DRAW;
+					
+					long opponentWinningStones = nonVerticalWinCellsBitboard(opponentFutureCells);
+					if(opponentWinningStones != 0) {
 						
-						if((row & yellowWinningStones) != 0) {
+						opponentWinningStones &= evenCells;
+						
+						int n = FULL_CELL_AMOUNT;
+						long row = Bitboards.TOP_BOARD_ROW;
+						while(true) {
 							
-							int score = BoardScore.LOSSES[n];
-							if(maxScore > score) maxScore = score;
+							if((row & opponentWinningStones) != 0) {
+								
+								int score = BoardScore.LOSSES[n];
+								if(maxScore > score) maxScore = score;
+								
+								break;
+							}
 							
-							break;
+							n--;
+							row >>>= 1;
 						}
-						
-						n -= 2;
-						row >>>= 2;
 					}
 				}
 			}
@@ -1400,8 +1429,8 @@ public final class Board {
 		return hash;
 	}
 	
-	private static boolean canRedWinInClaimEven(long redCells, long yellowCells, long currentYellowCells, long currentMask) {
-		long wins = redCells;
+	private static boolean canOpponentWinInClaimEven(long activeCells, long opponentCells, long currentOpponentCells, long currentMask) {
+		long wins = activeCells;
 		
 		wins &= wins << RIGHT_BITBOARD_DIRECTION;
 		wins &= wins << (RIGHT_BITBOARD_DIRECTION << 1);
@@ -1413,15 +1442,15 @@ public final class Board {
 			long winBitboard = 1L << winPosition;
 			wins ^= winBitboard;
 			
-			long redBuilds = Bitboards.RIGHT_CELLS_BELOW_LINE_BITBOARDS[winPosition];
+			long activePlayerBuilds = Bitboards.RIGHT_CELLS_BELOW_LINE_BITBOARDS[winPosition];
 			
-			long cells = currentYellowCells | (~currentMask & yellowCells & redBuilds);
+			long cells = currentOpponentCells | (~currentMask & opponentCells & activePlayerBuilds);
 			if(bitboardContainsNonVerticalConnection(cells)) continue;
 			
 			return true;
 		}
 		
-		wins = redCells;
+		wins = activeCells;
 		
 		wins &= wins << DOWN_RIGHT_BITBOARD_DIRECTION;
 		wins &= wins << (DOWN_RIGHT_BITBOARD_DIRECTION << 1);
@@ -1433,15 +1462,15 @@ public final class Board {
 			long winBitboard = 1L << winPosition;
 			wins ^= winBitboard;
 			
-			long redBuilds = Bitboards.DOWN_RIGHT_CELLS_BELOW_LINE_BITBOARDS[winPosition];
+			long activePlayerBuilds = Bitboards.DOWN_RIGHT_CELLS_BELOW_LINE_BITBOARDS[winPosition];
 			
-			long cells = currentYellowCells | (~currentMask & yellowCells & redBuilds);
+			long cells = currentOpponentCells | (~currentMask & opponentCells & activePlayerBuilds);
 			if(bitboardContainsNonVerticalConnection(cells)) continue;
 			
 			return true;
 		}
 		
-		wins = redCells;
+		wins = activeCells;
 		
 		wins &= wins << UP_RIGHT_BITBOARD_DIRECTION;
 		wins &= wins << (UP_RIGHT_BITBOARD_DIRECTION << 1);
@@ -1453,9 +1482,9 @@ public final class Board {
 			long winBitboard = 1L << winPosition;
 			wins ^= winBitboard;
 			
-			long redBuilds = Bitboards.UP_RIGHT_CELLS_BELOW_LINE_BITBOARDS[winPosition];
+			long activePlayerBuilds = Bitboards.UP_RIGHT_CELLS_BELOW_LINE_BITBOARDS[winPosition];
 			
-			long cells = currentYellowCells | (~currentMask & yellowCells & redBuilds);
+			long cells = currentOpponentCells | (~currentMask & opponentCells & activePlayerBuilds);
 			if(bitboardContainsNonVerticalConnection(cells)) continue;
 			
 			return true;
