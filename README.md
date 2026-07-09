@@ -27,6 +27,7 @@ Internally, Kite leverages **alpha-beta pruning**, **symmetry reduction**, **bit
 
 ## 🚀 Features
 
+* **Instant Solves**: Solves almost every position with no noticeable delay.
 * **Alpha-Beta Pruning**: Reduces search space by skipping suboptimal branches early.
 * **Symmetry Pruning**: Mirrored game states are considered equivalent and cached accordingly.
 * **Move Ordering**: Uses heuristics that favor center columns and winning threats.
