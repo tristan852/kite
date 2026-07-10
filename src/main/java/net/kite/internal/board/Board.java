@@ -868,30 +868,44 @@ public final class Board {
 		filledCellAmount--;
 		int lastMove = playedMoves[filledCellAmount];
 		
-		undoMove(lastMove);
-		
 		if(filledCellAmount == OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
 			
-			result = bitboardConnectionOpportunities(activeBitboard);
-			result &= ceilingBitboard;
-			
-			int openingBoardScore;
-			if(result == 0) {
+			long moves = board & (ceilingBitboard >>> 1);
+			while(moves != 0) {
 				
-				openingBoardScore = -OpeningBoardScoreCaches.DEFAULT.boardScore(mixedHash);
+				int p = Long.numberOfTrailingZeros(moves);
+				int x = p >>> LOGARITHMIC_BITBOARD_LENGTH;
 				
-			} else {
+				long move = 1L << p;
+				moves ^= move;
 				
-				openingBoardScore = -BoardScore.WINS[filledCellAmount + 1];
-			}
-			
-			if(minimalScore < openingBoardScore) {
+				long a = board ^ move;
+				long c = ceilingBitboard - move;
 				
-				minimalScore = openingBoardScore;
-				minimalScoreWeight = OPENING_SCORE_BOUND_WEIGHT;
+				result = bitboardConnectionOpportunities(a);
+				result &= c;
+				
+				if(result != 0) continue;
+				if(x != lastMove && !bitboardInOpeningBook(a, c, maskBitboard ^ move)) continue;
+				
+				long mixedHash = a | c;
+				
+				long mirrored = Long.reverseBytes(mixedHash) >>> MIRRORED_BITBOARD_SHIFT_AMOUNT;
+				if(mirrored < mixedHash) mixedHash = mirrored;
+				
+				mixedHash = mixedHash(mixedHash);
+				
+				int openingBoardScore = -OpeningBoardScoreCaches.DEFAULT.boardScore(mixedHash);
+				if(minimalScore < openingBoardScore) {
+					
+					minimalScore = openingBoardScore;
+					minimalScoreWeight = OPENING_SCORE_BOUND_WEIGHT;
+				}
 			}
 			
 		} else {
+			
+			undoMove(lastMove);
 			
 			key = importantScoreCache.entryKey(mixedHash);
 			if(key >= 0) {
@@ -907,9 +921,9 @@ public final class Board {
 					}
 				}
 			}
+			
+			playMove(lastMove);
 		}
-		
-		playMove(lastMove);
 		
 		if(minimalScore < minScore) minimalScore = minScore;
 		if(maximalScore > maxScore) maximalScore = maxScore;
@@ -1415,6 +1429,25 @@ public final class Board {
 		hash ^= hash >>> HASH_MIX_SHIFT_AMOUNT;
 		
 		return hash;
+	}
+	
+	private static boolean bitboardInOpeningBook(long activeBitboard, long ceilingBitboard, long maskBitboard) {
+		while(true) {
+			
+			long opponentCells = maskBitboard ^ activeBitboard;
+			long topCells = ceilingBitboard >>> 1;
+			
+			long b = opponentCells & topCells;
+			
+			if(b == maskBitboard) return true;
+			if(b == 0) return false;
+			
+			b = Long.highestOneBit(b);
+			
+			activeBitboard = opponentCells ^ b;
+			maskBitboard ^= b;
+			ceilingBitboard -= b;
+		}
 	}
 	
 	private static boolean canOpponentWinInClaimEven(long activeCells, long opponentCells, long currentOpponentCells, long currentMask) {
