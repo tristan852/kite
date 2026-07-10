@@ -51,29 +51,29 @@ public final class Board {
 			3, 2, 4, 1, 5, 0, 6
 	};
 	
-	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 830;
+	private static final int MOVE_SCORE_COLUMN_FORK_WEIGHT = 623;
 	private static final int MOVE_SCORE_SOON_THREAT_WEIGHT = 606;
 	private static final int MOVE_SCORE_IMMEDIATE_THREAT_WEIGHT = 458;
 	private static final int MOVE_SCORE_CONNECTION_OPPORTUNITY_WEIGHT = 230;
 	
 	private static final int[] RED_MOVE_CELL_SCORES = new int[] {
-			  0,   5,  35, 139,  69, 620,   0,   0,
-			105,  63,  36, 143, 139, 274,   0,   0,
-			 83,  31, 261, 227, 218, 247,   0,   0,
-			224, 149, 179, 282, 634, 625,   0,   0,
-			 83,  31, 261, 227, 218, 247,   0,   0,
-			105,  63,  36, 143, 139, 274,   0,   0,
-			  0,   5,  35, 139,  69, 620
+			158,   0,  78, 182, 112, 663,   0,   0,
+			148, 107,  98, 186, 182, 310,   0,   0,
+			168,  74, 297, 268, 261, 427,   0,   0,
+			267, 183, 222, 316, 677, 764,   0,   0,
+			168,  74, 297, 268, 261, 427,   0,   0,
+			148, 107,  98, 186, 182, 310,   0,   0,
+			158,   0,  78, 182, 112, 663
 	};
 	
 	private static final int[] YELLOW_MOVE_CELL_SCORES = new int[] {
-			142, 151, 162, 247, 127, 484,   0,   0,
-			127,  36, 183, 355, 179, 488,   0,   0,
-			  0, 146, 167, 385, 195, 469,   0,   0,
-			 97, 695, 265, 580, 578, 513,   0,   0,
-			  0, 146, 167, 385, 195, 469,   0,   0,
-			127,  36, 183, 355, 179, 488,   0,   0,
-			142, 151, 162, 247, 127, 484
+			145, 154, 165, 258, 130, 494,   0,   0,
+			130,  25, 186, 358, 182, 522,   0,   0,
+			  0, 146, 171, 388, 198, 472,   0,   0,
+			100, 667, 268, 552, 581, 580,   0,   0,
+			  0, 146, 171, 388, 198, 472,   0,   0,
+			130,  25, 186, 358, 182, 522,   0,   0,
+			145, 154, 165, 258, 130, 494
 	};
 	
 	private static final int BITBOARD_CONNECTION_OPPORTUNITY_LENGTH = 3;
@@ -100,11 +100,11 @@ public final class Board {
 	
 	private static final int OPENING_SCORE_CACHE_MAXIMAL_DEPTH = 15;
 	
-	private static final int SCORE_BOUND_WEIGHT_INCREMENT = 8;
+	private static final int SCORE_BOUND_WEIGHT_INCREMENT = 11;
 	private static final int CACHE_SCORE_BOUND_WEIGHT = 5;
 	private static final int IMPORTANT_CACHE_SCORE_BOUND_WEIGHT = 2;
 	private static final int PARENT_IMPORTANT_CACHE_SCORE_BOUND_WEIGHT = 15;
-	private static final int OPENING_SCORE_BOUND_WEIGHT = 6;
+	private static final int OPENING_SCORE_BOUND_WEIGHT = 1000;
 	
 	private static final float[] FIRST_ELO_APPROXIMATION_COEFFICIENTS = new float[] {
 			-1.480893f,  7.600903f
@@ -886,7 +886,7 @@ public final class Board {
 				result &= c;
 				
 				if(result != 0) continue;
-				if(x != lastMove && !bitboardInOpeningBook(a, c, maskBitboard ^ move)) continue;
+				if(x != lastMove && !openingBookContainsBitboard(a, c, maskBitboard ^ move)) continue;
 				
 				long mixedHash = a | c;
 				
@@ -1431,23 +1431,22 @@ public final class Board {
 		return hash;
 	}
 	
-	private static boolean bitboardInOpeningBook(long activeBitboard, long ceilingBitboard, long maskBitboard) {
-		while(true) {
+	private static boolean openingBookContainsBitboard(long activeBitboard, long ceilingBitboard, long maskBitboard) {
+		long opponentCells = maskBitboard ^ activeBitboard;
+		long topCells = ceilingBitboard >>> 1;
+		
+		long b = opponentCells & topCells;
+		
+		if(b == maskBitboard) return true;
+		while(b != 0) {
 			
-			long opponentCells = maskBitboard ^ activeBitboard;
-			long topCells = ceilingBitboard >>> 1;
+			long move = Long.highestOneBit(b);
+			b ^= move;
 			
-			long b = opponentCells & topCells;
-			
-			if(b == maskBitboard) return true;
-			if(b == 0) return false;
-			
-			b = Long.highestOneBit(b);
-			
-			activeBitboard = opponentCells ^ b;
-			maskBitboard ^= b;
-			ceilingBitboard -= b;
+			if(openingBookContainsBitboard(opponentCells ^ move, ceilingBitboard - move, maskBitboard ^ move)) return true;
 		}
+		
+		return false;
 	}
 	
 	private static boolean canOpponentWinInClaimEven(long activeCells, long opponentCells, long currentOpponentCells, long currentMask) {
