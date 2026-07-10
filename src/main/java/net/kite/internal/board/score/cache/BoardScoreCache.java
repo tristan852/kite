@@ -2,6 +2,8 @@ package net.kite.internal.board.score.cache;
 
 public final class BoardScoreCache {
 	
+	// Warning: do not change, due to removed safety check
+	// for probing
 	private static final int  CAPACITY = 65536;
 	private static final long KEY_MASK = 65535;
 	
