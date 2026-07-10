@@ -51,6 +51,9 @@ public final class Bitboard {
 		long activeBitboard = bitboard & b;
 		int n = Long.bitCount(b);
 		
+		boolean redIsActive = (n & 1) == 0;
+		if(!redIsActive) activeBitboard ^= b;
+		
 		StringBuilder stringBuilder = toBoardMovesString(b, activeBitboard, Bitboards.EMPTY_CEILING, n);
 		return stringBuilder == null ? null : stringBuilder.toString();
 	}
