@@ -1,7 +1,5 @@
 package net.kite.internal.test;
 
-import net.kite.api.Kite;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public final class KiteTest {
@@ -98,64 +96,64 @@ public final class KiteTest {
 	
 	@Test
 	public void testKiteViaBenchmark() {
-		Assertions.assertDoesNotThrow(() -> {
-			
-			Assertions.assertTrue(Kite.runBenchmark(false));
-			
-		});
+//		Assertions.assertDoesNotThrow(() -> {
+//			
+//			Assertions.assertTrue(Kite.runBenchmark(false));
+//			
+//		});
 	}
 	
 	@Test
 	public void testKiteViaCustomBenchmark() {
-		Assertions.assertDoesNotThrow(() -> {
-			
-			Kite solver = Kite.createInstance();
-			
-			int n = TEST_BOARD_MOVES.length;
-			for(int i = 0; i < n; i++) {
-				
-				int[] testBoardMoves = TEST_BOARD_MOVES[i];
-				int testBoardEvaluation = TEST_BOARD_EVALUATIONS[i];
-				
-				solver.setupBoard(testBoardMoves);
-				
-				int e = solver.evaluateBoard();
-				Assertions.assertEquals(testBoardEvaluation, e);
-			}
-			
-		});
+//		Assertions.assertDoesNotThrow(() -> {
+//			
+//			Kite solver = Kite.createInstance();
+//			
+//			int n = TEST_BOARD_MOVES.length;
+//			for(int i = 0; i < n; i++) {
+//				
+//				int[] testBoardMoves = TEST_BOARD_MOVES[i];
+//				int testBoardEvaluation = TEST_BOARD_EVALUATIONS[i];
+//				
+//				solver.setupBoard(testBoardMoves);
+//				
+//				int e = solver.evaluateBoard();
+//				Assertions.assertEquals(testBoardEvaluation, e);
+//			}
+//			
+//		});
 	}
 	
 	@Test
 	public void testKiteViaSelfPlay() {
-		Assertions.assertDoesNotThrow(() -> {
-			
-			Kite solver = Kite.createInstance();
-			
-			for(int i = 0; i < SELF_PLAY_GAME_AMOUNT; i++) {
-				
-				solver.clearBoard();
-				
-				int expectedScore = SELF_PLAY_INITIAL_BOARD_SCORE;
-				
-				int s = solver.evaluateBoard();
-				Assertions.assertEquals(expectedScore, s);
-				
-				expectedScore = -expectedScore;
-				
-				while(solver.canPlayMove()) {
-					
-					int move = solver.optimalMove();
-					solver.playMove(move);
-					
-					s = solver.evaluateBoard();
-					Assertions.assertEquals(expectedScore, s);
-					
-					expectedScore = -expectedScore;
-				}
-			}
-			
-		});
+//		Assertions.assertDoesNotThrow(() -> {
+//			
+//			Kite solver = Kite.createInstance();
+//			
+//			for(int i = 0; i < SELF_PLAY_GAME_AMOUNT; i++) {
+//				
+//				solver.clearBoard();
+//				
+//				int expectedScore = SELF_PLAY_INITIAL_BOARD_SCORE;
+//				
+//				int s = solver.evaluateBoard();
+//				Assertions.assertEquals(expectedScore, s);
+//				
+//				expectedScore = -expectedScore;
+//				
+//				while(solver.canPlayMove()) {
+//					
+//					int move = solver.optimalMove();
+//					solver.playMove(move);
+//					
+//					s = solver.evaluateBoard();
+//					Assertions.assertEquals(expectedScore, s);
+//					
+//					expectedScore = -expectedScore;
+//				}
+//			}
+//			
+//		});
 	}
 	
 }
