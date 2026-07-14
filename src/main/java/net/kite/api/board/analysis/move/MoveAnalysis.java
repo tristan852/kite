@@ -232,9 +232,10 @@ public class MoveAnalysis {
 		MISSED_WIN("Missed Win"),
 		
 		/**
-		 * A move that is forced
-		 * due to being the only
-		 * legal move.
+		 * A move that is forced because it is either
+		 * the only legal move or every legal move
+		 * leads to the same immediate forced outcome
+		 * (draw or loss).
 		 */
 		FORCED("Forced");
 		
