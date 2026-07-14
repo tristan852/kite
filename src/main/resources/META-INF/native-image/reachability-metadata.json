@@ -1,4 +1,28 @@
 {
+  "reflection": [
+    {
+      "type": "java.io.BufferedInputStream"
+    },
+    {
+      "type": "java.lang.Boolean",
+      "jniAccessible": true,
+      "methods": [
+        {
+          "name": "getBoolean",
+          "parameterTypes": [
+            "java.lang.String"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "long[]",
+      "serializable": true
+    },
+    {
+      "type": "sun.text.resources.cldr.FormatData"
+    }
+  ],
   "resources": [
     {
       "glob": "board_score_caches/opening.cfc"
