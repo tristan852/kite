@@ -18,7 +18,7 @@ import java.util.Locale;
  * {@link MoveAnalysis} instances,
  * one for each move played.
  */
-public class GameAnalysis {
+public final class GameAnalysis {
 	
 	private static final String TO_STRING_ELO_PREFIX = "approximate elo  ";
 	private static final String TO_STRING_MOVE_ACCURACY_PREFIX = "\nmove accuracy    ";

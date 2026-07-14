@@ -14,7 +14,7 @@ import java.io.Serial;
  * corresponds to the column number as exposed by the
  * public API.
  */
-public class IllegalMoveException extends IllegalStateException {
+public final class IllegalMoveException extends IllegalStateException {
 	
 	@Serial
 	private static final long serialVersionUID = 1L;

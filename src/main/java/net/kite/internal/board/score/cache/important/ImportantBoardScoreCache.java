@@ -1,6 +1,6 @@
 package net.kite.internal.board.score.cache.important;
 
-public class ImportantBoardScoreCache {
+public final class ImportantBoardScoreCache {
 	
 	// Warning: do not change, due to removed safety check
 	// for probing

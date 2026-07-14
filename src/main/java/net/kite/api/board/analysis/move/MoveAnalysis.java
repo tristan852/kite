@@ -14,7 +14,7 @@ import net.kite.api.board.evaluation.BoardEvaluation;
  * classification given by
  * {@link MoveQuality}.
  */
-public class MoveAnalysis {
+public final class MoveAnalysis {
 	
 	private final int moveColumnIndex;
 	private final int moveEvaluation;
