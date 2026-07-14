@@ -47,6 +47,7 @@ public final class KiteDemo {
 	private static final String YELLOW_LOCATION_SEARCH_AI_COLOR = "yellow";
 	
 	private static final String AUDIO_SETTING_LOCAL_STORAGE_ITEM_NAME = "volume";
+	private static final String MODE_SETTING_LOCAL_STORAGE_ITEM_NAME = "theme";
 	
 	private static final float[] VOLUME_LEVELS = new float[] {
 			1.0f, 0.0f, 0.3f
@@ -302,11 +303,14 @@ public final class KiteDemo {
 			"right", "0"
 	};
 	
-	private static final String[] AUDIO_SETTING_ELEMENT_STYLES = new String[] {
+	private static final String[] SETTINGS_ELEMENT_STYLES = new String[] {
 			"position", "fixed",
 			"bottom", "0",
 			"right", "0",
-			"margin", "2.5dvh 2.5dvw",
+			"margin", "2.5dvh 2.5dvw"
+	};
+	
+	private static final String[] SETTING_ELEMENT_STYLES = new String[] {
 			"padding", "6px",
 			"cursor", "pointer"
 	};
@@ -349,7 +353,13 @@ public final class KiteDemo {
 	};
 	
 	private static final String AUDIO_SETTING_ELEMENT_ALTERNATIVE_TEXT = "Volume control";
-	private static final int AUDIO_SETTING_ELEMENT_SIZE = 30;
+	
+	private static final String DARK_MODE_SETTING_ELEMENT_SOURCE_PATHS = "images/icons/mode_dark.svg";
+	private static final String LIGHT_MODE_SETTING_ELEMENT_SOURCE_PATHS = "images/icons/mode_light.svg";
+	
+	private static final String MODE_SETTING_ELEMENT_ALTERNATIVE_TEXT = "Theme toggle";
+	
+	private static final int SETTING_ELEMENT_SIZE = 30;
 	
 	private static final String VERSION_ELEMENT_TEXT_FORMAT = "v%s";
 	private static final String FIRST_MODE_BUTTON_ELEMENT_TEXT = "Analysis";
@@ -478,9 +488,11 @@ public final class KiteDemo {
 	private int cellAnalysisY;
 	
 	private int volumeLevel;
+	private boolean darkMode;
 	
 	public KiteDemo() {
 		this.redAtTurn = true;
+		this.darkMode = true;
 	}
 	
 	public void onStart() {
@@ -950,8 +962,14 @@ public final class KiteDemo {
 			moveAudioElement.setVolume(VOLUME_LEVELS[volumeLevel]);
 		}
 		
-		HTMLElement audioSettingElement = createImageElement(AUDIO_SETTING_ELEMENT_SOURCE_PATHS[volumeLevel], AUDIO_SETTING_ELEMENT_ALTERNATIVE_TEXT, AUDIO_SETTING_ELEMENT_SIZE);
-		setElementStyles(audioSettingElement, AUDIO_SETTING_ELEMENT_STYLES);
+		s = localStorage.getItem(MODE_SETTING_LOCAL_STORAGE_ITEM_NAME);
+		if(s != null) {
+			
+			darkMode = Boolean.parseBoolean(s);
+		}
+		
+		HTMLElement audioSettingElement = createImageElement(AUDIO_SETTING_ELEMENT_SOURCE_PATHS[volumeLevel], AUDIO_SETTING_ELEMENT_ALTERNATIVE_TEXT, SETTING_ELEMENT_SIZE);
+		setElementStyles(audioSettingElement, SETTING_ELEMENT_STYLES);
 		
 		audioSettingElement.onClick((mouseEvent) -> {
 			
@@ -966,7 +984,30 @@ public final class KiteDemo {
 			else localStorage.setItem(AUDIO_SETTING_LOCAL_STORAGE_ITEM_NAME, String.valueOf(volumeLevel));
 		});
 		
-		appElement.appendChild(audioSettingElement);
+		String modeSettingElementUrl = darkMode ? DARK_MODE_SETTING_ELEMENT_SOURCE_PATHS : LIGHT_MODE_SETTING_ELEMENT_SOURCE_PATHS;
+		
+		HTMLElement modeSettingElement = createImageElement(modeSettingElementUrl, MODE_SETTING_ELEMENT_ALTERNATIVE_TEXT, SETTING_ELEMENT_SIZE);
+		setElementStyles(modeSettingElement, SETTING_ELEMENT_STYLES);
+		
+		modeSettingElement.onClick((mouseEvent) -> {
+			
+			darkMode = !darkMode;
+			
+			updateTheme();
+			
+			((HTMLImageElement) modeSettingElement).setSrc(darkMode ? DARK_MODE_SETTING_ELEMENT_SOURCE_PATHS : LIGHT_MODE_SETTING_ELEMENT_SOURCE_PATHS);
+			
+			if(darkMode) localStorage.removeItem(MODE_SETTING_LOCAL_STORAGE_ITEM_NAME);
+			else localStorage.setItem(MODE_SETTING_LOCAL_STORAGE_ITEM_NAME, "false");
+		});
+		
+		HTMLElement settingsElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
+		setElementStyles(settingsElement, SETTINGS_ELEMENT_STYLES);
+		
+		settingsElement.appendChild(modeSettingElement);
+		settingsElement.appendChild(audioSettingElement);
+		
+		appElement.appendChild(settingsElement);
 		
 		int perfectIndex = SkillLevel.PERFECT.ordinal();
 		
@@ -1097,7 +1138,12 @@ public final class KiteDemo {
 			}
 		}
 		
+		if(!darkMode) updateTheme();
 		bodyElement.appendChild(appElement);
+	}
+	
+	private void updateTheme() {
+		System.out.println("TODO: update theme");
 	}
 	
 	private void changeAISkillLevel(int aiSkillLevelIndex) {
