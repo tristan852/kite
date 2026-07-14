@@ -1,5 +1,7 @@
 package net.kite.internal.util.random;
 
+import net.kite.internal.util.math.MathUtil;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class Random {
@@ -85,7 +87,7 @@ public final class Random {
 			
 			long randomLong = randomLong();
 			
-			long upperBits = Math.unsignedMultiplyHigh(randomLong, maximalValue);
+			long upperBits = MathUtil.unsignedMultiplyHigh(randomLong, maximalValue);
 			long lowerBits = randomLong * maximalValue;
 			
 			long threshold = Long.remainderUnsigned(-maximalValue, maximalValue);
