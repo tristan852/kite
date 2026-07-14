@@ -3,7 +3,7 @@ import org.teavm.gradle.api.OptimizationLevel
 plugins {
     id("java")
     id("com.vanniktech.maven.publish") version "0.34.0"
-    id("org.graalvm.buildtools.native") version "0.11.4"
+    id("org.graalvm.buildtools.native") version "1.1.3"
     
     id("war")
     id("org.teavm") version "0.13.1"
@@ -20,9 +20,6 @@ repositories {
 }
 
 dependencies {
-    implementation("it.unimi.dsi:sux4j:5.4.1")
-    implementation("it.unimi.dsi:fastutil:8.5.18")
-    
     implementation("org.fusesource.jansi:jansi:2.4.2")
     
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
@@ -107,7 +104,7 @@ graalvmNative {
             if(project.hasProperty("marchNative") && project.property("marchNative") == "true") {
                 buildArgs.add("-march=native")
                 
-	            println("[native-image-plugin] Using -march=native: binary will be CPU-specific")
+                println("[native-image-plugin] Using -march=native: binary will be CPU-specific")
             }
             
             buildArgs.add("-O3")
