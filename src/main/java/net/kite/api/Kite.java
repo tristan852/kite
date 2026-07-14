@@ -1555,6 +1555,66 @@ public final class Kite implements KiteApi {
 	}
 	
 	/**
+	 * Creates a new instance of the Kite solver and
+	 * sets up a given position.
+	 * Most of the solver's state is exclusive to one
+	 * instance and is not shared across instances.
+	 * This includes for example the game state and
+	 * the transposition table/score cache.
+	 * Some state, for example the opening book, only
+	 * exists once and <b>is</b> shared across solvers.
+	 * Solver instances are thread-safe by not allowing
+	 * multiple threads to use them in parallel.
+	 * If you are creating the first (or one of the first)
+	 * solver instances, some additional time might be
+	 * spent on warming up the solver and initializing
+	 * solver-shared state such as the opening book.
+	 *
+	 * @param moveColumnIndicesString the 1-indexed move column numbers (columns indexed from left to right) as a string
+	 * @return a newly created Kite solver instance
+	 * @throws IndexOutOfBoundsException if the string contains a character
+	 *         that is not between '1' and '7'
+	 * @throws IllegalMoveException if the sequence does not represent
+	 *         a legal Connect Four game
+	 */
+	public static Kite createInstance(String moveColumnIndicesString) {
+		Kite solver = new Kite();
+		solver.setupBoard(moveColumnIndicesString);
+		
+		return solver;
+	}
+	
+	/**
+	 * Creates a new instance of the Kite solver and
+	 * sets up a given position.
+	 * Most of the solver's state is exclusive to one
+	 * instance and is not shared across instances.
+	 * This includes for example the game state and
+	 * the transposition table/score cache.
+	 * Some state, for example the opening book, only
+	 * exists once and <b>is</b> shared across solvers.
+	 * Solver instances are thread-safe by not allowing
+	 * multiple threads to use them in parallel.
+	 * If you are creating the first (or one of the first)
+	 * solver instances, some additional time might be
+	 * spent on warming up the solver and initializing
+	 * solver-shared state such as the opening book.
+	 *
+	 * @param moveColumnIndices the 1-indexed move column numbers (columns indexed from left to right)
+	 * @return a newly created Kite solver instance
+	 * @throws IndexOutOfBoundsException if any move is not between
+	 *         1 and 7 (inclusive)
+	 * @throws IllegalMoveException if the sequence does not represent
+	 *         a legal Connect Four game
+	 */
+	public static Kite createInstance(int... moveColumnIndices) {
+		Kite solver = new Kite();
+		solver.setupBoard(moveColumnIndices);
+		
+		return solver;
+	}
+	
+	/**
 	 * Creates a new instance of the Kite solver.
 	 * Most of the solver's state is exclusive to one
 	 * instance and is not shared across instances.
