@@ -1001,7 +1001,7 @@ public final class KiteDemo {
 			else localStorage.setItem(MODE_SETTING_LOCAL_STORAGE_ITEM_NAME, "false");
 		});
 		
-		HTMLElement settingsElement = DOCUMENT.createElement(DEFAULT_ELEMENT_TYPE);
+		HTMLElement settingsElement = createFlexboxElement(FLEXBOX_ELEMENT_ROW_DIRECTION, 0);
 		setElementStyles(settingsElement, SETTINGS_ELEMENT_STYLES);
 		
 		settingsElement.appendChild(modeSettingElement);
