@@ -170,7 +170,7 @@ Additionally, the Fhourstones solver evaluates each benchmark position only *wea
 |                    | Ben Rall    | 1.40 ms                 | 17,631                   | 12.62                         |
 |                    | **Kite**    | **22.05 µs**            | **456.86**               | **20.72**                     |
 
-As of early 2026, Kite appears to be both the most efficient Connect Four solver, measured by the number of node evaluations required per position, and the fastest overall.
+As of late 2026, Kite appears to be both the most efficient Connect Four solver, measured by the number of node evaluations required per position, and the fastest overall.
 
 Despite being written in Java, Kite outperforms the C++ and Rust solvers included in this comparison.
 
