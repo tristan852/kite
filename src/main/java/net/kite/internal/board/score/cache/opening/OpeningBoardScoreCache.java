@@ -1,10 +1,10 @@
 package net.kite.internal.board.score.cache.opening;
 
-import it.unimi.dsi.fastutil.io.BinIO;
-import it.unimi.dsi.sux4j.mph.GOVMinimalPerfectHashFunction;
 import net.kite.internal.board.score.cache.BoardScoreCache;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public final class OpeningBoardScoreCache {
 	
@@ -18,8 +18,6 @@ public final class OpeningBoardScoreCache {
 	private static final int BYTE_MASK = 0xFF;
 	
 	private final byte[] packedBoardScores;
-	
-	private GOVMinimalPerfectHashFunction<Long> hashFunction;
 	
 	public OpeningBoardScoreCache() {
 		this.packedBoardScores = new byte[PACKED_BOARD_SCORES_SIZE_IN_BYTES];
@@ -38,12 +36,7 @@ public final class OpeningBoardScoreCache {
 			
 			inputStream.readNBytes(packedBoardScores, 0, PACKED_BOARD_SCORES_SIZE_IN_BYTES);
 			
-			@SuppressWarnings("unchecked")
-			GOVMinimalPerfectHashFunction<Long> hf = (GOVMinimalPerfectHashFunction<Long>) BinIO.loadObject(inputStream);
-			
-			hashFunction = hf;
-			
-		} catch(IOException | ClassNotFoundException exception) {
+		} catch(IOException exception) {
 			
 			String errorMessage = String.format("An exception occurred while loading opening score cache from resources: %s", exception);
 			System.err.println(errorMessage);
@@ -62,11 +55,6 @@ public final class OpeningBoardScoreCache {
 			System.arraycopy(bytes, 0, packedBoardScores, 0, PACKED_BOARD_SCORES_SIZE_IN_BYTES);
 			InputStream stream = new ByteArrayInputStream(bytes, PACKED_BOARD_SCORES_SIZE_IN_BYTES, HASH_FUNCTION_SIZE_IN_BYTES);
 			
-			@SuppressWarnings("unchecked")
-			GOVMinimalPerfectHashFunction<Long> hf = (GOVMinimalPerfectHashFunction<Long>) BinIO.loadObject(stream);
-			
-			hashFunction = hf;
-			
 		} catch(Exception exception) {
 			
 			String errorMessage = String.format("An exception occurred while loading opening score cache from bytes: %s", exception);
@@ -74,8 +62,9 @@ public final class OpeningBoardScoreCache {
 		}
 	}
 	
+	// TODO implement
 	public int boardScore(long mixedHash) {
-		int index = (int) hashFunction.getLong(mixedHash);
+		int index = 0;
 		index *= BOARD_SCORE_SIZE_IN_BITS;
 		
 		int byteIndex = index >> 3;
