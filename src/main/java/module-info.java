@@ -8,8 +8,6 @@ module kite.main {
 	exports net.kite.api.board.evaluation;
 	exports net.kite.api.skill.level;
 	
-	requires it.unimi.dsi.sux4j;
-	requires it.unimi.dsi.fastutil;
 	requires org.fusesource.jansi;
 	requires org.teavm.jso.apis;
 }
