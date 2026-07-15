@@ -1,6 +1,34 @@
 {
   "reflection": [
     {
+      "type": "it.unimi.dsi.bits.AbstractBitVector$LongBigListView",
+      "serializable": true
+    },
+    {
+      "type": "it.unimi.dsi.bits.LongArrayBitVector",
+      "serializable": true
+    },
+    {
+      "type": "it.unimi.dsi.bits.LongArrayBitVector$LongBigListView",
+      "serializable": true
+    },
+    {
+      "type": "it.unimi.dsi.bits.TransformationStrategies$FixedLongTransformationStrategy",
+      "serializable": true
+    },
+    {
+      "type": "it.unimi.dsi.fastutil.objects.AbstractObject2LongFunction",
+      "serializable": true
+    },
+    {
+      "type": "it.unimi.dsi.sux4j.mph.AbstractHashFunction",
+      "serializable": true
+    },
+    {
+      "type": "it.unimi.dsi.sux4j.mph.GOVMinimalPerfectHashFunction",
+      "serializable": true
+    },
+    {
       "type": "java.io.BufferedInputStream"
     },
     {
