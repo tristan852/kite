@@ -1670,7 +1670,11 @@ public final class Board {
 	}
 	
 	private static MoveAnalysis.MoveQuality moveQuality(int scoreBefore, int scoreAfter, int previousOwnMoveScore, boolean previousMoveCouldHaveBeenWin, int movesDoneAfterMove) {
-		if(scoreAfter == scoreBefore) return MoveAnalysis.MoveQuality.BEST;
+		if(scoreAfter == scoreBefore) {
+			
+			int movesLeft = BoardEvaluation.gameOverInTotalMoves(-scoreAfter, movesDoneAfterMove);
+			return movesLeft == 1 ? MoveAnalysis.MoveQuality.FORCED : MoveAnalysis.MoveQuality.BEST;
+		}
 		
 		boolean outcomeStayedTheSame = scoreBefore > 0 ? scoreAfter > 0 : scoreBefore != 0;
 		if(outcomeStayedTheSame) {
