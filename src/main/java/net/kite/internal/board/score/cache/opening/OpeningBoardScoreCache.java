@@ -12,6 +12,7 @@ public final class OpeningBoardScoreCache {
 	private static final int BUCKET_SEEDS_SIZE_IN_BYTES        = 33554432;
 	private static final int BUCKET_SEEDS_INDEX_MASK           = 33554431;
 	
+	private static final int BOARD_SCORE_SIZE_IN_BITS = 6;
 	private static final int BOARD_SCORE_MASK = 0x3F;
 	private static final int BOARD_SCORE_OFFSET = -18;
 	
@@ -78,11 +79,13 @@ public final class OpeningBoardScoreCache {
 		byte bucketSeed = bucketSeeds[bucketIndex];
 		
 		int index = (int) Long.remainderUnsigned(mixLong(mixedHash, bucketSeed), BOARD_SCORES_SIZE);
+		index *= BOARD_SCORE_SIZE_IN_BITS;
 		
 		int byteIndex = index >> 3;
 		int bitIndex = index - (byteIndex << 3);
 		
-		int i = (packedBoardScores[byteIndex + 1] << 8) | (packedBoardScores[byteIndex] & BYTE_MASK);
+		int i = packedBoardScores[byteIndex] & BYTE_MASK;
+		if(byteIndex + 1 < packedBoardScores.length) i |= (packedBoardScores[byteIndex + 1] & BYTE_MASK) << 8;
 		
 		i >>>= bitIndex;
 		i &= BOARD_SCORE_MASK;
