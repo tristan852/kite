@@ -74,7 +74,7 @@ public final class OpeningBoardScoreCache {
 	}
 	
 	public int boardScore(long mixedHash) {
-		int bucketIndex = (int) mixedHash & (BUCKET_SEEDS_INDEX_MASK);
+		int bucketIndex = ((int) mixedHash) & BUCKET_SEEDS_INDEX_MASK;
 		byte bucketSeed = bucketSeeds[bucketIndex];
 		
 		int index = (int) Long.remainderUnsigned(mixLong(mixedHash, bucketSeed), BOARD_SCORES_SIZE);
