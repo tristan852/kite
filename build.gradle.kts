@@ -5,8 +5,7 @@ plugins {
     id("com.vanniktech.maven.publish") version "0.34.0"
     id("org.graalvm.buildtools.native") version "1.1.3"
     
-    id("war")
-    id("org.teavm") version "0.13.1"
+    id("org.teavm") version "0.15.0"
     
     signing
     `maven-publish`
@@ -45,15 +44,6 @@ tasks.build {
     dependsOn(tasks.jar, tasks.javadoc)
 }
 
-tasks.named("build") {
-    finalizedBy("copyDemoAssetFiles")
-}
-
-tasks.register<Copy>("copyDemoAssetFiles") {
-    from("assets/demo/")
-    into("build/war-unpacked/assets")
-}
-
 tasks.processResources {
     doLast {
         val gitCommit = providers.exec {
@@ -81,7 +71,7 @@ signing {
 
 teavm {
     all {
-        mainClass = "net.kite.internal.demo.Main"
+        mainClass = "net.kite.internal.wasm.Main"
     }
     
     wasmGC {
