@@ -85,7 +85,7 @@ public final class OpeningBoardScoreCache {
 		int bitIndex = index - (byteIndex << 3);
 		
 		int i = packedBoardScores[byteIndex] & BYTE_MASK;
-		if(byteIndex + 1 < packedBoardScores.length) i |= (packedBoardScores[byteIndex + 1] & BYTE_MASK) << 8;
+		i |= (packedBoardScores[byteIndex + 1] & BYTE_MASK) << 8;
 		
 		i >>>= bitIndex;
 		i &= BOARD_SCORE_MASK;
