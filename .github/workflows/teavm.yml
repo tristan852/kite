@@ -52,12 +52,14 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew build
 
-      - name: Copy demo assets for deployment
+      - name: Copy assets for deployment
         run: |
           # Create output folder
           mkdir -p build/deploy
 
+          cp -r assets/wasm/* build/deploy/
           cp -r assets/demo/* build/deploy/
+          cp -r src/main/resources/* build/deploy/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
