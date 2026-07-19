@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy TeaVM content to Pages
+name: Build TeaVM and deploy static content to Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -52,23 +52,12 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew build
 
-      - name: Find and unzip WAR file
-        run: |
-          WAR_FILE=$(find build/libs -name "*.war" | head -n 1)
-          echo "Unzipping $WAR_FILE"
-          unzip "$WAR_FILE" -d build/war-unpacked
-
       - name: Extract relevant WAR contents
         run: |
           # Create output folder
           mkdir -p build/deploy
 
-          cp -r build/war-unpacked/assets/* build/deploy/
-          cp -r build/war-unpacked/wasm-gc/* build/deploy/
-
-          mkdir -p build/deploy/kite_resources/board_score_caches
-          cp -r build/war-unpacked/WEB-INF/classes/board_score_caches/* build/deploy/kite_resources/board_score_caches/
-          cp -r build/war-unpacked/WEB-INF/classes/build.properties build/deploy/kite_resources/build.properties
+          cp -r assets/demo/* build/deploy/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
