@@ -52,7 +52,7 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew build
 
-      - name: Extract relevant WAR contents
+      - name: Copy demo assets for deployment
         run: |
           # Create output folder
           mkdir -p build/deploy
