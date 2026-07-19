@@ -107,6 +107,15 @@
     <div id="loading-bar" style="width: 250px; height: 8px; margin-top: 16px; background-color: #27272A; border-radius: 4px; overflow: hidden;">
         <div id="loading-bar-progress" style="width: 0%; height: 100%; background-color: #D4D4D8; border-radius: 4px;"></div>
     </div>
+    
+    <script type="module">
+        import { Kite } from "https://github.com/yourname/kite/releases/download/v1.0.0/kite.js";
+        
+        const solver = await Kite.create();
+        const result = await solver.debug("test");
+        
+        console.log(result);
+    </script>
 </body>
 
 </html>
