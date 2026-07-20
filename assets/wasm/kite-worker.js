@@ -1,33 +1,30 @@
 importScripts("./kite.wasm-runtime.js");
 
-let teavm;
-let exports;
+let exportsPromise;
 
-async function init() {
-    if (!teavm) {
-        teavm = await TeaVM.wasmGC.load(
-            new URL("./kite.wasm", self.location.href).href
-        );
-
-        exports = teavm.exports;
+function getExports() {
+    if (!exportsPromise) {
+        exportsPromise = TeaVM.wasmGC
+            .load(new URL("./kite.wasm", self.location.href).href)
+            .then(teavm => teavm.exports);
     }
 
-    return exports;
+    return exportsPromise;
 }
 
 self.onmessage = async ({ data }) => {
     const { id, method, args = [] } = data;
 
     try {
-        const api = await init();
+        const exports = await getExports();
 
-        const fn = api[method];
+        const fn = exports[method];
 
         if (typeof fn !== "function") {
-            throw new Error(`Unknown method: ${method}`);
+            throw new Error(`Unknown method '${method}'`);
         }
 
-        const result = fn(...args);
+        const result = await fn(...args);
 
         self.postMessage({
             id,
