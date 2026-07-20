@@ -57,6 +57,7 @@ jobs:
           # Create output folder
           mkdir -p build/deploy
 
+          cp -r build/generated/teavm/wasm-gc/* build/deploy/
           cp -r assets/wasm/* build/deploy/
           cp -r assets/demo/* build/deploy/
           cp -r src/main/resources/* build/deploy/
