@@ -110,7 +110,9 @@ public final class Kite implements KiteApi {
 		System.out.println("internalPre");
 		
 		this.board = new Board();
+		System.out.println("random pre");
 		this.random = new Random();
+		System.out.println("random here");
 		
 		System.out.println("internal1");
 		OpeningBoardScoreCaches.ensureDefaultIsLoaded(null);
