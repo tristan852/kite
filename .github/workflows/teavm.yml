@@ -59,7 +59,7 @@ jobs:
 
           cp -r build/generated/teavm/wasm-gc/* build/deploy/
           cp -r assets/demo/* build/deploy/
-          cp -r src/main/resources/* build/deploy/
+          cp -r src/main/resources/board_score_caches/* build/deploy/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
