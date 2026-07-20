@@ -50,6 +50,7 @@ public final class Random {
 		Thread currentThread = Thread.currentThread();
 		System.out.println("current thread: " + currentThread);
 		ThreadLocalRandom currentThreadRandom = ThreadLocalRandom.current();
+		System.out.println(currentThreadRandom);
 		
 		long l1 = System.nanoTime();
 		@SuppressWarnings("deprecation")
