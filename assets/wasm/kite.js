@@ -5,8 +5,7 @@ export class Kite {
 
     static async create(options = {}) {
         const worker = new Worker(
-            new URL("./kite-worker.js", import.meta.url),
-            { type: "module" }
+            new URL("./kite-worker.js", import.meta.url)
         );
 
         const kite = new Kite(worker);
