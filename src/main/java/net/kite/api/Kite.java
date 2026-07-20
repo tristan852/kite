@@ -1632,6 +1632,8 @@ public final class Kite implements KiteApi {
 	 * @return a newly created Kite solver instance
 	 */
 	public static Kite createInstance() {
+		System.out.println("inside create instance");
+		
 		return new Kite();
 	}
 	
