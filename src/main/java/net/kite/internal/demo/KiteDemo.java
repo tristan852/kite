@@ -504,9 +504,7 @@ public final class KiteDemo {
 				Int8Array array = new Int8Array(arrayBuffer);
 				
 				byte[] bytes = array.copyToJavaArray();
-				System.out.println("db1: " + bytes.length);
 				OpeningBoardScoreCaches.ensureDefaultIsLoaded(bytes);
-				System.out.println("db2: " + bytes.length);
 				
 				buildApp();
 				
@@ -707,6 +705,7 @@ public final class KiteDemo {
 			int i = aiSkillLevelSelectElement.getSelectedIndex();
 			changeAISkillLevel(i);
 		});
+		System.out.println("db1");
 		
 		WINDOW.addEventListener(KEY_DOWN_EVENT_TYPE, (event) -> {
 			
@@ -913,6 +912,7 @@ public final class KiteDemo {
 		}
 		
 		setElementStyles(boardElement, BOARD_ELEMENT_STYLES);
+		System.out.println("db2");
 		
 		HTMLElement cellLabelsElement = createFlexboxElement(FLEXBOX_ELEMENT_ROW_DIRECTION, 0);
 		
@@ -1100,6 +1100,7 @@ public final class KiteDemo {
 		}
 		
 		bodyElement.appendChild(appElement);
+		System.out.println("db3");
 	}
 	
 	private void changeAISkillLevel(int aiSkillLevelIndex) {
