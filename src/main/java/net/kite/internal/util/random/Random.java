@@ -29,6 +29,8 @@ public final class Random {
 	private static final float  RANDOM_FLOAT_MULTIPLIER  = 0x1.0p-24F;
 	private static final double RANDOM_DOUBLE_MULTIPLIER = 0x1.0p-53;
 	
+	private static boolean useSimpleStartSeedEntropy;
+	
 	private long currentSeed;
 	
 	public Random() {
@@ -46,18 +48,25 @@ public final class Random {
 	}
 	
 	public long setRandomSeed() {
-		System.out.println("before curr thread");
 		Thread currentThread = Thread.currentThread();
-		System.out.println("current thread: " + currentThread);
 		ThreadLocalRandom currentThreadRandom = ThreadLocalRandom.current();
-		System.out.println(currentThreadRandom);
 		
-		long l1 = System.nanoTime();
-		@SuppressWarnings("deprecation")
-		long l2 = currentThread.getId() * START_SEED_THREAD_ID_MULTIPLIER;
-		long l3 = currentThreadRandom.nextLong();
+		long startSeed;
 		
-		long startSeed = l1 ^ l2 ^ l3;
+		if(useSimpleStartSeedEntropy) {
+			
+			startSeed = System.nanoTime();
+			
+		} else {
+			
+			long l1 = System.nanoTime();
+			@SuppressWarnings("deprecation")
+			long l2 = currentThread.getId() * START_SEED_THREAD_ID_MULTIPLIER;
+			long l3 = currentThreadRandom.nextLong();
+			
+			startSeed = l1 ^ l2 ^ l3;
+		}
+		
 		setSeed(startSeed);
 		
 		return startSeed;
@@ -142,6 +151,10 @@ public final class Random {
 		
 		seed ^= (seed >>> SCRAMBLE_SEED_THIRD_SHIFT_AMOUNT);
 		return seed;
+	}
+	
+	public static void setUseSimpleStartSeedEntropy() {
+		useSimpleStartSeedEntropy = true;
 	}
 	
 }

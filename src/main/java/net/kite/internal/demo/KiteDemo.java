@@ -505,6 +505,7 @@ public final class KiteDemo {
 				
 				byte[] bytes = array.copyToJavaArray();
 				OpeningBoardScoreCaches.ensureDefaultIsLoaded(bytes);
+				net.kite.internal.util.random.Random.setUseSimpleStartSeedEntropy();
 				
 				buildApp();
 				
