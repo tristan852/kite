@@ -582,7 +582,9 @@ public final class KiteDemo {
 	}
 	
 	private void buildApp() {
+		System.out.println("here1");
 		solver = Kite.createInstance();
+		System.out.println("here2");
 		
 		HTMLBodyElement bodyElement = DOCUMENT.getBody();
 		
