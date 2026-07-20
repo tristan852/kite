@@ -110,9 +110,12 @@ public final class Kite implements KiteApi {
 		this.board = new Board();
 		this.random = new Random();
 		
+		System.out.println("internal1");
 		OpeningBoardScoreCaches.ensureDefaultIsLoaded(null);
+		System.out.println("internal2");
 		
 		board.evaluate(Integer.MIN_VALUE, Integer.MAX_VALUE, playedMoves);
+		System.out.println("internal3");
 	}
 	
 	@Override
