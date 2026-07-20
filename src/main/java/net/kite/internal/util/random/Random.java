@@ -46,7 +46,9 @@ public final class Random {
 	}
 	
 	public long setRandomSeed() {
+		System.out.println("before curr thread");
 		Thread currentThread = Thread.currentThread();
+		System.out.println("current thread: " + currentThread);
 		ThreadLocalRandom currentThreadRandom = ThreadLocalRandom.current();
 		
 		long l1 = System.nanoTime();
