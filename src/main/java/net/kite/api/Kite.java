@@ -36,10 +36,6 @@ public final class Kite implements KiteApi {
 		
 		if(inputStream == null) {
 			
-			// TODO could load from kite resources via xml request but we dont need it...
-			// in graalvm wasm native image it should be in the binary and should be loaded
-			// via getResourceAsStream
-			
 			System.err.println("The build information could not be found in resources!");
 			BUILD_COMMIT = "unknown";
 			
@@ -1632,8 +1628,6 @@ public final class Kite implements KiteApi {
 	 * @return a newly created Kite solver instance
 	 */
 	public static Kite createInstance() {
-		System.out.println("inside create instance");
-		
 		return new Kite();
 	}
 	

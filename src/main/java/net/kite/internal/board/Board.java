@@ -208,14 +208,11 @@ public final class Board {
 	private final boolean[][] winCells = new boolean[WIDTH][HEIGHT];
 	
 	public Board() {
-		System.out.println("board");
 		this.scoreCache = new BoardScoreCache();
-		System.out.println("board2");
 		this.importantScoreCache = new ImportantBoardScoreCache();
 		
 		this.moves = new int[MOVES_LENGTH];
 		this.moveScores = new int[MOVES_LENGTH];
-		System.out.println("done");
 	}
 	
 	@SuppressWarnings("DataFlowIssue")
