@@ -52,6 +52,10 @@ export class Kite {
         this.#worker.terminate();
     }
 
+    debug() {
+        this.#worker.debug();
+    }
+
     encrypt(data) {
         return this.#call("encrypt", data);
     }

@@ -12,8 +12,8 @@ public class KiteWasmApi {
 	}
 	
 	@JSExport
-	public static void debug() {
-		
+	public static int debug() {
+		return 1234;
 	}
 	
 }
