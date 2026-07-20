@@ -17,6 +17,7 @@ self.onmessage = async ({ data }) => {
 
     try {
         const exports = await getExports();
+        console.log(Object.keys(exports));
 
         const fn = exports[method];
 
