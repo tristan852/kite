@@ -3,14 +3,14 @@ export class Kite {
     #nextId = 0;
     #pending = new Map();
 
-    static async create(options = {}) {
+    static async create() {
         const worker = new Worker(
             new URL("./kite-worker.js", import.meta.url)
         );
 
         const kite = new Kite(worker);
 
-        await kite.#call("initialize", options);
+        await kite.#call("main", []);
 
         return kite;
     }
