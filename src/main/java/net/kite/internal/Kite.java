@@ -107,6 +107,8 @@ public final class Kite implements KiteApi {
 	private boolean recordingMetrics;
 	
 	public Kite() {
+		System.out.println("internalPre");
+		
 		this.board = new Board();
 		this.random = new Random();
 		
