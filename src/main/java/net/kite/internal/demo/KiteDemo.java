@@ -504,7 +504,9 @@ public final class KiteDemo {
 				Int8Array array = new Int8Array(arrayBuffer);
 				
 				byte[] bytes = array.copyToJavaArray();
+				System.out.println("db1: " + bytes.length);
 				OpeningBoardScoreCaches.ensureDefaultIsLoaded(bytes);
+				System.out.println("db2: " + bytes.length);
 				
 				buildApp();
 				
