@@ -72,7 +72,7 @@ signing {
 
 teavm {
     all {
-        mainClass = "net.kite.internal.wasm.Main"
+        mainClass = "net.kite.internal.demo.Main"
     }
     
     wasmGC {
