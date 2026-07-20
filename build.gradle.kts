@@ -6,6 +6,7 @@ plugins {
     id("org.graalvm.buildtools.native") version "1.1.3"
     
     id("org.teavm") version "0.15.0"
+    id("war")
     
     signing
     `maven-publish`
@@ -76,7 +77,6 @@ teavm {
     
     wasmGC {
         addedToWebApp = true
-        
         optimization = OptimizationLevel.AGGRESSIVE
     }
 }
