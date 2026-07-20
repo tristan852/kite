@@ -109,12 +109,11 @@
     </div>
     
     <script type="module">
-        import { Kite } from "https://tristan852.github.io/kite/worker.js";
+        import { Kite } from "https://tristan852.github.io/kite/kite.js";
         
-        const solver = await Kite.create();
-        const result = await solver.debug("test");
+        const kite = await Kite.create();
         
-        console.log(result);
+        console.log(kite)
     </script>
 </body>
 
