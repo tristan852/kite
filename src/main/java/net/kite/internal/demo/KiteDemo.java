@@ -417,7 +417,7 @@ public final class KiteDemo {
 	
 	private static final String REQUEST_METHOD = "GET";
 	private static final String REQUEST_RESPONSE_TYPE = "arraybuffer";
-	private static final String REQUEST_URL = "kite_resources/board_score_caches/opening.cfc";
+	private static final String REQUEST_URL = "opening.cfc";
 	
 	private static final String MOVE_SOUND_URL = "sounds/move.mp3";
 	
