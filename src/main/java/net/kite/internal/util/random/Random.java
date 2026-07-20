@@ -48,9 +48,6 @@ public final class Random {
 	}
 	
 	public long setRandomSeed() {
-		Thread currentThread = Thread.currentThread();
-		ThreadLocalRandom currentThreadRandom = ThreadLocalRandom.current();
-		
 		long startSeed;
 		
 		if(useSimpleStartSeedEntropy) {
@@ -58,6 +55,9 @@ public final class Random {
 			startSeed = System.nanoTime();
 			
 		} else {
+			
+			Thread currentThread = Thread.currentThread();
+			ThreadLocalRandom currentThreadRandom = ThreadLocalRandom.current();
 			
 			long l1 = System.nanoTime();
 			@SuppressWarnings("deprecation")
