@@ -23,12 +23,6 @@
     <meta name="twitter:image" content="https://raw.githubusercontent.com/tristan852/kite/refs/heads/main/assets/images/brand/banner.png" />
     
     <script src="kite.wasm-runtime.js" type="text/javascript" charset="utf-8"></script>
-    <script>
-        async function main() {
-            let kiteDemo = await TeaVM.wasmGC.load("kite.wasm");
-            kiteDemo.exports.main([]);
-        }
-    </script>
     
     <style>
         body {
@@ -102,11 +96,52 @@
     </style>
 </head>
 
-<body style="min-height: 100dvh; margin: 0; padding: 2.5dvh 2.5dvw; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #09090B; color: #F4F4F5;" onload="main()">
-    <span id="loading-message" style="text-align: center;">Loading Kite solver...</span>
-    <div id="loading-bar" style="width: 250px; height: 8px; margin-top: 16px; background-color: #27272A; border-radius: 4px; overflow: hidden;">
+<body style="min-height: 100dvh; margin: 0; padding: 2.5dvh 2.5dvw; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #09090B; color: #F4F4F5;" onload="init()">
+    <span id="loading-message" style="text-align: center; display: none;">Loading Kite solver...</span>
+    <div id="loading-bar" style="width: 250px; height: 8px; margin-top: 16px; background-color: #27272A; border-radius: 4px; overflow: hidden; display: none;">
         <div id="loading-bar-progress" style="width: 0%; height: 100%; background-color: #D4D4D8; border-radius: 4px;"></div>
     </div>
+    
+    <span id="prompt-message" style="text-align: center; display: none;">Load Kite solver?<br>(95 MB)</span>
+    <button id="prompt-button" onclick="confirm()" style="width: 150px; height: 30px; margin-top: 16px; color: #09090B; background-color: #F4F4F5; border: none; border-radius: 6px; cursor: pointer; display: none;">
+        Download
+    </button>
+    
+    <script>
+        const loadingMessage = document.getElementById("loading-message");
+        const loadingBar = document.getElementById("loading-bar");
+        const promptMessage = document.getElementById("prompt-message");
+        const promptButton = document.getElementById("prompt-button");
+        
+        function init() {
+          const confirmed = localStorage.getItem("solverDownloadConfirmation") === "true";
+          if(confirmed) {
+            
+            confirm();
+            
+          } else {
+            
+            promptMessage.style.display = "block";
+            promptButton.style.display = "block";
+          }
+        }
+        
+        function confirm() {
+          localStorage.setItem("solverDownloadConfirmation", "true");
+          
+          promptMessage.style.display = "none";
+          promptButton.style.display = "none";
+          loadingMessage.style.display = "block";
+          loadingBar.style.display = "block";
+          
+          main();
+        }
+        
+        async function main() {
+            let kiteDemo = await TeaVM.wasmGC.load("kite.wasm");
+            kiteDemo.exports.main([]);
+        }
+    </script>
 </body>
 
 </html>
