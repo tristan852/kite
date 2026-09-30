@@ -1066,6 +1066,9 @@ public final class Board {
 		}
 		
 		long knownFailingMovesBitboard = Bitboards.EMPTY;
+		boolean nextDepthIsBookDepth = filledCellAmount == 9 || filledCellAmount == 14;
+		
+		long opponentOpportunities = nextDepthIsBookDepth ? bitboardConnectionOpportunities(maskBitboard ^ activeBitboard) : 0;
 		
 		long movesBitboard = ceilingBitboard & Bitboards.FULL_BOARD;
 		while(movesBitboard != 0) {
@@ -1080,14 +1083,27 @@ public final class Board {
 			
 			long mixedHash = mixedHash(h1);
 			
-			entryKey = scoreCache.entryKey(mixedHash);
-			if(entryKey >= 0) {
+			if(nextDepthIsBookDepth) {
 				
-				int entryMinScore = -scoreCache.entryMaximalScore(entryKey);
-				if(entryMinScore > minimalScore) return entryMinScore;
+				knownFailingMovesBitboard |= moveBitboard;
 				
-				int entryMaxScore = -scoreCache.entryMinimalScore(entryKey);
-				if(entryMaxScore <= minimalScore) knownFailingMovesBitboard |= moveBitboard;
+				if((opponentOpportunities & (ceilingBitboard + moveBitboard)) == 0) {
+					
+					int score = -OpeningBoardScoreCaches.DEFAULT.boardScore(mixedHash);
+					if(score > minimalScore) return score;
+				}
+				
+			} else {
+				
+				entryKey = scoreCache.entryKey(mixedHash);
+				if(entryKey >= 0) {
+					
+					int entryMinScore = -scoreCache.entryMaximalScore(entryKey);
+					if(entryMinScore > minimalScore) return entryMinScore;
+					
+					int entryMaxScore = -scoreCache.entryMinimalScore(entryKey);
+					if(entryMaxScore <= minimalScore) knownFailingMovesBitboard |= moveBitboard;
+				}
 			}
 		}
 		
