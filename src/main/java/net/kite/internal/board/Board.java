@@ -1085,12 +1085,12 @@ public final class Board {
 			
 			if(nextDepthIsBookDepth) {
 				
-				knownFailingMovesBitboard |= moveBitboard;
-				
 				if((opponentOpportunities & (ceilingBitboard + moveBitboard)) == 0) {
 					
 					int score = -OpeningBoardScoreCaches.DEFAULT.boardScore(mixedHash);
 					if(score > minimalScore) return score;
+					
+					knownFailingMovesBitboard |= moveBitboard;
 				}
 				
 			} else {
