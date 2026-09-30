@@ -7,10 +7,10 @@ import java.io.InputStream;
 
 public final class OpeningBoardScoreCache {
 	
-	private static final int PACKED_BOARD_SCORES_SIZE_IN_BYTES = 61737771;
-	private static final int BOARD_SCORES_SIZE                 = 82317028;
-	private static final int BUCKET_SEEDS_SIZE_IN_BYTES        = 33554432;
-	private static final int BUCKET_SEEDS_INDEX_MASK           = 33554431;
+	private static final int PACKED_BOARD_SCORES_SIZE_IN_BYTES = 50890871;
+	private static final int BOARD_SCORES_SIZE                 = 67854495;
+	private static final int BUCKET_SEEDS_SIZE_IN_BYTES        = 16777216;
+	private static final int BUCKET_SEEDS_INDEX_MASK           = 16777215;
 	
 	private static final int BOARD_SCORE_SIZE_IN_BITS = 6;
 	private static final int BOARD_SCORE_MASK = 0x3F;

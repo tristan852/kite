@@ -98,8 +98,6 @@ public final class Board {
 	
 	private static final int BITBOARD_HEIGHT = 8;
 	
-	private static final int OPENING_SCORE_CACHE_MAXIMAL_DEPTH = 15;
-	
 	private static final int SCORE_BOUND_WEIGHT_INCREMENT = 11;
 	private static final int CACHE_SCORE_BOUND_WEIGHT = 5;
 	private static final int IMPORTANT_CACHE_SCORE_BOUND_WEIGHT = 2;
@@ -832,7 +830,7 @@ public final class Board {
 			return BoardScore.WINS[filledCellAmount + 1];
 		}
 		
-		if(filledCellAmount <= OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
+		if(filledCellAmount <= 5 || filledCellAmount == 10 || filledCellAmount == 15) {
 			
 			int openingBoardScore = OpeningBoardScoreCaches.DEFAULT.boardScore(mixedHash);
 			
@@ -868,7 +866,7 @@ public final class Board {
 		filledCellAmount--;
 		int lastMove = playedMoves[filledCellAmount];
 		
-		if(filledCellAmount == OPENING_SCORE_CACHE_MAXIMAL_DEPTH) {
+		if(filledCellAmount == 5 || filledCellAmount == 10 || filledCellAmount == 15) {
 			
 			long moves = board & (ceilingBitboard >>> 1);
 			while(moves != 0) {
@@ -1051,6 +1049,11 @@ public final class Board {
 		
 		if(minScore > minimalScore) return minScore;
 		if(maxScore <= minimalScore) return minimalScore;
+		
+		if(filledCellAmount == 10 || filledCellAmount == 15) {
+			
+			return OpeningBoardScoreCaches.DEFAULT.boardScore(mixedHash);
+		}
 		
 		int entryKey = scoreCache.entryKey(mixedHash);
 		if(entryKey >= 0) {
