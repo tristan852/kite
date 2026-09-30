@@ -48,7 +48,7 @@ public final class Kite implements KiteApi {
 	private static final char SMALLEST_MOVE_CHARACTER = '1';
 	
 	private static final double METRICS_THROUGHPUT_CONVERSION_FACTOR = 1000.0;
-	private static final String METRICS_STRING_PATTERN = "positions evaluated      : %,d\naverage evaluation time  : %s\naverage node evaluations : %s\nnode throughput          : %s%s";
+	private static final String METRICS_STRING_PATTERN = "positions evaluated      : %,d\nnodes evaluated          : %,d\naverage evaluation time  : %s\naverage node evaluations : %s\nnode throughput          : %s%s";
 	private static final String COLORED_METRICS_STRING_PATTERN;
 	private static final String METRICS_STRING_MISSING_VALUE_STRING = "N/A";
 	
@@ -73,6 +73,8 @@ public final class Kite implements KiteApi {
 			
 			COLORED_METRICS_STRING_PATTERN =
 					AnsiUtil.cyanAnsi("positions evaluated      : ") +
+					AnsiUtil.brightYellowAnsi("%,d") +
+					AnsiUtil.cyanAnsi("nodes evaluated          : ") +
 					AnsiUtil.brightYellowAnsi("%,d") +
 					AnsiUtil.cyanAnsi("\naverage evaluation time  : ") +
 					AnsiUtil.brightYellowAnsi("%s") +
@@ -400,7 +402,7 @@ public final class Kite implements KiteApi {
 		boolean noAnsiCodes = AnsiUtil.areAnsiCodesDisabled() || System.console() == null;
 		
 		String pattern = noAnsiCodes ? METRICS_STRING_PATTERN : COLORED_METRICS_STRING_PATTERN;
-		String message = String.format(Locale.ROOT, pattern, metricsEvaluationAmount, s1, s2, s3, s4);
+		String message = String.format(Locale.ROOT, pattern, metricsEvaluationAmount, metricsNodeEvaluationAmount, s1, s2, s3, s4);
 		System.out.println(message);
 		
 		long n = metricsNodeEvaluationAmount;
